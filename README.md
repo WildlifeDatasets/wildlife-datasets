@@ -1,9 +1,10 @@
 # Wildlife Re-ID Datasets
 
 
+
 | Dataset              |    Status     |    Comments    |
 |----------------------|:-------------:|---------------:|
-| AAU Zebrafish        |   TODO        | Kaggle CLI     |
+| AAU Zebrafish        |   FULL        | Kaggle CLI     |
 | ATRW                 |   DOWNLOAD    |                |
 | Beluga ID            |   DOWNLOAD    |                |
 | Chimpanzee Faces     |   Partially   | Ugly repo      |
@@ -21,3 +22,11 @@
 | Whale Shark ID       |   DOWNLOAD    |                |
 | WNI Giraffes         |   TODO        | 190 GB         |
 | Zindi Turtle Recall  |   DOWNLOAD    |                |
+
+
+### Install required libraries
+```
+pip install gdown
+pip install kaggle
+pip install wget
+```
