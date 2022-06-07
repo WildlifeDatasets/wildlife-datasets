@@ -7,14 +7,14 @@
 | AAU Zebrafish        |   FULL        | Kaggle CLI     |
 | ATRW                 |   DOWNLOAD    |                |
 | Beluga ID            |   DOWNLOAD    |                |
-| Chimpanzee Faces     |   Partially   | Ugly repo      |
+| Chimpanzee Faces     |   DOWNLOAD    | Github repo    |
 | Cows 2021            |   DOWNLOAD    |                |
-| Drosophilia          |   TODO        | 90 GB 40 parts |
+| Drosophila           |   TODO        | 90 GB 40 parts |
 | Friesian Cattle 2015 |   DOWNLOAD    |                |
 | Giraffe Zebra ID     |   DOWNLOAD    |                |
-| HappyWhale           |   TODO        | Kaggle CLI     |
+| HappyWhale           |   FULL        | Kaggle CLI     |
 | Hyena ID             |   DOWNLOAD    |                |
-| iPanda-50            |   FULL        |                |
+| iPanda-50            |   FULL        | Google Drive   |
 | Leopard ID           |   DOWNLOAD    |                |
 | Macaque Faces        |   DOWNLOAD    |                |
 | OpenCow 2020         |   DOWNLOAD    |                |
@@ -28,5 +28,5 @@
 ```
 pip install gdown
 pip install kaggle
-pip install wget
+pip install tqdm
 ```
