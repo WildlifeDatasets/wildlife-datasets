@@ -2,6 +2,7 @@ import os
 import zipfile
 import argparse
 from utils import download_url
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--output", type=str, default='../datasets',  help="Output folder")
 parser.add_argument("--name", type=str, default='Test',  help="Dataset name")

@@ -4,7 +4,7 @@
 
 | Dataset              |    Status     |    Comments    |
 |----------------------|:-------------:|---------------:|
-| AAU Zebrafish        |   FULL        | Kaggle CLI     |
+| AAU Zebrafish        |   EXTRACTED   | Kaggle CLI     |
 | ATRW                 |   DOWNLOAD    |                |
 | Beluga ID            |   DOWNLOAD    |                |
 | Chimpanzee Faces     |   DOWNLOAD    | Github repo    |
@@ -12,13 +12,13 @@
 | Drosophila           |   TODO        | 90 GB 40 parts |
 | Friesian Cattle 2015 |   DOWNLOAD    |                |
 | Giraffe Zebra ID     |   DOWNLOAD    |                |
-| HappyWhale           |   FULL        | Kaggle CLI     |
+| HappyWhale           |   EXTRACTED   | Kaggle CLI     |
 | Hyena ID             |   DOWNLOAD    |                |
-| iPanda-50            |   FULL        | Google Drive   |
+| iPanda-50            |   EXTRACTED   | Google Drive   |
 | Leopard ID           |   DOWNLOAD    |                |
 | Macaque Faces        |   DOWNLOAD    |                |
 | OpenCow 2020         |   DOWNLOAD    |                |
-| StripeSpotter        |   FULL        | Only linux     |
+| StripeSpotter        |   EXTRACTED   | Only linux     |
 | Whale Shark ID       |   DOWNLOAD    |                |
 | WNI Giraffes         |   TODO        | 190 GB         |
 | Zindi Turtle Recall  |   DOWNLOAD    |                |
