@@ -1,6 +1,7 @@
 import os
 import argparse
-parser = argparse.ArgumentParser(description='')
+
+parser = argparse.ArgumentParser()
 parser.add_argument("--output", type=str, default='../datasets',  help="Output folder")
 parser.add_argument("--name", type=str, default='StripeSpotter',  help="Dataset name")
 args = parser.parse_args()
@@ -19,7 +20,7 @@ urls = [
 for url in urls:
     os.system(f"wget -P '.' {url}")
 
-# Unpack
+# Extract
 os.system(f"zip -s- data-20110718.zip -O data-full.zip")
 os.system(f"unzip data-full.zip")
 
