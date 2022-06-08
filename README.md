@@ -6,7 +6,7 @@
 |----------------------|:-------------:|---------------:|
 | AAU Zebrafish        |   EXTRACTED   | Kaggle CLI     |
 | Aerial Cattle        |   EXTRACTED   |                |
-| ATRW                 |   TO RUN      |                |
+| ATRW                 |   EXTRACTED   |                |
 | Beluga ID            |   EXTRACTED   |                |
 | Chimpanzee C-Tai     |   EXTRACTED   |                |
 | Chimpanzee C-Zoo     |   EXTRACTED   |                |
