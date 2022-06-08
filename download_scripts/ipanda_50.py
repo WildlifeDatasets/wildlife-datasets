@@ -1,7 +1,7 @@
 import os
 import argparse
 import gdown
-import zipfile
+import utils
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--output", type=str, default='../datasets',  help="Output folder")
@@ -21,6 +21,4 @@ downloads = [
 
 for url, archive in downloads:
     gdown.download(url, archive, quiet=False)
-    with zipfile.ZipFile(archive, 'r') as zip_ref:
-        zip_ref.extractall('.')
-    os.remove(archive)
+    utils.extract_archive(archive, delete=True)

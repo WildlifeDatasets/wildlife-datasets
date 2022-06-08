@@ -1,6 +1,6 @@
 import os
-import zipfile
 import argparse
+import utils
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--output", type=str, default='../datasets',  help="Output folder")
@@ -12,11 +12,7 @@ if not os.path.exists(directory):
     os.makedirs(directory)
 os.chdir(directory)
 
-# Download
+# Download and extract
 os.system(f"kaggle competitions download -c happy-whale-and-dolphin")
+utils.extract_archive('happy-whale-and-dolphin.zip', delete=True)
 
-# Extract and Clean-up
-archive = 'happy-whale-and-dolphin.zip'
-with zipfile.ZipFile(archive, 'r') as zip_ref:
-    zip_ref.extractall('.')
-os.remove(archive)
