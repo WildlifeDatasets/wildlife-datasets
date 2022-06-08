@@ -5,9 +5,9 @@
 | Dataset              |    Status     |    Comments    |
 |----------------------|:-------------:|---------------:|
 | AAU Zebrafish        |   EXTRACTED   | Kaggle CLI     |
-| Aerial Cattle        |   TODO        |                |
+| Aerial Cattle        |   EXTRACTED   |                |
 | ATRW                 |   DOWNLOAD    |                |
-| Beluga ID            |   DOWNLOAD    |                |
+| Beluga ID            |   EXTRACTED   |                |
 | Chimpanzee C-Tai     |   TODO        |                |
 | Chimpanzee C-Zoo     |   TODO        |                |
 | Cows 2021            |   DOWNLOAD    |                |
@@ -20,7 +20,7 @@
 | iPanda-50            |   EXTRACTED   | Google Drive   |
 | Leopard ID           |   DOWNLOAD    |                |
 | Lion Data            |   TODO        |                |
-| Macaque Faces        |   DOWNLOAD    |                |
+| Macaque Faces        |   EXTRACTED   |                |
 | Nyala Data           |   TODO        |                |
 | OpenCow 2020         |   DOWNLOAD    |                |
 | StripeSpotter        |   EXTRACTED   | Only linux     |
