@@ -12,8 +12,8 @@
 | Chimpanzee C-Zoo     |   EXTRACTED   |                |
 | Cows 2021            |   DOWNLOAD    |                |
 | Drosophila           |   TODO        | 90 GB 40 parts |
-| Friesian Cattle 2015 |   DOWNLOAD    |                |
-| Friesian Cattle 2017 |   DOWNLOAD    |                |
+| Friesian Cattle 2015 |   EXTRACTED   |                |
+| Friesian Cattle 2017 |   EXTRACTED   |                |
 | Giraffe Zebra ID     |   DOWNLOAD    |                |
 | HappyWhale           |   EXTRACTED   | Kaggle CLI     |
 | Hyena ID             |   DOWNLOAD    |                |
@@ -22,7 +22,7 @@
 | Lion Data            |   EXTRACTED   |                |
 | Macaque Faces        |   EXTRACTED   |                |
 | Nyala Data           |   EXTRACTED   |                |
-| OpenCow 2020         |   DOWNLOAD    |                |
+| OpenCow 2020         |   EXTRACTED   |                |
 | StripeSpotter        |   EXTRACTED   | Only linux     |
 | Whale Shark ID       |   DOWNLOAD    |                |
 | WNI Giraffes         |   TO RUN      | 190 GB         |

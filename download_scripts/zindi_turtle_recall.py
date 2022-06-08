@@ -1,10 +1,28 @@
 import os
-name = 'ZindiTurtleRecall'
-urls = [
-    'https://storage.googleapis.com/dm-turtle-recall/train.csv',
-    'https://storage.googleapis.com/dm-turtle-recall/extra_images.csv',
-    'https://storage.googleapis.com/dm-turtle-recall/test.csv',
-    'https://storage.googleapis.com/dm-turtle-recall/images.tar',
+import argparse
+import utils
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--output", type=str, default='../datasets',  help="Output folder")
+parser.add_argument("--name", type=str, default='ZindiTurtleRecall',  help="Dataset name")
+args = parser.parse_args()
+
+directory = os.path.join(args.output, args.name)
+if not os.path.exists(directory):
+    os.makedirs(directory)
+os.chdir(directory)
+
+
+# Download
+downloads = [
+    ('https://storage.googleapis.com/dm-turtle-recall/train.csv', 'train.csv'),
+    ('https://storage.googleapis.com/dm-turtle-recall/extra_images.csv', 'extra_images.csv'),
+    ('https://storage.googleapis.com/dm-turtle-recall/test.csv', 'test.csv'),
+    ('https://storage.googleapis.com/dm-turtle-recall/images.tar', 'images.tar'),
 ]
-for url in urls:
-    os.system(f"wget -P '../datasets/{name}' {url}")
+for url, file in downloads:
+    utils.download_url(url, file)
+
+# Extract
+utils.extract_archive('images.tar', 'images', delete=True)
+
