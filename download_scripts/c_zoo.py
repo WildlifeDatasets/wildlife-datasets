@@ -1,8 +1,23 @@
 import os
-url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
-name = 'CZoo'
-# data in datasets_cropped_chimpanzee_faces/data_CZoo/face_images
-# csv file datasets_cropped_chimpanzee_faces/data_CZoo/annotations_czoo.txt
-# include additional information on age, sex and keypoints
+import argparse
+import utils
+import shutil
 
-os.system(f"wget -P '../datasets/{name}' {url}")
+parser = argparse.ArgumentParser()
+parser.add_argument("--output", type=str, default='../datasets',  help="Output folder")
+parser.add_argument("--name", type=str, default='CZoo',  help="Dataset name")
+args = parser.parse_args()
+
+directory = os.path.join(args.output, args.name)
+if not os.path.exists(directory):
+    os.makedirs(directory)
+os.chdir(directory)
+
+# Download and extract
+url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
+archive = 'master.zip'
+utils.download_url(url, archive)
+utils.extract_archive(archive, delete=True)
+
+# Cleanup
+shutil.rmtree('chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CTai')
