@@ -10,15 +10,15 @@
 | Beluga ID            |   EXTRACTED   |                |
 | Chimpanzee C-Tai     |   EXTRACTED   |                |
 | Chimpanzee C-Zoo     |   EXTRACTED   |                |
-| Cows 2021            |   DOWNLOAD    |                |
+| Cows 2021            |   EXTRACTED   |                |
 | Drosophila           |   TODO        | 90 GB 40 parts |
 | Friesian Cattle 2015 |   EXTRACTED   |                |
 | Friesian Cattle 2017 |   EXTRACTED   |                |
 | Giraffe Zebra ID     |   DOWNLOAD    |                |
 | HappyWhale           |   EXTRACTED   | Kaggle CLI     |
-| Hyena ID             |   DOWNLOAD    |                |
+| Hyena ID             |   EXTRACTED   |                |
 | iPanda-50            |   EXTRACTED   | Google Drive   |
-| Leopard ID           |   DOWNLOAD    |                |
+| Leopard ID           |   EXTRACTED   |                |
 | Lion Data            |   EXTRACTED   |                |
 | Macaque Faces        |   EXTRACTED   |                |
 | Nyala Data           |   EXTRACTED   |                |
