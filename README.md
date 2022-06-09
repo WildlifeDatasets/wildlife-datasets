@@ -11,10 +11,10 @@
 | Chimpanzee C-Tai     |   EXTRACTED   |                |
 | Chimpanzee C-Zoo     |   EXTRACTED   |                |
 | Cows 2021            |   EXTRACTED   |                |
-| Drosophila           |   TODO        | 90 GB 40 parts |
+| Drosophila           |   RUNNING     | 90 GB 40 parts |
 | Friesian Cattle 2015 |   EXTRACTED   |                |
 | Friesian Cattle 2017 |   EXTRACTED   |                |
-| Giraffe Zebra ID     |   DOWNLOAD    |                |
+| Giraffe Zebra ID     |   RUNNING     |                |
 | HappyWhale           |   EXTRACTED   | Kaggle CLI     |
 | Hyena ID             |   EXTRACTED   |                |
 | iPanda-50            |   EXTRACTED   | Google Drive   |
@@ -24,9 +24,9 @@
 | Nyala Data           |   EXTRACTED   |                |
 | OpenCow 2020         |   EXTRACTED   |                |
 | StripeSpotter        |   EXTRACTED   | Only linux     |
-| Whale Shark ID       |   DOWNLOAD    |                |
-| WNI Giraffes         |   TO RUN      | 190 GB         |
-| Zindi Turtle Recall  |   DOWNLOAD    |                |
+| Whale Shark ID       |   RUNNING     |                |
+| WNI Giraffes         |   RUNNING     | 190 GB         |
+| Zindi Turtle Recall  |   EXTRACTED   |                |
 
 
 ### Install required libraries
