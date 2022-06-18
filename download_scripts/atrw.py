@@ -28,4 +28,5 @@ downloads = [
 # Download and extract
 for url, archive in downloads:
     utils.download_url(url, archive)
-    utils.extract_archive(archive, delete=True)
+    archive_name = archive.split('.')[0]
+    utils.extract_archive(archive, archive_name, delete=True)
