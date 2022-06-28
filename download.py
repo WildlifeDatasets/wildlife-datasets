@@ -4,38 +4,42 @@ scripts = os.listdir(scripts_folder)
 
 scripts = [
     # Easy datasets
-    'lion_data.py',
-    'nyala_data.py',
-    'c_zoo.py',
-    'c_tai.py',
     'aau_zebrafish_id.py',
+    'aerial_cattle_2017.py',
+    'bird_individual_id.py',
+    'c_tai.py',
+    'c_zoo.py',
+    'cows_2021.py',
+    'friesian_cattle_2015.py',
+    'friesian_cattle_2017.py',
+    'giraffes.py',
+    'ipanda_50.py',
+    'lion_data.py',
     'macaque_faces.py',
+    'ndd20.py',
+    'noaa_right_whale.py',
+    'nyala_data.py',
+    'open_cows_2020.py',
+    'seal_id.py',
+    'smalst.py',
     'stripe_spotter.py',
     'zindi_turtle_recall.py',
-    'ipanda_50.py',
 
     # LILA BC datasets
-    'whale_shark_id.py',
-    'giraffe_zebra_id.py',
-    'leopard_id_2022.py',
-    'hyena_id_2022.py',
     'beluga_id.py',
-
-    # Giraffes
-    'wni_giraffes.py',
-
-    # Cattle
-    'cows_2021.py',
-    'aerial_cattle_2017.py',
-    'open_cows_2020.py',
-    'friesian_cattle_2017.py',
-    'friesian_cattle_2015.py',
+    'giraffe_zebra_id.py',
+    'hyena_id_2022.py',
+    'leopard_id_2022.py',
+    'whale_shark_id.py',
 
     # Hard - large datasets
-    'drosophila.py',
     'atrw.py',
+    'humpback_whale.py'
+    'drosophila.py',
     'happy_whale.py',
 
+    # Hard - very large datasets
+    'wni_giraffes.py',
 ]
 
 os.chdir(scripts_folder)
