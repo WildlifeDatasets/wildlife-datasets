@@ -14,8 +14,6 @@ os.chdir(directory)
 
 downloads = [
     # Wild dataset (Detection)
-    ('https://lilablobssc.blob.core.windows.net/cvwc2019/train/atrw_detection_train.tar.gz', 'atrw_detection_train.tar.gz'),
-    ('https://lilablobssc.blob.core.windows.net/cvwc2019/train/atrw_anno_detection_train.tar.gz', 'atrw_anno_detection_train.tar.gz'),
     ('https://lilablobssc.blob.core.windows.net/cvwc2019/test/atrw_detection_test.tar.gz', 'atrw_detection_test.tar.gz'),
 
     # Re-ID dataset
@@ -30,3 +28,9 @@ for url, archive in downloads:
     utils.download_url(url, archive)
     archive_name = archive.split('.')[0]
     utils.extract_archive(archive, archive_name, delete=True)
+
+# Download evaluation scripts
+url = 'https://github.com/cvwc2019/ATRWEvalScript/archive/refs/heads/main.zip'
+archive = 'main.zip'
+utils.download_url(url, archive)
+utils.extract_archive(archive, 'eval_script', delete=True)
