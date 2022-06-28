@@ -3,6 +3,9 @@ import pandas as pd
 import hashlib
 import json
 import numpy as np
+from matplotlib import pyplot as plt
+from PIL import Image
+
 
 def find_images(root, img_extensions = ('.png', '.jpg', '.jpeg')):
     data = []
@@ -30,6 +33,41 @@ def is_annotation_bbox(ann, bbox, tol=0):
         return False
     return True
 
+def plot_image(img):
+    fig, ax = plt.subplots()
+    ax.imshow(img)
+    plt.show()
+    
+def plot_segmentation(img, segmentation):
+    if not np.isnan(segmentation).all():
+        fig, ax = plt.subplots()
+        ax.imshow(img)
+        ax.plot(segmentation[0::2], segmentation[1::2], '--', linewidth=5, color='firebrick')
+        plt.show()
+    
+def plot_bbox_segmentation(df, root, n):
+    if 'bbox' not in df.columns and 'segmentation' not in df.columns:
+        for i in range(n):
+            img = Image.open(os.path.join(root, df['path'][i]))
+            plot_image(img)
+    if 'bbox' in df.columns:
+        df_red = df[~df['bbox'].isnull()]
+        for i in range(n):
+            img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+            segmentation = bbox_segmentation(df_red['bbox'].iloc[i])
+            plot_segmentation(img, segmentation)
+    if 'segmentation' in df.columns:
+        df_red = df[~df['segmentation'].isnull()]
+        for i in range(n):
+            img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+            segmentation = df_red['segmentation'].iloc[i]
+            plot_segmentation(img, segmentation)
+    if 'mask' in df.columns:
+        df_red = df[~df['mask'].isnull()]
+        for i in range(n):
+            img = Image.open(os.path.join(root, df_red['mask'].iloc[i]))
+            plot_image(img) 
+
 
 
 
@@ -51,6 +89,38 @@ class DatasetFactory():
         self.check_files_exist(df)
         self.check_masks_exist(df)
         return df
+
+    def display_statistics(self, plot_images=True, display_dataframe=True, n=2):
+        df_red = self.df.loc[self.df['identity'] != 'unknown', 'identity']
+        df_red.value_counts().reset_index(drop=True).plot()
+            
+        if 'unknown' in list(self.df['identity'].unique()):
+            n_identity = len(self.df.identity.unique()) - 1
+        else:
+            n_identity = len(self.df.identity.unique())
+        print(f"Number of identitites          {n_identity}")
+        print(f"Number of all animals          {len(self.df)}")
+        print(f"Number of identified animals   {sum(self.df['identity'] != 'unknown')}")    
+        print(f"Number of unidentified animals {sum(self.df['identity'] == 'unknown')}")
+        if 'video' in self.df.columns:
+            print(f"Number of videos               {len(self.df[['identity', 'video']].drop_duplicates())}")
+        if plot_images:
+            plot_bbox_segmentation(self.df, self.root, n)
+        if display_dataframe:
+            display(self.df)
+
+    def image_sizes(self):
+        '''
+        Return width and height of all images.
+
+        It is slow for large datasets.
+        '''
+        paths = self.root + os.path.sep + self.df['path']
+        data = []
+        for path in paths:
+            img = Image.open(path)
+            data.append({'width': img.size[0], 'height': img.size[1]})
+        return pd.DataFrame(data)
 
     def reorder_df(self, df):
         default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'video', 'attributes']
@@ -801,13 +871,29 @@ class WNIGiraffes(DatasetFactory):
     def create_catalogue(self):
         data = find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
+        
+        with open(os.path.join(self.root, 'wni_giraffes_train.json')) as file:
+            keypoints = json.load(file)
+        create_dict = lambda i: {'file': os.path.split(i['filename'])[1], 'keypoints': self.extract_keypoints(i)}
+        df_keypoints = pd.DataFrame([create_dict(i) for i in keypoints['annotations']])
 
+        data = pd.merge(data, df_keypoints, how='left', on='file')
         data['id'] = create_id(data['file'])
         data['identity'] = folders[1].astype(int)
         data['path'] = data['path'] + os.path.sep + data['file']
-        data.drop(['file'], axis=1)
+        data = data.drop(['file'], axis=1)
 
         return self.finalize_df(data)
+
+    def extract_keypoints(self, row):
+        keypoints = [row['keypoints']['too']['median_x'], row['keypoints']['too']['median_y'],
+                row['keypoints']['toh']['median_x'], row['keypoints']['toh']['median_y'],
+                row['keypoints']['ni']['median_x'], row['keypoints']['ni']['median_y'],
+                row['keypoints']['fbh']['median_x'], row['keypoints']['fbh']['median_y'],
+            ]
+        keypoints = np.array(keypoints)
+        keypoints[keypoints == None] = np.nan
+        return list(keypoints)
 
 
 
