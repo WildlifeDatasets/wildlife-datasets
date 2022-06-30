@@ -1173,13 +1173,16 @@ class NyalaData(DatasetFactory):
     def create_catalogue(self):
         data = find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
-
         identity = folders[3].astype(int)
+        position = np.full(len(data), np.nan, dtype=object)
+        position[['left' in filename for filename in data['file']]] = 'left'
+        position[['right' in filename for filename in data['file']]] = 'right'
 
         df = {
             'id': create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
+            'position': position,
         }
         return self.finalize_df(df)   
 
