@@ -653,7 +653,7 @@ class FriesianCattle2015(DatasetFactory):
     reported_n_total = 83+294 # train+test
     reported_n_identified = 83+294 # train+test
     reported_n_photos = 83+294 # train+test
-    reported_n_individuals = 10+40 # train+test
+    reported_n_individuals = 40
     wild = False
     clear_photos = True
     pose = 'single' # from the top
