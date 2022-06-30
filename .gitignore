@@ -1,5 +1,6 @@
-*datasets
-*venv
-*__pycache__
-*.ipynb_checkpoints
+datasets/
+dataframes/
+venv/
+__pycache__/
+.ipynb_checkpoints/
 *.out
