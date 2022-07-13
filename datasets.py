@@ -493,7 +493,7 @@ class CTai(DatasetFactory):
     real_animals = True    
     year = 2016
     reported_n_total = 5078
-    reported_n_identified = 4377 # they use the word usable
+    reported_n_identified = 5078
     reported_n_photos = 5078
     reported_n_individuals = 78 
     wild = True
@@ -721,7 +721,7 @@ class GiraffeZebraID(DatasetFactoryWildMe):
     year = 2017
     reported_n_total = 639+6286 # giraffes + zebra
     reported_n_identified = 639+6286 # giraffes + zebra
-    reported_n_photos = 639+6286 # giraffes + zebra
+    reported_n_photos = 4948
     reported_n_individuals = 2056 
     wild = True
     clear_photos = True
@@ -949,9 +949,9 @@ class LeopardID2022(DatasetFactoryWildMe):
     animals = ('leopard')
     real_animals = True    
     year = 2022
-    reported_n_total = 6795
+    reported_n_total = None
     reported_n_identified = 6805
-    reported_n_photos = 6805
+    reported_n_photos = 6795
     reported_n_individuals = 430
     wild = True
     clear_photos = False # night, blurry, parts missing, ...
