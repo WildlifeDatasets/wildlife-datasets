@@ -19,6 +19,9 @@ class Lcg():
 
 
 class Split():
+    # TODO add unknown to semi?
+    # TODO what to do with csv files?
+    # TODO return indices
     def __init__(self, df, seed, keep_unknown=False):
         if keep_unknown:
             self.df = df
@@ -109,6 +112,6 @@ class Split():
         lcg = Lcg(self.seed, 3)
         return self.__set_split2(lcg, ratio_train, ratio_class_test, 'semiopen')
 
-    def open_set_split(self, ratio_train, ratio_class_test):
+    def open_set_split(self, ratio_class_test):
         lcg = Lcg(self.seed, 4)
-        return self.__set_split2(lcg, ratio_train, ratio_class_test, 'open')
+        return self.__set_split2(lcg, [], ratio_class_test, 'open')
