@@ -72,9 +72,24 @@ def plot_bbox_segmentation(df, root, n):
 
 
 class DatasetFactory():
-    def __init__(self, root, **kwargs):
+    def __init__(self, root, df, save=True, **kwargs):
         self.root = root
-        self.df = self.create_catalogue(**kwargs)
+        if df is None:
+            self.df = self.create_catalogue(**kwargs)
+        else:
+            self.df = df
+
+    @classmethod
+    def from_csv(cls, root, csv_path, save=True, overwrite=False, **kwargs):
+        if overwrite or not os.path.exists(csv_path):
+            df = None
+            instance = cls(root, df, **kwargs)
+            if save:
+                instance.df.to_csv(csv_path, index=False)
+        else:
+            df = pd.read_csv(csv_path)
+            instance = cls(root, df, **kwargs)
+        return instance
 
     def create_catalogue(self):
         raise NotImplementedError()

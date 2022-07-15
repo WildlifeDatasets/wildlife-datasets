@@ -1,9 +1,8 @@
 import os
-import pickle
 import numpy as np
 from datasets import *
 
-datasets_list = [
+info_datasets = [
     (AAUZebraFishID, {}),
     (AerialCattle2017, {}),
     (ATRW, {}),
@@ -48,42 +47,13 @@ def unique_datasets_list(datasets_list):
 
     return datasets_list_red
 
-# TODO think about pickle/csv
-class Method:
-    def __init__(self, name, root_dataset, root_dataframe=None, variant=None):
-        self.name = name
-        self.variant = variant
-        self.root_dataset = root_dataset
-        self.root_dataframe = root_dataframe
-        if variant is None:
-            self.save_name = name.__name__
+def add_paths(datasets_list, root_dataset, root_dataframe):
+    datasets_list_mod = []
+    for dataset in datasets_list:        
+        if len(dataset[1]) == 0:                        
+            csv_path = os.path.join(root_dataframe, dataset[0].__name__ + '.csv')
         else:
-            self.save_name = name.__name__ + '_' + variant
-
-    def create_dataset(self):
-        root = os.path.join(self.root_dataset, self.name.__name__)
-        if self.variant is None:
-            self.dataset = self.name(root)
-        else:
-            self.dataset = self.name(root, variant=self.variant)
-
-    def save_dataset(self):
-        with open(self.get_file_name(), 'wb') as handle:
-            pickle.dump(self.dataset, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    
-    def load_dataset(self):
-        with open(self.get_file_name(), 'rb') as handle:
-            self.dataset = pickle.load(handle)
-
-    def load_or_create_dataset(self, overwrite=False, save=True):
-        file_name = self.get_file_name()
-        if overwrite or not os.path.exists(file_name):
-            self.create_dataset()
-            if save:
-                self.save_dataset()
-        else:
-            self.load_dataset()
-        
-    def get_file_name(self):
-        return os.path.join(self.root_dataframe, self.save_name + '.pkl')
+            csv_path = os.path.join(root_dataframe, dataset[0].__name__ + '_' + dataset[1]['variant'] + '.csv')
+        datasets_list_mod.append(dataset + (os.path.join(root_dataset, dataset[0].__name__),) + (csv_path,))
+    return datasets_list_mod
 
