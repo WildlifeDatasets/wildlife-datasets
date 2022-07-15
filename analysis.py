@@ -1,5 +1,6 @@
 import os
 import pickle
+import numpy as np
 from datasets import *
 
 datasets_list = [
@@ -37,6 +38,17 @@ datasets_list = [
     (ZindiTurtleRecall, {})
 ]
 
+def unique_datasets_list(datasets_list):
+    _, idx = np.unique([dataset[0].__name__ for dataset in datasets_list], return_index=True)
+    idx = np.sort(idx)
+
+    datasets_list_red = []
+    for i in idx:
+        datasets_list_red.append(datasets_list[i])
+
+    return datasets_list_red
+
+# TODO think about pickle/csv
 class Method:
     def __init__(self, name, root_dataset, root_dataframe=None, variant=None):
         self.name = name
