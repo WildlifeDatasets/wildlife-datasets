@@ -80,14 +80,14 @@ class DatasetFactory():
             self.df = df
 
     @classmethod
-    def from_csv(cls, root, csv_path, save=True, overwrite=False, **kwargs):
-        if overwrite or not os.path.exists(csv_path):
+    def from_file(cls, root, df_path, save=True, overwrite=False, **kwargs):
+        if overwrite or not os.path.exists(df_path):
             df = None
             instance = cls(root, df, **kwargs)
             if save:
-                instance.df.to_csv(csv_path, index=False)
+                instance.df.to_pickle(df_path)
         else:
-            df = pd.read_csv(csv_path)
+            df = pd.read_pickle(df_path)
             instance = cls(root, df, **kwargs)
         return instance
 

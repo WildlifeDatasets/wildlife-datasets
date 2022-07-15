@@ -51,9 +51,9 @@ def add_paths(datasets_list, root_dataset, root_dataframe):
     datasets_list_mod = []
     for dataset in datasets_list:        
         if len(dataset[1]) == 0:                        
-            csv_path = os.path.join(root_dataframe, dataset[0].__name__ + '.csv')
+            df_path = os.path.join(root_dataframe, dataset[0].__name__ + '.pkl')
         else:
-            csv_path = os.path.join(root_dataframe, dataset[0].__name__ + '_' + dataset[1]['variant'] + '.csv')
-        datasets_list_mod.append(dataset + (os.path.join(root_dataset, dataset[0].__name__),) + (csv_path,))
+            df_path = os.path.join(root_dataframe, dataset[0].__name__ + '_' + dataset[1]['variant'] + '.pkl')
+        datasets_list_mod.append(dataset + (os.path.join(root_dataset, dataset[0].__name__),) + (df_path,))
     return datasets_list_mod
 
