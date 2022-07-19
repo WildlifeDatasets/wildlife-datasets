@@ -408,7 +408,7 @@ class BelugaID(DatasetFactoryWildMe):
     licenses = 'Attribution-NonCommercial-NoDerivs License'
     licenses_url = 'http://creativecommons.org/licenses/by-nc-nd/2.0/'
     url = 'https://lila.science/datasets/beluga-id-2022/'
-    cite = '???'
+    cite = 'belugaid'
     animals = ('beluga whale')
     real_animals = True    
     year = 2022
@@ -838,7 +838,7 @@ class HumpbackWhaleID(DatasetFactory):
     licenses = None
     licenses_url = None
     url = 'https://www.kaggle.com/competitions/humpback-whale-identification'
-    cite = '???'
+    cite = 'humpbackwhale'
     animals = ('whale')
     real_animals = True    
     year = 2019
@@ -1130,7 +1130,7 @@ class NOAARightWhale(DatasetFactory):
     licenses = None
     licenses_url = None
     url = 'https://www.kaggle.com/c/noaa-right-whale-recognition'
-    cite = '???'
+    cite = 'rightwhale'
     animals = ('right whale')
     real_animals = True    
     year = 2015
@@ -1393,7 +1393,7 @@ class WNIGiraffes(DatasetFactory):
     licenses = 'Community Data License Agreement – Permissive'
     licenses_url = 'https://cdla.dev/permissive-1-0/'
     url = 'https://lila.science/datasets/wni-giraffes'
-    cite = '???'
+    cite = 'wnigiraffes'
     animals = ('giraffe')
     real_animals = True    
     year = 2021
@@ -1441,7 +1441,7 @@ class ZindiTurtleRecall(DatasetFactory):
     licenses = 'Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)'
     licenses_url = 'https://creativecommons.org/licenses/by-sa/4.0/'
     url = 'https://zindi.africa/competitions/turtle-recall-conservation-challenge'
-    cite = '???'
+    cite = 'zinditurtles'
     animals = ('sea turtle')
     real_animals = True    
     year = 2022
