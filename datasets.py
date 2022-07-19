@@ -68,6 +68,38 @@ def plot_bbox_segmentation(df, root, n):
             img = Image.open(os.path.join(root, df_red['mask'].iloc[i]))
             plot_image(img) 
 
+def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True):
+    idx = np.random.permutation(len(df))[:n_rows*n_cols]
+
+    ratios = []
+    for k in idx:
+        file_path = os.path.join(root, df['path'][k])
+        im = Image.open(file_path)
+        ratios.append(im.size[0] / im.size[1])
+
+    ratio = np.median(ratios)
+    if ratio > 1:    
+        img_w, img_h = int(img_min*ratio), int(img_min)
+    else:
+        img_w, img_h = int(img_min), int(img_min/ratio)
+
+    im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, n_rows*img_h + (n_rows-1)*offset))
+
+    for i in range(n_rows):
+        for j in range(n_cols):
+            k = n_cols*i + j
+            file_path = os.path.join(root, df['path'][idx[k]])
+
+            im = Image.open(file_path)
+            if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
+                im = im.transpose(Image.ROTATE_90)
+            im.thumbnail((img_w,img_h))
+
+            pos_x = j*img_w + j*offset
+            pos_y = i*img_h + i*offset        
+            im_grid.paste(im, (pos_x,pos_y))
+
+    display(im_grid)
 
 
 
@@ -121,6 +153,7 @@ class DatasetFactory():
             print(f"Number of videos               {len(self.df[['identity', 'video']].drop_duplicates())}")
         if plot_images:
             plot_bbox_segmentation(self.df, self.root, n)
+            plot_grid(self.df, self.root)
         if display_dataframe:
             display(self.df)
 
