@@ -130,7 +130,7 @@ class DatasetFactory():
         if type(df) is dict:
             df = pd.DataFrame(df)
         df = self.reorder_df(df)
-        df = self.remove_segmentation(df)
+        df = self.remove_columns(df)
         self.check_unique_id(df)
         self.check_split_values(df)
         self.check_files_exist(df)
@@ -171,7 +171,7 @@ class DatasetFactory():
         return pd.DataFrame(data)
 
     def reorder_df(self, df):
-        default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'video', 'attributes']
+        default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'date', 'video', 'attributes']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
@@ -184,10 +184,10 @@ class DatasetFactory():
         df = df.sort_values('id').reset_index(drop=True)
         return df.reindex(columns=col_names)
 
-    def remove_segmentation(self, df):
-        if 'segmentation' in list(df.columns):
-            if sum(df['segmentation'].isnull()) == len(df):
-                df = df.drop(['segmentation'], axis=1)
+    def remove_columns(self, df):
+        for df_name in list(df.columns):
+            if df[df_name].astype('str').nunique() == 1:
+                df = df.drop([df_name], axis=1)
         return df
         
     def check_unique_id(self, df):
@@ -231,10 +231,10 @@ class DatasetFactoryWildMe(DatasetFactory):
             if len(ann['segmentation']) != 1:
                 raise(Exception('Wrong number of segmentations'))
             
-        create_dict = lambda i: {'identity': i['name'], 'bbox':i['bbox'], 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0]}
+        create_dict = lambda i: {'identity': i['name'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0]}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
 
-        create_dict = lambda i: {'file_name': i['file_name'], 'image_id':i['id']}
+        create_dict = lambda i: {'file_name': i['file_name'], 'image_id': i['id'], 'date': i['date_captured']}
         df_images = pd.DataFrame([create_dict(i) for i in data['images']])
 
         species = pd.DataFrame(data['categories'])
