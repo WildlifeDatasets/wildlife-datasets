@@ -360,7 +360,7 @@ class ATRW(DatasetFactory):
     clear_photos = False # occlussions, shadows
     pose = 'double' # from either side
     unique_pattern = True
-    from_video = False
+    from_video = True
     full_frame = True
 
     def create_catalogue(self):
