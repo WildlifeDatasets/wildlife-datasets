@@ -20,11 +20,18 @@ def create_id(string):
     assert len(entity_id.unique()) == len(entity_id)
     return entity_id
 
-def bbox_segmentation(bbox):
-    return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
+def bbox_segmentation(bbox, theta=0):    
+    segmentation = [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
+    if theta != 0:
+        rot_matrix = np.array([[np.cos(theta), np.sin(theta)], [-np.sin(theta), np.cos(theta)]])
+        center = np.array([bbox[0]+bbox[2]/2, bbox[1]+bbox[3]/2])
+        segmentation = (np.reshape(segmentation, (-1,2)) - center) @ rot_matrix + center
+        segmentation = np.reshape(segmentation, (segmentation.size,))
+        segmentation = list(segmentation)
+    return segmentation
 
-def is_annotation_bbox(ann, bbox, tol=0):
-    bbox_ann = bbox_segmentation(bbox)    
+def is_annotation_bbox(ann, bbox, theta=0, tol=0):
+    bbox_ann = bbox_segmentation(bbox, theta)
     if len(ann) == len(bbox_ann):
         for x, y in zip(ann, bbox_ann):
             if abs(x-y) > tol:
@@ -52,10 +59,23 @@ def plot_bbox_segmentation(df, root, n):
             plot_image(img)
     if 'bbox' in df.columns:
         df_red = df[~df['bbox'].isnull()]
-        for i in range(n):
-            img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
-            segmentation = bbox_segmentation(df_red['bbox'].iloc[i])
-            plot_segmentation(img, segmentation)
+        if 'bbox_theta' in df.columns:
+            df_red1 = df_red[df_red['bbox_theta'] != 0]
+            for i in range(n):
+                img = Image.open(os.path.join(root, df_red1['path'].iloc[i]))
+                segmentation = bbox_segmentation(df_red1['bbox'].iloc[i], df_red1['bbox_theta'].iloc[i])
+                plot_segmentation(img, segmentation)
+
+            df_red2 = df_red[df_red['bbox_theta'] == 0]
+            for i in range(n):
+                img = Image.open(os.path.join(root, df_red2['path'].iloc[i]))
+                segmentation = bbox_segmentation(df_red2['bbox'].iloc[i], df_red2['bbox_theta'].iloc[i])
+                plot_segmentation(img, segmentation)
+        else:
+            for i in range(n):
+                img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+                segmentation = bbox_segmentation(df_red['bbox'].iloc[i])
+                plot_segmentation(img, segmentation)
     if 'segmentation' in df.columns:
         df_red = df[~df['segmentation'].isnull()]
         for i in range(n):
@@ -171,7 +191,7 @@ class DatasetFactory():
         return pd.DataFrame(data)
 
     def reorder_df(self, df):
-        default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'date', 'video', 'attributes']
+        default_order = ['id', 'path', 'identity', 'bbox', 'bbox_theta', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'date', 'video', 'attributes']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
@@ -231,7 +251,7 @@ class DatasetFactoryWildMe(DatasetFactory):
             if len(ann['segmentation']) != 1:
                 raise(Exception('Wrong number of segmentations'))
             
-        create_dict = lambda i: {'identity': i['name'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0]}
+        create_dict = lambda i: {'identity': i['name'], 'bbox': i['bbox'], 'bbox_theta': i['theta'], 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0]}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
 
         create_dict = lambda i: {'file_name': i['file_name'], 'image_id': i['id'], 'date': i['date_captured']}
@@ -249,7 +269,7 @@ class DatasetFactoryWildMe(DatasetFactory):
         # Remove segmentations which are the same as bounding boxes
         ii = []
         for i in range(len(df)):
-            ii.append(is_annotation_bbox(df.loc[i].segmentation, df.loc[i].bbox, tol=2))
+            ii.append(is_annotation_bbox(df.loc[i]['segmentation'], df.loc[i]['bbox'], df.loc[i]['bbox_theta'], tol=3))
         df.loc[ii, 'segmentation'] = np.nan
 
         # Rename empty dates
