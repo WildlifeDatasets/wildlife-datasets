@@ -252,6 +252,9 @@ class DatasetFactoryWildMe(DatasetFactory):
             ii.append(is_annotation_bbox(df.loc[i].segmentation, df.loc[i].bbox, tol=2))
         df.loc[ii, 'segmentation'] = np.nan
 
+        # Rename empty dates
+        df.loc[df['date'] == 'NA', 'date'] = np.nan
+
         df = df.drop(['image_id', 'file_name', 'supercategory', 'category_id'], axis=1)
         if len(df['species'].unique()) == 1:
             df = df.drop(['species'], axis=1)
@@ -580,7 +583,6 @@ class CTai(DatasetFactory):
         }
         df = pd.DataFrame(df)
         for replace_tuple in replace_names:
-            print(replace_tuple)
             df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
         return self.finalize_df(df)
 
