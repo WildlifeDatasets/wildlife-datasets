@@ -552,6 +552,16 @@ class CTai(DatasetFactory):
     full_frame = False
 
     def create_catalogue(self):
+        replace_names = [
+            ('Adult', 'unknown'),
+            ('Akouba', 'Akrouba'),
+            ('Freddy', 'Fredy'),
+            ('Ibrahiim', 'Ibrahim'),
+            ('Liliou', 'Lilou'),
+            ('Wapii', 'Wapi'),
+            ('Woodstiock', 'Woodstock')
+        ]
+            
         path = os.path.join('chimpanzee_faces-master', 'datasets_cropped_chimpanzee_faces', 'data_CTai',)
         data = pd.read_csv(os.path.join(self.root, path, 'annotations_ctai.txt'), header=None, sep=' ')
         
@@ -569,7 +579,9 @@ class CTai(DatasetFactory):
             'attributes': attributes
         }
         df = pd.DataFrame(df)
-        df['identity'] = df['identity'].replace({'Adult': 'unknown'})
+        for replace_tuple in replace_names:
+            print(replace_tuple)
+            df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
         return self.finalize_df(df)
 
 
