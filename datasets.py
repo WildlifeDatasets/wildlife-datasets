@@ -854,6 +854,11 @@ class HappyWhale(DatasetFactory):
     full_frame = True
     
     def create_catalogue(self):
+        replace_names = [
+            ('bottlenose_dolpin', 'bottlenose_dolphin'),
+            ('kiler_whale', 'killer_whale'),
+        ]
+
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
 
         df1 = {
@@ -863,7 +868,9 @@ class HappyWhale(DatasetFactory):
             'species': data['species'],
             'split': 'train'
             }
-        
+        for replace_tuple in replace_names:
+            df1['species'] = df1['species'].replace({replace_tuple[0]: replace_tuple[1]})
+
         test_files = find_images(os.path.join(self.root, 'test_images'))
         test_files = list(test_files['file'])
         test_files = pd.Series(np.sort(test_files))
@@ -872,7 +879,7 @@ class HappyWhale(DatasetFactory):
             'id': test_files.str.split('.', expand=True)[0],
             'path': 'test_images' + os.path.sep + test_files,
             'identity': 'unknown',
-            'species': 'unknown',
+            'species': np.nan,
             'split': 'test'
             }
         
