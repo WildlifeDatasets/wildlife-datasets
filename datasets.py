@@ -3,6 +3,7 @@ import pandas as pd
 import hashlib
 import json
 import numpy as np
+import datetime
 from matplotlib import pyplot as plt
 from PIL import Image
 
@@ -1110,12 +1111,14 @@ class MacaqueFaces(DatasetFactory):
     def create_catalogue(self):
         data = pd.read_csv(os.path.join(self.root, 'MacaqueFaces_ImageInfo.csv'))
         attributes = data[['Category']].to_dict(orient='index')
+        date_taken = [datetime.datetime.strptime(date, '%d-%m-%Y').strftime('%Y-%m-%d') for date in data['DateTaken']]
         
         df = {
             'id': pd.Series(range(len(data))),
             'path': 'MacaqueFaces' + os.path.sep + data['Path'].str.strip(os.path.sep) + os.path.sep + data['FileName'],
             'identity': data['ID'],
             'attributes': attributes,
+            'date': pd.Series(date_taken)
         }
         return self.finalize_df(df)
 
