@@ -1316,9 +1316,9 @@ class OpenCows2020(DatasetFactory):
     reported_n_individuals = 46
     wild = False
     clear_photos = True
-    pose = 'single' # from the top
+    pose = 'double' # from the top, drone and close camera
     unique_pattern = True
-    from_video = False
+    from_video = True
     full_frame = False
 
     def create_catalogue(self):
@@ -1492,7 +1492,7 @@ class WNIGiraffes(DatasetFactory):
     licenses = 'Community Data License Agreement – Permissive'
     licenses_url = 'https://cdla.dev/permissive-1-0/'
     url = 'https://lila.science/datasets/wni-giraffes'
-    cite = 'wnigiraffes'
+    cite = 'clavadetscher2021development'
     animals = ('giraffe')
     real_animals = True    
     year = 2021
