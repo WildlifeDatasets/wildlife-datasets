@@ -122,6 +122,20 @@ def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True)
 
     display(im_grid)
 
+def get_dates(dates, frmt):
+    return np.array([datetime.datetime.strptime(date, frmt) for date in dates])
+
+def compute_span(df):
+    df = df.loc[~df['date'].isnull()]
+    dates = get_dates(df['date'].str[:10], '%Y-%m-%d')
+    identities = df['identity'].unique()
+    span = -np.inf
+    for identity in identities:
+        idx = df['identity'] == identity
+        span = np.maximum(span, (max(dates[idx]) - min(dates[idx])).total_seconds())    
+    return span
+
+
 
 
 class DatasetFactory():
@@ -172,6 +186,14 @@ class DatasetFactory():
         print(f"Number of unidentified animals {sum(self.df['identity'] == 'unknown')}")
         if 'video' in self.df.columns:
             print(f"Number of videos               {len(self.df[['identity', 'video']].drop_duplicates())}")
+        if 'date' in self.df.columns:
+            span_years = compute_span(self.df) / (60*60*24*365.25)
+            if span_years > 1:
+                print(f"Images span                    %1.1f years" % (span_years))
+            elif span_years / 12 > 1:
+                print(f"Images span                    %1.1f months" % (span_years * 12))
+            else:
+                print(f"Images span                    %1.0f days" % (span_years * 365.25))
         if plot_images:
             plot_bbox_segmentation(self.df, self.root, n)
             plot_grid(self.df, self.root)
