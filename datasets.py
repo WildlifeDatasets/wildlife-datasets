@@ -1205,7 +1205,7 @@ class NDD20(DatasetFactory):
                 segmentation[1::2] = region['shape_attributes']['all_points_y']
                 entries.append({
                     'identity': identity,
-                    'species': np.nan,
+                    'species': 'WBD',
                     'attributes': {'out of focus': region['region_attributes']['out of focus']},
                     'file_name': data[key]['filename'],
                     'reg_type': region['shape_attributes']['name'],
