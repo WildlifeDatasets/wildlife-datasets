@@ -323,6 +323,7 @@ class AAUZebraFishID(DatasetFactory):
     unique_pattern = False
     from_video = True
     full_frame = True
+    span = '1 day'
     
     def create_catalogue(self):
         data = pd.read_csv(os.path.join(self.root, 'annotations.csv'), sep=';')
@@ -375,6 +376,7 @@ class AerialCattle2017(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = False
+    span = '1 day'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -408,6 +410,7 @@ class ATRW(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = True
+    span = 'short'
 
     def create_catalogue(self):
         ids = pd.read_csv(os.path.join(self.root, 'atrw_anno_reid_train', 'reid_list_train.csv'),
@@ -501,6 +504,7 @@ class BelugaID(DatasetFactoryWildMe):
     unique_pattern = False
     from_video = False
     full_frame = False
+    span = '2.1 years'
 
     def create_catalogue(self):
         return self.create_catalogue_wildme('beluga', 2022)
@@ -525,6 +529,7 @@ class BirdIndividualID(DatasetFactory):
     unique_pattern = False
     from_video = False
     full_frame = True
+    span = '15 days'
 
     def create_catalogue(self, variant='source'):
         if variant == 'source':
@@ -596,6 +601,7 @@ class CTai(DatasetFactory):
     unique_pattern = False
     from_video = False
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         replace_names = [
@@ -649,6 +655,7 @@ class CZoo(DatasetFactory):
     unique_pattern = False
     from_video = False
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         path = os.path.join('chimpanzee_faces-master', 'datasets_cropped_chimpanzee_faces', 'data_CZoo',)
@@ -689,6 +696,7 @@ class Cows2021(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = False
+    span = '1 month'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -725,6 +733,7 @@ class Drosophila(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = False
+    span = '3 days'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -765,6 +774,7 @@ class FriesianCattle2015(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = False
+    span = '1 day'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -802,6 +812,7 @@ class FriesianCattle2017(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = False
+    span = '1 day'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -834,6 +845,7 @@ class GiraffeZebraID(DatasetFactoryWildMe):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = '12 days'
     
     def create_catalogue(self):
         return self.create_catalogue_wildme('gzgc', 2020)
@@ -858,6 +870,7 @@ class Giraffes(DatasetFactory):
     unique_pattern = True
     from_video = True # from burst
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         path = os.path.join('pbil.univ-lyon1.fr', 'pub', 'datasets', 'miele2021')
@@ -895,6 +908,7 @@ class HappyWhale(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = 'very long'
     
     def create_catalogue(self):
         replace_names = [
@@ -949,6 +963,7 @@ class HumpbackWhaleID(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = False
+    span = 'very long'
 
     def create_catalogue(self):
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
@@ -995,6 +1010,7 @@ class HyenaID2022(DatasetFactoryWildMe):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = 'unknown'
 
     def create_catalogue(self):
         return self.create_catalogue_wildme('hyena', 2022)
@@ -1019,6 +1035,7 @@ class IPanda50(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1071,6 +1088,7 @@ class LeopardID2022(DatasetFactoryWildMe):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = 'unknown'
 
     def create_catalogue(self):
         return self.create_catalogue_wildme('leopard', 2022)
@@ -1095,6 +1113,7 @@ class LionData(DatasetFactory):
     unique_pattern = True # by whiskers
     from_video = False
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1129,6 +1148,7 @@ class MacaqueFaces(DatasetFactory):
     unique_pattern = False
     from_video = True
     full_frame = False
+    span = '1.4 years'
     
     def create_catalogue(self):
         data = pd.read_csv(os.path.join(self.root, 'MacaqueFaces_ImageInfo.csv'))
@@ -1164,6 +1184,7 @@ class NDD20(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = '7 years'
 
     def create_catalogue(self):
         with open(os.path.join(self.root, 'ABOVE_LABELS.json')) as file:
@@ -1243,6 +1264,7 @@ class NOAARightWhale(DatasetFactory):
     unique_pattern = False # fins not present at pictures
     from_video = False
     full_frame = True
+    span = '10 years'
 
     def create_catalogue(self):
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
@@ -1283,6 +1305,7 @@ class NyalaData(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = 'unknown'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1320,6 +1343,7 @@ class OpenCows2020(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = False
+    span = 'short'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1361,6 +1385,7 @@ class SealID(DatasetFactory):
     unique_pattern = True 
     from_video = False
     full_frame = True
+    span = '10 years'
 
     def create_catalogue(self, variant='source'):
         if variant == 'source':
@@ -1401,6 +1426,7 @@ class SMALST(DatasetFactory):
     unique_pattern = True 
     from_video = False
     full_frame = True
+    span = 'artificial'
 
     def create_catalogue(self):
         data = find_images(os.path.join(self.root, 'zebra_training_set', 'images'))
@@ -1441,6 +1467,7 @@ class StripeSpotter(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = '7 days'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1482,6 +1509,7 @@ class WhaleSharkID(DatasetFactoryWildMe):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = '5.2 years'
 
     def create_catalogue(self):
         return self.create_catalogue_wildme('whaleshark', 2020)
@@ -1506,6 +1534,7 @@ class WNIGiraffes(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = '7 years'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1554,6 +1583,7 @@ class ZindiTurtleRecall(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         data_train = pd.read_csv(os.path.join(self.root, 'train.csv'))
