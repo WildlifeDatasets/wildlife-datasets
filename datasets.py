@@ -3,6 +3,7 @@ import pandas as pd
 import hashlib
 import json
 import numpy as np
+import datetime
 from matplotlib import pyplot as plt
 from PIL import Image
 
@@ -20,11 +21,18 @@ def create_id(string):
     assert len(entity_id.unique()) == len(entity_id)
     return entity_id
 
-def bbox_segmentation(bbox):
-    return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
+def bbox_segmentation(bbox, theta=0):    
+    segmentation = [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
+    if theta != 0:
+        rot_matrix = np.array([[np.cos(theta), np.sin(theta)], [-np.sin(theta), np.cos(theta)]])
+        center = np.array([bbox[0]+bbox[2]/2, bbox[1]+bbox[3]/2])
+        segmentation = (np.reshape(segmentation, (-1,2)) - center) @ rot_matrix + center
+        segmentation = np.reshape(segmentation, (segmentation.size,))
+        segmentation = list(segmentation)
+    return segmentation
 
-def is_annotation_bbox(ann, bbox, tol=0):
-    bbox_ann = bbox_segmentation(bbox)    
+def is_annotation_bbox(ann, bbox, theta=0, tol=0):
+    bbox_ann = bbox_segmentation(bbox, theta)
     if len(ann) == len(bbox_ann):
         for x, y in zip(ann, bbox_ann):
             if abs(x-y) > tol:
@@ -52,10 +60,23 @@ def plot_bbox_segmentation(df, root, n):
             plot_image(img)
     if 'bbox' in df.columns:
         df_red = df[~df['bbox'].isnull()]
-        for i in range(n):
-            img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
-            segmentation = bbox_segmentation(df_red['bbox'].iloc[i])
-            plot_segmentation(img, segmentation)
+        if 'bbox_theta' in df.columns:
+            df_red1 = df_red[df_red['bbox_theta'] != 0]
+            for i in range(n):
+                img = Image.open(os.path.join(root, df_red1['path'].iloc[i]))
+                segmentation = bbox_segmentation(df_red1['bbox'].iloc[i], df_red1['bbox_theta'].iloc[i])
+                plot_segmentation(img, segmentation)
+
+            df_red2 = df_red[df_red['bbox_theta'] == 0]
+            for i in range(n):
+                img = Image.open(os.path.join(root, df_red2['path'].iloc[i]))
+                segmentation = bbox_segmentation(df_red2['bbox'].iloc[i], df_red2['bbox_theta'].iloc[i])
+                plot_segmentation(img, segmentation)
+        else:
+            for i in range(n):
+                img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+                segmentation = bbox_segmentation(df_red['bbox'].iloc[i])
+                plot_segmentation(img, segmentation)
     if 'segmentation' in df.columns:
         df_red = df[~df['segmentation'].isnull()]
         for i in range(n):
@@ -100,6 +121,20 @@ def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True)
             im_grid.paste(im, (pos_x,pos_y))
 
     display(im_grid)
+
+def get_dates(dates, frmt):
+    return np.array([datetime.datetime.strptime(date, frmt) for date in dates])
+
+def compute_span(df):
+    df = df.loc[~df['date'].isnull()]
+    dates = get_dates(df['date'].str[:10], '%Y-%m-%d')
+    identities = df['identity'].unique()
+    span = -np.inf
+    for identity in identities:
+        idx = df['identity'] == identity
+        span = np.maximum(span, (max(dates[idx]) - min(dates[idx])).total_seconds())    
+    return span
+
 
 
 
@@ -151,6 +186,14 @@ class DatasetFactory():
         print(f"Number of unidentified animals {sum(self.df['identity'] == 'unknown')}")
         if 'video' in self.df.columns:
             print(f"Number of videos               {len(self.df[['identity', 'video']].drop_duplicates())}")
+        if 'date' in self.df.columns:
+            span_years = compute_span(self.df) / (60*60*24*365.25)
+            if span_years > 1:
+                print(f"Images span                    %1.1f years" % (span_years))
+            elif span_years / 12 > 1:
+                print(f"Images span                    %1.1f months" % (span_years * 12))
+            else:
+                print(f"Images span                    %1.0f days" % (span_years * 365.25))
         if plot_images:
             plot_bbox_segmentation(self.df, self.root, n)
             plot_grid(self.df, self.root)
@@ -171,7 +214,7 @@ class DatasetFactory():
         return pd.DataFrame(data)
 
     def reorder_df(self, df):
-        default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'date', 'video', 'attributes']
+        default_order = ['id', 'path', 'identity', 'bbox', 'bbox_theta', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'date', 'video', 'attributes']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
@@ -231,7 +274,7 @@ class DatasetFactoryWildMe(DatasetFactory):
             if len(ann['segmentation']) != 1:
                 raise(Exception('Wrong number of segmentations'))
             
-        create_dict = lambda i: {'identity': i['name'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0]}
+        create_dict = lambda i: {'identity': i['name'], 'bbox': i['bbox'], 'bbox_theta': i['theta'], 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
 
         create_dict = lambda i: {'file_name': i['file_name'], 'image_id': i['id'], 'date': i['date_captured']}
@@ -249,7 +292,7 @@ class DatasetFactoryWildMe(DatasetFactory):
         # Remove segmentations which are the same as bounding boxes
         ii = []
         for i in range(len(df)):
-            ii.append(is_annotation_bbox(df.loc[i].segmentation, df.loc[i].bbox, tol=2))
+            ii.append(is_annotation_bbox(df.loc[i]['segmentation'], df.loc[i]['bbox'], df.loc[i]['bbox_theta'], tol=3))
         df.loc[ii, 'segmentation'] = np.nan
 
         # Rename empty dates
@@ -280,6 +323,7 @@ class AAUZebraFishID(DatasetFactory):
     unique_pattern = False
     from_video = True
     full_frame = True
+    span = '1 day'
     
     def create_catalogue(self):
         data = pd.read_csv(os.path.join(self.root, 'annotations.csv'), sep=';')
@@ -332,6 +376,7 @@ class AerialCattle2017(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = False
+    span = '1 day'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -365,6 +410,7 @@ class ATRW(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = True
+    span = 'short'
 
     def create_catalogue(self):
         ids = pd.read_csv(os.path.join(self.root, 'atrw_anno_reid_train', 'reid_list_train.csv'),
@@ -458,6 +504,7 @@ class BelugaID(DatasetFactoryWildMe):
     unique_pattern = False
     from_video = False
     full_frame = False
+    span = '2.1 years'
 
     def create_catalogue(self):
         return self.create_catalogue_wildme('beluga', 2022)
@@ -482,6 +529,7 @@ class BirdIndividualID(DatasetFactory):
     unique_pattern = False
     from_video = False
     full_frame = True
+    span = '15 days'
 
     def create_catalogue(self, variant='source'):
         if variant == 'source':
@@ -553,6 +601,7 @@ class CTai(DatasetFactory):
     unique_pattern = False
     from_video = False
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         replace_names = [
@@ -606,6 +655,7 @@ class CZoo(DatasetFactory):
     unique_pattern = False
     from_video = False
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         path = os.path.join('chimpanzee_faces-master', 'datasets_cropped_chimpanzee_faces', 'data_CZoo',)
@@ -646,6 +696,7 @@ class Cows2021(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = False
+    span = '1 month'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -682,6 +733,7 @@ class Drosophila(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = False
+    span = '3 days'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -722,6 +774,7 @@ class FriesianCattle2015(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = False
+    span = '1 day'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -759,6 +812,7 @@ class FriesianCattle2017(DatasetFactory):
     unique_pattern = True
     from_video = True
     full_frame = False
+    span = '1 day'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -791,6 +845,7 @@ class GiraffeZebraID(DatasetFactoryWildMe):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = '12 days'
     
     def create_catalogue(self):
         return self.create_catalogue_wildme('gzgc', 2020)
@@ -815,6 +870,7 @@ class Giraffes(DatasetFactory):
     unique_pattern = True
     from_video = True # from burst
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         path = os.path.join('pbil.univ-lyon1.fr', 'pub', 'datasets', 'miele2021')
@@ -852,8 +908,14 @@ class HappyWhale(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = 'very long'
     
     def create_catalogue(self):
+        replace_names = [
+            ('bottlenose_dolpin', 'bottlenose_dolphin'),
+            ('kiler_whale', 'killer_whale'),
+        ]
+
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
 
         df1 = {
@@ -863,7 +925,9 @@ class HappyWhale(DatasetFactory):
             'species': data['species'],
             'split': 'train'
             }
-        
+        for replace_tuple in replace_names:
+            df1['species'] = df1['species'].replace({replace_tuple[0]: replace_tuple[1]})
+
         test_files = find_images(os.path.join(self.root, 'test_images'))
         test_files = list(test_files['file'])
         test_files = pd.Series(np.sort(test_files))
@@ -872,7 +936,7 @@ class HappyWhale(DatasetFactory):
             'id': test_files.str.split('.', expand=True)[0],
             'path': 'test_images' + os.path.sep + test_files,
             'identity': 'unknown',
-            'species': 'unknown',
+            'species': np.nan,
             'split': 'test'
             }
         
@@ -899,6 +963,7 @@ class HumpbackWhaleID(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = False
+    span = 'very long'
 
     def create_catalogue(self):
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
@@ -945,6 +1010,7 @@ class HyenaID2022(DatasetFactoryWildMe):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = 'unknown'
 
     def create_catalogue(self):
         return self.create_catalogue_wildme('hyena', 2022)
@@ -969,6 +1035,7 @@ class IPanda50(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1021,6 +1088,7 @@ class LeopardID2022(DatasetFactoryWildMe):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = 'unknown'
 
     def create_catalogue(self):
         return self.create_catalogue_wildme('leopard', 2022)
@@ -1045,6 +1113,7 @@ class LionData(DatasetFactory):
     unique_pattern = True # by whiskers
     from_video = False
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1079,16 +1148,19 @@ class MacaqueFaces(DatasetFactory):
     unique_pattern = False
     from_video = True
     full_frame = False
+    span = '1.4 years'
     
     def create_catalogue(self):
         data = pd.read_csv(os.path.join(self.root, 'MacaqueFaces_ImageInfo.csv'))
         attributes = data[['Category']].to_dict(orient='index')
+        date_taken = [datetime.datetime.strptime(date, '%d-%m-%Y').strftime('%Y-%m-%d') for date in data['DateTaken']]
         
         df = {
             'id': pd.Series(range(len(data))),
             'path': 'MacaqueFaces' + os.path.sep + data['Path'].str.strip(os.path.sep) + os.path.sep + data['FileName'],
             'identity': data['ID'],
             'attributes': attributes,
+            'date': pd.Series(date_taken)
         }
         return self.finalize_df(df)
 
@@ -1112,6 +1184,7 @@ class NDD20(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = '7 years'
 
     def create_catalogue(self):
         with open(os.path.join(self.root, 'ABOVE_LABELS.json')) as file:
@@ -1153,7 +1226,7 @@ class NDD20(DatasetFactory):
                 segmentation[1::2] = region['shape_attributes']['all_points_y']
                 entries.append({
                     'identity': identity,
-                    'species': np.nan,
+                    'species': 'WBD',
                     'attributes': {'out of focus': region['region_attributes']['out of focus']},
                     'file_name': data[key]['filename'],
                     'reg_type': region['shape_attributes']['name'],
@@ -1191,6 +1264,7 @@ class NOAARightWhale(DatasetFactory):
     unique_pattern = False # fins not present at pictures
     from_video = False
     full_frame = True
+    span = '10 years'
 
     def create_catalogue(self):
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
@@ -1231,6 +1305,7 @@ class NyalaData(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = 'unknown'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1264,10 +1339,11 @@ class OpenCows2020(DatasetFactory):
     reported_n_individuals = 46
     wild = False
     clear_photos = True
-    pose = 'single' # from the top
+    pose = 'double' # from the top, drone and close camera
     unique_pattern = True
-    from_video = False
+    from_video = True
     full_frame = False
+    span = 'short'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1309,6 +1385,7 @@ class SealID(DatasetFactory):
     unique_pattern = True 
     from_video = False
     full_frame = True
+    span = '10 years'
 
     def create_catalogue(self, variant='source'):
         if variant == 'source':
@@ -1349,6 +1426,7 @@ class SMALST(DatasetFactory):
     unique_pattern = True 
     from_video = False
     full_frame = True
+    span = 'artificial'
 
     def create_catalogue(self):
         data = find_images(os.path.join(self.root, 'zebra_training_set', 'images'))
@@ -1389,6 +1467,7 @@ class StripeSpotter(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = '7 days'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1430,6 +1509,7 @@ class WhaleSharkID(DatasetFactoryWildMe):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = '5.2 years'
 
     def create_catalogue(self):
         return self.create_catalogue_wildme('whaleshark', 2020)
@@ -1440,7 +1520,7 @@ class WNIGiraffes(DatasetFactory):
     licenses = 'Community Data License Agreement – Permissive'
     licenses_url = 'https://cdla.dev/permissive-1-0/'
     url = 'https://lila.science/datasets/wni-giraffes'
-    cite = 'wnigiraffes'
+    cite = 'clavadetscher2021development'
     animals = ('giraffe')
     real_animals = True    
     year = 2021
@@ -1454,6 +1534,7 @@ class WNIGiraffes(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = True
+    span = '7 years'
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -1502,6 +1583,7 @@ class ZindiTurtleRecall(DatasetFactory):
     unique_pattern = True
     from_video = False
     full_frame = False
+    span = 'unknown'
 
     def create_catalogue(self):
         data_train = pd.read_csv(os.path.join(self.root, 'train.csv'))
