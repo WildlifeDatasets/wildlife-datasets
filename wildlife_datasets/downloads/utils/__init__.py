@@ -2,6 +2,7 @@ import os
 import urllib.request
 from tqdm import tqdm
 import shutil
+from contextlib import contextmanager
 
 class ProgressBar(tqdm):
     def update_to(self, b=1, bsize=1, tsize=None):
@@ -19,9 +20,17 @@ def extract_archive(archive, extract_path='.', delete=False):
         os.remove(archive)
 
 
-import zipfile
-def extract_archive2(archive, extract_path='.', delete=False):
-    with zipfile.ZipFile(archive, 'r') as zip_ref:
-        zip_ref.extractall(extract_path)
-    if delete:
-        os.remove(archive)
+@contextmanager
+def data_directory(dir):
+    '''
+    Changes context such that data directory is used as current work directory.
+    Data directory is created if it does not exist.
+    '''
+    current_dir = os.getcwd()
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+    os.chdir(dir)
+    try:
+        yield
+    finally:
+        os.chdir(current_dir)

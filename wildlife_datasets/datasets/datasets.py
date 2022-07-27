@@ -5,6 +5,8 @@ import json
 import numpy as np
 from matplotlib import pyplot as plt
 from PIL import Image
+from .. import downloads
+from .metadata import metadata
 
 '''
 General comments:
@@ -127,13 +129,12 @@ def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True)
 
 
 
-import download
 class DatasetFactory():
     def __init__(self, root, df, download=False, download_folder='data', **kwargs):
         self.root = root
 
         if download and hasattr(self, 'download'): 
-            self.download(output=download_folder)
+            self.download.get_data(output=download_folder)
         if df is None:
             self.df = self.create_catalogue(**kwargs)
         else:
@@ -253,32 +254,17 @@ class DatasetFactory():
                     raise(Exception('Path does not exist:' + os.path.join(self.root, path)))
 
 
+class Test(DatasetFactory):
+    download = downloads.test
+    metadata = metadata['Test']
 
-
-
+    def create_catalogue(self):
+        return pd.DataFrame([1, 2])
 
 
 class AerialCattle2017(DatasetFactory):
-    download = download.aerial_cattle_2017.get_data
-
-    licenses = 'Non-Commercial Government Licence for public sector information'
-    licenses_url = 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/'
-    url = 'https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh'
-    cite = 'andrew2017visual'
-    animals = ('Friesian cattle')
-    real_animals = True    
-    year = 2017
-    reported_n_total = 46340
-    reported_n_identified = 46340
-    reported_n_photos = 46340
-    reported_n_individuals = 23
-    wild = False
-    clear_photos = True
-    pose = 'single' # from the top
-    unique_pattern = True
-    from_video = True
-    full_frame = False
-    
+    download = downloads.aerial_cattle_2017
+    metadata = metadata['AerialCattle2017']
 
     def create_catalogue(self):
         data = find_images(self.root)
@@ -293,8 +279,22 @@ class AerialCattle2017(DatasetFactory):
         return self.finalize_df(df)
 
 
+class FriesianCattle2015(DatasetFactory):
+    download = downloads.friesian_cattle_2015
+    metadata = metadata['FriesianCattle2015']
 
+    def create_catalogue(self):
+        data = find_images(self.root)
+        folders = data['path'].str.split(os.path.sep, expand=True)
+        split = folders[1].replace({'Cows-testing': 'test', 'Cows-training': 'train'})
+        assert len(split.unique()) == 2
 
+        identity = folders[2].str.strip('Cow').astype(int)
 
-
-
+        df = {
+            'id': create_id(identity.astype(str) + split + data['file']),
+            'path': data['path'] + os.path.sep + data['file'],
+            'identity': identity,
+            'split': split
+        }
+        return self.finalize_df(df)
