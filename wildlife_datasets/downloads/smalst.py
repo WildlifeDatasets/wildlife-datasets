@@ -1,7 +1,7 @@
 import os
 import argparse
 from . import utils
-import gdown
+#import gdown
 import shutil
 
 def get_data(root):

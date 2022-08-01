@@ -1,73 +1,22 @@
 import os
 import numpy as np
-from datasets import *
+#from .. import datasets
 from matplotlib import pyplot as plt
 from PIL import Image
 
-info_datasets = [
-    (AAUZebraFishID, {}),
-    (AerialCattle2017, {}),
-    (ATRW, {}),
-    (BelugaID, {}),
-    (BirdIndividualID, {'variant': 'source'}),
-    (BirdIndividualID, {'variant': 'segmented'}),
-    (CTai, {}),
-    (CZoo, {}),
-    (Cows2021, {}),
-    (Drosophila, {}),
-    (FriesianCattle2015, {}),
-    (FriesianCattle2017, {}),
-    (GiraffeZebraID, {}),
-    (Giraffes, {}),
-    (HappyWhale, {}),
-    (HumpbackWhaleID, {}),
-    (HyenaID2022, {}),
-    (IPanda50, {}),
-    (LeopardID2022, {}),
-    (LionData, {}),
-    (MacaqueFaces, {}),
-    (NDD20, {}),
-    (NOAARightWhale, {}),
-    (NyalaData, {}),
-    (OpenCows2020, {}),
-    (SealID, {'variant': 'source'}),
-    (SealID, {'variant': 'segmented'}),
-    (SMALST, {}),
-    (StripeSpotter, {}),
-    (WhaleSharkID, {}),
-    (WNIGiraffes, {}),
-    (ZindiTurtleRecall, {})
-]
-
-def unique_datasets_list(datasets_list):
-    _, idx = np.unique([dataset[0].__name__ for dataset in datasets_list], return_index=True)
-    idx = np.sort(idx)
-
-    datasets_list_red = []
-    for i in idx:
-        datasets_list_red.append(datasets_list[i])
-
-    return datasets_list_red
-
-def add_paths(datasets_list, root_dataset, root_dataframe):
-    datasets_list_mod = []
-    for dataset in datasets_list:        
-        if len(dataset[1]) == 0:                        
-            df_path = os.path.join(root_dataframe, dataset[0].__name__ + '.pkl')
-        else:
-            df_path = os.path.join(root_dataframe, dataset[0].__name__ + '_' + dataset[1]['variant'] + '.pkl')
-        datasets_list_mod.append(dataset + (os.path.join(root_dataset, dataset[0].__name__),) + (df_path,))
-    return datasets_list_mod
-
-
-
-
 # Visualisation utils
-def bbox_segmentation(bbox):
-    return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
+def bbox_segmentation(bbox, theta=0):    
+    segmentation = [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
+    if theta != 0:
+        rot_matrix = np.array([[np.cos(theta), np.sin(theta)], [-np.sin(theta), np.cos(theta)]])
+        center = np.array([bbox[0]+bbox[2]/2, bbox[1]+bbox[3]/2])
+        segmentation = (np.reshape(segmentation, (-1,2)) - center) @ rot_matrix + center
+        segmentation = np.reshape(segmentation, (segmentation.size,))
+        segmentation = list(segmentation)
+    return segmentation
 
-def is_annotation_bbox(ann, bbox, tol=0):
-    bbox_ann = bbox_segmentation(bbox)    
+def is_annotation_bbox(ann, bbox, theta=0, tol=0):
+    bbox_ann = bbox_segmentation(bbox, theta)
     if len(ann) == len(bbox_ann):
         for x, y in zip(ann, bbox_ann):
             if abs(x-y) > tol:
@@ -95,10 +44,23 @@ def plot_bbox_segmentation(df, root, n):
             plot_image(img)
     if 'bbox' in df.columns:
         df_red = df[~df['bbox'].isnull()]
-        for i in range(n):
-            img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
-            segmentation = bbox_segmentation(df_red['bbox'].iloc[i])
-            plot_segmentation(img, segmentation)
+        if 'bbox_theta' in df.columns:
+            df_red1 = df_red[df_red['bbox_theta'] != 0]
+            for i in range(n):
+                img = Image.open(os.path.join(root, df_red1['path'].iloc[i]))
+                segmentation = bbox_segmentation(df_red1['bbox'].iloc[i], df_red1['bbox_theta'].iloc[i])
+                plot_segmentation(img, segmentation)
+
+            df_red2 = df_red[df_red['bbox_theta'] == 0]
+            for i in range(n):
+                img = Image.open(os.path.join(root, df_red2['path'].iloc[i]))
+                segmentation = bbox_segmentation(df_red2['bbox'].iloc[i], df_red2['bbox_theta'].iloc[i])
+                plot_segmentation(img, segmentation)
+        else:
+            for i in range(n):
+                img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+                segmentation = bbox_segmentation(df_red['bbox'].iloc[i])
+                plot_segmentation(img, segmentation)
     if 'segmentation' in df.columns:
         df_red = df[~df['segmentation'].isnull()]
         for i in range(n):
@@ -143,23 +105,43 @@ def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True)
             im_grid.paste(im, (pos_x,pos_y))
     display(im_grid) # TODO: remove display
 
-def display_statistics(dataset_factory, plot_images=True, display_dataframe=True, n=2):
-    # TODO: Move to utils
-    df_red = dataset_factory.df.loc[dataset_factory.df['identity'] != 'unknown', 'identity']
+def display_statistics(df, root, plot_images=True, display_dataframe=True, n=2):
+    df_red = df.loc[df['identity'] != 'unknown', 'identity']
     df_red.value_counts().reset_index(drop=True).plot()
         
-    if 'unknown' in list(dataset_factory.df['identity'].unique()):
-        n_identity = len(dataset_factory.df.identity.unique()) - 1
+    if 'unknown' in list(df['identity'].unique()):
+        n_identity = len(df.identity.unique()) - 1
     else:
-        n_identity = len(dataset_factory.df.identity.unique())
+        n_identity = len(df.identity.unique())
     print(f"Number of identitites          {n_identity}")
-    print(f"Number of all animals          {len(dataset_factory.df)}")
-    print(f"Number of identified animals   {sum(dataset_factory.df['identity'] != 'unknown')}")    
-    print(f"Number of unidentified animals {sum(dataset_factory.df['identity'] == 'unknown')}")
-    if 'video' in dataset_factory.df.columns:
-        print(f"Number of videos               {len(dataset_factory.df[['identity', 'video']].drop_duplicates())}")
+    print(f"Number of all animals          {len(df)}")
+    print(f"Number of identified animals   {sum(df['identity'] != 'unknown')}")    
+    print(f"Number of unidentified animals {sum(df['identity'] == 'unknown')}")
+    if 'video' in df.columns:
+        print(f"Number of videos               {len(df[['identity', 'video']].drop_duplicates())}")
+    if 'date' in df.columns:
+        span_years = compute_span(df) / (60*60*24*365.25)
+        if span_years > 1:
+            print(f"Images span                    %1.1f years" % (span_years))
+        elif span_years / 12 > 1:
+            print(f"Images span                    %1.1f months" % (span_years * 12))
+        else:
+            print(f"Images span                    %1.0f days" % (span_years * 365.25))
     if plot_images:
-        plot_bbox_segmentation(dataset_factory.df, dataset_factory.root, n)
-        plot_grid(dataset_factory.df, dataset_factory.root)
+        plot_bbox_segmentation(df, root, n)
+        plot_grid(df, root)
     if display_dataframe:
-        display(dataset_factory.df)  # TODO: remove display
+        display(df)  # TODO: remove display
+
+def get_dates(dates, frmt):
+    return np.array([datetime.datetime.strptime(date, frmt) for date in dates])
+
+def compute_span(df):
+    df = df.loc[~df['date'].isnull()]
+    dates = get_dates(df['date'].str[:10], '%Y-%m-%d')
+    identities = df['identity'].unique()
+    span = -np.inf
+    for identity in identities:
+        idx = df['identity'] == identity
+        span = np.maximum(span, (max(dates[idx]) - min(dates[idx])).total_seconds())    
+    return span
