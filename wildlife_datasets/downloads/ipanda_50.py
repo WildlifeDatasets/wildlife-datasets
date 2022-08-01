@@ -1,6 +1,6 @@
 import os
 import argparse
-#import gdown
+import gdown
 from . import utils
 
 def get_data(root):
