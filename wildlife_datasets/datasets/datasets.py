@@ -155,7 +155,7 @@ class DatasetFactoryWildMe(DatasetFactory):
             if len(ann['segmentation']) != 1:
                 raise(Exception('Wrong number of segmentations'))
             
-        create_dict = lambda i: {'identity': i['name'], 'bbox': i['bbox'], 'bbox_theta': i['theta'], 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
+        create_dict = lambda i: {'identity': i['name'], 'bbox': i['segmentation_bbox'], 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
 
         create_dict = lambda i: {'file_name': i['file_name'], 'image_id': i['id'], 'date': i['date_captured']}
@@ -173,7 +173,7 @@ class DatasetFactoryWildMe(DatasetFactory):
         # Remove segmentations which are the same as bounding boxes
         ii = []
         for i in range(len(df)):
-            ii.append(utils.analysis.is_annotation_bbox(df.loc[i]['segmentation'], df.loc[i]['bbox'], df.loc[i]['bbox_theta'], tol=3))
+            ii.append(utils.analysis.is_annotation_bbox(df.loc[i]['segmentation'], df.loc[i]['bbox'], 0, tol=3))
         df.loc[ii, 'segmentation'] = np.nan
 
         # Rename empty dates

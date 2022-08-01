@@ -15,6 +15,15 @@ def bbox_segmentation(bbox, theta=0):
         segmentation = list(segmentation)
     return segmentation
 
+def segmentation_bbox(segmentation):
+    x = segmentation[0::2]
+    y = segmentation[1::2]
+    x_min = np.min(x)
+    x_max = np.max(x)
+    y_min = np.min(y)
+    y_max = np.max(y)
+    return [x_min, y_min, x_max-x_min, y_max-y_min]
+
 def is_annotation_bbox(ann, bbox, theta=0, tol=0):
     bbox_ann = bbox_segmentation(bbox, theta)
     if len(ann) == len(bbox_ann):
