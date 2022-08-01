@@ -4,8 +4,10 @@ import numpy as np
 from typing import Tuple, Optional
 import hashlib
 import json
+import datetime
 
 from .. import downloads
+from .. import utils
 from .metadata import metadata
 
 
@@ -175,7 +177,7 @@ class DatasetFactoryWildMe(DatasetFactory):
         # Remove segmentations which are the same as bounding boxes
         ii = []
         for i in range(len(df)):
-            ii.append(is_annotation_bbox(df.loc[i]['segmentation'], df.loc[i]['bbox'], df.loc[i]['bbox_theta'], tol=3))
+            ii.append(utils.analysis.is_annotation_bbox(df.loc[i]['segmentation'], df.loc[i]['bbox'], df.loc[i]['bbox_theta'], tol=3))
         df.loc[ii, 'segmentation'] = np.nan
 
         # Rename empty dates
@@ -472,7 +474,7 @@ class BirdIndividualID(DatasetFactory):
             'split': 'unassigned',
         })
 
-        return self.finalize_df(pd.concat([df1, df2]))
+        return self.finalize_catalogue(pd.concat([df1, df2]))
 
 
 class CTai(DatasetFactory):
@@ -1486,7 +1488,7 @@ class WNIGiraffes(DatasetFactory):
         data['path'] = data['path'] + os.path.sep + data['file']
         data = data.drop(['file'], axis=1)
 
-        return self.finalize_df(data)
+        return self.finalize_catalogue(data)
 
     def extract_keypoints(self, row):
         keypoints = [row['keypoints']['too']['median_x'], row['keypoints']['too']['median_y'],
