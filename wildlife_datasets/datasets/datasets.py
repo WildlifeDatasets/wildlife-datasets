@@ -20,10 +20,6 @@ what they can represent (unlike segmentations and bbox) and lot of
 imporant information can get lost.
 
 TODO:
-I think standard attributes should always be in separate columns
- or always in 'attributes' column as dict.
-
-TODO:
 We should at least provide description on how we did the data
 processing and the reasoning behind it. Some datasets are especially
 dificult and not obvious
@@ -96,7 +92,7 @@ class DatasetFactory():
         # TODO: 3 columns are always there - order them first
         # TODO: rest alphabetical: df.sort_index(axis=1) + df.loc[:, cols]
 
-        default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'date', 'video', 'attributes']
+        default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'date', 'video']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
@@ -227,8 +223,13 @@ class AAUZebraFishID(DatasetFactory):
         bbox = pd.Series(list(bbox))
 
         attributes = data['Right,Turning,Occlusion,Glitch'].str.split(',', expand=True)
-        attributes.columns = ['Right', 'Turning', 'Occlusion', 'Glitch']
-        attributes = attributes.astype(bool).to_dict(orient='index')
+        attributes.drop([0], axis=1, inplace=True)
+        attributes.columns = ['turning', 'occlusion', 'glitch']
+        attributes = attributes.astype(int).astype(bool)
+
+        position = data['Right,Turning,Occlusion,Glitch'].str.split(',', expand=True)[0]
+        position.replace('1', 'right', inplace=True)
+        position.replace('0', 'left', inplace=True)
 
         video = data['Filename'].str.split('_',  expand=True)[0]
         video = video.astype('category').cat.codes
@@ -239,8 +240,9 @@ class AAUZebraFishID(DatasetFactory):
             'identity': data['Object ID'],
             'video': video,
             'bbox': bbox,
-            'attributes': attributes,
+            'position': position,
         })
+        df = df.join(attributes)
         return self.finalize_catalogue(df)
 
 
@@ -513,8 +515,6 @@ class CTai(DatasetFactory):
         path = os.path.join('chimpanzee_faces-master', 'datasets_cropped_chimpanzee_faces', 'data_CTai',)
         data = pd.read_csv(os.path.join(self.root, path, 'annotations_ctai.txt'), header=None, sep=' ')
         
-        data = data.rename(columns={5: 'age', 7: 'age_group', 9: 'gender'})
-        attributes = data[['age', 'age_group', 'gender']].to_dict(orient='index')
         keypoints = data[[11, 12, 14, 15, 17, 18, 20, 21, 23, 24]].to_numpy()
         keypoints[np.isinf(keypoints)] = np.nan
         keypoints = pd.Series(list(keypoints))
@@ -524,7 +524,9 @@ class CTai(DatasetFactory):
             'path': path + os.path.sep + data[1],
             'identity': data[3],
             'keypoints': keypoints,
-            'attributes': attributes
+            'age': data[5],
+            'age_group': data[7],
+            'gender': data[9],
         })
         for replace_tuple in replace_names:
             df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
@@ -558,8 +560,6 @@ class CZoo(DatasetFactory):
         path = os.path.join('chimpanzee_faces-master', 'datasets_cropped_chimpanzee_faces', 'data_CZoo',)
         data = pd.read_csv(os.path.join(self.root, path, 'annotations_czoo.txt'), header=None, sep=' ')
 
-        data = data.rename(columns={5: 'age', 7: 'age_group', 9: 'gender'})
-        attributes = data[['age', 'age_group', 'gender']].to_dict(orient='index')
         keypoints = data[[11, 12, 14, 15, 17, 18, 20, 21, 23, 24]].to_numpy()
         keypoints[np.isinf(keypoints)] = np.nan
         keypoints = pd.Series(list(keypoints))
@@ -569,7 +569,9 @@ class CZoo(DatasetFactory):
             'path': path + os.path.sep + data[1],
             'identity': data[3],
             'keypoints': keypoints,
-            'attributes': attributes
+            'age': data[5],
+            'age_group': data[7],
+            'gender': data[9],
         })
         return self.finalize_catalogue(df)
 
@@ -1073,15 +1075,14 @@ class MacaqueFaces(DatasetFactory):
     
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'MacaqueFaces_ImageInfo.csv'))
-        attributes = data[['Category']].to_dict(orient='index')
         date_taken = [datetime.datetime.strptime(date, '%d-%m-%Y').strftime('%Y-%m-%d') for date in data['DateTaken']]
         
         df = pd.DataFrame({
             'id': pd.Series(range(len(data))),
             'path': 'MacaqueFaces' + os.path.sep + data['Path'].str.strip(os.path.sep) + os.path.sep + data['FileName'],
             'identity': data['ID'],
-            'attributes': attributes,
-            'date': pd.Series(date_taken)
+            'date': pd.Series(date_taken),
+            'category': data['Category']
         })
         return self.finalize_catalogue(df)
 
@@ -1127,7 +1128,7 @@ class NDD20(DatasetFactory):
                 entries.append({
                     'identity': identity,
                     'species': region['region_attributes']['species'],
-                    'attributes': {'out of focus': np.nan},
+                    'out_of_focus': np.nan,
                     'file_name': data[key]['filename'],
                     'reg_type': region['shape_attributes']['name'],
                     'segmentation': segmentation,
@@ -1150,7 +1151,7 @@ class NDD20(DatasetFactory):
                 entries.append({
                     'identity': identity,
                     'species': 'WBD',
-                    'attributes': {'out of focus': region['region_attributes']['out of focus']},
+                    'out_of_focus': region['region_attributes']['out of focus'] == 'true',
                     'file_name': data[key]['filename'],
                     'reg_type': region['shape_attributes']['name'],
                     'segmentation': segmentation,
@@ -1411,14 +1412,14 @@ class StripeSpotter(DatasetFactory):
         data_aux = pd.read_csv(os.path.join(self.root, 'data', 'SightingData.csv'))
         data = pd.merge(data, data_aux, how='left', left_on='index', right_on='#imgindex')
         data.loc[data['animal_name'].isnull(), 'animal_name'] = 'unknown'
-        attributes = data[['flank', 'photo_quality']].to_dict(orient='index')
-
+        
         df = pd.DataFrame({
             'id': create_id(data['file']),
             'path':  data['path'] + os.path.sep + data['file'],
             'identity': data['animal_name'],
             'bbox': pd.Series([[int(a) for a in b.split(' ')] for b in data['roi']]),
-            'attributes': attributes,
+            'position': data['flank'],
+            'photo_quality': data['photo_quality'],
         })
         return self.finalize_catalogue(df)  
 
