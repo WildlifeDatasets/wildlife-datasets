@@ -79,21 +79,6 @@ class Split():
             idx_train[self.y == individual] = idx_train_class
         return self.df.iloc[idx_train], self.df.iloc[~idx_train]
 
-    def __set_split2(self, lcg, ratio_train, ratio_class_test, mode):
-        idx_permuted = lcg.random_permutation(self.n_class)
-        y_unique = self.y_unique[idx_permuted]
-        y_counts = self.y_counts[idx_permuted]        
-        i_end = np.where(np.cumsum(y_counts) >= np.round(ratio_class_test * self.n).astype(int))[0][0]
-        
-        if mode == 'open':
-            individual_train = np.array(y_unique[i_end:])            
-        elif mode == 'semiopen':
-            individual_train = np.array([], dtype=object)
-        else:
-            raise(Exception('Mode not known. Choose either open or semiopen.'))
-        individual_test = np.array(y_unique[:i_end])
-        return self.__set_split(lcg, ratio_train, individual_train, individual_test)
-
     def random_split(self, ratio_train):
         lcg = Lcg(self.seed, 1)
         n_train = np.round(ratio_train * self.n).astype(int)
@@ -108,10 +93,22 @@ class Split():
         individual_test = np.array([], dtype=object)
         return self.__set_split(lcg, ratio_train, individual_train, individual_test)
 
-    def semiopen_set_split(self, ratio_train, ratio_class_test):
+    def open_set_split(self, ratio_train, ratio_class_test):
         lcg = Lcg(self.seed, 3)
-        return self.__set_split2(lcg, ratio_train, ratio_class_test, 'semiopen')
+        idx_permuted = lcg.random_permutation(self.n_class)
+        y_unique = self.y_unique[idx_permuted]
+        y_counts = self.y_counts[idx_permuted]        
+        i_end = np.where(np.cumsum(y_counts) >= np.round(ratio_class_test * self.n).astype(int))[0][0]
+        individual_train = np.array([], dtype=object)
+        individual_test = np.array(y_unique[:i_end])
+        return self.__set_split(lcg, ratio_train, individual_train, individual_test)
 
-    def open_set_split(self, ratio_class_test):
+    def disjoint_set_split(self, ratio_class_test):
         lcg = Lcg(self.seed, 4)
-        return self.__set_split2(lcg, [], ratio_class_test, 'open')
+        idx_permuted = lcg.random_permutation(self.n_class)
+        y_unique = self.y_unique[idx_permuted]
+        y_counts = self.y_counts[idx_permuted]        
+        i_end = np.where(np.cumsum(y_counts) >= np.round(ratio_class_test * self.n).astype(int))[0][0]
+        individual_train = np.array(y_unique[i_end:])
+        individual_test = np.array(y_unique[:i_end])
+        return self.__set_split(lcg, ratio_train, individual_train, individual_test)
