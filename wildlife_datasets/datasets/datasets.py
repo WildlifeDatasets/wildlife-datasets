@@ -231,14 +231,14 @@ class AAUZebraFishID(DatasetFactory):
         video = data['Filename'].str.split('_',  expand=True)[0]
         video = video.astype('category').cat.codes
 
-        df = {
+        df = pd.DataFrame({
             'id': create_id(data['Object ID'].astype(str) + data['Filename']),
             'path': 'data' + os.path.sep + data['Filename'],
             'identity': data['Object ID'],
             'video': video,
             'bbox': bbox,
             'attributes': attributes,
-        }
+        })
         return self.finalize_catalogue(df)
 
 
@@ -451,28 +451,28 @@ class BirdIndividualID(DatasetFactory):
         identity = folders[2]
         species = folders[0]
 
-        df1 = {    
+        df1 = pd.DataFrame({    
             'id': create_id(split + data['file']),
             'path': prefix1 + os.path.sep + prefix2 + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'species': species,
             'split': split,
-        }
+        })
 
         # Add images without labels
         path = os.path.join(self.root, prefix1, 'New_birds')
         data = find_images(path)
         species = data['path']
 
-        df2 = {    
+        df2 = pd.DataFrame({    
             'id': create_id(data['file']),
             'path': prefix1 + os.path.sep + 'New_birds' + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': 'unknown',
             'species': species,
             'split': 'unassigned',
-        }
+        })
 
-        return self.finalize_df(pd.concat([pd.DataFrame(df1), pd.DataFrame(df2)]))
+        return self.finalize_df(pd.concat([df1, df2]))
 
 
 class CTai(DatasetFactory):
@@ -517,14 +517,13 @@ class CTai(DatasetFactory):
         keypoints[np.isinf(keypoints)] = np.nan
         keypoints = pd.Series(list(keypoints))
         
-        df = {
+        df = pd.DataFrame({
             'id': pd.Series(range(len(data))),
             'path': path + os.path.sep + data[1],
             'identity': data[3],
             'keypoints': keypoints,
             'attributes': attributes
-        }
-        df = pd.DataFrame(df)
+        })
         for replace_tuple in replace_names:
             df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
         return self.finalize_catalogue(df)
@@ -563,13 +562,13 @@ class CZoo(DatasetFactory):
         keypoints[np.isinf(keypoints)] = np.nan
         keypoints = pd.Series(list(keypoints))
         
-        df = {
+        df = pd.DataFrame({
             'id': pd.Series(range(len(data))),
             'path': path + os.path.sep + data[1],
             'identity': data[3],
             'keypoints': keypoints,
             'attributes': attributes
-        }
+        })
         return self.finalize_catalogue(df)
 
 
@@ -604,11 +603,11 @@ class Cows2021(DatasetFactory):
         folders = folders.loc[ii]
         data = data.loc[ii]
 
-        df = {
+        df = pd.DataFrame({
             'id': create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[4].astype(int),
-        }
+        })
         return self.finalize_catalogue(df)
 
 
@@ -686,12 +685,12 @@ class FriesianCattle2015(DatasetFactory):
 
         identity = folders[2].str.strip('Cow').astype(int)
 
-        df = {
+        df = pd.DataFrame({
             'id': create_id(identity.astype(str) + split + data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'split': split
-        }
+        })
         return self.finalize_catalogue(df)
 
 
@@ -789,11 +788,11 @@ class Giraffes(DatasetFactory):
         clusters = folders[0] == 'clusters'
         data, folders = data[clusters], folders[clusters]
 
-        df = {    
+        df = pd.DataFrame({    
             'id': create_id(data['file']),
             'path': path + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': folders[1],
-        }
+        })
         return self.finalize_catalogue(df)
 
 
@@ -828,13 +827,13 @@ class HappyWhale(DatasetFactory):
 
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
 
-        df1 = {
+        df1 = pd.DataFrame({
             'id': data['image'].str.split('.', expand=True)[0],
             'path': 'train_images' + os.path.sep + data['image'],
             'identity': data['individual_id'],
             'species': data['species'],
             'split': 'train'
-            }
+            })
         for replace_tuple in replace_names:
             df1['species'] = df1['species'].replace({replace_tuple[0]: replace_tuple[1]})
 
@@ -842,15 +841,15 @@ class HappyWhale(DatasetFactory):
         test_files = list(test_files['file'])
         test_files = pd.Series(np.sort(test_files))
 
-        df2 = {
+        df2 = pd.DataFrame({
             'id': test_files.str.split('.', expand=True)[0],
             'path': 'test_images' + os.path.sep + test_files,
             'identity': 'unknown',
             'species': np.nan,
             'split': 'test'
-            }
+            })
         
-        df = pd.concat([pd.DataFrame(df1), pd.DataFrame(df2)])    
+        df = pd.concat([df1, df2])    
         return self.finalize_catalogue(df)
 
 
@@ -881,25 +880,25 @@ class HumpbackWhaleID(DatasetFactory):
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
         data.loc[data['Id'] == 'new_whale', 'Id'] = 'unknown'
 
-        df1 = {
+        df1 = pd.DataFrame({
             'id': data['Image'].str.split('.', expand=True)[0],
             'path': 'train' + os.path.sep + data['Image'],
             'identity': data['Id'],
             'split': 'train'
-            }
+            })
         
         test_files = find_images(os.path.join(self.root, 'test'))
         test_files = list(test_files['file'])
         test_files = pd.Series(np.sort(test_files))
 
-        df2 = {
+        df2 = pd.DataFrame({
             'id': test_files.str.split('.', expand=True)[0],
             'path': 'test' + os.path.sep + test_files,
             'identity': 'unknown',
             'split': 'test'
-            }
+            })
         
-        df = pd.concat([pd.DataFrame(df1), pd.DataFrame(df2)])    
+        df = pd.concat([df1, df2])    
         return self.finalize_catalogue(df)
 
 
@@ -976,12 +975,12 @@ class IPanda50(DatasetFactory):
                         keypoints_part[4:8] = np.reshape(keypoints_file[1]['points'], 4)
             keypoints.append(list(keypoints_part))
         
-        df = {
+        df = pd.DataFrame({
             'id': create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1],
             'keypoints': keypoints
-            }
+            })
         return self.finalize_catalogue(df)
 
 
@@ -1039,11 +1038,11 @@ class LionData(DatasetFactory):
         data = find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
-        df = {
+        df = pd.DataFrame({
             'id': create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[3],
-        }
+        })
         return self.finalize_catalogue(df)
 
 
@@ -1075,13 +1074,13 @@ class MacaqueFaces(DatasetFactory):
         attributes = data[['Category']].to_dict(orient='index')
         date_taken = [datetime.datetime.strptime(date, '%d-%m-%Y').strftime('%Y-%m-%d') for date in data['DateTaken']]
         
-        df = {
+        df = pd.DataFrame({
             'id': pd.Series(range(len(data))),
             'path': 'MacaqueFaces' + os.path.sep + data['Path'].str.strip(os.path.sep) + os.path.sep + data['FileName'],
             'identity': data['ID'],
             'attributes': attributes,
             'date': pd.Series(date_taken)
-        }
+        })
         return self.finalize_catalogue(df)
 
 
@@ -1192,21 +1191,21 @@ class NOAARightWhale(DatasetFactory):
 
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
-        df1 = {
+        df1 = pd.DataFrame({
             #.str.strip('Cow').astype(int)
             'id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),
             'path': 'imgs' + os.path.sep + data['Image'],
             'identity': data['whaleID'],
-            }
+            })
 
         data = pd.read_csv(os.path.join(self.root, 'sample_submission.csv'))
-        df2 = {
+        df2 = pd.DataFrame({
             'id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),
             'path': 'imgs' + os.path.sep + data['Image'],
             'identity': 'unknown',
-            }
+            })
         
-        df = pd.concat([pd.DataFrame(df1), pd.DataFrame(df2)])    
+        df = pd.concat([df1, df2])    
         return self.finalize_catalogue(df)
 
 
@@ -1241,12 +1240,12 @@ class NyalaData(DatasetFactory):
         position[['left' in filename for filename in data['file']]] = 'left'
         position[['right' in filename for filename in data['file']]] = 'right'
 
-        df = {
+        df = pd.DataFrame({
             'id': create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'position': position,
-        }
+        })
         return self.finalize_catalogue(df)   
 
 
@@ -1285,12 +1284,12 @@ class OpenCows2020(DatasetFactory):
         assert len(split.unique()) == 2
         identity = folders[4]
 
-        df = {
+        df = pd.DataFrame({
             'id': create_id(identity.astype(str) + split + data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'split': split
-        }
+        })
         return self.finalize_catalogue(df)    
 
 
@@ -1327,13 +1326,13 @@ class SealID(DatasetFactory):
 
         data = pd.read_csv(os.path.join(self.root, 'full images', 'annotation.csv'))
 
-        df = {    
+        df = pd.DataFrame({    
             'id': data['file'].str.split('.', expand=True)[0],
             'path': 'full images' + os.path.sep + prefix + data['reid_split'] + os.path.sep + data['file'],
             'identity': data['class_id'].astype(int),
             'reid_split': data['reid_split'],
             'segmentation_split': data['segmentation_split'],
-        }
+        })
         return self.finalize_catalogue(df)
 
 
@@ -1412,13 +1411,13 @@ class StripeSpotter(DatasetFactory):
         data.loc[data['animal_name'].isnull(), 'animal_name'] = 'unknown'
         attributes = data[['flank', 'photo_quality']].to_dict(orient='index')
 
-        df = {
+        df = pd.DataFrame({
             'id': create_id(data['file']),
             'path':  data['path'] + os.path.sep + data['file'],
             'identity': data['animal_name'],
             'bbox': pd.Series([[int(a) for a in b.split(' ')] for b in data['roi']]),
             'attributes': attributes,
-        }
+        })
         return self.finalize_catalogue(df)  
 
 
@@ -1535,13 +1534,13 @@ class ZindiTurtleRecall(DatasetFactory):
         data = data.reset_index(drop=True)
         
         data.loc[data['turtle_id'].isnull(), 'turtle_id'] = 'unknown'
-        df = {
+        df = pd.DataFrame({
             'id': data['image_id'],
             'path': 'images' + os.path.sep + data['image_id'] + '.JPG',
             'identity': data['turtle_id'],
             'position': data['image_location'].str.lower(),
             'split': data['split'],
-        }
+        })
         return self.finalize_catalogue(df)
 
 
