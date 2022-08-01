@@ -21,7 +21,6 @@ class Lcg():
 class Split():
     # TODO add unknown to semi?
     # TODO what to do with csv files?
-    # TODO return indices
     def __init__(self, df, seed, keep_unknown=False):
         if keep_unknown:
             self.df = df
@@ -77,15 +76,7 @@ class Split():
                 idx_train_class = idx_train_class[idx_permutation]
 
             idx_train[self.y == individual] = idx_train_class
-        return self.df.iloc[idx_train], self.df.iloc[~idx_train]
-
-    def random_split(self, ratio_train):
-        lcg = Lcg(self.seed, 1)
-        n_train = np.round(ratio_train * self.n).astype(int)
-        idx_permuted = lcg.random_permutation(self.n)
-        idx_train = idx_permuted[:n_train]
-        idx_test = idx_permuted[n_train:]
-        return self.df.iloc[idx_train], self.df.iloc[idx_test]
+        return np.array(self.df.index.values)[idx_train], np.array(self.df.index.values)[~idx_train]
 
     def closed_set_split(self, ratio_train):
         lcg = Lcg(self.seed, 2)
@@ -111,4 +102,4 @@ class Split():
         i_end = np.where(np.cumsum(y_counts) >= np.round(ratio_class_test * self.n).astype(int))[0][0]
         individual_train = np.array(y_unique[i_end:])
         individual_test = np.array(y_unique[:i_end])
-        return self.__set_split(lcg, ratio_train, individual_train, individual_test)
+        return self.__set_split(lcg, [], individual_train, individual_test)
