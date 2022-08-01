@@ -64,7 +64,7 @@ class DatasetFactory():
 
         self.root = root
         if download and hasattr(self, 'download'): 
-            self.download.get_data(os.path.join(root, self.__class__.__name__))
+            self.download.get_data(root)
         if df is None:
             self.df = self.create_catalogue(**kwargs)
         else:
@@ -85,7 +85,7 @@ class DatasetFactory():
         df = self.remove_constant_columns(df)
         self.check_unique_id(df)
         self.check_files_exist(df['path'])
-        if segmentation in df.columns:
+        if 'segmentation' in df.columns:
             self.check_files_exist(df['segmentation'])
         return df
 
