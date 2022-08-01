@@ -4,12 +4,6 @@ from . import utils
 
 def get_data(root):
     with utils.data_directory(root):
-        directory = os.path.join(args.output, args.name)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        os.chdir(directory)
-
-        # Download and extract
         url = 'https://data.bris.ac.uk/datasets/2yizcfbkuv4352pzc32n54371r/2yizcfbkuv4352pzc32n54371r.zip'
         archive = '2yizcfbkuv4352pzc32n54371r.zip'
         utils.download_url(url, archive)

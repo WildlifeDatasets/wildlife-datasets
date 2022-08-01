@@ -4,12 +4,6 @@ from . import utils
 
 def get_data(root):
     with utils.data_directory(root):
-        directory = os.path.join(args.output, args.name)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        os.chdir(directory)
-
-        # Download and extract
         url = 'https://lilablobssc.blob.core.windows.net/giraffe-zebra-id/gzgc.coco.tar.gz'
         archive = 'gzgc.coco.tar.gz'
         utils.download_url(url, archive)

@@ -5,11 +5,6 @@ from . import utils
 
 def get_data(root):
     with utils.data_directory(root):
-        directory = os.path.join(args.output, args.name)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        os.chdir(directory)
-
         # Try automatic download
         #url = 'https://drive.google.com/uc?id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA'
         #archive = 'ferreira_et_al_2020.zip'

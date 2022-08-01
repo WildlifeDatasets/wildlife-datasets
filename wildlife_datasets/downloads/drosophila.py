@@ -4,11 +4,6 @@ from . import utils
 
 def get_data(root):
     with utils.data_directory(root):
-        directory = os.path.join(args.output, args.name)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        os.chdir(directory)
-
         downloads = [
             ('https://dataverse.scholarsportal.info/api/access/datafile/71066', 'week1_Day1_train_01to05.zip'),
             ('https://dataverse.scholarsportal.info/api/access/datafile/71067', 'week1_Day1_train_06to10.zip'),

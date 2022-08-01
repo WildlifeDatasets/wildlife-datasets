@@ -4,12 +4,6 @@ from . import utils
 
 def get_data(root):
     with utils.data_directory(root):
-        directory = os.path.join(args.output, args.name)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        os.chdir(directory)
-
-        # Download
         downloads = [
             ('https://storage.googleapis.com/dm-turtle-recall/train.csv', 'train.csv'),
             ('https://storage.googleapis.com/dm-turtle-recall/extra_images.csv', 'extra_images.csv'),
@@ -18,8 +12,6 @@ def get_data(root):
         ]
         for url, file in downloads:
             utils.download_url(url, file)
-
-        # Extract
         utils.extract_archive('images.tar', 'images', delete=True)
 
 

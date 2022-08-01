@@ -4,12 +4,6 @@ from . import utils
 
 def get_data(root):
     with utils.data_directory(root):
-        directory = os.path.join(args.output, args.name)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        os.chdir(directory)
-
-        # Download and extract
         url = 'https://data.ncl.ac.uk/ndownloader/files/22774175'
         archive = 'NDD20.zip'
         utils.download_url(url, archive)

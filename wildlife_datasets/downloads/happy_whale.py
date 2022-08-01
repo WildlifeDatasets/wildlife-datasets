@@ -4,12 +4,6 @@ from . import utils
 
 def get_data(root):
     with utils.data_directory(root):
-        directory = os.path.join(args.output, args.name)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        os.chdir(directory)
-
-        # Download and extract
         os.system(f"kaggle competitions download -c happy-whale-and-dolphin")
         utils.extract_archive('happy-whale-and-dolphin.zip', delete=True)
 

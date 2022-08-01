@@ -5,12 +5,8 @@ from . import utils
 
 def get_data(root):
     with utils.data_directory(root):
-        directory = os.path.join(args.output, args.name)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
+        # TODO does not work. it is specific for specific distros, isnt it?
         shutil.copy('../azcopy', os.path.join(directory, 'azcopy'))
-        os.chdir(directory)
 
         # Images
         url = "https://lilablobssc.blob.core.windows.net/wni-giraffes/wni_giraffes_train_images.zip"
