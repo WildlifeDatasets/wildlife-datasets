@@ -92,7 +92,7 @@ class DatasetFactory():
         # TODO: 3 columns are always there - order them first
         # TODO: rest alphabetical: df.sort_index(axis=1) + df.loc[:, cols]
 
-        default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'date', 'video']
+        default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'position', 'species', 'keypoints', 'date', 'video']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
@@ -1374,7 +1374,7 @@ class SMALST(DatasetFactory):
         masks = find_images(os.path.join(self.root, 'zebra_training_set', 'bgsub'))
         path = masks['file'].str.strip('zebra_')
         masks['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
-        masks['mask'] = 'zebra_training_set' + os.path.sep + 'bgsub' + os.path.sep + masks['file']
+        masks['segmentation'] = 'zebra_training_set' + os.path.sep + 'bgsub' + os.path.sep + masks['file']
         masks = masks.drop(['path', 'file'], axis=1)
 
         df = pd.merge(data, masks, on='id')

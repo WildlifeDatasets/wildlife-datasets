@@ -64,14 +64,16 @@ def plot_bbox_segmentation(df, root, n):
     if 'segmentation' in df.columns:
         df_red = df[~df['segmentation'].isnull()]
         for i in range(n):
-            img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
             segmentation = df_red['segmentation'].iloc[i]
-            plot_segmentation(img, segmentation)
-    if 'mask' in df.columns:
-        df_red = df[~df['mask'].isnull()]
-        for i in range(n):
-            img = Image.open(os.path.join(root, df_red['mask'].iloc[i]))
-            plot_image(img) 
+            if type(segmentation) == str:
+                img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+                plot_image(img)
+                img = Image.open(os.path.join(root, segmentation))
+                plot_image(img)
+            else:
+                img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+                segmentation = df_red['segmentation'].iloc[i]
+                plot_segmentation(img, segmentation)
 
 def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True):
     idx = np.random.permutation(len(df))[:n_rows*n_cols]
