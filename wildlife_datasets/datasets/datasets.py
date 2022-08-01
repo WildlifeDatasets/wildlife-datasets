@@ -134,7 +134,7 @@ class DatasetFactory():
         self.root = root
 
         if download and hasattr(self, 'download'): 
-            self.download.get_data(output=download_folder)
+            self.download.get_data(os.path.join(download_folder, self.__class__.__name__))
         if df is None:
             self.df = self.create_catalogue(**kwargs)
         else:
