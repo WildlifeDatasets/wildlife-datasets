@@ -55,16 +55,15 @@ def create_id(string_col: pd.Series) -> pd.Series:
 class DatasetFactory():
     def __init__(
         self, 
-        root: str,
+        root: str = 'data',
         df: Optional(pd.DataFrame) = None,
         download: bool = False,
-        download_folder: str = 'data',
         **kwargs
         ):
 
         self.root = root
         if download and hasattr(self, 'download'): 
-            self.download.get_data(os.path.join(download_folder, self.__class__.__name__))
+            self.download.get_data(os.path.join(root, self.__class__.__name__))
         if df is None:
             self.df = self.create_catalogue(**kwargs)
         else:
@@ -100,6 +99,8 @@ class DatasetFactory():
         df = self.remove_constant_columns(df)
         self.check_unique_id(df)
         self.check_files_exist(df['path'])
+        if segmentation in df.columns:
+            self.check_files_exist(df['segmentation'])
         return df
 
     def reorder_df(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -144,7 +145,7 @@ class DatasetFactory():
         Check if paths in given column exist.
         '''
         for path in col:
-            if not os.path.exists(os.path.join(self.root, path)):
+            if type(path) == str and not os.path.exists(os.path.join(self.root, path)):
                 raise(Exception('Path does not exist:' + os.path.join(self.root, path)))
 
 
@@ -233,7 +234,6 @@ class SMALST(DatasetFactory):
         masks = masks.drop(['path', 'file'], axis=1)
 
         df = pd.merge(data, masks, on='id')
-        self.check_files_exist(df['mask'])
         return self.finalize_catalogue(df)
 
 
