@@ -4,3 +4,4 @@ venv/
 __pycache__/
 .ipynb_checkpoints/
 *.out
+ibeis/
