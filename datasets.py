@@ -7,259 +7,6 @@ import datetime
 from matplotlib import pyplot as plt
 from PIL import Image
 
-
-def find_images(root, img_extensions = ('.png', '.jpg', '.jpeg')):
-    data = []
-    for path, directories, files in os.walk(root):
-        for file in files:
-            if file.lower().endswith(tuple(img_extensions)):
-                data.append({'path': os.path.relpath(path, start=root), 'file': file})
-    return pd.DataFrame(data)
-
-def create_id(string):
-    entity_id = string.apply(lambda x: hashlib.md5(x.encode()).hexdigest()[:16])
-    assert len(entity_id.unique()) == len(entity_id)
-    return entity_id
-
-def bbox_segmentation(bbox, theta=0):    
-    segmentation = [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
-    if theta != 0:
-        rot_matrix = np.array([[np.cos(theta), np.sin(theta)], [-np.sin(theta), np.cos(theta)]])
-        center = np.array([bbox[0]+bbox[2]/2, bbox[1]+bbox[3]/2])
-        segmentation = (np.reshape(segmentation, (-1,2)) - center) @ rot_matrix + center
-        segmentation = np.reshape(segmentation, (segmentation.size,))
-        segmentation = list(segmentation)
-    return segmentation
-
-def is_annotation_bbox(ann, bbox, theta=0, tol=0):
-    bbox_ann = bbox_segmentation(bbox, theta)
-    if len(ann) == len(bbox_ann):
-        for x, y in zip(ann, bbox_ann):
-            if abs(x-y) > tol:
-                return False
-    else:
-        return False
-    return True
-
-def plot_image(img):
-    fig, ax = plt.subplots()
-    ax.imshow(img)
-    plt.show()
-    
-def plot_segmentation(img, segmentation):
-    if not np.isnan(segmentation).all():
-        fig, ax = plt.subplots()
-        ax.imshow(img)
-        ax.plot(segmentation[0::2], segmentation[1::2], '--', linewidth=5, color='firebrick')
-        plt.show()
-    
-def plot_bbox_segmentation(df, root, n):
-    if 'bbox' not in df.columns and 'segmentation' not in df.columns:
-        for i in range(n):
-            img = Image.open(os.path.join(root, df['path'][i]))
-            plot_image(img)
-    if 'bbox' in df.columns:
-        df_red = df[~df['bbox'].isnull()]
-        if 'bbox_theta' in df.columns:
-            df_red1 = df_red[df_red['bbox_theta'] != 0]
-            for i in range(n):
-                img = Image.open(os.path.join(root, df_red1['path'].iloc[i]))
-                segmentation = bbox_segmentation(df_red1['bbox'].iloc[i], df_red1['bbox_theta'].iloc[i])
-                plot_segmentation(img, segmentation)
-
-            df_red2 = df_red[df_red['bbox_theta'] == 0]
-            for i in range(n):
-                img = Image.open(os.path.join(root, df_red2['path'].iloc[i]))
-                segmentation = bbox_segmentation(df_red2['bbox'].iloc[i], df_red2['bbox_theta'].iloc[i])
-                plot_segmentation(img, segmentation)
-        else:
-            for i in range(n):
-                img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
-                segmentation = bbox_segmentation(df_red['bbox'].iloc[i])
-                plot_segmentation(img, segmentation)
-    if 'segmentation' in df.columns:
-        df_red = df[~df['segmentation'].isnull()]
-        for i in range(n):
-            img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
-            segmentation = df_red['segmentation'].iloc[i]
-            plot_segmentation(img, segmentation)
-    if 'mask' in df.columns:
-        df_red = df[~df['mask'].isnull()]
-        for i in range(n):
-            img = Image.open(os.path.join(root, df_red['mask'].iloc[i]))
-            plot_image(img) 
-
-def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True):
-    idx = np.random.permutation(len(df))[:n_rows*n_cols]
-
-    ratios = []
-    for k in idx:
-        file_path = os.path.join(root, df['path'][k])
-        im = Image.open(file_path)
-        ratios.append(im.size[0] / im.size[1])
-
-    ratio = np.median(ratios)
-    if ratio > 1:    
-        img_w, img_h = int(img_min*ratio), int(img_min)
-    else:
-        img_w, img_h = int(img_min), int(img_min/ratio)
-
-    im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, n_rows*img_h + (n_rows-1)*offset))
-
-    for i in range(n_rows):
-        for j in range(n_cols):
-            k = n_cols*i + j
-            file_path = os.path.join(root, df['path'][idx[k]])
-
-            im = Image.open(file_path)
-            if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
-                im = im.transpose(Image.ROTATE_90)
-            im.thumbnail((img_w,img_h))
-
-            pos_x = j*img_w + j*offset
-            pos_y = i*img_h + i*offset        
-            im_grid.paste(im, (pos_x,pos_y))
-
-    display(im_grid)
-
-def get_dates(dates, frmt):
-    return np.array([datetime.datetime.strptime(date, frmt) for date in dates])
-
-def compute_span(df):
-    df = df.loc[~df['date'].isnull()]
-    dates = get_dates(df['date'].str[:10], '%Y-%m-%d')
-    identities = df['identity'].unique()
-    span = -np.inf
-    for identity in identities:
-        idx = df['identity'] == identity
-        span = np.maximum(span, (max(dates[idx]) - min(dates[idx])).total_seconds())    
-    return span
-
-
-
-
-class DatasetFactory():
-    def __init__(self, root, df, save=True, **kwargs):
-        self.root = root
-        if df is None:
-            self.df = self.create_catalogue(**kwargs)
-        else:
-            self.df = df
-
-    @classmethod
-    def from_file(cls, root, df_path, save=True, overwrite=False, **kwargs):
-        if overwrite or not os.path.exists(df_path):
-            df = None
-            instance = cls(root, df, **kwargs)
-            if save:
-                instance.df.to_pickle(df_path)
-        else:
-            df = pd.read_pickle(df_path)
-            instance = cls(root, df, **kwargs)
-        return instance
-
-    def create_catalogue(self):
-        raise NotImplementedError()
-
-    def finalize_df(self, df):
-        if type(df) is dict:
-            df = pd.DataFrame(df)
-        df = self.reorder_df(df)
-        df = self.remove_columns(df)
-        self.check_unique_id(df)
-        self.check_split_values(df)
-        self.check_files_exist(df)
-        self.check_masks_exist(df)
-        return df
-
-    def display_statistics(self, plot_images=True, display_dataframe=True, n=2):
-        df_red = self.df.loc[self.df['identity'] != 'unknown', 'identity']
-        df_red.value_counts().reset_index(drop=True).plot()
-            
-        if 'unknown' in list(self.df['identity'].unique()):
-            n_identity = len(self.df.identity.unique()) - 1
-        else:
-            n_identity = len(self.df.identity.unique())
-        print(f"Number of identitites          {n_identity}")
-        print(f"Number of all animals          {len(self.df)}")
-        print(f"Number of identified animals   {sum(self.df['identity'] != 'unknown')}")    
-        print(f"Number of unidentified animals {sum(self.df['identity'] == 'unknown')}")
-        if 'video' in self.df.columns:
-            print(f"Number of videos               {len(self.df[['identity', 'video']].drop_duplicates())}")
-        if 'date' in self.df.columns:
-            span_years = compute_span(self.df) / (60*60*24*365.25)
-            if span_years > 1:
-                print(f"Images span                    %1.1f years" % (span_years))
-            elif span_years / 12 > 1:
-                print(f"Images span                    %1.1f months" % (span_years * 12))
-            else:
-                print(f"Images span                    %1.0f days" % (span_years * 365.25))
-        if plot_images:
-            plot_bbox_segmentation(self.df, self.root, n)
-            plot_grid(self.df, self.root)
-        if display_dataframe:
-            display(self.df)
-
-    def image_sizes(self):
-        '''
-        Return width and height of all images.
-
-        It is slow for large datasets.
-        '''
-        paths = self.root + os.path.sep + self.df['path']
-        data = []
-        for path in paths:
-            img = Image.open(path)
-            data.append({'width': img.size[0], 'height': img.size[1]})
-        return pd.DataFrame(data)
-
-    def reorder_df(self, df):
-        default_order = ['id', 'path', 'identity', 'bbox', 'bbox_theta', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'date', 'video', 'attributes']
-        df_names = list(df.columns)
-        col_names = []
-        for name in default_order:
-            if name in df_names:
-                col_names.append(name)
-        for name in df_names:
-            if name not in default_order:
-                col_names.append(name)
-        
-        df = df.sort_values('id').reset_index(drop=True)
-        return df.reindex(columns=col_names)
-
-    def remove_columns(self, df):
-        for df_name in list(df.columns):
-            if df[df_name].astype('str').nunique() == 1:
-                df = df.drop([df_name], axis=1)
-        return df
-        
-    def check_unique_id(self, df):
-        if len(df['id'].unique()) != len(df):
-            raise(Exception('Image ID not unique.'))
-
-    def check_split_values(self, df):
-        allowed_values = ['train', 'test', 'val', 'database', 'query', 'unassigned']
-        if 'split' in list(df.columns):
-            split_values = list(df['split'].unique())
-            for split_value in split_values:
-                if split_value not in allowed_values:
-                    raise(Exception('Split value not allowed:' + split_value))
-
-    def check_files_exist(self, df):
-        for path in df['path']:
-            if not os.path.exists(os.path.join(self.root, path)):
-                raise(Exception('Path does not exist:' + os.path.join(self.root, path)))
-
-    def check_masks_exist(self, df):
-        if 'mask' in df.columns:
-            for path in df['mask']:
-                if not os.path.exists(os.path.join(self.root, path)):
-                    raise(Exception('Path does not exist:' + os.path.join(self.root, path)))
-
-
-
-
-
 class DatasetFactoryWildMe(DatasetFactory):
     def create_catalogue_wildme(self, prefix, year):
         path_json = os.path.join(prefix + '.coco', 'annotations', 'instances_train' + str(year) + '.json')
@@ -1119,12 +866,10 @@ class LionData(DatasetFactory):
         data = find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
-        identity = folders[3]
-
         df = {
             'id': create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
-            'identity': identity,
+            'identity': folders[3],
         }
         return self.finalize_df(df)
 
@@ -1431,16 +1176,16 @@ class SMALST(DatasetFactory):
     def create_catalogue(self):
         data = find_images(os.path.join(self.root, 'zebra_training_set', 'images'))
 
-        path0 = data['file'].str.strip('zebra_')
-        data['identity'] = path0.str[0]
-        data['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path0]
+        path = data['file'].str.strip('zebra_')
+        data['identity'] = path.str[0]
+        data['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
         data['path'] = 'zebra_training_set' + os.path.sep + 'images' + os.path.sep + data['file']
         data = data.drop(['file'], axis=1)
 
         masks = find_images(os.path.join(self.root, 'zebra_training_set', 'bgsub'))
 
-        path0 = masks['file'].str.strip('zebra_')
-        masks['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path0]
+        path = masks['file'].str.strip('zebra_')
+        masks['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
         masks['mask'] = 'zebra_training_set' + os.path.sep + 'bgsub' + os.path.sep + masks['file']
         masks = masks.drop(['path', 'file'], axis=1)
 
