@@ -55,24 +55,24 @@ def plot_bbox_segmentation(df, root, n):
         df_red = df[~df['bbox'].isnull()]
         if 'bbox_theta' in df.columns:
             df_red1 = df_red[df_red['bbox_theta'] != 0]
-            for i in range(n):
+            for i in range(min(n, len(df_red1))):
                 img = Image.open(os.path.join(root, df_red1['path'].iloc[i]))
                 segmentation = bbox_segmentation(df_red1['bbox'].iloc[i], df_red1['bbox_theta'].iloc[i])
                 plot_segmentation(img, segmentation)
 
             df_red2 = df_red[df_red['bbox_theta'] == 0]
-            for i in range(n):
+            for i in range(min(n, len(df_red2))):
                 img = Image.open(os.path.join(root, df_red2['path'].iloc[i]))
                 segmentation = bbox_segmentation(df_red2['bbox'].iloc[i], df_red2['bbox_theta'].iloc[i])
                 plot_segmentation(img, segmentation)
         else:
-            for i in range(n):
+            for i in range(min(n, len(df_red))):
                 img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
                 segmentation = bbox_segmentation(df_red['bbox'].iloc[i])
                 plot_segmentation(img, segmentation)
     if 'segmentation' in df.columns:
         df_red = df[~df['segmentation'].isnull()]
-        for i in range(n):
+        for i in range(min(n, len(df_red))):
             segmentation = df_red['segmentation'].iloc[i]
             if type(segmentation) == str:
                 img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
