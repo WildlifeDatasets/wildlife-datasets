@@ -4,16 +4,9 @@ import datetime
 from matplotlib import pyplot as plt
 from PIL import Image
 
-# Visualisation utils
-def bbox_segmentation(bbox, theta=0):    
-    segmentation = [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
-    if theta != 0:
-        rot_matrix = np.array([[np.cos(theta), np.sin(theta)], [-np.sin(theta), np.cos(theta)]])
-        center = np.array([bbox[0]+bbox[2]/2, bbox[1]+bbox[3]/2])
-        segmentation = (np.reshape(segmentation, (-1,2)) - center) @ rot_matrix + center
-        segmentation = np.reshape(segmentation, (segmentation.size,))
-        segmentation = list(segmentation)
-    return segmentation
+
+def bbox_segmentation(bbox):
+    return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
 
 def segmentation_bbox(segmentation):
     x = segmentation[0::2]
@@ -24,8 +17,8 @@ def segmentation_bbox(segmentation):
     y_max = np.max(y)
     return [x_min, y_min, x_max-x_min, y_max-y_min]
 
-def is_annotation_bbox(ann, bbox, theta=0, tol=0):
-    bbox_ann = bbox_segmentation(bbox, theta)
+def is_annotation_bbox(ann, bbox, tol=0):
+    bbox_ann = bbox_segmentation(bbox)
     if len(ann) == len(bbox_ann):
         for x, y in zip(ann, bbox_ann):
             if abs(x-y) > tol:
