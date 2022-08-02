@@ -84,7 +84,7 @@ def plot_bbox_segmentation(df, root, n):
                 segmentation = df_red['segmentation'].iloc[i]
                 plot_segmentation(img, segmentation)
 
-def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True):
+def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True, display_data=False):
     idx = np.random.permutation(len(df))[:n_rows*n_cols]
 
     ratios = []
@@ -114,9 +114,11 @@ def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True)
             pos_x = j*img_w + j*offset
             pos_y = i*img_h + i*offset        
             im_grid.paste(im, (pos_x,pos_y))
-    display(im_grid) # TODO: remove display
+    if display_data:
+        display(im_grid)
+    return im_grid
 
-def display_statistics(df, root, plot_images=True, display_dataframe=True, n=2):
+def display_statistics(df, root, display_data=False, n=2, **kwargs):
     df_red = df.loc[df['identity'] != 'unknown', 'identity']
     df_red.value_counts().reset_index(drop=True).plot()
         
@@ -138,11 +140,10 @@ def display_statistics(df, root, plot_images=True, display_dataframe=True, n=2):
             print(f"Images span                    %1.1f months" % (span_years * 12))
         else:
             print(f"Images span                    %1.0f days" % (span_years * 365.25))
-    if plot_images:
+    if display_data:
         plot_bbox_segmentation(df, root, n)
-        plot_grid(df, root)
-    if display_dataframe:
-        display(df)  # TODO: remove display
+        plot_grid(df, root, display_data=display_data, **kwargs)
+        display(df)
 
 def get_dates(dates, frmt):
     return np.array([datetime.datetime.strptime(date, frmt) for date in dates])
