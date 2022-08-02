@@ -1,6 +1,6 @@
 import os
 import numpy as np
-#from .. import datasets
+import datetime
 from matplotlib import pyplot as plt
 from PIL import Image
 
@@ -14,6 +14,15 @@ def bbox_segmentation(bbox, theta=0):
         segmentation = np.reshape(segmentation, (segmentation.size,))
         segmentation = list(segmentation)
     return segmentation
+
+def segmentation_bbox(segmentation):
+    x = segmentation[0::2]
+    y = segmentation[1::2]
+    x_min = np.min(x)
+    x_max = np.max(x)
+    y_min = np.min(y)
+    y_max = np.max(y)
+    return [x_min, y_min, x_max-x_min, y_max-y_min]
 
 def is_annotation_bbox(ann, bbox, theta=0, tol=0):
     bbox_ann = bbox_segmentation(bbox, theta)
@@ -64,14 +73,16 @@ def plot_bbox_segmentation(df, root, n):
     if 'segmentation' in df.columns:
         df_red = df[~df['segmentation'].isnull()]
         for i in range(n):
-            img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
             segmentation = df_red['segmentation'].iloc[i]
-            plot_segmentation(img, segmentation)
-    if 'mask' in df.columns:
-        df_red = df[~df['mask'].isnull()]
-        for i in range(n):
-            img = Image.open(os.path.join(root, df_red['mask'].iloc[i]))
-            plot_image(img) 
+            if type(segmentation) == str:
+                img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+                plot_image(img)
+                img = Image.open(os.path.join(root, segmentation))
+                plot_image(img)
+            else:
+                img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+                segmentation = df_red['segmentation'].iloc[i]
+                plot_segmentation(img, segmentation)
 
 def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True):
     idx = np.random.permutation(len(df))[:n_rows*n_cols]

@@ -4,8 +4,10 @@ import numpy as np
 from typing import Tuple, Optional
 import hashlib
 import json
+import datetime
 
 from .. import downloads
+from .. import utils
 from .metadata import metadata
 
 
@@ -16,10 +18,6 @@ TODO:
 I would represent keypoints as they are. There is no unified notation
 what they can represent (unlike segmentations and bbox) and lot of
 imporant information can get lost.
-
-TODO:
-I think standard attributes should always be in separate columns
- or always in 'attributes' column as dict.
 
 TODO:
 We should at least provide description on how we did the data
@@ -94,7 +92,7 @@ class DatasetFactory():
         # TODO: 3 columns are always there - order them first
         # TODO: rest alphabetical: df.sort_index(axis=1) + df.loc[:, cols]
 
-        default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'mask', 'position', 'species', 'keypoints', 'date', 'video', 'attributes']
+        default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'position', 'species', 'keypoints', 'date', 'video']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
@@ -157,7 +155,7 @@ class DatasetFactoryWildMe(DatasetFactory):
             if len(ann['segmentation']) != 1:
                 raise(Exception('Wrong number of segmentations'))
             
-        create_dict = lambda i: {'identity': i['name'], 'bbox': i['bbox'], 'bbox_theta': i['theta'], 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
+        create_dict = lambda i: {'identity': i['name'], 'bbox': i['segmentation_bbox'], 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
 
         create_dict = lambda i: {'file_name': i['file_name'], 'image_id': i['id'], 'date': i['date_captured']}
@@ -175,7 +173,7 @@ class DatasetFactoryWildMe(DatasetFactory):
         # Remove segmentations which are the same as bounding boxes
         ii = []
         for i in range(len(df)):
-            ii.append(is_annotation_bbox(df.loc[i]['segmentation'], df.loc[i]['bbox'], df.loc[i]['bbox_theta'], tol=3))
+            ii.append(utils.analysis.is_annotation_bbox(df.loc[i]['segmentation'], df.loc[i]['bbox'], 0, tol=3))
         df.loc[ii, 'segmentation'] = np.nan
 
         # Rename empty dates
@@ -190,25 +188,7 @@ class DatasetFactoryWildMe(DatasetFactory):
 
 class AAUZebraFishID(DatasetFactory):
     download = downloads.aau_zebrafish_id
-
-    licenses = 'Attribution 4.0 International (CC BY 4.0)'
-    licenses_url = 'https://creativecommons.org/licenses/by/4.0/'
-    url = 'https://www.kaggle.com/datasets/aalborguniversity/aau-zebrafish-reid'
-    cite = 'bruslund2020re'
-    animals = ('zebrafish')
-    real_animals = True    
-    year = 2020
-    reported_n_total = 6672
-    reported_n_identified = 6672
-    reported_n_photos = 2224
-    reported_n_individuals = 6 
-    wild = False
-    clear_photos = True
-    pose = 'double' # from either side
-    unique_pattern = False
-    from_video = True
-    full_frame = True
-    span = '1 day'
+    metadata = metadata['AAUZebraFishID']
     
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'annotations.csv'), sep=';')
@@ -225,8 +205,13 @@ class AAUZebraFishID(DatasetFactory):
         bbox = pd.Series(list(bbox))
 
         attributes = data['Right,Turning,Occlusion,Glitch'].str.split(',', expand=True)
-        attributes.columns = ['Right', 'Turning', 'Occlusion', 'Glitch']
-        attributes = attributes.astype(bool).to_dict(orient='index')
+        attributes.drop([0], axis=1, inplace=True)
+        attributes.columns = ['turning', 'occlusion', 'glitch']
+        attributes = attributes.astype(int).astype(bool)
+
+        position = data['Right,Turning,Occlusion,Glitch'].str.split(',', expand=True)[0]
+        position.replace('1', 'right', inplace=True)
+        position.replace('0', 'left', inplace=True)
 
         video = data['Filename'].str.split('_',  expand=True)[0]
         video = video.astype('category').cat.codes
@@ -237,33 +222,15 @@ class AAUZebraFishID(DatasetFactory):
             'identity': data['Object ID'],
             'video': video,
             'bbox': bbox,
-            'attributes': attributes,
+            'position': position,
         })
+        df = df.join(attributes)
         return self.finalize_catalogue(df)
 
 
 class AerialCattle2017(DatasetFactory):
     download = downloads.aerial_cattle_2017
-    #metadata = metadata['AerialCattle2017']
-
-    licenses = 'Non-Commercial Government Licence for public sector information'
-    licenses_url = 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/'
-    url = 'https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh'
-    cite = 'andrew2017visual'
-    animals = ('Friesian cattle')
-    real_animals = True    
-    year = 2017
-    reported_n_total = 46340
-    reported_n_identified = 46340
-    reported_n_photos = 46340
-    reported_n_individuals = 23
-    wild = False
-    clear_photos = True
-    pose = 'single' # from the top
-    unique_pattern = True
-    from_video = True
-    full_frame = False
-    span = '1 day'
+    metadata = metadata['AerialCattle2017']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = find_images(self.root)
@@ -280,25 +247,7 @@ class AerialCattle2017(DatasetFactory):
 
 class ATRW(DatasetFactory):
     download = downloads.atrw
-
-    licenses = 'Attribution-NonCommercial-ShareAlike 4.0 International'
-    licenses_url = 'https://creativecommons.org/licenses/by-nc-sa/4.0/'
-    url = 'https://lila.science/datasets/atrw'
-    cite = 'li2019atrw'
-    animals = ('amur tiger')
-    real_animals = True    
-    year = 2019
-    reported_n_total = 9496
-    reported_n_identified = 3649
-    reported_n_photos = 8076
-    reported_n_individuals = 92
-    wild = False # Chinese zoos
-    clear_photos = False # occlussions, shadows
-    pose = 'double' # from either side
-    unique_pattern = True
-    from_video = True
-    full_frame = True
-    span = 'short'
+    metadata = metadata['ATRW']
 
     def create_catalogue(self) -> pd.DataFrame:
         ids = pd.read_csv(os.path.join(self.root, 'atrw_anno_reid_train', 'reid_list_train.csv'),
@@ -376,25 +325,7 @@ class ATRW(DatasetFactory):
     
 class BelugaID(DatasetFactoryWildMe):
     download = downloads.beluga_id
-
-    licenses = 'Attribution-NonCommercial-NoDerivs License'
-    licenses_url = 'http://creativecommons.org/licenses/by-nc-nd/2.0/'
-    url = 'https://lila.science/datasets/beluga-id-2022/'
-    cite = 'belugaid'
-    animals = ('beluga whale')
-    real_animals = True    
-    year = 2022
-    reported_n_total = 5902
-    reported_n_identified = 5902
-    reported_n_photos = 5902
-    reported_n_individuals = 788
-    wild = True
-    clear_photos = True
-    pose = 'single' # from the top
-    unique_pattern = False
-    from_video = False
-    full_frame = False
-    span = '2.1 years'
+    metadata = metadata['BelugaID']
 
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('beluga', 2022)
@@ -403,25 +334,7 @@ class BelugaID(DatasetFactoryWildMe):
 
 class BirdIndividualID(DatasetFactory):
     download = downloads.bird_individual_id
-
-    licenses = None
-    licenses_url = None
-    url = 'https://github.com/AndreCFerreira/Bird_individualID'
-    cite = 'ferreira2020deep'
-    animals = ('sociable weaver', 'great tit', 'zebra finch')
-    real_animals = True    
-    year = 2019
-    reported_n_total = 27038+7605+16000 # plus some test
-    reported_n_identified = 27038+7605+16000 # plus some test
-    reported_n_photos = 27038+7605+16000 # plus some test
-    reported_n_individuals = 30+10+10 # plus some test
-    wild = False
-    clear_photos = True
-    pose = 'single' # from the top
-    unique_pattern = False
-    from_video = False
-    full_frame = True
-    span = '15 days'
+    metadata = metadata['BirdIndividualID']
 
     def create_catalogue(self, variant='source'):
         if variant == 'source':
@@ -472,30 +385,12 @@ class BirdIndividualID(DatasetFactory):
             'split': 'unassigned',
         })
 
-        return self.finalize_df(pd.concat([df1, df2]))
+        return self.finalize_catalogue(pd.concat([df1, df2]))
 
 
 class CTai(DatasetFactory):
     download = downloads.c_tai
-
-    licenses = None
-    licenses_url = None
-    url = 'https://github.com/cvjena/chimpanzee_faces'
-    cite = 'freytag2016chimpanzee'
-    animals = ('chimpanzee')
-    real_animals = True    
-    year = 2016
-    reported_n_total = 5078
-    reported_n_identified = 5078
-    reported_n_photos = 5078
-    reported_n_individuals = 78 
-    wild = True
-    clear_photos = True
-    pose = 'single' # from the front
-    unique_pattern = False
-    from_video = False
-    full_frame = False
-    span = 'unknown'
+    metadata = metadata['CTai']
 
     def create_catalogue(self) -> pd.DataFrame:
         replace_names = [
@@ -511,8 +406,6 @@ class CTai(DatasetFactory):
         path = os.path.join('chimpanzee_faces-master', 'datasets_cropped_chimpanzee_faces', 'data_CTai',)
         data = pd.read_csv(os.path.join(self.root, path, 'annotations_ctai.txt'), header=None, sep=' ')
         
-        data = data.rename(columns={5: 'age', 7: 'age_group', 9: 'gender'})
-        attributes = data[['age', 'age_group', 'gender']].to_dict(orient='index')
         keypoints = data[[11, 12, 14, 15, 17, 18, 20, 21, 23, 24]].to_numpy()
         keypoints[np.isinf(keypoints)] = np.nan
         keypoints = pd.Series(list(keypoints))
@@ -522,7 +415,9 @@ class CTai(DatasetFactory):
             'path': path + os.path.sep + data[1],
             'identity': data[3],
             'keypoints': keypoints,
-            'attributes': attributes
+            'age': data[5],
+            'age_group': data[7],
+            'gender': data[9],
         })
         for replace_tuple in replace_names:
             df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
@@ -532,32 +427,12 @@ class CTai(DatasetFactory):
 
 class CZoo(DatasetFactory):
     download = downloads.c_zoo
-
-    licenses = None
-    licenses_url = None
-    url = 'https://github.com/cvjena/chimpanzee_faces'
-    cite = 'freytag2016chimpanzee'
-    animals = ('chimpanzee')
-    real_animals = True    
-    year = 2016
-    reported_n_total = 2109
-    reported_n_identified = 2109
-    reported_n_photos = 2109
-    reported_n_individuals = 24
-    wild = False
-    clear_photos = True
-    pose = 'single' # from the front
-    unique_pattern = False
-    from_video = False
-    full_frame = False
-    span = 'unknown'
+    metadata = metadata['CZoo']
 
     def create_catalogue(self) -> pd.DataFrame:
         path = os.path.join('chimpanzee_faces-master', 'datasets_cropped_chimpanzee_faces', 'data_CZoo',)
         data = pd.read_csv(os.path.join(self.root, path, 'annotations_czoo.txt'), header=None, sep=' ')
 
-        data = data.rename(columns={5: 'age', 7: 'age_group', 9: 'gender'})
-        attributes = data[['age', 'age_group', 'gender']].to_dict(orient='index')
         keypoints = data[[11, 12, 14, 15, 17, 18, 20, 21, 23, 24]].to_numpy()
         keypoints[np.isinf(keypoints)] = np.nan
         keypoints = pd.Series(list(keypoints))
@@ -567,7 +442,9 @@ class CZoo(DatasetFactory):
             'path': path + os.path.sep + data[1],
             'identity': data[3],
             'keypoints': keypoints,
-            'attributes': attributes
+            'age': data[5],
+            'age_group': data[7],
+            'gender': data[9],
         })
         return self.finalize_catalogue(df)
 
@@ -575,25 +452,7 @@ class CZoo(DatasetFactory):
 
 class Cows2021(DatasetFactory):
     download = downloads.cows_2021
-
-    licenses = 'Non-Commercial Government Licence for public sector information'
-    licenses_url = 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/'
-    url = 'https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7'
-    cite = 'gao2021towards'
-    animals = ('cow')
-    real_animals = True    
-    year = 2021
-    reported_n_total = 13784
-    reported_n_identified = 13784
-    reported_n_photos = 13784
-    reported_n_individuals = 181
-    wild = False
-    clear_photos = True
-    pose = 'single' # from the top
-    unique_pattern = True
-    from_video = True
-    full_frame = False
-    span = '1 month'
+    metadata = metadata['Cows2021']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = find_images(self.root)
@@ -614,25 +473,7 @@ class Cows2021(DatasetFactory):
 
 class Drosophila(DatasetFactory):
     download = downloads.drosophila
-
-    licenses = None
-    licenses_url = None
-    url = 'https://github.com/j-schneider/fly_eye'
-    cite = 'schneider2018can'
-    animals = ('drosophila')
-    real_animals = True    
-    year = 2018
-    reported_n_total = 2592000
-    reported_n_identified = 2592000
-    reported_n_photos = 2592000
-    reported_n_individuals = 60
-    wild = False
-    clear_photos = True
-    pose = 'single' # from the top
-    unique_pattern = True
-    from_video = True
-    full_frame = False
-    span = '3 days'
+    metadata = metadata['Drosophila']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = find_images(self.root)
@@ -657,25 +498,7 @@ class Drosophila(DatasetFactory):
 
 class FriesianCattle2015(DatasetFactory):
     download = downloads.friesian_cattle_2015
-
-    licenses = 'Non-Commercial Government Licence for public sector information'
-    licenses_url = 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/'
-    url = 'https://data.bris.ac.uk/data/dataset/wurzq71kfm561ljahbwjhx9n3'
-    cite = 'andrew2016automatic'
-    animals = ('Friesian cattle')
-    real_animals = True    
-    year = 2016
-    reported_n_total = 83+294 # train+test
-    reported_n_identified = 83+294 # train+test
-    reported_n_photos = 83+294 # train+test
-    reported_n_individuals = 40
-    wild = False
-    clear_photos = True
-    pose = 'single' # from the top
-    unique_pattern = True
-    from_video = True
-    full_frame = False
-    span = '1 day'
+    metadata = metadata['FriesianCattle2015']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = find_images(self.root)
@@ -697,26 +520,7 @@ class FriesianCattle2015(DatasetFactory):
 
 class FriesianCattle2017(DatasetFactory):
     download = downloads.friesian_cattle_2017
-    #metadata = metadata['FriesianCattle2017']
-
-    licenses = 'Non-Commercial Government Licence for public sector information'
-    licenses_url = 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/'
-    url = 'https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r'
-    cite = 'andrew2017visual'
-    animals = ('Friesian cattle')
-    real_animals = True    
-    year = 2017
-    reported_n_total = 940
-    reported_n_identified = 940
-    reported_n_photos = 940
-    reported_n_individuals = 89
-    wild = False
-    clear_photos = True
-    pose = 'single' # from the top
-    unique_pattern = True
-    from_video = True
-    full_frame = False
-    span = '1 day'
+    metadata = metadata['FriesianCattle2017']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = find_images(self.root)
@@ -732,25 +536,7 @@ class FriesianCattle2017(DatasetFactory):
 
 class GiraffeZebraID(DatasetFactoryWildMe):
     download = downloads.giraffe_zebra_id
-
-    licenses = 'Attribution-NonCommercial-NoDerivs License'
-    licenses_url = 'http://creativecommons.org/licenses/by-nc-nd/2.0/'
-    url = 'https://lila.science/datasets/great-zebra-giraffe-id'
-    cite = 'parham2017animal'
-    animals = ('giraffe masai', 'zebra plains')
-    real_animals = True    
-    year = 2017
-    reported_n_total = 639+6286 # giraffes + zebra
-    reported_n_identified = 639+6286 # giraffes + zebra
-    reported_n_photos = 4948
-    reported_n_individuals = 2056 
-    wild = True
-    clear_photos = True
-    pose = 'double' # from either side
-    unique_pattern = True
-    from_video = False
-    full_frame = True
-    span = '12 days'
+    metadata = metadata['GiraffeZebraID']
     
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('gzgc', 2020)
@@ -759,25 +545,7 @@ class GiraffeZebraID(DatasetFactoryWildMe):
 
 class Giraffes(DatasetFactory):
     download = downloads.giraffes
-
-    licenses = None
-    licenses_url = None
-    url = 'ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021'
-    cite = 'miele2021revisiting'
-    animals = ('giraffe')
-    real_animals = True    
-    year = 2021
-    reported_n_total = None
-    reported_n_identified = None 
-    reported_n_photos = None
-    reported_n_individuals = None 
-    wild = True
-    clear_photos = True
-    pose = 'double' # from either side
-    unique_pattern = True
-    from_video = True # from burst
-    full_frame = False
-    span = 'unknown'
+    metadata = metadata['Giraffes']
 
     def create_catalogue(self) -> pd.DataFrame:
         path = os.path.join('pbil.univ-lyon1.fr', 'pub', 'datasets', 'miele2021')
@@ -799,25 +567,7 @@ class Giraffes(DatasetFactory):
 
 class HappyWhale(DatasetFactory):
     download = downloads.happy_whale
-
-    licenses = None
-    licenses_url = None
-    url = 'https://www.kaggle.com/competitions/happy-whale-and-dolphin'
-    cite = 'cheeseman2017happywhale'
-    animals = ('whale')
-    real_animals = True    
-    year = 2022
-    reported_n_total = None
-    reported_n_identified = None
-    reported_n_photos = None
-    reported_n_individuals = None
-    wild = True
-    clear_photos = True
-    pose = 'multiple'
-    unique_pattern = True
-    from_video = False
-    full_frame = True
-    span = 'very long'
+    metadata = metadata['HappyWhale']
     
     def create_catalogue(self) -> pd.DataFrame:
         replace_names = [
@@ -856,25 +606,7 @@ class HappyWhale(DatasetFactory):
 
 class HumpbackWhaleID(DatasetFactory):
     download = downloads.humpback_whale
-
-    licenses = None
-    licenses_url = None
-    url = 'https://www.kaggle.com/competitions/humpback-whale-identification'
-    cite = 'humpbackwhale'
-    animals = ('whale')
-    real_animals = True    
-    year = 2019
-    reported_n_total = None
-    reported_n_identified = None
-    reported_n_photos = None
-    reported_n_individuals = None 
-    wild = True
-    clear_photos = True
-    pose = 'single' # tail fin only
-    unique_pattern = True
-    from_video = False
-    full_frame = False
-    span = 'very long'
+    metadata = metadata['HumpbackWhaleID']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
@@ -905,25 +637,7 @@ class HumpbackWhaleID(DatasetFactory):
 
 class HyenaID2022(DatasetFactoryWildMe):
     download = downloads.hyena_id_2022
-
-    licenses = 'Attribution-NonCommercial-NoDerivs License'
-    licenses_url = 'http://creativecommons.org/licenses/by-nc-nd/2.0/'
-    url = 'https://lila.science/datasets/hyena-id-2022/'
-    cite = 'botswana2022'
-    animals = ('spotted hyena')
-    real_animals = True    
-    year = 2022
-    reported_n_total = 3129
-    reported_n_identified = 3129
-    reported_n_photos = 3104 
-    reported_n_individuals = 256  
-    wild = True
-    clear_photos = False # night, blurry, parts missing, ...
-    pose = 'multiple'
-    unique_pattern = True
-    from_video = False
-    full_frame = True
-    span = 'unknown'
+    metadata = metadata['HyenaID2022']
 
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('hyena', 2022)
@@ -932,25 +646,7 @@ class HyenaID2022(DatasetFactoryWildMe):
 
 class IPanda50(DatasetFactory):
     download = downloads.ipanda_50
-
-    licenses = None
-    licenses_url = None
-    url = 'https://github.com/iPandaDateset/iPanda-50'
-    cite = 'wang2021giant'
-    animals = ('great panda')
-    real_animals = True    
-    year = 2021
-    reported_n_total = 6874
-    reported_n_identified = 6874
-    reported_n_photos = 6874
-    reported_n_individuals = 50
-    wild = False # zoos
-    clear_photos = True
-    pose = 'multiple'
-    unique_pattern = True
-    from_video = False
-    full_frame = False
-    span = 'unknown'
+    metadata = metadata['IPanda50']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = find_images(self.root)
@@ -987,25 +683,7 @@ class IPanda50(DatasetFactory):
 
 class LeopardID2022(DatasetFactoryWildMe):
     download = downloads.leopard_id_2022
-
-    licenses = 'Attribution-NonCommercial-NoDerivs License'
-    licenses_url = 'http://creativecommons.org/licenses/by-nc-nd/2.0/'
-    url = 'https://lila.science/datasets/leopard-id-2022/'
-    cite = 'botswana2022'
-    animals = ('leopard')
-    real_animals = True    
-    year = 2022
-    reported_n_total = None
-    reported_n_identified = 6805
-    reported_n_photos = 6795
-    reported_n_individuals = 430
-    wild = True
-    clear_photos = False # night, blurry, parts missing, ...
-    pose = 'multiple'
-    unique_pattern = True
-    from_video = False
-    full_frame = True
-    span = 'unknown'
+    metadata = metadata['LeopardID2022']
 
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('leopard', 2022)
@@ -1014,25 +692,7 @@ class LeopardID2022(DatasetFactoryWildMe):
 
 class LionData(DatasetFactory):
     download = downloads.lion_data
-
-    licenses = None
-    licenses_url = None
-    url = 'https://github.com/tvanzyl/wildlife_reidentification'
-    cite = 'dlamini2020automated'
-    animals = ('lion')
-    real_animals = True    
-    year = 2020
-    reported_n_total = 750
-    reported_n_identified = 750
-    reported_n_photos = 750
-    reported_n_individuals = 98
-    wild = True
-    clear_photos = True
-    pose = 'multiple' # various body parts
-    unique_pattern = True # by whiskers
-    from_video = False
-    full_frame = False
-    span = 'unknown'
+    metadata = metadata['LionData']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = find_images(self.root)
@@ -1049,37 +709,18 @@ class LionData(DatasetFactory):
 
 class MacaqueFaces(DatasetFactory):
     download = downloads.macaque_faces
-
-    licenses = 'The 3-Clause BSD License'
-    licenses_url = 'https://github.com/clwitham/MacaqueFaces/blob/master/license.md'
-    url = 'https://github.com/clwitham/MacaqueFaces'
-    cite = 'witham2018automated'
-    animals = ('rhesus macaque')
-    real_animals = True    
-    year = 2018
-    reported_n_total = (150+4*10)*34 # slightly less, not described properly
-    reported_n_identified = (150+4*10)*34 # slightly less, not described properly
-    reported_n_photos = (150+4*10)*34 # slightly less, not described properly
-    reported_n_individuals = 34
-    wild = False # breeding facility
-    clear_photos = True
-    pose = 'single' # from the front
-    unique_pattern = False
-    from_video = True
-    full_frame = False
-    span = '1.4 years'
+    metadata = metadata['MacaqueFaces']
     
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'MacaqueFaces_ImageInfo.csv'))
-        attributes = data[['Category']].to_dict(orient='index')
         date_taken = [datetime.datetime.strptime(date, '%d-%m-%Y').strftime('%Y-%m-%d') for date in data['DateTaken']]
         
         df = pd.DataFrame({
             'id': pd.Series(range(len(data))),
             'path': 'MacaqueFaces' + os.path.sep + data['Path'].str.strip(os.path.sep) + os.path.sep + data['FileName'],
             'identity': data['ID'],
-            'attributes': attributes,
-            'date': pd.Series(date_taken)
+            'date': pd.Series(date_taken),
+            'category': data['Category']
         })
         return self.finalize_catalogue(df)
 
@@ -1087,25 +728,7 @@ class MacaqueFaces(DatasetFactory):
 
 class NDD20(DatasetFactory):
     download = downloads.ndd20
-
-    licenses = 'Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)'
-    licenses_url = 'https://creativecommons.org/licenses/by-nc-sa/4.0/'
-    url = 'https://doi.org/10.25405/data.ncl.c.4982342'
-    cite = 'trotter2020ndd20'
-    animals = ('Northumberland dolphin')
-    real_animals = True    
-    year = 2020
-    reported_n_total = None # not specified exactly
-    reported_n_identified = None # above around 14%
-    reported_n_photos = 2201+2201 # above + below
-    reported_n_individuals = 82
-    wild = False # below the water
-    clear_photos = True
-    pose = 'multiple' # both above and beow water
-    unique_pattern = True
-    from_video = False
-    full_frame = True
-    span = '7 years'
+    metadata = metadata['NDD20']
 
     def create_catalogue(self) -> pd.DataFrame:
         with open(os.path.join(self.root, 'ABOVE_LABELS.json')) as file:
@@ -1125,7 +748,7 @@ class NDD20(DatasetFactory):
                 entries.append({
                     'identity': identity,
                     'species': region['region_attributes']['species'],
-                    'attributes': {'out of focus': np.nan},
+                    'out_of_focus': np.nan,
                     'file_name': data[key]['filename'],
                     'reg_type': region['shape_attributes']['name'],
                     'segmentation': segmentation,
@@ -1148,7 +771,7 @@ class NDD20(DatasetFactory):
                 entries.append({
                     'identity': identity,
                     'species': 'WBD',
-                    'attributes': {'out of focus': region['region_attributes']['out of focus']},
+                    'out_of_focus': region['region_attributes']['out of focus'] == 'true',
                     'file_name': data[key]['filename'],
                     'reg_type': region['shape_attributes']['name'],
                     'segmentation': segmentation,
@@ -1169,25 +792,7 @@ class NDD20(DatasetFactory):
 
 class NOAARightWhale(DatasetFactory):
     download = downloads.noaa_right_whale
-
-    licenses = None
-    licenses_url = None
-    url = 'https://www.kaggle.com/c/noaa-right-whale-recognition'
-    cite = 'rightwhale'
-    animals = ('right whale')
-    real_animals = True    
-    year = 2015
-    reported_n_total = None
-    reported_n_identified = None
-    reported_n_photos = None
-    reported_n_individuals = None 
-    wild = True
-    clear_photos = False # often below the water
-    pose = 'single' # from the top
-    unique_pattern = False # fins not present at pictures
-    from_video = False
-    full_frame = True
-    span = '10 years'
+    metadata = metadata['NOAARightWhale']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
@@ -1212,25 +817,7 @@ class NOAARightWhale(DatasetFactory):
 
 class NyalaData(DatasetFactory):
     download = downloads.nyala_data
-
-    licenses = None
-    licenses_url = None
-    url = 'https://github.com/tvanzyl/wildlife_reidentification'
-    cite = 'dlamini2020automated'
-    animals = ('nyala')
-    real_animals = True    
-    year = 2020
-    reported_n_total = 1934
-    reported_n_identified = 1934
-    reported_n_photos = 1934
-    reported_n_individuals = 274
-    wild = True
-    clear_photos = True
-    pose = 'double' # from either side
-    unique_pattern = True
-    from_video = False
-    full_frame = True
-    span = 'unknown'
+    metadata = metadata['NyalaData']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = find_images(self.root)
@@ -1252,25 +839,7 @@ class NyalaData(DatasetFactory):
 
 class OpenCows2020(DatasetFactory):
     download = downloads.open_cows_2020
-
-    licenses = 'Non-Commercial Government Licence for public sector information'
-    licenses_url = 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/'
-    url = 'https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17'
-    cite = 'andrew2021visual'
-    animals = ('cow')
-    real_animals = True    
-    year = 2020
-    reported_n_total = 4736
-    reported_n_identified = 4736
-    reported_n_photos = 4736
-    reported_n_individuals = 46
-    wild = False
-    clear_photos = True
-    pose = 'double' # from the top, drone and close camera
-    unique_pattern = True
-    from_video = True
-    full_frame = False
-    span = 'short'
+    metadata = metadata['OpenCows2020']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = find_images(self.root)
@@ -1296,25 +865,7 @@ class OpenCows2020(DatasetFactory):
 
 class SealID(DatasetFactory):
     download = downloads.seal_id
-
-    licenses = 'Attribution 4.0 International (CC BY 4.0)'
-    licenses_url = 'https://creativecommons.org/licenses/by/4.0/'
-    url = 'https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53'
-    cite = 'nepovinnykh2022sealid'
-    animals = ('ringed seal')
-    real_animals = True    
-    year = 2022
-    reported_n_total = 2080
-    reported_n_identified = 2080
-    reported_n_photos = 2080
-    reported_n_individuals = 57
-    wild = True
-    clear_photos = False # night, blurry, parts missing, ...
-    pose = 'multiple'
-    unique_pattern = True 
-    from_video = False
-    full_frame = True
-    span = '10 years'
+    metadata = metadata['SealID']
 
     def create_catalogue(self, variant='source'):
         if variant == 'source':
@@ -1338,25 +889,7 @@ class SealID(DatasetFactory):
 
 class SMALST(DatasetFactory):
     download = downloads.smalst
-
-    licenses = 'MIT License'
-    licenses_url = 'https://github.com/silviazuffi/smalst/blob/master/LICENSE.txt'
-    url = 'https://github.com/silviazuffi/smalst'
-    cite = 'zuffi2019three'
-    animals = ('zebra')
-    real_animals = False
-    year = 2019
-    reported_n_total = 12850
-    reported_n_identified = 12850
-    reported_n_photos = 12850
-    reported_n_individuals = 10
-    wild = False
-    clear_photos = True
-    pose = 'multiple'
-    unique_pattern = True 
-    from_video = False
-    full_frame = True
-    span = 'artificial'
+    metadata = metadata['SMALST']
 
     def create_catalogue(self) -> pd.DataFrame:
         # Images
@@ -1371,7 +904,7 @@ class SMALST(DatasetFactory):
         masks = find_images(os.path.join(self.root, 'zebra_training_set', 'bgsub'))
         path = masks['file'].str.strip('zebra_')
         masks['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
-        masks['mask'] = 'zebra_training_set' + os.path.sep + 'bgsub' + os.path.sep + masks['file']
+        masks['segmentation'] = 'zebra_training_set' + os.path.sep + 'bgsub' + os.path.sep + masks['file']
         masks = masks.drop(['path', 'file'], axis=1)
 
         df = pd.merge(data, masks, on='id')
@@ -1380,25 +913,7 @@ class SMALST(DatasetFactory):
 
 class StripeSpotter(DatasetFactory):
     download = downloads.stripe_spotter
-
-    licenses = 'GNU General Public License, version 2'
-    licenses_url = 'http://www.gnu.org/licenses/old-licenses/gpl-2.0.html'
-    url = 'https://code.google.com/archive/p/stripespotter/downloads'
-    cite = 'lahiri2011biometric'
-    animals = ('zebra')
-    real_animals = True    
-    year = 2011
-    reported_n_total = None
-    reported_n_identified = None
-    reported_n_photos = None
-    reported_n_individuals = None
-    wild = True
-    clear_photos = True
-    pose = 'double' # from either side
-    unique_pattern = True
-    from_video = False
-    full_frame = True
-    span = '7 days'
+    metadata = metadata['StripeSpotter']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = find_images(self.root)
@@ -1409,14 +924,14 @@ class StripeSpotter(DatasetFactory):
         data_aux = pd.read_csv(os.path.join(self.root, 'data', 'SightingData.csv'))
         data = pd.merge(data, data_aux, how='left', left_on='index', right_on='#imgindex')
         data.loc[data['animal_name'].isnull(), 'animal_name'] = 'unknown'
-        attributes = data[['flank', 'photo_quality']].to_dict(orient='index')
-
+        
         df = pd.DataFrame({
             'id': create_id(data['file']),
             'path':  data['path'] + os.path.sep + data['file'],
             'identity': data['animal_name'],
             'bbox': pd.Series([[int(a) for a in b.split(' ')] for b in data['roi']]),
-            'attributes': attributes,
+            'position': data['flank'],
+            'photo_quality': data['photo_quality'],
         })
         return self.finalize_catalogue(df)  
 
@@ -1424,25 +939,7 @@ class StripeSpotter(DatasetFactory):
 
 class WhaleSharkID(DatasetFactoryWildMe):
     download = downloads.whale_shark_id
-
-    licenses = 'Attribution-NonCommercial-NoDerivs 2.0 Generic (CC BY-NC-ND 2.0)'
-    licenses_url = 'http://creativecommons.org/licenses/by-nc-nd/2.0/'
-    url = 'https://lila.science/datasets/whale-shark-id'
-    cite = 'holmberg2009estimating'
-    animals = ('whale shark')
-    real_animals = True    
-    year = 2020
-    reported_n_total = 7693
-    reported_n_identified = 7693
-    reported_n_photos = 7693
-    reported_n_individuals = 543
-    wild = True
-    clear_photos = False
-    pose = 'multiple' # underwater
-    unique_pattern = True
-    from_video = False
-    full_frame = True
-    span = '5.2 years'
+    metadata = metadata['WhaleSharkID']
 
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('whaleshark', 2020)
@@ -1451,25 +948,7 @@ class WhaleSharkID(DatasetFactoryWildMe):
 
 class WNIGiraffes(DatasetFactory):
     download = downloads.wni_giraffes
-
-    licenses = 'Community Data License Agreement – Permissive'
-    licenses_url = 'https://cdla.dev/permissive-1-0/'
-    url = 'https://lila.science/datasets/wni-giraffes'
-    cite = 'clavadetscher2021development'
-    animals = ('giraffe')
-    real_animals = True    
-    year = 2021
-    reported_n_total = 29806
-    reported_n_identified = 29806
-    reported_n_photos = 29806 
-    reported_n_individuals = None
-    wild = True
-    clear_photos = True
-    pose = 'double' # from either side
-    unique_pattern = True
-    from_video = False
-    full_frame = True
-    span = '7 years'
+    metadata = metadata['WNIGiraffes']
 
     def create_catalogue(self) -> pd.DataFrame:
         data = find_images(self.root)
@@ -1486,7 +965,7 @@ class WNIGiraffes(DatasetFactory):
         data['path'] = data['path'] + os.path.sep + data['file']
         data = data.drop(['file'], axis=1)
 
-        return self.finalize_df(data)
+        return self.finalize_catalogue(data)
 
     def extract_keypoints(self, row):
         keypoints = [row['keypoints']['too']['median_x'], row['keypoints']['too']['median_y'],
@@ -1502,25 +981,7 @@ class WNIGiraffes(DatasetFactory):
 
 class ZindiTurtleRecall(DatasetFactory):
     download = downloads.zindi_turtle_recall
-
-    licenses = 'Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)'
-    licenses_url = 'https://creativecommons.org/licenses/by-sa/4.0/'
-    url = 'https://zindi.africa/competitions/turtle-recall-conservation-challenge'
-    cite = 'zinditurtles'
-    animals = ('sea turtle')
-    real_animals = True    
-    year = 2022
-    reported_n_total = None
-    reported_n_identified = None
-    reported_n_photos = None
-    reported_n_individuals = None
-    wild = True
-    clear_photos = True
-    pose = 'double' # from either side
-    unique_pattern = True
-    from_video = False
-    full_frame = False
-    span = 'unknown'
+    metadata = metadata['ZindiTurtleRecall']
 
     def create_catalogue(self) -> pd.DataFrame:
         data_train = pd.read_csv(os.path.join(self.root, 'train.csv'))
