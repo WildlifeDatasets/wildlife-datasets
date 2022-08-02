@@ -1,6 +1,7 @@
 data/
 dataframes/
 venv/
+venv_ibeis/
 __pycache__/
 .ipynb_checkpoints/
 *.out
