@@ -87,11 +87,7 @@ class DatasetFactory():
         return df
 
     def reorder_df(self, df: pd.DataFrame) -> pd.DataFrame:
-        # TODO: fixed column names is never good idea. 
-        # TODO: 3 columns are always there - order them first
-        # TODO: rest alphabetical: df.sort_index(axis=1) + df.loc[:, cols]
-
-        default_order = ['id', 'path', 'identity', 'bbox', 'segmentation', 'position', 'species', 'keypoints', 'date', 'video']
+        default_order = ['id', 'identity', 'path', 'bbox', 'segmentation', 'position', 'species', 'keypoints']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
@@ -108,9 +104,6 @@ class DatasetFactory():
         '''
         Removes columns with single unique value.
         '''
-        # TODO: try this
-        #df = df.drop(columns=df.columns[df.astype('str').nunique()==1])
-
         for df_name in list(df.columns):
             if df[df_name].astype('str').nunique() == 1:
                 df = df.drop([df_name], axis=1)
