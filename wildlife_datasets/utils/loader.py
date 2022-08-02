@@ -49,7 +49,7 @@ def unique_datasets_list(datasets_list):
     return datasets_list_red
 
 def load_datasets(info_datasets, root_dataset, root_dataframe):
-    # TODO some overwrite would be nice
+    # TODO: some overwrite would be nice
     if not os.path.exists(root_dataframe):
         os.makedirs(root_dataframe)
     datasets = []

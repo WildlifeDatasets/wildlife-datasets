@@ -5,7 +5,7 @@ from . import utils
 
 def get_data(root):
     with utils.data_directory(root):
-        # TODO does not work. it is specific for specific distros, isnt it?
+        # TODO: does not work. it is specific for specific distros, isnt it?
         shutil.copy('../azcopy', os.path.join(directory, 'azcopy'))
 
         # Images
