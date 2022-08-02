@@ -54,7 +54,7 @@ class DatasetFactory():
     def __init__(
         self, 
         root: str,
-        df: Optional(pd.DataFrame) = None,
+        df: Optional[pd.DataFrame] = None,
         download: bool = False,
         **kwargs
         ):
