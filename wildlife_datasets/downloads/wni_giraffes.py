@@ -1,12 +1,20 @@
 import os
 import argparse
 import shutil
-from . import utils
+if __name__ == '__main__':
+    import utils
+else:
+    from . import utils
+
 
 def get_data(root):
+    script_dir = os.path.dirname(os.path.abspath(__file__))
     with utils.data_directory(root):
         # TODO: does not work. it is specific for specific distros, isnt it?
-        shutil.copy('../azcopy', os.path.join(directory, 'azcopy'))
+        # TODO: Yes this is Ubuntu/linux specific.
+
+        # Copy azcopy from utils to working directory.
+        shutil.copy(os.path.join(script_dir, 'utils', 'azcopy'), os.path.join(root, 'azcopy'))
 
         # Images
         url = "https://lilablobssc.blob.core.windows.net/wni-giraffes/wni_giraffes_train_images.zip"
