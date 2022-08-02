@@ -62,10 +62,7 @@ def download_datasets(info_datasets, root_dataset, **kwargs):
         download_dataset(info_dataset, root_dataset, **kwargs)
 
 def download_dataset(info_dataset, root_dataset, overwrite=False):    
-    if type(info_dataset) == tuple:
-        dataset_class = info_dataset[0]
-    else:
-        dataset_class = info_dataset
+    dataset_class = info_dataset[0]
     root = get_dataset_folder(root_dataset, dataset_class)
     if overwrite or not os.path.exists(root):
         dataset_class.download.get_data(root)
@@ -78,12 +75,8 @@ def load_dataset(info_dataset, root_dataset, root_dataframe, overwrite=False):
         raise(Exception('Data not found. Download them first.'))
     if not os.path.exists(root_dataframe):
         os.makedirs(root_dataframe)
-    if type(info_dataset) == tuple:
-        dataset_class = info_dataset[0]
-        dataset_kwargs = info_dataset[1]
-    else:
-        dataset_class = info_dataset
-        dataset_kwargs = {}
+    dataset_class = info_dataset[0]
+    dataset_kwargs = info_dataset[1]
 
     root = get_dataset_folder(root_dataset, dataset_class)
     df_path = get_dataframe_path(root_dataframe, dataset_class, dataset_kwargs)
