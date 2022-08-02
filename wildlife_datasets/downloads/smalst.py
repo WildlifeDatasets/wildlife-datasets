@@ -1,8 +1,11 @@
 import os
-import argparse
-from . import utils
-#import gdown
+import gdown
 import shutil
+import argparse
+if __name__ == '__main__':
+    import utils
+else:
+    from . import utils
 
 def get_data(root):
     with utils.data_directory(root):
