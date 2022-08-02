@@ -53,9 +53,8 @@ def create_id(string_col: pd.Series) -> pd.Series:
 class DatasetFactory():
     def __init__(
         self, 
-        root: str = 'data',
-        #df: Optional(pd.DataFrame) = None,
-        df = None,
+        root: str,
+        df: Optional(pd.DataFrame) = None,
         download: bool = False,
         **kwargs
         ):
