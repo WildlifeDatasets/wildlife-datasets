@@ -48,30 +48,49 @@ def unique_datasets_list(datasets_list):
 
     return datasets_list_red
 
-def load_datasets(info_datasets, root_dataset, root_dataframe):
-    # TODO: some overwrite would be nice
+def get_dataset_folder(root_dataset, dataset_class):
+    return os.path.join(root_dataset, dataset_class.__name__)
+
+def get_dataframe_path(root_dataframe, dataset_class, dataset_kwargs={}):
+    if len(dataset_kwargs) == 0:
+        return os.path.join(root_dataframe, dataset_class.__name__ + '.pkl')
+    else:
+        return os.path.join(root_dataframe, dataset_class.__name__ + '_' + dataset_kwargs['variant'] + '.pkl')    
+
+def download_datasets(info_datasets, root_dataset, **kwargs):
+    for info_dataset in info_datasets:
+        download_dataset(info_dataset, root_dataset, **kwargs)
+
+def download_dataset(info_dataset, root_dataset, overwrite=False):    
+    if type(info_dataset) == tuple:
+        dataset_class = info_dataset[0]
+    else:
+        dataset_class = info_dataset
+    root = get_dataset_folder(root_dataset, dataset_class)
+    if overwrite or not os.path.exists(root):
+        dataset_class.download.get_data(root)
+        
+def load_datasets(info_datasets, root_dataset, root_dataframe, **kwargs):
+    return [load_dataset(info_dataset, root_dataset, root_dataframe, **kwargs) for info_dataset in info_datasets]
+
+def load_dataset(info_dataset, root_dataset, root_dataframe, overwrite=False):
+    if not os.path.exists(root_dataset):
+        raise(Exception('Data not found. Download them first.'))
     if not os.path.exists(root_dataframe):
         os.makedirs(root_dataframe)
-    datasets = []
-    for info_dataset in info_datasets:
-        root = os.path.join(root_dataset, info_dataset[0].__name__)
-        if len(info_dataset[1]) == 0:
-            df_path = os.path.join(root_dataframe, info_dataset[0].__name__ + '.pkl')
-        else:
-            df_path = os.path.join(root_dataframe, info_dataset[0].__name__ + '_' + info_dataset[1]['variant'] + '.pkl')
-        
-        if os.path.exists(root) and os.path.exists(df_path):
-            df = pd.read_pickle(df_path)
-            dataset = info_dataset[0](root, df, download=False, **info_dataset[1])
-        elif os.path.exists(root) and not os.path.exists(df_path):
-            dataset = info_dataset[0](root, None, download=False, **info_dataset[1])
-            dataset.df.to_pickle(df_path)
-        elif not os.path.exists(root) and os.path.exists(df_path):
-            raise(Exception('Data not found but dataframe found. This should not happen.'))
-        elif not os.path.exists(root) and not os.path.exists(df_path):
-            dataset = info_dataset[0](root, None, download=True, **info_dataset[1])
-            dataset.df.to_pickle(df_path)
-        datasets.append(dataset)
+    if type(info_dataset) == tuple:
+        dataset_class = info_dataset[0]
+        dataset_kwargs = info_dataset[1]
+    else:
+        dataset_class = info_dataset
+        dataset_kwargs = {}
 
-    return datasets
-
+    root = get_dataset_folder(root_dataset, dataset_class)
+    df_path = get_dataframe_path(root_dataframe, dataset_class, dataset_kwargs)
+    if overwrite or not os.path.exists(df_path):
+        dataset = dataset_class(root, None, download=False, **dataset_kwargs)
+        dataset.df.to_pickle(df_path)
+    else:
+        df = pd.read_pickle(df_path)
+        dataset = dataset_class(root, df, download=False, **dataset_kwargs)
+    return dataset
