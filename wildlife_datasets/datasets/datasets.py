@@ -891,6 +891,33 @@ class SealID(DatasetFactory):
         return self.finalize_catalogue(df)
 
 
+class SeaTurtleID(DatasetFactory):
+    # TODO: download missing
+    # TODO: metadata missing
+    # TODO: the json is strange. for example identities are with images and not annotations
+    # TODO: segmentation is not loaded
+    # TODO: file_name is linux only
+    # TODO: images without bbox are missing (they have labels)
+
+    def create_catalogue(self):        
+        path_json = os.path.join(self.root, 'annotations.json')
+        with open(os.path.join(self.root, path_json)) as file:
+            data = json.load(file)
+
+        create_dict = lambda i: {'bbox': i['bbox'], 'image_id': i['image_id']}
+        df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
+
+        create_dict = lambda i: {'path': i['file_name'], 'image_id': i['id'], 'identity': i['file_name'].split(os.path.sep)[1]}
+        df_images = pd.DataFrame([create_dict(i) for i in data['images']])
+
+        folders = df_images['path'].str.split(os.path.sep, expand=True)
+
+        df = pd.merge(df_annotation, df_images, on='image_id')
+        df['id'] = df['image_id']
+        df = df.drop(['image_id'], axis=1)
+        return self.finalize_catalogue(df)
+        
+        
 class SMALST(DatasetFactory):
     download = downloads.smalst
     metadata = metadata['SMALST']
