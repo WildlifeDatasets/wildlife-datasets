@@ -1,5 +1,4 @@
 import os
-import gdown
 import shutil
 import argparse
 if __name__ == '__main__':
@@ -8,6 +7,7 @@ else:
     from . import utils
 
 def get_data(root):
+    import gdown
     with utils.data_directory(root):
         url = 'https://drive.google.com/uc?id=1yVy4--M4CNfE5x9wUr1QBmAXEcWb6PWF'
         archive = 'zebra_training_set.zip'

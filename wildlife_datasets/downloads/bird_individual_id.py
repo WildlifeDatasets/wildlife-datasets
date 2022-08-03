@@ -1,6 +1,5 @@
 import os
 import argparse
-import gdown
 if __name__ == '__main__':
     import utils
 else:
@@ -9,6 +8,7 @@ else:
 def get_data(root):
     with utils.data_directory(root):
         # Try automatic download
+        #import gdown
         #url = 'https://drive.google.com/uc?id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA'
         #archive = 'ferreira_et_al_2020.zip'
         #gdown.download(url, archive, quiet=False)

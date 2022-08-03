@@ -1,12 +1,12 @@
 import os
 import argparse
-import gdown
 if __name__ == '__main__':
     import utils
 else:
     from . import utils
 
 def get_data(root):
+    import gdown
     with utils.data_directory(root):
         downloads = [
             ('https://drive.google.com/uc?id=1nkh-g6a8JvWy-XsMaZqrN2AXoPlaXuFg', 'iPanda50-images.zip'),
