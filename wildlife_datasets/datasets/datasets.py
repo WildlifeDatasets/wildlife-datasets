@@ -5,6 +5,7 @@ from typing import Tuple, Optional
 import hashlib
 import json
 import datetime
+from collections.abc import Iterable
 
 from .. import downloads
 from .. import utils
@@ -14,13 +15,11 @@ from .metadata import metadata
 '''
 General:
 
-TODO: 
-I would represent keypoints as they are. There is no unified notation
+TODO: I would represent keypoints as they are. There is no unified notation
 what they can represent (unlike segmentations and bbox) and lot of
 imporant information can get lost.
 
-TODO:
-We should at least provide description on how we did the data
+TODO: We should at least provide description on how we did the data
 processing and the reasoning behind it. Some datasets are especially
 dificult and not obvious
 
@@ -48,6 +47,19 @@ def create_id(string_col: pd.Series) -> pd.Series:
     entity_id = string_col.apply(lambda x: hashlib.md5(x.encode()).hexdigest()[:16])
     assert len(entity_id.unique()) == len(entity_id)
     return entity_id
+
+def convert_keypoint(keypoint, keypoints_names):
+    keypoint_dict = {}
+    if isinstance(keypoint, Iterable):
+        for i in range(len(keypoints_names)):
+            x = keypoint[2*i]
+            y = keypoint[2*i+1]
+            if np.isfinite(x) and np.isfinite(y):
+                keypoint_dict[keypoints_names[i]] = [x, y]
+    return keypoint_dict
+
+def convert_keypoints(keypoints: pd.Series, keypoints_names):
+    return [convert_keypoint(keypoint, keypoints_names) for keypoint in keypoints]
 
 
 class DatasetFactory():
