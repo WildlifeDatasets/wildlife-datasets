@@ -8,7 +8,6 @@ import datetime
 from collections.abc import Iterable
 
 from .. import downloads
-from .. import utils
 from .metadata import metadata
 
 
@@ -47,6 +46,28 @@ def create_id(string_col: pd.Series) -> pd.Series:
     entity_id = string_col.apply(lambda x: hashlib.md5(x.encode()).hexdigest()[:16])
     assert len(entity_id.unique()) == len(entity_id)
     return entity_id
+
+def bbox_segmentation(bbox):
+    return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
+
+def segmentation_bbox(segmentation):
+    x = segmentation[0::2]
+    y = segmentation[1::2]
+    x_min = np.min(x)
+    x_max = np.max(x)
+    y_min = np.min(y)
+    y_max = np.max(y)
+    return [x_min, y_min, x_max-x_min, y_max-y_min]
+
+def is_annotation_bbox(ann, bbox, tol=0):
+    bbox_ann = bbox_segmentation(bbox)
+    if len(ann) == len(bbox_ann):
+        for x, y in zip(ann, bbox_ann):
+            if abs(x-y) > tol:
+                return False
+    else:
+        return False
+    return True
 
 def convert_keypoint(keypoint, keypoints_names):
     keypoint_dict = {}
@@ -159,7 +180,7 @@ class DatasetFactoryWildMe(DatasetFactory):
             if len(ann['segmentation']) != 1:
                 raise(Exception('Wrong number of segmentations'))
             
-        create_dict = lambda i: {'identity': i['name'], 'bbox': utils.analysis.segmentation_bbox(i['segmentation'][0]), 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
+        create_dict = lambda i: {'identity': i['name'], 'bbox': segmentation_bbox(i['segmentation'][0]), 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
 
         create_dict = lambda i: {'file_name': i['file_name'], 'image_id': i['id'], 'date': i['date_captured']}
@@ -177,7 +198,7 @@ class DatasetFactoryWildMe(DatasetFactory):
         # Remove segmentations which are the same as bounding boxes
         ii = []
         for i in range(len(df)):
-            ii.append(utils.analysis.is_annotation_bbox(df.iloc[i]['segmentation'], df.iloc[i]['bbox'], tol=3))
+            ii.append(is_annotation_bbox(df.iloc[i]['segmentation'], df.iloc[i]['bbox'], tol=3))
         df.loc[ii, 'segmentation'] = np.nan
 
         # Rename empty dates
