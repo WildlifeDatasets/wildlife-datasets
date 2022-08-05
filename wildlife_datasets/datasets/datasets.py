@@ -915,27 +915,34 @@ class SealID(DatasetFactory):
 class SeaTurtleID(DatasetFactory):
     # TODO: download missing
     # TODO: metadata missing
-    # TODO: the json is strange. for example identities are with images and not annotations
+    # TODO: the json is a complete mess. rewrite it
     # TODO: segmentation is not loaded
-    # TODO: file_name is linux only
-    # TODO: images without bbox are missing (they have labels)
+    # TODO: date is not formatted
 
     def create_catalogue(self):        
         path_json = os.path.join(self.root, 'annotations.json')
         with open(os.path.join(self.root, path_json)) as file:
-            data = json.load(file)
+            data1 = json.load(file)
+
+        path_csv = os.path.join(self.root, 'images', 'data.csv')
+        data2 = pd.read_csv(path_csv)
 
         create_dict = lambda i: {'bbox': i['bbox'], 'image_id': i['image_id']}
-        df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
+        df_annotation = pd.DataFrame([create_dict(i) for i in data1['annotations']])
 
-        create_dict = lambda i: {'path': i['file_name'], 'image_id': i['id'], 'identity': i['file_name'].split(os.path.sep)[1]}
-        df_images = pd.DataFrame([create_dict(i) for i in data['images']])
-
-        folders = df_images['path'].str.split(os.path.sep, expand=True)
+        create_dict = lambda i: {'file_name': os.path.split(i['file_name'])[-1], 'image_id': i['id']}
+        df_images = pd.DataFrame([create_dict(i) for i in data1['images']])
+                
+        create_dict = lambda i: {'path': i['path'], 'identity': i['turtle_name'], 'file_name': i['file_name'], 'date': i['path_orig'].split(os.path.sep)[-2]}
+        df_list = pd.DataFrame([create_dict(i) for _, i in data2.iterrows()])
+        df_list['path'] = df_list['path'].apply(lambda x: os.path.join('images', x[32:]))
+        df_list['id'] = range(len(df_list))
 
         df = pd.merge(df_annotation, df_images, on='image_id')
-        df['id'] = df['image_id']
-        df = df.drop(['image_id'], axis=1)
+        df = pd.merge(df, df_list, on='file_name', how='outer')
+
+        df = df.drop(['image_id', 'file_name'], axis=1)
+
         return self.finalize_catalogue(df)
         
         
