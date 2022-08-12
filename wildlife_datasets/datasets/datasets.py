@@ -915,6 +915,9 @@ class SealID(DatasetFactory):
 class SeaTurtleID(DatasetFactory):
     # TODO: download missing
     # TODO: metadata missing
+    # TODO: fix width and height in some images
+    # TODO: some annotations may be rotated
+    # TODO: delete the last three functions when not needed
 
     def create_catalogue(self):        
         path_json = os.path.join(self.root, 'annotations.json')
@@ -932,7 +935,93 @@ class SeaTurtleID(DatasetFactory):
         df = df.drop(['image_id', 'file_name'], axis=1)
 
         return self.finalize_catalogue(df)
-        
+    
+    def create_ann_ann(self, i, identity, segmentation=None, area=None, bbox=None):
+        return {'segmentation': segmentation,
+                'area': area,
+                'image_id': i,
+                'bbox': bbox,
+                'category_id': 0,
+                'id': i,
+                'iscrowd': 0,
+                'identity': identity}
+
+    def create_ann_img(self, i, path, path_orig, year=None, day=None, width=None, height=None):
+        return {'id': i,
+                'width': width,
+                'height': height,
+                'path': path,
+                'license': 0,
+                'year': year,
+                'day': day,
+                'path_orig': path_orig}
+
+    def convert_annotations(self):
+        path_json = os.path.join(self.root, 'annotations_old.json')
+        with open(os.path.join(self.root, path_json)) as file:
+            data1 = json.load(file)
+
+        path_csv = os.path.join(self.root, 'images', 'data.csv')
+        data2 = pd.read_csv(path_csv)
+
+
+        file_names = np.array([os.path.split(img['file_name'])[1] for img in data1['images']])
+
+        imgs_new = []
+        anns_new = []
+        for i, (_, df_row) in enumerate(data2.iterrows()):
+            idx = np.where(df_row['file_name'] == file_names)[0]
+            path = os.path.join('images', df_row['turtle_name'], df_row['file_name'])
+            
+            if len(idx) == 1:
+                img = data1['images'][idx[0]]
+                ann = data1['annotations'][idx[0]]
+                if ann['image_id'] != img['id']:
+                    raise Exception('Structure different than expected')
+
+                width = img['width']
+                height = img['height']
+                segmentation = ann['segmentation']
+                area = ann['area']
+                bbox = ann['bbox']
+            elif len(idx) == 0:
+                width = None
+                height = None
+                segmentation = None
+                area = None
+                bbox = None
+            else:
+                raise Exception('Well...')
+            
+            img = self.create_ann_img(i, path, df_row['path_orig'], df_row['year'], df_row['day'], width, height)
+            ann = self.create_ann_ann(i, df_row['turtle_name'], segmentation, area, bbox)
+            imgs_new.append(img)
+            anns_new.append(ann)
+
+        data1['images'] = imgs_new
+        data1['annotations'] = anns_new
+
+        path_json = os.path.join(self.root, 'annotations.json')
+        with open(os.path.join(self.root, path_json), 'w') as file:
+            json.dump(data1, file) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 class SMALST(DatasetFactory):
     download = downloads.smalst
