@@ -6,5 +6,6 @@ __pycache__/
 .ipynb_checkpoints/
 *.out
 ibeis/
-
+logs/
+ibeis_database*
 jupyter.sh
