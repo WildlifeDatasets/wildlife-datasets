@@ -920,7 +920,7 @@ class SeaTurtleID(DatasetFactory):
     # TODO: delete the last three functions when not needed
 
     def create_catalogue(self):        
-        path_json = os.path.join(self.root, 'annotations.json')
+        path_json = 'annotations.json'
         with open(os.path.join(self.root, path_json)) as file:
             data = json.load(file)
 
