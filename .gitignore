@@ -9,3 +9,5 @@ ibeis/
 logs/
 ibeis_database*
 jupyter.sh
+site/
+venv_docs/

@@ -1,0 +1,18 @@
+site_name: Wildlife Datasets
+
+theme:
+  name: "readthedocs"
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [wildlife_datasets]
+
+nav:
+  - Home: index.md
+  - tutorials.md
+  - How-To Guides: how-to-guides.md
+  - Datasets: datasets.md
+  - Reference: reference.md
+  - explanation.md
