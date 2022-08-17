@@ -31,6 +31,7 @@ info_datasets_full = [
     (datasets.OpenCows2020, {}),
     (datasets.SealID, {'variant': 'source'}),
     (datasets.SealID, {'variant': 'segmented'}),
+    (datasets.SeaTurtleID, {}),
     (datasets.SMALST, {}),
     (datasets.StripeSpotter, {}),
     (datasets.WhaleSharkID, {}),

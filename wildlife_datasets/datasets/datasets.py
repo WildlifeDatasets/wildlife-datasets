@@ -8,7 +8,6 @@ import datetime
 from collections.abc import Iterable
 
 from .. import downloads
-from .. import utils
 from .metadata import metadata
 
 
@@ -47,6 +46,28 @@ def create_id(string_col: pd.Series) -> pd.Series:
     entity_id = string_col.apply(lambda x: hashlib.md5(x.encode()).hexdigest()[:16])
     assert len(entity_id.unique()) == len(entity_id)
     return entity_id
+
+def bbox_segmentation(bbox):
+    return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
+
+def segmentation_bbox(segmentation):
+    x = segmentation[0::2]
+    y = segmentation[1::2]
+    x_min = np.min(x)
+    x_max = np.max(x)
+    y_min = np.min(y)
+    y_max = np.max(y)
+    return [x_min, y_min, x_max-x_min, y_max-y_min]
+
+def is_annotation_bbox(ann, bbox, tol=0):
+    bbox_ann = bbox_segmentation(bbox)
+    if len(ann) == len(bbox_ann):
+        for x, y in zip(ann, bbox_ann):
+            if abs(x-y) > tol:
+                return False
+    else:
+        return False
+    return True
 
 def convert_keypoint(keypoint, keypoints_names):
     keypoint_dict = {}
@@ -159,7 +180,7 @@ class DatasetFactoryWildMe(DatasetFactory):
             if len(ann['segmentation']) != 1:
                 raise(Exception('Wrong number of segmentations'))
             
-        create_dict = lambda i: {'identity': i['name'], 'bbox': utils.analysis.segmentation_bbox(i['segmentation'][0]), 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
+        create_dict = lambda i: {'identity': i['name'], 'bbox': segmentation_bbox(i['segmentation'][0]), 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
 
         create_dict = lambda i: {'file_name': i['file_name'], 'image_id': i['id'], 'date': i['date_captured']}
@@ -177,7 +198,7 @@ class DatasetFactoryWildMe(DatasetFactory):
         # Remove segmentations which are the same as bounding boxes
         ii = []
         for i in range(len(df)):
-            ii.append(utils.analysis.is_annotation_bbox(df.iloc[i]['segmentation'], df.iloc[i]['bbox'], tol=3))
+            ii.append(is_annotation_bbox(df.iloc[i]['segmentation'], df.iloc[i]['bbox'], tol=3))
         df.loc[ii, 'segmentation'] = np.nan
 
         # Rename empty dates
@@ -891,6 +912,117 @@ class SealID(DatasetFactory):
         return self.finalize_catalogue(df)
 
 
+class SeaTurtleID(DatasetFactory):
+    # TODO: download missing
+    # TODO: metadata missing
+    # TODO: fix width and height in some images
+    # TODO: some annotations may be rotated
+    # TODO: delete the last three functions when not needed
+
+    def create_catalogue(self):        
+        path_json = 'annotations.json'
+        with open(os.path.join(self.root, path_json)) as file:
+            data = json.load(file)
+
+        create_dict = lambda i: {'id': i['id'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'identity': i['identity'], 'segmentation': i['segmentation']}
+        df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
+
+        create_dict = lambda i: {'file_name': i['path'].split('/')[-1], 'image_id': i['id'], 'year': i['year']}
+        df_images = pd.DataFrame([create_dict(i) for i in data['images']])
+                
+        df = pd.merge(df_annotation, df_images, on='image_id')
+        df['path'] = 'images' + os.path.sep + df['identity'] + os.path.sep + df['file_name']        
+        df = df.drop(['image_id', 'file_name'], axis=1)
+
+        return self.finalize_catalogue(df)
+    
+    def create_ann_ann(self, i, identity, segmentation=None, area=None, bbox=None):
+        return {'segmentation': segmentation,
+                'area': area,
+                'image_id': i,
+                'bbox': bbox,
+                'category_id': 0,
+                'id': i,
+                'iscrowd': 0,
+                'identity': identity}
+
+    def create_ann_img(self, i, path, path_orig, year=None, day=None, width=None, height=None):
+        return {'id': i,
+                'width': width,
+                'height': height,
+                'path': path,
+                'license': 0,
+                'year': year,
+                'day': day,
+                'path_orig': path_orig}
+
+    def convert_annotations(self):
+        path_json = os.path.join(self.root, 'annotations_old.json')
+        with open(os.path.join(self.root, path_json)) as file:
+            data1 = json.load(file)
+
+        path_csv = os.path.join(self.root, 'images', 'data.csv')
+        data2 = pd.read_csv(path_csv)
+
+
+        file_names = np.array([os.path.split(img['file_name'])[1] for img in data1['images']])
+
+        imgs_new = []
+        anns_new = []
+        for i, (_, df_row) in enumerate(data2.iterrows()):
+            idx = np.where(df_row['file_name'] == file_names)[0]
+            path = os.path.join('images', df_row['turtle_name'], df_row['file_name'])
+            
+            if len(idx) == 1:
+                img = data1['images'][idx[0]]
+                ann = data1['annotations'][idx[0]]
+                if ann['image_id'] != img['id']:
+                    raise Exception('Structure different than expected')
+
+                width = img['width']
+                height = img['height']
+                segmentation = ann['segmentation']
+                area = ann['area']
+                bbox = ann['bbox']
+            elif len(idx) == 0:
+                width = None
+                height = None
+                segmentation = None
+                area = None
+                bbox = None
+            else:
+                raise Exception('Well...')
+            
+            img = self.create_ann_img(i, path, df_row['path_orig'], df_row['year'], df_row['day'], width, height)
+            ann = self.create_ann_ann(i, df_row['turtle_name'], segmentation, area, bbox)
+            imgs_new.append(img)
+            anns_new.append(ann)
+
+        data1['images'] = imgs_new
+        data1['annotations'] = anns_new
+
+        path_json = os.path.join(self.root, 'annotations.json')
+        with open(os.path.join(self.root, path_json), 'w') as file:
+            json.dump(data1, file) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
 class SMALST(DatasetFactory):
     download = downloads.smalst
     metadata = metadata['SMALST']

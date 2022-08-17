@@ -8,25 +8,6 @@ from PIL import Image
 def bbox_segmentation(bbox):
     return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
 
-def segmentation_bbox(segmentation):
-    x = segmentation[0::2]
-    y = segmentation[1::2]
-    x_min = np.min(x)
-    x_max = np.max(x)
-    y_min = np.min(y)
-    y_max = np.max(y)
-    return [x_min, y_min, x_max-x_min, y_max-y_min]
-
-def is_annotation_bbox(ann, bbox, tol=0):
-    bbox_ann = bbox_segmentation(bbox)
-    if len(ann) == len(bbox_ann):
-        for x, y in zip(ann, bbox_ann):
-            if abs(x-y) > tol:
-                return False
-    else:
-        return False
-    return True
-
 def plot_image(img):
     fig, ax = plt.subplots()
     ax.imshow(img)
