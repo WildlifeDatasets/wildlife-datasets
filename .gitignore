@@ -2,6 +2,10 @@ data/
 dataframes/
 venv/
 venv_ibeis/
+venv_gpu/
+venv_docs/
+venv_train/
+
 __pycache__/
 .ipynb_checkpoints/
 *.out
@@ -10,4 +14,5 @@ logs/
 ibeis_database*
 jupyter.sh
 site/
-venv_docs/
+
+/experiments

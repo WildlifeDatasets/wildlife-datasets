@@ -157,13 +157,25 @@ class DatasetFactory():
             if type(path) == str and not os.path.exists(os.path.join(self.root, path)):
                 raise(Exception('Path does not exist:' + os.path.join(self.root, path)))
 
+    def split_data(self, splitter):
+        '''
+        Splits data by splitter class with scikit like API.
+        create_dataset is creates suitable dataset for training.
+        '''
+        indexes = np.arange(len(self.df))
+        labels = self.df['identity']
 
-class Test(DatasetFactory):
-    download = downloads.test
-    metadata = metadata['Test']
+        splits = []
+        for train, valid in splitter.split(indexes, labels):
+            splits.append([
+                self.df.iloc[indexes[train]],
+                self.df.iloc[indexes[valid]],
+            ])
 
-    def create_catalogue(self) -> pd.DataFrame:
-        return pd.DataFrame([1, 2])
+        if len(splits) == 1:
+            return splits[0]
+        else:
+            return splits
 
 
 class DatasetFactoryWildMe(DatasetFactory):
