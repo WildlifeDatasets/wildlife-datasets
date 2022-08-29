@@ -1,9 +1,15 @@
 import os
 import numpy as np
 import datetime
+import cv2
 from matplotlib import pyplot as plt
 from PIL import Image
 
+def get_image(path):
+    # We load with OpenCV because PIL does not apply metadata.
+    img = cv2.imread(path)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    return Image.fromarray(img)
 
 def bbox_segmentation(bbox):
     return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
@@ -23,25 +29,26 @@ def plot_segmentation(img, segmentation):
 def plot_bbox_segmentation(df, root, n):
     if 'bbox' not in df.columns and 'segmentation' not in df.columns:
         for i in range(n):
-            img = Image.open(os.path.join(root, df['path'][i]))
+            img = get_image(os.path.join(root, df['path'][i]))
             plot_image(img)
     if 'bbox' in df.columns:
         df_red = df[~df['bbox'].isnull()]
+        # TODO: this should be removed
         if 'bbox_theta' in df.columns:
             df_red1 = df_red[df_red['bbox_theta'] != 0]
             for i in range(min(n, len(df_red1))):
-                img = Image.open(os.path.join(root, df_red1['path'].iloc[i]))
+                img = get_image(os.path.join(root, df_red1['path'].iloc[i]))
                 segmentation = bbox_segmentation(df_red1['bbox'].iloc[i], df_red1['bbox_theta'].iloc[i])
                 plot_segmentation(img, segmentation)
 
             df_red2 = df_red[df_red['bbox_theta'] == 0]
             for i in range(min(n, len(df_red2))):
-                img = Image.open(os.path.join(root, df_red2['path'].iloc[i]))
+                img = get_image(os.path.join(root, df_red2['path'].iloc[i]))
                 segmentation = bbox_segmentation(df_red2['bbox'].iloc[i], df_red2['bbox_theta'].iloc[i])
                 plot_segmentation(img, segmentation)
         else:
             for i in range(min(n, len(df_red))):
-                img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+                img = get_image(os.path.join(root, df_red['path'].iloc[i]))
                 segmentation = bbox_segmentation(df_red['bbox'].iloc[i])
                 plot_segmentation(img, segmentation)
     if 'segmentation' in df.columns:
@@ -49,12 +56,12 @@ def plot_bbox_segmentation(df, root, n):
         for i in range(min(n, len(df_red))):
             segmentation = df_red['segmentation'].iloc[i]
             if type(segmentation) == str:
-                img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+                img = get_image(os.path.join(root, df_red['path'].iloc[i]))
                 plot_image(img)
-                img = Image.open(os.path.join(root, segmentation))
+                img = get_image(os.path.join(root, segmentation))
                 plot_image(img)
             else:
-                img = Image.open(os.path.join(root, df_red['path'].iloc[i]))
+                img = get_image(os.path.join(root, df_red['path'].iloc[i]))
                 segmentation = df_red['segmentation'].iloc[i]
                 plot_segmentation(img, segmentation)
 
@@ -64,7 +71,7 @@ def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True,
     ratios = []
     for k in idx:
         file_path = os.path.join(root, df['path'][k])
-        im = Image.open(file_path)
+        im = get_image(file_path)
         ratios.append(im.size[0] / im.size[1])
 
     ratio = np.median(ratios)
@@ -80,7 +87,7 @@ def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True,
             k = n_cols*i + j
             file_path = os.path.join(root, df['path'][idx[k]])
 
-            im = Image.open(file_path)
+            im = get_image(file_path)
             if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
                 im = im.transpose(Image.ROTATE_90)
             im.thumbnail((img_w,img_h))

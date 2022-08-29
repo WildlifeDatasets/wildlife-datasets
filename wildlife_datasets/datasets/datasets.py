@@ -936,10 +936,10 @@ class SeaTurtleID(DatasetFactory):
         with open(os.path.join(self.root, path_json)) as file:
             data = json.load(file)
 
-        create_dict = lambda i: {'id': i['id'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'identity': i['identity'], 'segmentation': i['segmentation']}
+        create_dict = lambda i: {'id': i['id'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'identity': i['identity'], 'segmentation': i['segmentation'], 'position': i['position']}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
 
-        create_dict = lambda i: {'file_name': i['path'].split('/')[-1], 'image_id': i['id'], 'year': i['year']}
+        create_dict = lambda i: {'file_name': i['path'].split('/')[-1], 'image_id': i['id'], 'year': i['year'], 'path_orig': i['path_orig']}
         df_images = pd.DataFrame([create_dict(i) for i in data['images']])
                 
         df = pd.merge(df_annotation, df_images, on='image_id')
