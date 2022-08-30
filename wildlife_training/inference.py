@@ -1,18 +1,18 @@
-
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-from pytorch_metric_learning.utils.inference import FaissKNN
-from pytorch_metric_learning import testers
-
+from tqdm import tqdm
+import faiss
 
 class Evaluation():
-    def __init__(self, metrics, method='knn', device='cpu', k=1):
+    def __init__(self, metrics, method='knn', k=1, batch_size=64, num_workers=0, device='cpu'):
         self.metrics = metrics
-        self.device = device
         self.k = k
+        self.batch_size = batch_size
+        self.num_workers = num_workers
+        self.device = device
         if method == 'knn':
             self.predict_func = predict_knn
         elif method == 'classifier':
@@ -21,7 +21,15 @@ class Evaluation():
             raise ValueError()
 
     def __call__(self, model, dataset_train, dataset_valid):
-        predicted, _ = self.predict_func(model, dataset_train, dataset_valid, k=self.k, device=self.device)
+        predicted, _ = self.predict_func(
+            model,
+            dataset_train,
+            dataset_valid,
+            k=self.k,
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
+            device=self.device,
+            )
         actual = dataset_valid.label_map[dataset_valid.label]
 
         output = {}
@@ -47,7 +55,42 @@ def remap_labels(label_train, label_valid):
     return np.array(label_train), np.array(label_valid), np.array(label_all_map)
 
 
-def predict_knn(embedder, dataset_train, dataset_valid, k=5, **kwargs):
+def get_embeddings(embedder, dataset, normalize=True, batch_size=64, num_workers=0, device='cpu'):
+    embedder = embedder.eval()
+    loader = DataLoader(dataset, shuffle=False, batch_size=batch_size, num_workers=num_workers)
+
+    embeddings = []
+    for batch in tqdm(loader):
+        img = batch['image'].to(device)
+        with torch.no_grad():
+            embeddings.append(embedder(img).cpu())
+    embeddings = torch.cat(embeddings)
+
+    if normalize:
+        embeddings = F.normalize(embeddings)
+    return embeddings
+
+
+def faiss_knn(reference, query, k=1):
+    '''
+    For each datapoint in query, return K nearest neigbours in reference set.
+    '''
+    faiss_index = faiss.IndexFlatL2(reference.shape[1])
+    faiss_index.add(reference.float().cpu())
+    score, index = faiss_index.search(query.float().cpu(), k=k)
+    return score, index
+
+
+def predict_knn(
+    embedder,
+    dataset_train,
+    dataset_valid,
+    normalize=True,
+    k=1,
+    batch_size=64,
+    num_workers=0,
+    device='cpu',
+    **kwargs):
     '''
     Calculates top K predictions using embedder and nearest neighbours in train dataset.
 
@@ -56,11 +99,22 @@ def predict_knn(embedder, dataset_train, dataset_valid, k=5, **kwargs):
         actual = dataset_valid.label_map[dataset_valid.label]
         calculate_accuracy(actual, predicted)
     '''
-    # Embeddings
-    embedder = embedder.eval()
-    tester = testers.BaseTester(data_and_label_getter=lambda x: (x['image'], x['label']))
-    embeddings_train, _ = tester.get_all_embeddings(dataset_train, embedder)
-    embeddings_valid, _ = tester.get_all_embeddings(dataset_valid, embedder)
+
+    # Calculate embeddings
+    embeddings_train = get_embeddings(
+        embedder,
+        dataset_train,
+        normalize=normalize,
+        batch_size=batch_size,
+        num_workers=num_workers
+    )
+    embeddings_valid = get_embeddings(
+        embedder,
+        dataset_valid,
+        normalize=normalize,
+        batch_size=batch_size,
+        num_workers=num_workers
+    )
 
     # Labels
     if len(dataset_valid.label_map) == 0: # If there are no labels in valid.
@@ -71,13 +125,21 @@ def predict_knn(embedder, dataset_train, dataset_valid, k=5, **kwargs):
     label_train, label_valid, label_map = remap_labels(label_name_train, label_name_valid)
 
     # Predictions
-    knn_function = FaissKNN()
-    score, index = knn_function(embeddings_valid, k, embeddings_train)
+    score, index = faiss_knn(embeddings_train, embeddings_valid, k)
     predicted = label_map[label_train[index.cpu()]]
     return predicted, score
 
-
-def predict_classifier(classifier, dataset_train, dataset_valid, k=5, batch_size=64, score_func=None, device='cpu', **kwargs):
+def predict_classifier(
+    classifier,
+    dataset_train,
+    dataset_valid,
+    score_func=None,
+    k=1,
+    batch_size=64,
+    num_workers=0,
+    device='cpu',
+    **kwargs
+    ):
     '''
     Calculates top K predictions using classifier output.
 
@@ -88,9 +150,9 @@ def predict_classifier(classifier, dataset_train, dataset_valid, k=5, batch_size
     '''
     classifier = classifier.eval()
     predicted, scores = [], []
-    loader = DataLoader(dataset_valid, shuffle=False, batch_size=batch_size)
+    loader = DataLoader(dataset_valid, shuffle=False, batch_size=batch_size, num_workers=num_workers)
 
-    for batch in loader:
+    for batch in tqdm(loader):
         img = batch['image'].to(device)
         with torch.no_grad():
             output = classifier(img).cpu()
