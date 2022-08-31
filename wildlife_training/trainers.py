@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from tqdm import tqdm
-
+from .utils import prepare_batch
 
 class BasicTrainer():
     def __init__(self, model, optimizer, evaluation=None, scheduler=None, device='cuda'):
@@ -14,16 +14,11 @@ class BasicTrainer():
         self.criterion = nn.CrossEntropyLoss()
         self.current_epoch = 0
 
-    def parse_batch(self, batch):
-        x = batch['image'].to(self.device)
-        y = batch['label'].to(self.device)
-        return x, y
-
     def train_epoch(self, loader, epoch):
         self.current_epoch = epoch
         self.model = self.model.train()
         for batch in tqdm(loader, desc=f'Epoch {epoch}: ', disable=False):
-            x, y = self.parse_batch(batch)
+            x, y = prepare_batch(batch, device=self.device)
 
             self.optimizer.zero_grad()
             out = self.model(x)
@@ -62,16 +57,12 @@ class EmbeddingTrainer():
         self.device = device
         self.current_epoch = 0
 
-    def parse_batch(self, batch):
-        x = batch['image'].to(self.device)
-        y = batch['label'].to(self.device)
-        return x, y
 
     def train_epoch(self, loader, epoch):
         self.current_epoch = epoch
         self.embedder = self.embedder.train()
         for batch in tqdm(loader, desc=f'Epoch {epoch}: ', disable=False):
-            x, y = self.parse_batch(batch)
+            x, y = prepare_batch(batch, device=self.device)
 
             # Optimizers reset 
             for _, optimizer in self.optimizers.items():

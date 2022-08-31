@@ -5,6 +5,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import faiss
+from .utils import prepare_batch
 
 class Evaluation():
     def __init__(self, metrics, method='knn', k=1, batch_size=64, num_workers=0, device='cpu'):
@@ -61,9 +62,9 @@ def get_embeddings(embedder, dataset, normalize=True, batch_size=64, num_workers
 
     embeddings = []
     for batch in tqdm(loader):
-        img = batch['image'].to(device)
+        x, _ = prepare_batch(batch, device=device)
         with torch.no_grad():
-            embeddings.append(embedder(img).cpu())
+            embeddings.append(embedder(x).cpu())
     embeddings = torch.cat(embeddings)
 
     if normalize:
@@ -153,9 +154,9 @@ def predict_classifier(
     loader = DataLoader(dataset_valid, shuffle=False, batch_size=batch_size, num_workers=num_workers)
 
     for batch in tqdm(loader):
-        img = batch['image'].to(device)
+        x, _ = prepare_batch(batch, device=device)
         with torch.no_grad():
-            output = classifier(img).cpu()
+            output = classifier(x).cpu()
 
         # Calculate score
         if score_func is None:
