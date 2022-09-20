@@ -41,8 +41,8 @@ class BasicTrainer():
         }
         torch.save(checkpoint, path)
 
-    def load_checkpoint(self, path):
-        checkpoint = torch.load(path)
+    def load_checkpoint(self, path, device='cpu'):
+        checkpoint = torch.load(path, map_location=torch.device(device))
         self.current_epoch = checkpoint['epoch']
         self.model.load_state_dict(checkpoint['model'])
 
@@ -83,7 +83,7 @@ class EmbeddingTrainer():
 
     def evaluate(self, datasets):
         dataset_train = datasets['reference']
-        dataset_valid = datasets['query']
+        dataset_valid = datasets['valid']
         return self.evaluation(self.embedder, dataset_train, dataset_valid) 
 
     def save_checkpoint(self, path):
@@ -94,8 +94,8 @@ class EmbeddingTrainer():
         }
         torch.save(checkpoint, path)
 
-    def load_checkpoint(self, path):
-        checkpoint = torch.load(path)
+    def load_checkpoint(self, path, device='cpu'):
+        checkpoint = torch.load(path, map_location=torch.device(device))
         self.current_epoch = checkpoint['epoch']
         self.embedder.load_state_dict(checkpoint['embedder'])
         self.loss_func.load_state_dict(checkpoint['loss_func'])

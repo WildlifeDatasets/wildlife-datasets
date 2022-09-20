@@ -77,8 +77,8 @@ def faiss_knn(reference, query, k=1):
     For each datapoint in query, return K nearest neigbours in reference set.
     '''
     faiss_index = faiss.IndexFlatL2(reference.shape[1])
-    faiss_index.add(reference.float().cpu())
-    score, index = faiss_index.search(query.float().cpu(), k=k)
+    faiss_index.add(reference.float().cpu().numpy())
+    score, index = faiss_index.search(query.float().cpu().numpy(), k=k)
     return score, index
 
 
@@ -107,14 +107,16 @@ def predict_knn(
         dataset_train,
         normalize=normalize,
         batch_size=batch_size,
-        num_workers=num_workers
+        num_workers=num_workers,
+        device=device
     )
     embeddings_valid = get_embeddings(
         embedder,
         dataset_valid,
         normalize=normalize,
         batch_size=batch_size,
-        num_workers=num_workers
+        num_workers=num_workers,
+        device=device,
     )
 
     # Labels
@@ -127,7 +129,7 @@ def predict_knn(
 
     # Predictions
     score, index = faiss_knn(embeddings_train, embeddings_valid, k)
-    predicted = label_map[label_train[index.cpu()]]
+    predicted = label_map[label_train[index]]
     return predicted, score
 
 def predict_classifier(
@@ -161,13 +163,53 @@ def predict_classifier(
         # Calculate score
         if score_func is None:
             score = output
-        elif score_func == 'log_softmax':
-            score = torch.exp(F.log_softmax(output, dim=1))
         elif score_func == 'softmax':
+            score = torch.exp(F.log_softmax(output, dim=1))
+        elif score_func == 'log_softmax':
             score = F.log_softmax(output, dim=1)
         else:
             raise ValueError(f'Invalid score function: {score_func}')
 
+        score, index = score.topk(k, dim=1)
+        predicted.append(dataset_train.label_map[index.numpy()])
+        scores.append(score.numpy())
+
+    predicted = np.concatenate(predicted)
+    scores = np.concatenate(scores)
+    return predicted, scores
+
+def predict_arcface(
+    embedder,
+    loss_func,
+    dataset_train,
+    dataset_valid,
+    score_func=None,
+    k=1,
+    batch_size=64,
+    num_workers=0,
+    device='cpu',
+    **kwargs
+    ):
+    '''
+    Calculates top K predictions using cosine similarity to arcface W matrix.
+
+    Example:
+        predicted, _ = predict_arcface(classifier, dataset_train, dataset_valid)
+        actual = dataset_valid.label_map[dataset_valid.label]
+        calculate_accuracy(actual, predicted)
+    '''
+    embedder = embedder.eval()
+    predicted, scores = [], []
+    loader = DataLoader(dataset_valid, shuffle=False, batch_size=batch_size, num_workers=num_workers)
+    w_norm = F.normalize(loss_func.W)
+
+    for batch in tqdm(loader):
+        x, _ = prepare_batch(batch, device=device)
+        with torch.no_grad():
+            x_norm = F.normalize(embedder(x))
+            score = torch.matmul(x_norm, w_norm)
+
+        # Calculate score
         score, index = score.topk(k, dim=1)
         predicted.append(dataset_train.label_map[index.numpy()])
         scores.append(score.numpy())

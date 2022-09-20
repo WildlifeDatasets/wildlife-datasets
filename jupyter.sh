@@ -8,7 +8,7 @@ ml Anaconda3/2021.05
 jupyter-notebook --no-browser --port 8890
 
 # Interactive GPU
-#srun -p gpufast --gres=gpu:1  --pty bash -i
+#srun -p amdgpufast --gres=gpu:1 --cpus-per-task=12  --pty bash -i
 
 # Vevn
 #python3 -m venv venv
@@ -17,6 +17,4 @@ jupyter-notebook --no-browser --port 8890
 
 # Tensorboard
 #ml tensorboard/2.8.0-foss-2021a
-#tensorboard --logdir='experiments'
-
-
+#tensorboard --logdir='runs'

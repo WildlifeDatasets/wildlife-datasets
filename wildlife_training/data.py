@@ -31,6 +31,10 @@ class ImageDataset():
         img = Image.fromarray(img)
         return img
 
+    @property
+    def num_classes(self):
+        return len(self.label_map)
+
     def __len__(self):
         return len(self.df)
 
@@ -71,6 +75,10 @@ class CategoryImageDataset(ImageDataset):
     def __init__(self, df, root, category, transform, img_load=None):
         super().__init__(df, root, transform=transform, img_load=img_load)
         self.category, self.category_map = pd.factorize(df[category].values)
+
+    @property
+    def num_categories(self):
+        return len(self.category_map)
 
     def __getitem__(self, idx):
         x, y = super().__getitem__(idx)
@@ -160,7 +168,7 @@ def split_standard(
                 transform=transform_valid,
                 **kwargs,
             ),
-            'name': str(i)
+            'name': str(i),
         })
     return splits
 
@@ -185,7 +193,6 @@ def split_expanding_years(
         transform_train: transformations used for training
         transform_valid: transformations used for inference
     '''
-
     years = np.sort(np.unique(df[col_year]))
 
     if create_dataset is None:
@@ -216,6 +223,7 @@ def split_expanding_years(
                 transform=transform_valid,
                 **kwargs,
             ),
-            'name': str(valid_years[0])
+            'name': str(valid_years[0]),
+            'years': {'valid': valid_years, 'train': train_years},
         })
     return splits

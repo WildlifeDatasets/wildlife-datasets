@@ -15,4 +15,5 @@ ibeis_database*
 jupyter.sh
 site/
 
-/experiments
+/experiments/*/runs
+*.pkl
