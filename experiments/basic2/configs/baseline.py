@@ -9,9 +9,12 @@ import sys
 root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
 sys.path.append(root)
 
+from torchvision import transforms as T
+
 # Wildlife training
+from wildlife_training.models import create_model_with_categories
 from wildlife_training.trainers import BasicTrainer
-from wildlife_training.data import ImageDataset, split_standard, split_expanding_years
+from wildlife_training.data import ImageDataset, CategoryImageDataset, split_standard, split_expanding_years
 from wildlife_training.inference import Evaluation
 from wildlife_datasets import datasets
 
@@ -50,7 +53,7 @@ def apply_corrections(df):
 config = {
     'batch_size': 128,
     'device': 'cuda',
-    'epochs': 50,
+    'epochs': 100,
     'workers': 6,
     'folder': 'runs/',
     'name': os.path.splitext(os.path.basename(__file__))[0],
@@ -65,18 +68,24 @@ dataset_factory.df = apply_corrections(dataset_factory.df)
 
 dataset_factory.root = '/home/cermavo3/projects/datasets/data/256x256_bbox' # cropped to 256x256 with bbox
 
-transform_valid = create_transform(
-    input_size = 256,
-    is_training = False,
-    )
+transform_train = T.Compose([
+    T.Resize(size=256),
+    T.CenterCrop(size=(224, 224)),
+    T.RandomVerticalFlip(p=0.5),
+    T.RandomHorizontalFlip(p=0.5),
+    T.ToTensor(),
+    T.Normalize(mean=[0.4850, 0.4560, 0.4060], std=[0.2290, 0.2240, 0.2250]),
+])
 
-transform_train = create_transform(
-    input_size = 256,
-    is_training = True,
-    )
+transform_valid = T.Compose([
+    T.Resize(size=256),
+    T.CenterCrop(size=(224, 224)),
+    T.ToTensor(),
+    T.Normalize(mean=[0.4850, 0.4560, 0.4060], std=[0.2290, 0.2240, 0.2250]),
+])
 
 splitter = StratifiedShuffleSplit(
-    n_splits=1,
+    n_splits=5,
     random_state=1,
     test_size=0.3
     )
@@ -88,7 +97,7 @@ splits = split_standard(
     create_dataset = ImageDataset,
     transform_train = transform_train,
     transform_valid = transform_valid,
-    img_load='full', # Already with bbox
+    img_load='full', # Add bbox/segmentation using different data root.
     )
 
 evaluation = Evaluation(

@@ -9,6 +9,7 @@ jupyter-notebook --no-browser --port 8890
 
 # Interactive GPU
 #srun -p amdgpufast --gres=gpu:1 --cpus-per-task=12  --pty bash -i
+#srun -p gpufast --gres=gpu:1 --cpus-per-task=12  --pty bash -i
 
 # Vevn
 #python3 -m venv venv

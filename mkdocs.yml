@@ -1,7 +1,7 @@
 site_name: Wildlife Datasets
 
 theme:
-  name: "readthedocs"
+  name: "material"
 
 plugins:
   - mkdocstrings:

@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 class Lcg():
     def __init__(self, seed, iterate=0):
@@ -103,3 +104,19 @@ class Split():
         individual_train = np.array(y_unique[i_end:])
         individual_test = np.array(y_unique[:i_end])
         return self.__set_split(lcg, [], individual_train, individual_test)
+
+
+class ReplicableRandomSplit:
+    def __init__(self, n_splits=1, train_size=0.5, random_state=0):
+        self.n_splits = n_splits
+        self.train_size = train_size
+        self.random_state = random_state
+
+    def split(self, indices, labels):
+        splits = []
+        for i in range(self.n_splits):
+            df = pd.DataFrame({'identity': labels})
+            splitter = Split(df, self.random_state + i*10)
+            split = splitter.closed_set_split(self.train_size)
+            splits.append( (indices[split[0]], indices[split[1]]) )
+        return splits
