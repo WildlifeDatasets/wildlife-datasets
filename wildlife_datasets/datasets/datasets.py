@@ -372,18 +372,11 @@ class BelugaID(DatasetFactoryWildMe):
 class BirdIndividualID(DatasetFactory):
     download = downloads.bird_individual_id
     metadata = metadata['BirdIndividualID']
+    prefix1 = 'Original_pictures'
+    prefix2 = 'IndividualID'
 
-    def create_catalogue(self, variant='source'):
-        if variant == 'source':
-            prefix1 = 'Original_pictures'
-            prefix2 = 'IndividualID'
-        elif variant == 'segmented':
-            prefix1 = 'Cropped_pictures'
-            prefix2 = 'IndividuaID'
-        else:
-            raise ValueError(f'Variant {variant} is not valid')
-
-        path = os.path.join(self.root, prefix1, prefix2)
+    def create_catalogue(self):
+        path = os.path.join(self.root, self.prefix1, self.prefix2)
         data = find_images(path)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
@@ -403,26 +396,32 @@ class BirdIndividualID(DatasetFactory):
 
         df1 = pd.DataFrame({    
             'id': create_id(split + data['file']),
-            'path': prefix1 + os.path.sep + prefix2 + os.path.sep + data['path'] + os.path.sep + data['file'],
+            'path': self.prefix1 + os.path.sep + self.prefix2 + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'species': species,
             'split': split,
         })
 
         # Add images without labels
-        path = os.path.join(self.root, prefix1, 'New_birds')
+        path = os.path.join(self.root, self.prefix1, 'New_birds')
         data = find_images(path)
         species = data['path']
 
         df2 = pd.DataFrame({    
             'id': create_id(data['file']),
-            'path': prefix1 + os.path.sep + 'New_birds' + os.path.sep + data['path'] + os.path.sep + data['file'],
+            'path': self.prefix1 + os.path.sep + 'New_birds' + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': 'unknown',
             'species': species,
             'split': 'unassigned',
         })
 
         return self.finalize_catalogue(pd.concat([df1, df2]))
+
+
+class BirdIndividualIDSegmented(BirdIndividualID):
+    prefix1 = 'Cropped_pictures'
+    prefix2 = 'IndividuaID'
+
 
 
 class CTai(DatasetFactory):
@@ -903,25 +902,23 @@ class OpenCows2020(DatasetFactory):
 class SealID(DatasetFactory):
     download = downloads.seal_id
     metadata = metadata['SealID']
+    prefix = 'source_'
 
-    def create_catalogue(self, variant='source'):
-        if variant == 'source':
-            prefix = 'source_'
-        elif variant == 'segmented':
-            prefix = 'segmented_'
-        else:
-            raise ValueError(f'Variant {variant} is not valid')
-
+    def create_catalogue(self):
         data = pd.read_csv(os.path.join(self.root, 'full images', 'annotation.csv'))
 
         df = pd.DataFrame({    
             'id': data['file'].str.split('.', expand=True)[0],
-            'path': 'full images' + os.path.sep + prefix + data['reid_split'] + os.path.sep + data['file'],
+            'path': 'full images' + os.path.sep + self.prefix + data['reid_split'] + os.path.sep + data['file'],
             'identity': data['class_id'].astype(int),
             'reid_split': data['reid_split'],
             'segmentation_split': data['segmentation_split'],
         })
         return self.finalize_catalogue(df)
+
+
+class SealIDSegmented(SealID):
+    prefix = 'segmented_'
 
 
 class SeaTurtleID(DatasetFactory):
