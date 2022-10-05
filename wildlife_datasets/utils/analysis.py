@@ -31,24 +31,10 @@ def plot_bbox_segmentation(df, root, n):
             plot_image(img)
     if 'bbox' in df.columns:
         df_red = df[~df['bbox'].isnull()]
-        # TODO: this should be removed
-        if 'bbox_theta' in df.columns:
-            df_red1 = df_red[df_red['bbox_theta'] != 0]
-            for i in range(min(n, len(df_red1))):
-                img = get_image(os.path.join(root, df_red1['path'].iloc[i]))
-                segmentation = utils.bbox_segmentation(df_red1['bbox'].iloc[i], df_red1['bbox_theta'].iloc[i])
-                plot_segmentation(img, segmentation)
-
-            df_red2 = df_red[df_red['bbox_theta'] == 0]
-            for i in range(min(n, len(df_red2))):
-                img = get_image(os.path.join(root, df_red2['path'].iloc[i]))
-                segmentation = utils.bbox_segmentation(df_red2['bbox'].iloc[i], df_red2['bbox_theta'].iloc[i])
-                plot_segmentation(img, segmentation)
-        else:
-            for i in range(min(n, len(df_red))):
-                img = get_image(os.path.join(root, df_red['path'].iloc[i]))
-                segmentation = utils.bbox_segmentation(df_red['bbox'].iloc[i])
-                plot_segmentation(img, segmentation)
+        for i in range(min(n, len(df_red))):
+            img = get_image(os.path.join(root, df_red['path'].iloc[i]))
+            segmentation = utils.bbox_segmentation(df_red['bbox'].iloc[i])
+            plot_segmentation(img, segmentation)
     if 'segmentation' in df.columns:
         df_red = df[~df['segmentation'].isnull()]
         for i in range(min(n, len(df_red))):
@@ -63,7 +49,7 @@ def plot_bbox_segmentation(df, root, n):
                 segmentation = df_red['segmentation'].iloc[i]
                 plot_segmentation(img, segmentation)
 
-def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True, display_data=False):
+def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True):
     idx = np.random.permutation(len(df))[:n_rows*n_cols]
 
     ratios = []
@@ -93,11 +79,9 @@ def plot_grid(df, root, n_rows=5, n_cols=8, offset=10, img_min=100, rotate=True,
             pos_x = j*img_w + j*offset
             pos_y = i*img_h + i*offset        
             im_grid.paste(im, (pos_x,pos_y))
-    if display_data:
-        display(im_grid)
     return im_grid
 
-def display_statistics(df, root, display_data=False, n=2, **kwargs):
+def display_statistics(df, root, **kwargs):
     df_red = df.loc[df['identity'] != 'unknown', 'identity']
     df_red.value_counts().reset_index(drop=True).plot()
         
@@ -119,10 +103,6 @@ def display_statistics(df, root, display_data=False, n=2, **kwargs):
             print(f"Images span                    %1.1f months" % (span_years * 12))
         else:
             print(f"Images span                    %1.0f days" % (span_years * 365.25))
-    if display_data:
-        plot_bbox_segmentation(df, root, n)
-        plot_grid(df, root, display_data=display_data, **kwargs)
-        display(df)
 
 def get_dates(dates, frmt):
     return np.array([datetime.datetime.strptime(date, frmt) for date in dates])
