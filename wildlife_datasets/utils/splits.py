@@ -20,8 +20,6 @@ class Lcg():
 
 
 class Split():
-    # TODO: add unknown to semi?
-    # TODO: what to do with csv files?
     def __init__(self, df, seed, keep_unknown=False):
         if keep_unknown:
             self.df = df
