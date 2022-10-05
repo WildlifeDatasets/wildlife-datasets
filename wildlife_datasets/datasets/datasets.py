@@ -1,14 +1,13 @@
 import os
 import pandas as pd
 import numpy as np
-from typing import Tuple, Optional
-import hashlib
+from typing import Optional
 import json
 import datetime
-from collections.abc import Iterable
 
 from .. import downloads
 from .metadata import metadata
+from . import utils
 
 
 '''
@@ -23,64 +22,6 @@ processing and the reasoning behind it. Some datasets are especially
 dificult and not obvious
 
 '''
-
-def find_images(
-    root: str,
-    img_extensions: Tuple[str, ...] = ('.png', '.jpg', '.jpeg')
-    ) -> pd.DataFrame:
-    '''
-    Find all image files in folder recursively based on img_extensions. 
-    Save filename and relative path from root.
-    '''
-    data = [] 
-    for path, directories, files in os.walk(root):
-        for file in files:
-            if file.lower().endswith(tuple(img_extensions)):
-                data.append({'path': os.path.relpath(path, start=root), 'file': file})
-    return pd.DataFrame(data)
-
-def create_id(string_col: pd.Series) -> pd.Series:
-    '''
-    Creates unique id from string based on MD5 hash.
-    '''
-    entity_id = string_col.apply(lambda x: hashlib.md5(x.encode()).hexdigest()[:16])
-    assert len(entity_id.unique()) == len(entity_id)
-    return entity_id
-
-def bbox_segmentation(bbox):
-    return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
-
-def segmentation_bbox(segmentation):
-    x = segmentation[0::2]
-    y = segmentation[1::2]
-    x_min = np.min(x)
-    x_max = np.max(x)
-    y_min = np.min(y)
-    y_max = np.max(y)
-    return [x_min, y_min, x_max-x_min, y_max-y_min]
-
-def is_annotation_bbox(ann, bbox, tol=0):
-    bbox_ann = bbox_segmentation(bbox)
-    if len(ann) == len(bbox_ann):
-        for x, y in zip(ann, bbox_ann):
-            if abs(x-y) > tol:
-                return False
-    else:
-        return False
-    return True
-
-def convert_keypoint(keypoint, keypoints_names):
-    keypoint_dict = {}
-    if isinstance(keypoint, Iterable):
-        for i in range(len(keypoints_names)):
-            x = keypoint[2*i]
-            y = keypoint[2*i+1]
-            if np.isfinite(x) and np.isfinite(y):
-                keypoint_dict[keypoints_names[i]] = [x, y]
-    return keypoint_dict
-
-def convert_keypoints(keypoints: pd.Series, keypoints_names):
-    return [convert_keypoint(keypoint, keypoints_names) for keypoint in keypoints]
 
 
 class DatasetFactory():
@@ -192,7 +133,7 @@ class DatasetFactoryWildMe(DatasetFactory):
             if len(ann['segmentation']) != 1:
                 raise(Exception('Wrong number of segmentations'))
             
-        create_dict = lambda i: {'identity': i['name'], 'bbox': segmentation_bbox(i['segmentation'][0]), 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
+        create_dict = lambda i: {'identity': i['name'], 'bbox': utils.segmentation_bbox(i['segmentation'][0]), 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
 
         create_dict = lambda i: {'file_name': i['file_name'], 'image_id': i['id'], 'date': i['date_captured']}
@@ -210,7 +151,7 @@ class DatasetFactoryWildMe(DatasetFactory):
         # Remove segmentations which are the same as bounding boxes
         ii = []
         for i in range(len(df)):
-            ii.append(is_annotation_bbox(df.iloc[i]['segmentation'], df.iloc[i]['bbox'], tol=3))
+            ii.append(utils.is_annotation_bbox(df.iloc[i]['segmentation'], df.iloc[i]['bbox'], tol=3))
         df.loc[ii, 'segmentation'] = np.nan
 
         # Rename empty dates
@@ -254,7 +195,7 @@ class AAUZebraFishID(DatasetFactory):
         video = video.astype('category').cat.codes
 
         df = pd.DataFrame({
-            'id': create_id(data['Object ID'].astype(str) + data['Filename']),
+            'id': utils.create_id(data['Object ID'].astype(str) + data['Filename']),
             'path': 'data' + os.path.sep + data['Filename'],
             'identity': data['Object ID'],
             'video': video,
@@ -270,11 +211,11 @@ class AerialCattle2017(DatasetFactory):
     metadata = metadata['AerialCattle2017']
 
     def create_catalogue(self) -> pd.DataFrame:
-        data = find_images(self.root)
+        data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
         df = pd.DataFrame({
-            'id': create_id(data['file']),
+            'id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1].astype(int),
             'video': folders[2],
@@ -338,7 +279,7 @@ class ATRW(DatasetFactory):
         with open(os.path.join(self.root, 'eval_script', 'ATRWEvalScript-main', 'annotations', 'gt_test_wild.json')) as file:
             identity = json.load(file)
 
-        ids = find_images(os.path.join(self.root, 'atrw_detection_test', 'test'))
+        ids = utils.find_images(os.path.join(self.root, 'atrw_detection_test', 'test'))
         ids['imgid'] = ids['file'].str.split('.', expand=True)[0].astype('int')
 
         entries = []
@@ -355,7 +296,7 @@ class ATRW(DatasetFactory):
         df_test2 = df_test2.drop(['file', 'imgid'], axis=1)
 
         df = pd.concat([df_train, df_test1, df_test2])
-        df['id'] = create_id(df.id.astype(str))
+        df['id'] = utils.create_id(df.id.astype(str))
         return self.finalize_catalogue(df)
 
     
@@ -377,7 +318,7 @@ class BirdIndividualID(DatasetFactory):
 
     def create_catalogue(self):
         path = os.path.join(self.root, self.prefix1, self.prefix2)
-        data = find_images(path)
+        data = utils.find_images(path)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
         # Remove images with multiple labels
@@ -395,7 +336,7 @@ class BirdIndividualID(DatasetFactory):
         species = folders[0]
 
         df1 = pd.DataFrame({    
-            'id': create_id(split + data['file']),
+            'id': utils.create_id(split + data['file']),
             'path': self.prefix1 + os.path.sep + self.prefix2 + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'species': species,
@@ -404,11 +345,11 @@ class BirdIndividualID(DatasetFactory):
 
         # Add images without labels
         path = os.path.join(self.root, self.prefix1, 'New_birds')
-        data = find_images(path)
+        data = utils.find_images(path)
         species = data['path']
 
         df2 = pd.DataFrame({    
-            'id': create_id(data['file']),
+            'id': utils.create_id(data['file']),
             'path': self.prefix1 + os.path.sep + 'New_birds' + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': 'unknown',
             'species': species,
@@ -491,7 +432,7 @@ class Cows2021(DatasetFactory):
     metadata = metadata['Cows2021']
 
     def create_catalogue(self) -> pd.DataFrame:
-        data = find_images(self.root)
+        data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
         ii = (folders[2] == 'Identification') & (folders[3] == 'Test')
@@ -499,7 +440,7 @@ class Cows2021(DatasetFactory):
         data = data.loc[ii]
 
         df = pd.DataFrame({
-            'id': create_id(data['file']),
+            'id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[4].astype(int),
         })
@@ -512,7 +453,7 @@ class Drosophila(DatasetFactory):
     metadata = metadata['Drosophila']
 
     def create_catalogue(self) -> pd.DataFrame:
-        data = find_images(self.root)
+        data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
         data['identity'] = 'unknown'
@@ -524,7 +465,7 @@ class Drosophila(DatasetFactory):
             data.loc[idx1 & idx2 & ~idx3, 'identity'] = (i_week-1)*20 + folders.loc[idx1 & idx2 & ~idx3, 2].astype(int)
             data.loc[idx1 & ~idx2, 'split'] = 'train'
             data.loc[idx1 & idx2, 'split'] = 'val'
-        data['id'] = create_id(folders[0] + data['file'])
+        data['id'] = utils.create_id(folders[0] + data['file'])
         data['path'] = data['path'] + os.path.sep + data['file']
         
         df = data.drop(['file'], axis=1)
@@ -537,7 +478,7 @@ class FriesianCattle2015(DatasetFactory):
     metadata = metadata['FriesianCattle2015']
 
     def create_catalogue(self) -> pd.DataFrame:
-        data = find_images(self.root)
+        data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
         split = folders[1].replace({'Cows-testing': 'test', 'Cows-training': 'train'})
         assert len(split.unique()) == 2
@@ -545,7 +486,7 @@ class FriesianCattle2015(DatasetFactory):
         identity = folders[2].str.strip('Cow').astype(int)
 
         df = pd.DataFrame({
-            'id': create_id(identity.astype(str) + split + data['file']),
+            'id': utils.create_id(identity.astype(str) + split + data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'split': split
@@ -559,11 +500,11 @@ class FriesianCattle2017(DatasetFactory):
     metadata = metadata['FriesianCattle2017']
 
     def create_catalogue(self) -> pd.DataFrame:
-        data = find_images(self.root)
+        data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
         df = pd.DataFrame({
-            'id': create_id(data['file']),
+            'id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1].astype(int),
         })
@@ -586,14 +527,14 @@ class Giraffes(DatasetFactory):
     def create_catalogue(self) -> pd.DataFrame:
         path = os.path.join('pbil.univ-lyon1.fr', 'pub', 'datasets', 'miele2021')
 
-        data = find_images(os.path.join(self.root, path))
+        data = utils.find_images(os.path.join(self.root, path))
         folders = data['path'].str.split(os.path.sep, expand=True)
 
         clusters = folders[0] == 'clusters'
         data, folders = data[clusters], folders[clusters]
 
         df = pd.DataFrame({    
-            'id': create_id(data['file']),
+            'id': utils.create_id(data['file']),
             'path': path + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': folders[1],
         })
@@ -623,7 +564,7 @@ class HappyWhale(DatasetFactory):
         for replace_tuple in replace_names:
             df1['species'] = df1['species'].replace({replace_tuple[0]: replace_tuple[1]})
 
-        test_files = find_images(os.path.join(self.root, 'test_images'))
+        test_files = utils.find_images(os.path.join(self.root, 'test_images'))
         test_files = list(test_files['file'])
         test_files = pd.Series(np.sort(test_files))
 
@@ -655,7 +596,7 @@ class HumpbackWhaleID(DatasetFactory):
             'split': 'train'
             })
         
-        test_files = find_images(os.path.join(self.root, 'test'))
+        test_files = utils.find_images(os.path.join(self.root, 'test'))
         test_files = list(test_files['file'])
         test_files = pd.Series(np.sort(test_files))
 
@@ -685,7 +626,7 @@ class IPanda50(DatasetFactory):
     metadata = metadata['IPanda50']
 
     def create_catalogue(self) -> pd.DataFrame:
-        data = find_images(self.root)
+        data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
         keypoints = []
@@ -708,7 +649,7 @@ class IPanda50(DatasetFactory):
             keypoints.append(list(keypoints_part))
         
         df = pd.DataFrame({
-            'id': create_id(data['file']),
+            'id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1],
             'keypoints': keypoints
@@ -731,11 +672,11 @@ class LionData(DatasetFactory):
     metadata = metadata['LionData']
 
     def create_catalogue(self) -> pd.DataFrame:
-        data = find_images(self.root)
+        data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
         df = pd.DataFrame({
-            'id': create_id(data['file']),
+            'id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[3],
         })
@@ -856,7 +797,7 @@ class NyalaData(DatasetFactory):
     metadata = metadata['NyalaData']
 
     def create_catalogue(self) -> pd.DataFrame:
-        data = find_images(self.root)
+        data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
         identity = folders[3].astype(int)
         position = np.full(len(data), np.nan, dtype=object)
@@ -864,7 +805,7 @@ class NyalaData(DatasetFactory):
         position[['right' in filename for filename in data['file']]] = 'right'
 
         df = pd.DataFrame({
-            'id': create_id(data['file']),
+            'id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'position': position,
@@ -878,7 +819,7 @@ class OpenCows2020(DatasetFactory):
     metadata = metadata['OpenCows2020']
 
     def create_catalogue(self) -> pd.DataFrame:
-        data = find_images(self.root)
+        data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
         #Select only re-identification dataset
@@ -890,7 +831,7 @@ class OpenCows2020(DatasetFactory):
         identity = folders[4]
 
         df = pd.DataFrame({
-            'id': create_id(identity.astype(str) + split + data['file']),
+            'id': utils.create_id(identity.astype(str) + split + data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'split': split
@@ -1038,7 +979,7 @@ class SMALST(DatasetFactory):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Images
-        data = find_images(os.path.join(self.root, 'zebra_training_set', 'images'))
+        data = utils.find_images(os.path.join(self.root, 'zebra_training_set', 'images'))
         path = data['file'].str.strip('zebra_')
         data['identity'] = path.str[0]
         data['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
@@ -1046,7 +987,7 @@ class SMALST(DatasetFactory):
         data = data.drop(['file'], axis=1)
 
         # Masks
-        masks = find_images(os.path.join(self.root, 'zebra_training_set', 'bgsub'))
+        masks = utils.find_images(os.path.join(self.root, 'zebra_training_set', 'bgsub'))
         path = masks['file'].str.strip('zebra_')
         masks['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
         masks['segmentation'] = 'zebra_training_set' + os.path.sep + 'bgsub' + os.path.sep + masks['file']
@@ -1061,7 +1002,7 @@ class StripeSpotter(DatasetFactory):
     metadata = metadata['StripeSpotter']
 
     def create_catalogue(self) -> pd.DataFrame:
-        data = find_images(self.root)
+        data = utils.find_images(self.root)
         data['index'] = data['file'].str[-7:-4].astype(int)
         category = data['file'].str.split('-', expand=True)[0]
         data = data[category == 'img'] # Only full images
@@ -1071,7 +1012,7 @@ class StripeSpotter(DatasetFactory):
         data.loc[data['animal_name'].isnull(), 'animal_name'] = 'unknown'
         
         df = pd.DataFrame({
-            'id': create_id(data['file']),
+            'id': utils.create_id(data['file']),
             'path':  data['path'] + os.path.sep + data['file'],
             'identity': data['animal_name'],
             'bbox': pd.Series([[int(a) for a in b.split(' ')] for b in data['roi']]),
@@ -1096,7 +1037,7 @@ class WNIGiraffes(DatasetFactory):
     metadata = metadata['WNIGiraffes']
 
     def create_catalogue(self) -> pd.DataFrame:
-        data = find_images(self.root)
+        data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
         
         with open(os.path.join(self.root, 'wni_giraffes_train.json')) as file:
@@ -1105,7 +1046,7 @@ class WNIGiraffes(DatasetFactory):
         df_keypoints = pd.DataFrame([create_dict(i) for i in keypoints['annotations']])
 
         data = pd.merge(data, df_keypoints, how='left', on='file')
-        data['id'] = create_id(data['file'])
+        data['id'] = utils.create_id(data['file'])
         data['identity'] = folders[1].astype(int)
         data['path'] = data['path'] + os.path.sep + data['file']
         data = data.drop(['file'], axis=1)

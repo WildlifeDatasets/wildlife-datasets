@@ -4,15 +4,13 @@ import datetime
 import cv2
 from matplotlib import pyplot as plt
 from PIL import Image
+from ..datasets import utils
 
 def get_image(path):
     # We load with OpenCV because PIL does not apply metadata.
     img = cv2.imread(path)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     return Image.fromarray(img)
-
-def bbox_segmentation(bbox):
-    return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
 
 def plot_image(img):
     fig, ax = plt.subplots()
@@ -38,18 +36,18 @@ def plot_bbox_segmentation(df, root, n):
             df_red1 = df_red[df_red['bbox_theta'] != 0]
             for i in range(min(n, len(df_red1))):
                 img = get_image(os.path.join(root, df_red1['path'].iloc[i]))
-                segmentation = bbox_segmentation(df_red1['bbox'].iloc[i], df_red1['bbox_theta'].iloc[i])
+                segmentation = utils.bbox_segmentation(df_red1['bbox'].iloc[i], df_red1['bbox_theta'].iloc[i])
                 plot_segmentation(img, segmentation)
 
             df_red2 = df_red[df_red['bbox_theta'] == 0]
             for i in range(min(n, len(df_red2))):
                 img = get_image(os.path.join(root, df_red2['path'].iloc[i]))
-                segmentation = bbox_segmentation(df_red2['bbox'].iloc[i], df_red2['bbox_theta'].iloc[i])
+                segmentation = utils.bbox_segmentation(df_red2['bbox'].iloc[i], df_red2['bbox_theta'].iloc[i])
                 plot_segmentation(img, segmentation)
         else:
             for i in range(min(n, len(df_red))):
                 img = get_image(os.path.join(root, df_red['path'].iloc[i]))
-                segmentation = bbox_segmentation(df_red['bbox'].iloc[i])
+                segmentation = utils.bbox_segmentation(df_red['bbox'].iloc[i])
                 plot_segmentation(img, segmentation)
     if 'segmentation' in df.columns:
         df_red = df[~df['segmentation'].isnull()]
