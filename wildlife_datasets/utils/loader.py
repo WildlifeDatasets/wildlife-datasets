@@ -4,39 +4,39 @@ import pandas as pd
 from .. import datasets
 
 info_datasets_full = [
-    (datasets.AAUZebraFishID, {}),
-    (datasets.AerialCattle2017, {}),
-    (datasets.ATRW, {}),
-    (datasets.BelugaID, {}),
-    (datasets.BirdIndividualID, {'variant': 'source'}),
-    (datasets.BirdIndividualID, {'variant': 'segmented'}),
-    (datasets.CTai, {}),
-    (datasets.CZoo, {}),
-    (datasets.Cows2021, {}),
-    (datasets.Drosophila, {}),
-    (datasets.FriesianCattle2015, {}),
-    (datasets.FriesianCattle2017, {}),
-    (datasets.GiraffeZebraID, {}),
-    (datasets.Giraffes, {}),
-    (datasets.HappyWhale, {}),
-    (datasets.HumpbackWhaleID, {}),
-    (datasets.HyenaID2022, {}),
-    (datasets.IPanda50, {}),
-    (datasets.LeopardID2022, {}),
-    (datasets.LionData, {}),
-    (datasets.MacaqueFaces, {}),
-    (datasets.NDD20, {}),
-    (datasets.NOAARightWhale, {}),
-    (datasets.NyalaData, {}),
-    (datasets.OpenCows2020, {}),
-    (datasets.SealID, {'variant': 'source'}),
-    (datasets.SealID, {'variant': 'segmented'}),
-    (datasets.SeaTurtleID, {}),
-    (datasets.SMALST, {}),
-    (datasets.StripeSpotter, {}),
-    (datasets.WhaleSharkID, {}),
-    (datasets.WNIGiraffes, {}),
-    (datasets.ZindiTurtleRecall, {})
+    datasets.AAUZebraFishID,
+    datasets.AerialCattle2017,
+    datasets.ATRW,
+    datasets.BelugaID,
+    datasets.BirdIndividualID,
+    datasets.BirdIndividualIDSegmented,
+    datasets.CTai,
+    datasets.CZoo,
+    datasets.Cows2021,
+    datasets.Drosophila,
+    datasets.FriesianCattle2015,
+    datasets.FriesianCattle2017,
+    datasets.GiraffeZebraID,
+    datasets.Giraffes,
+    datasets.HappyWhale,
+    datasets.HumpbackWhaleID,
+    datasets.HyenaID2022,
+    datasets.IPanda50,
+    datasets.LeopardID2022,
+    datasets.LionData,
+    datasets.MacaqueFaces,
+    datasets.NDD20,
+    datasets.NOAARightWhale,
+    datasets.NyalaData,
+    datasets.OpenCows2020,
+    datasets.SealID,
+    datasets.SealIDSegmented,
+    datasets.SeaTurtleID,
+    datasets.SMALST,
+    datasets.StripeSpotter,
+    datasets.WhaleSharkID,
+    datasets.WNIGiraffes,
+    datasets.ZindiTurtleRecall
 ]
 
 def unique_datasets_list(datasets_list):
@@ -52,11 +52,8 @@ def unique_datasets_list(datasets_list):
 def get_dataset_folder(root_dataset, dataset_class):
     return os.path.join(root_dataset, dataset_class.__name__)
 
-def get_dataframe_path(root_dataframe, dataset_class, dataset_kwargs={}):
-    if len(dataset_kwargs) == 0:
-        return os.path.join(root_dataframe, dataset_class.__name__ + '.pkl')
-    else:
-        return os.path.join(root_dataframe, dataset_class.__name__ + '_' + dataset_kwargs['variant'] + '.pkl')    
+def get_dataframe_path(root_dataframe, dataset_class):
+    return os.path.join(root_dataframe, dataset_class.__name__ + '.pkl')
 
 def download_datasets(info_datasets, root_dataset, **kwargs):
     for info_dataset in info_datasets:
@@ -77,14 +74,13 @@ def load_dataset(info_dataset, root_dataset, root_dataframe, overwrite=False):
     if not os.path.exists(root_dataframe):
         os.makedirs(root_dataframe)
     dataset_class = info_dataset[0]
-    dataset_kwargs = info_dataset[1]
 
     root = get_dataset_folder(root_dataset, dataset_class)
-    df_path = get_dataframe_path(root_dataframe, dataset_class, dataset_kwargs)
+    df_path = get_dataframe_path(root_dataframe, dataset_class)
     if overwrite or not os.path.exists(df_path):
-        dataset = dataset_class(root, None, download=False, **dataset_kwargs)
+        dataset = dataset_class(root, None, download=False)
         dataset.df.to_pickle(df_path)
     else:
         df = pd.read_pickle(df_path)
-        dataset = dataset_class(root, df, download=False, **dataset_kwargs)
+        dataset = dataset_class(root, df, download=False)
     return dataset
