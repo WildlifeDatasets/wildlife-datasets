@@ -3,7 +3,11 @@ import numpy as np
 import pandas as pd
 
 def get_dataset_folder(root_dataset, dataset_class):
-    return os.path.join(root_dataset, dataset_class.__name__)
+    # TODO: hacky solution
+    if dataset_class.__name__.endswith('Segmented'):
+        return os.path.join(root_dataset, dataset_class.__name__[:-9])
+    else:
+        return os.path.join(root_dataset, dataset_class.__name__)
 
 def get_dataframe_path(root_dataframe, dataset_class):
     return os.path.join(root_dataframe, dataset_class.__name__ + '.pkl')
