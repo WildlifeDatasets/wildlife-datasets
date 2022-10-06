@@ -1,9 +1,18 @@
 # Wildlife Re-Identification (Re-ID) Datasets
 
 This package provides:
-- overview of 30 publicly available [wildlife re-identification datasets](notebooks/dataset_descriptions.ipynb).
+- overview of 30 publicly available wildlife re-identification datasets.
 - utilities to mass download and convert them into a unified format.
 - splits for open and closed-set classification.
+
+
+## Summary of datasets
+
+The package is able to handle the following datasets. We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and whether the images were taken in the wild, whether the animals have unique patterns and whether the images are cropped.
+
+Additional information including links to the original datasets is in a [separate Markdown file](datasets.md). Graphical summary is located in a [Jupyter notebook](notebooks/dataset_descriptions.ipynb).
+
+![](images/Datasets_Summary.png)
 
 
 ## Installation
@@ -14,7 +23,7 @@ pip install wildlife-datasets
 ```
 
 
-## Overview
+## Basic functionality
 
 We show an example of downloading, extracting and processing the MacaqueFaces dataset.
 
@@ -50,11 +59,3 @@ utils.analysis.plot_grid(dataset.df, 'data/MacaqueFaces')
 
 ![](images/MacaqueFaces_Grid.png)
 
-
-## Summary of datasets
-
-The package is able to handle the following datasets. We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and whether the images were taken in the wild, whether the animals have unique patterns and whether the images are cropped.
-
-Additional information including links to the original datasets is in a [separate file](datasets.md).
-
-![](images/Datasets_Summary.png)
