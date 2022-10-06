@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from typing import Tuple
 import hashlib
-from collections.abc import Iterable
+from collections.abc import Iterable, List, Dict
 
 
 def find_images(
@@ -29,10 +29,16 @@ def create_id(string_col: pd.Series) -> pd.Series:
     assert len(entity_id.unique()) == len(entity_id)
     return entity_id
 
-def bbox_segmentation(bbox):
+def bbox_segmentation(bbox: List[float]) -> List[float]:
+    '''
+    Converts a bounding box into a segmentation mask.
+    '''
     return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
 
-def segmentation_bbox(segmentation):
+def segmentation_bbox(segmentation: List[float, ...]) -> List[float]:
+    '''
+    Converts a segmentation mask into a bounding box.
+    '''
     x = segmentation[0::2]
     y = segmentation[1::2]
     x_min = np.min(x)
@@ -41,17 +47,30 @@ def segmentation_bbox(segmentation):
     y_max = np.max(y)
     return [x_min, y_min, x_max-x_min, y_max-y_min]
 
-def is_annotation_bbox(ann, bbox, tol=0):
-    bbox_ann = bbox_segmentation(bbox)
-    if len(ann) == len(bbox_ann):
-        for x, y in zip(ann, bbox_ann):
+def is_annotation_bbox(
+    segmentation: List[float, ...],
+    bbox: List[float],
+    tol: float = 0
+    ) -> bool:
+    '''
+    Checks whether a segmentation mask is a boundign box.
+    '''
+    bbox_seg = bbox_segmentation(bbox)
+    if len(segmentation) == len(bbox_seg):
+        for x, y in zip(segmentation, bbox_seg):
             if abs(x-y) > tol:
                 return False
     else:
         return False
     return True
 
-def convert_keypoint(keypoint, keypoints_names):
+def convert_keypoint(
+    keypoint: List[float, ...],
+    keypoints_names: List[str, ...]
+    ) -> Dict[str, object]:
+    '''
+    Converts list of keypoints into a dictionary named by keypoint_names.
+    '''
     keypoint_dict = {}
     if isinstance(keypoint, Iterable):
         for i in range(len(keypoints_names)):
@@ -61,5 +80,11 @@ def convert_keypoint(keypoint, keypoints_names):
                 keypoint_dict[keypoints_names[i]] = [x, y]
     return keypoint_dict
 
-def convert_keypoints(keypoints: pd.Series, keypoints_names):
+def convert_keypoints(
+    keypoints: pd.Series,
+    keypoints_names: List[str, ...]
+    ) -> List[Dict[str, object], ...]:
+    '''
+    Converts dataframe of lists of keypoints into a dictionary named by keypoint_names.
+    '''
     return [convert_keypoint(keypoint, keypoints_names) for keypoint in keypoints]
