@@ -1,7 +1,7 @@
 # Wildlife Re-Identification (Re-ID) Datasets
 
 This package provides:
-- overview of 30 publicly available wildlife re-identification datasets.
+- overview of 30 publicly available [wildlife re-identification datasets](notebooks/dataset_descriptions.ipynb).
 - utilities to mass download and convert them into a unified format.
 
 
