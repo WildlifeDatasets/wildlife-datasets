@@ -88,3 +88,4 @@ utils.analysis.plot_grid(dataset.df, 'data/MacaqueFaces')
 | [WNI Giraffes](https://lila.science/datasets/wni-giraffes)           | AUTO    | Only linux: download          |
 | [Zindi Turtle Recall](https://zindi.africa/competitions/turtle-recall-conservation-challenge)    | AUTO    |                                |
 
+![](images/Datasets_Summary.png)
