@@ -1,9 +1,9 @@
 import os
 import pandas as pd
 import numpy as np
-from typing import Tuple
+from typing import Tuple, List, Dict
 import hashlib
-from collections.abc import Iterable, List, Dict
+from collections.abc import Iterable
 
 
 def find_images(
@@ -35,7 +35,7 @@ def bbox_segmentation(bbox: List[float]) -> List[float]:
     '''
     return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
 
-def segmentation_bbox(segmentation: List[float, ...]) -> List[float]:
+def segmentation_bbox(segmentation: List[float]) -> List[float]:
     '''
     Converts a segmentation mask into a bounding box.
     '''
@@ -48,7 +48,7 @@ def segmentation_bbox(segmentation: List[float, ...]) -> List[float]:
     return [x_min, y_min, x_max-x_min, y_max-y_min]
 
 def is_annotation_bbox(
-    segmentation: List[float, ...],
+    segmentation: List[float],
     bbox: List[float],
     tol: float = 0
     ) -> bool:
@@ -65,8 +65,8 @@ def is_annotation_bbox(
     return True
 
 def convert_keypoint(
-    keypoint: List[float, ...],
-    keypoints_names: List[str, ...]
+    keypoint: List[float],
+    keypoints_names: List[str]
     ) -> Dict[str, object]:
     '''
     Converts list of keypoints into a dictionary named by keypoint_names.
@@ -82,8 +82,8 @@ def convert_keypoint(
 
 def convert_keypoints(
     keypoints: pd.Series,
-    keypoints_names: List[str, ...]
-    ) -> List[Dict[str, object], ...]:
+    keypoints_names: List[str]
+    ) -> List[Dict[str, object]]:
     '''
     Converts dataframe of lists of keypoints into a dictionary named by keypoint_names.
     '''
