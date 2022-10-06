@@ -44,7 +44,7 @@ def plot_bbox_segmentation(df, root, n):
                 plot_image(img)
                 img = get_image(os.path.join(root, segmentation))
                 plot_image(img)
-            else:
+            elif type(segmentation) == list or type(segmentation) == np.ndarray:
                 img = get_image(os.path.join(root, df_red['path'].iloc[i]))
                 segmentation = df_red['segmentation'].iloc[i]
                 plot_segmentation(img, segmentation)
