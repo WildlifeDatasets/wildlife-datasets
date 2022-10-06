@@ -899,8 +899,8 @@ class SealIDSegmented(SealID):
 
 
 class SeaTurtleID(DatasetFactory):
-    # TODO: download missing
-    # TODO: metadata missing
+    download = downloads.sea_turtle_id
+    metadata = metadata['SeaTurtleID']
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load annotations JSON file
