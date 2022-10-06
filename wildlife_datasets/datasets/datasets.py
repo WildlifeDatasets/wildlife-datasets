@@ -865,7 +865,8 @@ class SeaTurtleID(DatasetFactory):
                 
         df = pd.merge(df_annotation, df_images, on='image_id')
         df['path'] = 'images' + os.path.sep + df['identity'] + os.path.sep + df['file_name']        
-        df = df.drop(['image_id', 'file_name'], axis=1)
+        df = df.drop(['image_id', 'file_name', 'path_orig'], axis=1)
+        df['date'] = df['date'].apply(lambda x: x[:4] + '-' + x[5:7] + '-' + x[8:])
 
         return self.finalize_catalogue(df)
     
