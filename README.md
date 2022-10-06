@@ -30,7 +30,7 @@ The dataset also contains basic metadata including information about the number 
 dataset.metadata
 ```
 
-![](images/MacaqueFaces_DataFrame.png)
+![](images/MacaqueFaces_Metadata.png)
 
 This particular dataset already contains cropped images of faces. Other datasets may contain uncropped images with bounding boxes or even segmentation masks.
 
