@@ -30,4 +30,3 @@ StripeSpotter,"GNU General Public License, version 2",http://www.gnu.org/license
 WhaleSharkID,Attribution-NonCommercial-NoDerivs 2.0 Generic (CC BY-NC-ND 2.0),http://creativecommons.org/licenses/by-nc-nd/2.0/,https://lila.science/datasets/whale-shark-id,holmberg2009estimating,"{'whale shark'}",True,2020,7693,7693,7693,543,True,False,multiple,True,False,False,5.2 years
 WNIGiraffes,Community Data License Agreement – Permissive,https://cdla.dev/permissive-1-0/,https://lila.science/datasets/wni-giraffes,clavadetscher2021development,"{'giraffe'}",True,2021,29806,29806,29806,,True,True,double,True,False,False,7 years
 ZindiTurtleRecall,Attribution-ShareAlike 4.0 International (CC BY-SA 4.0),https://creativecommons.org/licenses/by-sa/4.0/,https://zindi.africa/competitions/turtle-recall-conservation-challenge,zinditurtles,"{'sea turtle'}",True,2022,,,,,True,True,double,True,False,True,unknown
-Test,,,,,,,,,,,,,,,,,,
