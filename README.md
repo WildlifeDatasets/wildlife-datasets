@@ -4,6 +4,15 @@ This package provides:
 - overview of 30 publicly available wildlife re-identification datasets.
 - utilities to mass download and convert them into a unified format.
 
+
+## Installation
+
+The installation is simple by
+```
+pip install wildlife-datasets
+```
+
+
 ## Overview
 
 We show an example of downloading, extracting and processing the MacaqueFaces dataset.
@@ -40,13 +49,6 @@ utils.analysis.plot_grid(dataset.df, 'data/MacaqueFaces')
 
 ![](images/MacaqueFaces_Grid.png)
 
-
-## Installation
-
-The installation is simple by
-```
-pip install wildlife-datasets
-```
 
 ## Summary of datasets
 
