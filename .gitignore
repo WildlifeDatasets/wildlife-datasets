@@ -1,10 +1,7 @@
 data/
-dataframes/
 venv/
-venv_ibeis/
 venv_gpu/
 venv_docs/
-venv_train/
 
 __pycache__/
 .ipynb_checkpoints/
@@ -16,5 +13,4 @@ jupyter.sh
 jupyter_gpu.sh
 site/
 
-/experiments/*/runs
 *.pkl
