@@ -1,17 +1,31 @@
 import numpy as np
 import pandas as pd
+from typing import List
+
 
 class Lcg():
-    def __init__(self, seed, iterate=0):
+    def __init__(self, seed: int, iterate: int = 0):
+        '''        
+        Simple Linear congruential generator for generating random numbers.
+        Copied from https://stackoverflow.com/questions/18634079/glibc-rand-function-implementation        
+        It is machine-, distribution- and package version-independent.
+        It has some drawbacks (check the link above) but perfectly sufficient for our application.
+        '''
         self.state = seed
         for _ in range(iterate):
             self.random()
 
-    def random(self):
+    def random(self) -> int:
+        '''
+        Generate random integer from the current state.        
+        '''
         self.state = (self.state * 1103515245 + 12345) & 0x7FFFFFFF
         return self.state
 
-    def random_permutation(self, n):
+    def random_permutation(self, n: int) -> List[int]:
+        '''
+        Generate random permutation of range(n).
+        '''
         rnd = []
         for _ in range(n):
             self.random()
@@ -20,8 +34,6 @@ class Lcg():
 
 
 class Split():
-    # TODO: add unknown to semi?
-    # TODO: what to do with csv files?
     def __init__(self, df, seed, keep_unknown=False):
         if keep_unknown:
             self.df = df
