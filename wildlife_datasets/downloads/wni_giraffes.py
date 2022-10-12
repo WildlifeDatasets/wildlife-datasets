@@ -12,14 +12,13 @@ def get_data(root):
     with utils.data_directory(root):
         # TODO: does not work. it is specific for specific distros, isnt it?
         # TODO: Yes this is Ubuntu/linux specific.
-
+        # TODO: this requires azcopy
         # Copy azcopy from utils to working directory.
-        shutil.copy(os.path.join(script_dir, 'utils', 'azcopy'), os.path.join(root, 'azcopy'))
 
         # Images
         url = "https://lilablobssc.blob.core.windows.net/wni-giraffes/wni_giraffes_train_images.zip"
         archive = 'wni_giraffes_train_images.zip'
-        os.system(f'./azcopy cp {url} {archive}')
+        os.system(f'azcopy cp {url} {archive}')
         utils.extract_archive(archive, delete=True)
 
         # Metadata

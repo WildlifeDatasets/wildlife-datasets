@@ -1,6 +1,7 @@
 data/
 venv/
 venv_gpu/
+venv_test/
 venv_docs/
 
 __pycache__/
@@ -14,3 +15,6 @@ jupyter_gpu.sh
 site/
 
 *.pkl
+token.txt
+*.egg-info
+dist/
