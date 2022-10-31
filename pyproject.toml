@@ -1,19 +1,40 @@
 [project]
-name = "Wildlife datasets"
-version = "0.0.1"
+name = "wildlife-datasets"
+version = "0.0.4"
 authors = [
-  { name="Vojtech Cermak", email="cermak.vojtech@seznam.cz" },
   { name="Lukas Adam", email="lukas.adam.cr@gmail.com" },
+  { name="Vojtech Cermak", email="cermak.vojtech@seznam.cz" },
 ]
-description = "Library for easier access andresearch of wildlife datasets"
+description = "Library for easier access and research of wildlife re-identification datasets"
 readme = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies=[
+          'numpy>=1.19.4',
+          'pandas>=1.1.4',
+          'tqdm>=4.62.3',
+          'opencv-python>=4.5.5.62',
+          'Pillow>=7.1.2',
+          'matplotlib>=3.5.1',
+          'gdown',
+]
 
 [project.urls]
 "Homepage" = "https://github.com/WildlifeDatasets/wildlife-datasets"
 "Bug Tracker" = "https://github.com/WildlifeDatasets/wildlife-datasets/issues"
+
+
+[tool.setuptools]
+packages = [
+  "wildlife_datasets",
+  "wildlife_datasets.datasets",
+  "wildlife_datasets.downloads",
+  "wildlife_datasets.utils",
+]
+
+[tool.setuptools.package-data]
+wildlife_datasets = ["datasets/metadata.csv"]
