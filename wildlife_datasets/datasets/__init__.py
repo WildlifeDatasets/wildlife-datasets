@@ -26,6 +26,7 @@ from .datasets import OpenCows2020
 from .datasets import SealID
 from .datasets import SealIDSegmented
 from .datasets import SeaTurtleID
+from .datasets import SeaTurtleIDHeads
 from .datasets import SMALST
 from .datasets import StripeSpotter
 from .datasets import WhaleSharkID
@@ -61,6 +62,7 @@ dataset_names = [
     SealID,
     SealIDSegmented,
     SeaTurtleID,
+    SeaTurtleIDHeads,
     SMALST,
     StripeSpotter,
     WhaleSharkID,

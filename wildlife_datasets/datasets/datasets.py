@@ -904,7 +904,7 @@ class SeaTurtleID(DatasetFactory):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load annotations JSON file
-        path_json = 'annotations.json'
+        path_json = 'annotations_new.json'
         with open(os.path.join(self.root, path_json)) as file:
             data = json.load(file)
 
@@ -917,13 +917,40 @@ class SeaTurtleID(DatasetFactory):
         # Merge the information from the JSON file
         df = pd.merge(df_annotation, df_images, on='image_id')
         df['path'] = 'images' + os.path.sep + df['identity'] + os.path.sep + df['file_name']        
-        df = df.drop(['image_id', 'file_name', 'path_orig'], axis=1)
+        df = df.drop(['image_id', 'file_name'], axis=1)
         df['date'] = df['date'].apply(lambda x: x[:4] + '-' + x[5:7] + '-' + x[8:])
 
         # Finalize the dataframe
         return self.finalize_catalogue(df)
-    
-        
+
+
+class SeaTurtleIDHeads(DatasetFactory):
+    # TODO: add download and metadata
+    #download = downloads.sea_turtle_id_heads
+    #metadata = metadata['SeaTurtleIDHeads']
+
+    def create_catalogue(self) -> pd.DataFrame:
+        # Load annotations JSON file
+        path_json = 'annotations.json'
+        with open(os.path.join(self.root, path_json)) as file:
+            data = json.load(file)
+
+        # Extract dtaa from the JSON file
+        create_dict = lambda i: {'id': i['id'], 'image_id': i['image_id'], 'identity': i['identity'], 'position': i['position']}
+        df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
+        create_dict = lambda i: {'file_name': i['path'].split('/')[-1], 'image_id': i['id'], 'date': i['date']}
+        df_images = pd.DataFrame([create_dict(i) for i in data['images']])
+
+        # Merge the information from the JSON file
+        df = pd.merge(df_annotation, df_images, on='image_id')
+        df['path'] = 'images' + os.path.sep + df['identity'] + os.path.sep + df['file_name']        
+        df = df.drop(['image_id', 'file_name'], axis=1)
+        df['date'] = df['date'].apply(lambda x: x[:4] + '-' + x[5:7] + '-' + x[8:])
+
+        # Finalize the dataframe
+        return self.finalize_catalogue(df)
+
+
 class SMALST(DatasetFactory):
     download = downloads.smalst
     metadata = metadata['SMALST']
