@@ -15,6 +15,7 @@ class DatasetFactory():
         self, 
         root: str,
         df: Optional[pd.DataFrame] = None,
+        df_full: Optional[pd.DataFrame] = None,
         download: bool = False,
         **kwargs
         ):
@@ -22,9 +23,11 @@ class DatasetFactory():
         self.root = root
         if download and hasattr(self, 'download'): 
             self.download.get_data(root)
-        if df is None:
-            self.df = self.create_catalogue(**kwargs)
+        if df is None or df_full is None:
+            self.df_full = self.create_catalogue(**kwargs)
+            self.df = self.create_catalogue_trainable(self.df_full)
         else:
+            self.df_full = df_full
             self.df = df
 
     def create_catalogue(self):
@@ -34,6 +37,15 @@ class DatasetFactory():
         '''
         raise NotImplementedError()
 
+    def create_catalogue_trainable(self, df: pd.DataFrame) -> pd.DataFrame:
+        '''
+        Creates a dataframe catalogue summarizing the dataset.
+        It should be more prepared for machine learning techniques than create_catalogue().
+        '''
+        df = df.groupby('identity').filter(lambda x : len(x) >= 2)
+        df = df[df['identity'] != 'unknown']
+        return df
+    
     def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
         '''
         Finalizes catalogue dataframe and runs checks for errors.

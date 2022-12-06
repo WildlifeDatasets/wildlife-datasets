@@ -32,7 +32,8 @@ def download_dataset(class_dataset, root_dataset: str, overwrite:bool=False) -> 
     root = get_dataset_folder(root_dataset, class_dataset)
     if overwrite or not os.path.exists(root):
         class_dataset.download.get_data(root)
-        
+
+# TODO: This is not updated with df and df_full        
 def load_datasets(
     class_datasets: List[object],
     root_dataset: str,
