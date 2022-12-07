@@ -42,6 +42,7 @@ class DatasetFactory():
         '''
         df = df.groupby('identity').filter(lambda x : len(x) >= 2)
         df = df[df['identity'] != 'unknown']
+        df.reset_index(drop=True, inplace=True)
         return df
     
     def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
