@@ -14,7 +14,6 @@ class DatasetFactory():
     def __init__(
         self, 
         root: str,
-        df: Optional[pd.DataFrame] = None,
         df_full: Optional[pd.DataFrame] = None,
         download: bool = False,
         **kwargs
@@ -23,12 +22,11 @@ class DatasetFactory():
         self.root = root
         if download and hasattr(self, 'download'): 
             self.download.get_data(root)
-        if df is None or df_full is None:
+        if df_full is None:
             self.df_full = self.create_catalogue(**kwargs)
-            self.df = self.create_catalogue_trainable(self.df_full)
         else:
             self.df_full = df_full
-            self.df = df
+        self.df = self.create_catalogue_trainable(self.df_full)
 
     def create_catalogue(self):
         '''

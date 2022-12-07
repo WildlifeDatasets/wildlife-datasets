@@ -32,8 +32,7 @@ def download_dataset(class_dataset, root_dataset: str, overwrite:bool=False) -> 
     root = get_dataset_folder(root_dataset, class_dataset)
     if overwrite or not os.path.exists(root):
         class_dataset.download.get_data(root)
-
-# TODO: This is not updated with df and df_full        
+    
 def load_datasets(
     class_datasets: List[object],
     root_dataset: str,
@@ -68,9 +67,9 @@ def load_dataset(
         dataset = class_dataset(root, None, download=False)
         if not os.path.exists(root_dataframe):
             os.makedirs(root_dataframe)
-        dataset.df.to_pickle(df_path)
+        dataset.df_full.to_pickle(df_path)
     else:
         # Load the dataframe and create the dataset
-        df = pd.read_pickle(df_path)
-        dataset = class_dataset(root, df, download=False)
+        df_full = pd.read_pickle(df_path)
+        dataset = class_dataset(root, df_full, download=False)
     return dataset
