@@ -42,7 +42,7 @@ def plot_bbox_segmentation(df: pd.DataFrame, root: str, n: int) -> None:
     '''
     if 'bbox' not in df.columns and 'segmentation' not in df.columns:
         for i in range(n):
-            img = get_image(os.path.join(root, df['path'][i]))
+            img = get_image(os.path.join(root, df['path'].iloc[i]))
             plot_image(img)
     if 'bbox' in df.columns:
         df_red = df[~df['bbox'].isnull()]
