@@ -131,27 +131,30 @@ def display_statistics(df):
     if 'unknown' in list(df['identity'].unique()):
         n_identity = len(df.identity.unique()) - 1
     else:
-        n_identity = len(df.identity.unique())
-    
+        n_identity = len(df.identity.unique())    
+    n_one = len(df.groupby('identity').filter(lambda x : len(x) == 1))
+    n_unidentified = sum(df['identity'] == 'unknown')
+
     # Print general statistics
-    print(f"Number of identitites          {n_identity}")
-    print(f"Number of all animals          {len(df)}")
-    print(f"Number of identified animals   {sum(df['identity'] != 'unknown')}")    
-    print(f"Number of unidentified animals {sum(df['identity'] == 'unknown')}")
+    print(f"Number of identitites            {n_identity}")
+    print(f"Number of all animals            {len(df)}")
+    print(f"Number of animals with one image {n_one}")
+    print(f"Number of unidentified animals   {n_unidentified}")
+    print(f"Number of animals in dataframe   {len(df)-n_one-n_unidentified}")
 
     # Print statistics about video if present
     if 'video' in df.columns:
-        print(f"Number of videos               {len(df[['identity', 'video']].drop_duplicates())}")
+        print(f"Number of videos                 {len(df[['identity', 'video']].drop_duplicates())}")
     
     # Print statistics about time span if present
     if 'date' in df.columns:
         span_years = compute_span(df) / (60*60*24*365.25)
         if span_years > 1:
-            print(f"Images span                    %1.1f years" % (span_years))
+            print(f"Images span                      %1.1f years" % (span_years))
         elif span_years / 12 > 1:
-            print(f"Images span                    %1.1f months" % (span_years * 12))
+            print(f"Images span                      %1.1f months" % (span_years * 12))
         else:
-            print(f"Images span                    %1.0f days" % (span_years * 365.25))
+            print(f"Images span                      %1.0f days" % (span_years * 365.25))
 
 def get_dates(dates: pd.Series, frmt: str) -> List[datetime.date]:
     '''
