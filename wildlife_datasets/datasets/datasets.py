@@ -936,9 +936,8 @@ class SeaTurtleID(DatasetFactory):
 
 
 class SeaTurtleIDHeads(DatasetFactory):
-    # TODO: add download and metadata
-    #download = downloads.sea_turtle_id_heads
-    #metadata = metadata['SeaTurtleIDHeads']
+    download = downloads.sea_turtle_id_heads
+    metadata = metadata['SeaTurtleIDHeads']
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load annotations JSON file
