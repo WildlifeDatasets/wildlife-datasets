@@ -293,7 +293,7 @@ class TimeProportionSplit(TimeAwareSplit):
                         idx_train += list(y[1].index)
                     else:
                         idx_test += list(y[1].index)
-        return np.array(self.df.index.values)[idx_train], np.array(self.df.index.values)[idx_test]
+        return idx_train, idx_test
 
 
 class TimeCutoffSplit(TimeAwareSplit):
