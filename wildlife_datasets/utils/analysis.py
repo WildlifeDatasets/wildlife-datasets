@@ -119,7 +119,7 @@ def plot_grid(
             im_grid.paste(im, (pos_x,pos_y))
     return im_grid
 
-def display_statistics(df):
+def display_statistics(df: pd.DataFrame) -> None:
     '''
     Prints statistics about the dataframe df.
     '''
