@@ -259,7 +259,7 @@ class TimeAwareSplit(BalancedSplit):
             n_test = counts_test.get(identity, 0)
             # Get randomly permuted indices of the corresponding identity
             idx = np.where(self.df['identity'] == identity)[0]
-            idx = idx[self.df.loc[idx]['year'] <= year_max]
+            idx = idx[self.df.iloc[idx]['year'] <= year_max]
             idx = self.lcg.random_shuffle(idx)
             if len(idx) < n_train+n_test:
                 raise(Exception('The set is too small.'))
