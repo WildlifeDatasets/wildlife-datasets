@@ -87,6 +87,12 @@ class BalancedSplit():
         '''
         raise(NotImplementedError('Subclasses should implement this. \n You may want to use ClosedSetSplit instead of BalancedSplit.'))
 
+    def splits(self, *args, **kwargs) -> List[Tuple[np.ndarray, np.ndarray]]:
+        '''
+        # TODO: prepis
+        '''
+        return [self.split(*args, **kwargs)]
+
     def general_split(self, ratio_train, individual_train, individual_test,
         ratio_train_min: float=0, ratio_train_max: float=1
         ) -> Tuple[np.ndarray, np.ndarray]:
@@ -311,6 +317,10 @@ class TimeCutoffSplit(TimeAwareSplit):
         idx_test = list(np.where(self.df['year'] == year)[0])
         return np.array(self.df.index.values)[idx_train], np.array(self.df.index.values)[idx_test]
 
+    # TODO: dopis
+    def splits(self):
+        return self.splits_all()[0]
+
     def splits_all(self) -> Tuple[List[Tuple[np.ndarray, np.ndarray]], np.ndarray]:
         '''
         Creates splits for all possible splitting years
@@ -331,12 +341,15 @@ class ReplicableRandomSplit:
         self.random_state = random_state
         self.kwargs = kwargs
 
-    def split(self, indices, labels):
+    def split(self, indices, labels, date=None):
         splits = []
         for i in range(self.n_splits):
-            df = pd.DataFrame({'identity': labels})
+            if date is None:
+                df = pd.DataFrame({'identity': labels})
+            else:
+                df = pd.DataFrame({'identity': labels, 'date': date})
             splitter = self.splitter(df, self.random_state + i)
-            split = splitter.split(**self.kwargs)
-            splits.append( (indices[split[0]], indices[split[1]]) )
+            for (idx_train, idx_test) in splitter.splits(**self.kwargs):
+                splits.append((indices[idx_train], indices[idx_test]))
         return splits
 
