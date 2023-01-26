@@ -226,8 +226,8 @@ class TimeAwareSplit(BalancedSplit):
         if 'date' not in self.df.columns:
             # Check if the DataFrame contain the column date.
             raise(Exception('Dataframe df does not contain column date.'))
-        # Convert date to datetime format (from possibly strings)
-        self.df['date'] = pd.to_datetime(self.df['date'])
+        # Convert date to datetime format (from possibly strings) and drop hours
+        self.df['date'] = pd.to_datetime(self.df['date']).apply(lambda x: x.date())
         if 'year' not in self.df.columns:
             # Extract year from the date format
             self.df['year'] = self.df['date'].apply(lambda x: x.year).to_numpy()
