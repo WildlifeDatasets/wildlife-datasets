@@ -466,7 +466,19 @@ class Cows2021(DatasetFactory):
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[4].astype(int),
         })
+        df['date'] = df['path'].apply(lambda x: self.extract_date(x))
         return self.finalize_catalogue(df)
+
+    def extract_date(self, x):
+        x = os.path.split(x)[1]
+        if x.startswith('image_'):
+            x = x[6:]
+        if x[7] == '_':
+            x = x[8:]
+        i1 = x.find('_')
+        i2 = x[i1+1:].find('_')
+        x = x[:i1+i2+1]
+        return datetime.datetime.strptime(x, '%Y-%m-%d_%H-%M-%S').strftime('%Y-%m-%d %H:%M:%S')
 
 
 class Drosophila(DatasetFactory):
