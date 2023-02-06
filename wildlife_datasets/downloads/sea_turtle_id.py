@@ -7,8 +7,7 @@ else:
 
 def get_data(root):
     with utils.data_directory(root):
-        # TODO: not implemented
-        raise NotImplementedError()
+        os.system(f"kaggle datasets download -d 'wildlifedatasets/seaturtleid' --unzip")
 
 
 if __name__ == '__main__':
