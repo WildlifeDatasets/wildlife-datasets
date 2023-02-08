@@ -13,6 +13,7 @@ from . import utils
 class DatasetFactory():
     # TODO: add 'unknown' as an attribute
     # TODO: change position to orientation or pose or something normal
+    # TODO: add some examples of usage
 
     """
     The class `DatasetFactory` is a base class for creating datasets.
