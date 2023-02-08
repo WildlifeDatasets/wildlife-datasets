@@ -7,13 +7,24 @@ from collections.abc import Iterable
 
 
 def find_images(
-    root: str,
-    img_extensions: Tuple[str, ...] = ('.png', '.jpg', '.jpeg')
-    ) -> pd.DataFrame:
-    '''
-    Find all image files in folder recursively based on img_extensions. 
-    Save filename and relative path from root.
-    '''
+        root: str,
+        img_extensions: Tuple[str, ...] = ('.png', '.jpg', '.jpeg')
+        ) -> pd.DataFrame:
+    """Finds all image files in folder and subfolders.
+
+    Parameters
+    ----------
+    root : str
+        The root folder where to look for images.
+    img_extensions : Tuple[str, ...], optional
+        Image extensions to look for, by default ('.png', '.jpg', '.jpeg')
+
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe of relative paths of the images.
+    """
+
     data = [] 
     for path, directories, files in os.walk(root):
         for file in files:
@@ -22,23 +33,53 @@ def find_images(
     return pd.DataFrame(data)
 
 def create_id(string_col: pd.Series) -> pd.Series:
-    '''
-    Creates unique id from string based on MD5 hash.
-    '''
+    """Creates unique ids from string based on MD5 hash.
+
+    Parameters
+    ----------
+    string_col : pd.Series
+        List of ids.
+
+    Returns
+    -------
+    pd.Series
+        List of encoded ids.
+    """
+
     entity_id = string_col.apply(lambda x: hashlib.md5(x.encode()).hexdigest()[:16])
     assert len(entity_id.unique()) == len(entity_id)
     return entity_id
 
 def bbox_segmentation(bbox: List[float]) -> List[float]:
-    '''
-    Converts a bounding box into a segmentation mask.
-    '''
+    """Convert bounding box to segmentation.
+
+    Parameters
+    ----------
+    bbox : List[float]
+        Bounding box in the form [x, y, w, h].
+
+    Returns
+    -------
+    List[float]
+        Segmentation mask in the form [x1, y1, x2, y2, ...]
+    """
+
     return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
 
 def segmentation_bbox(segmentation: List[float]) -> List[float]:
-    '''
-    Converts a segmentation mask into a bounding box.
-    '''
+    """Convert segmentation to bounding box.
+
+    Parameters
+    ----------
+    segmentation : List[float]
+        Segmentation mask in the form [x1, y1, x2, y2, ...]
+
+    Returns
+    -------
+    List[float]
+        Bounding box in the form [x, y, w, h].
+    """
+
     x = segmentation[0::2]
     y = segmentation[1::2]
     x_min = np.min(x)
@@ -48,13 +89,27 @@ def segmentation_bbox(segmentation: List[float]) -> List[float]:
     return [x_min, y_min, x_max-x_min, y_max-y_min]
 
 def is_annotation_bbox(
-    segmentation: List[float],
-    bbox: List[float],
-    tol: float = 0
-    ) -> bool:
-    '''
-    Checks whether a segmentation mask is a boundign box.
-    '''
+        segmentation: List[float],
+        bbox: List[float],
+        tol: float = 0
+        ) -> bool:
+    """Checks whether segmentation is bounding box.
+
+    Parameters
+    ----------
+    segmentation : List[float]
+        Segmentation mask in the form [x1, y1, x2, y2, ...]
+    bbox : List[float]
+        Bounding box in the form [x, y, w, h].
+    tol : float, optional
+        Tolerance for difference, by default 0
+
+    Returns
+    -------
+    bool
+        True if segmentation is bounding box within tolerance.
+    """
+
     bbox_seg = bbox_segmentation(bbox)
     if len(segmentation) == len(bbox_seg):
         for x, y in zip(segmentation, bbox_seg):
@@ -65,9 +120,10 @@ def is_annotation_bbox(
     return True
 
 def convert_keypoint(
-    keypoint: List[float],
-    keypoints_names: List[str]
-    ) -> Dict[str, object]:
+        keypoint: List[float],
+        keypoints_names: List[str]
+        ) -> Dict[str, object]:
+    # TODO: check if used. if yes, write documentation. if not, delete
     '''
     Converts list of keypoints into a dictionary named by keypoint_names.
     '''
@@ -81,9 +137,10 @@ def convert_keypoint(
     return keypoint_dict
 
 def convert_keypoints(
-    keypoints: pd.Series,
-    keypoints_names: List[str]
-    ) -> List[Dict[str, object]]:
+        keypoints: pd.Series,
+        keypoints_names: List[str]
+        ) -> List[Dict[str, object]]:
+    # TODO: check if used. if yes, write documentation. if not, delete
     '''
     Converts dataframe of lists of keypoints into a dictionary named by keypoint_names.
     '''
