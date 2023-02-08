@@ -11,7 +11,7 @@ from . import utils
 
 
 class DatasetFactory():
-    # TODO: add 'unknown' as an attribute
+    unknown_name = 'unknown'
     # TODO: change position to orientation or pose or something normal
     # TODO: add some examples of usage
 
@@ -20,6 +20,8 @@ class DatasetFactory():
 
     Attributes
     ----------
+    unknown_name : str
+        Name of the unknown class.
     root : str
         Root directory for the data.
     df : pd.DataFrame
@@ -90,7 +92,7 @@ class DatasetFactory():
         """
 
         df = df.groupby('identity').filter(lambda x : len(x) >= 2)
-        df = df[df['identity'] != 'unknown']
+        df = df[df['identity'] != self.unknown_name]
         df.reset_index(drop=True, inplace=True)
         return df
     
@@ -224,7 +226,7 @@ class DatasetFactoryWildMe(DatasetFactory):
         # Modify some columns
         df['path'] = path_images + os.path.sep + df['file_name']
         df['id'] = range(len(df))    
-        df.loc[df['identity'] == '____', 'identity'] = 'unknown'
+        df.loc[df['identity'] == '____', 'identity'] = self.unknown_name
 
         # Remove segmentations which are the same as bounding boxes
         ii = []
@@ -440,7 +442,7 @@ class BirdIndividualID(DatasetFactory):
         df2 = pd.DataFrame({    
             'id': utils.create_id(data['file']),
             'path': self.prefix1 + os.path.sep + 'New_birds' + os.path.sep + data['path'] + os.path.sep + data['file'],
-            'identity': 'unknown',
+            'identity': self.unknown_name,
             'species': species,
             'split': 'unassigned',
         })
@@ -459,7 +461,7 @@ class CTai(DatasetFactory):
     def create_catalogue(self) -> pd.DataFrame:
         # Define the wrong identity names
         replace_names = [
-            ('Adult', 'unknown'),
+            ('Adult', self.unknown_name),
             ('Akouba', 'Akrouba'),
             ('Freddy', 'Fredy'),
             ('Ibrahiim', 'Ibrahim'),
@@ -566,7 +568,7 @@ class Drosophila(DatasetFactory):
         folders = data['path'].str.split(os.path.sep, expand=True)
 
         # Extract information from the folder structure
-        data['identity'] = 'unknown'
+        data['identity'] = self.unknown_name
         for i_week in range(1, 4):
             idx1 = folders[0].str.startswith('week' + str(i_week))
             idx2 = folders[1] == 'val'
@@ -690,7 +692,7 @@ class HappyWhale(DatasetFactory):
         df2 = pd.DataFrame({
             'id': test_files.str.split('.', expand=True)[0],
             'path': 'test_images' + os.path.sep + test_files,
-            'identity': 'unknown',
+            'identity': self.unknown_name,
             'species': np.nan,
             'split': 'test'
             })
@@ -707,7 +709,7 @@ class HumpbackWhaleID(DatasetFactory):
     def create_catalogue(self) -> pd.DataFrame:
         # Load the training data
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
-        data.loc[data['Id'] == 'new_whale', 'Id'] = 'unknown'
+        data.loc[data['Id'] == 'new_whale', 'Id'] = self.unknown_name
         df1 = pd.DataFrame({
             'id': data['Image'].str.split('.', expand=True)[0],
             'path': 'train' + os.path.sep + data['Image'],
@@ -724,7 +726,7 @@ class HumpbackWhaleID(DatasetFactory):
         df2 = pd.DataFrame({
             'id': test_files.str.split('.', expand=True)[0],
             'path': 'test' + os.path.sep + test_files,
-            'identity': 'unknown',
+            'identity': self.unknown_name,
             'split': 'test'
             })
         
@@ -842,7 +844,7 @@ class NDD20(DatasetFactory):
                 if 'id' in region['region_attributes']:
                     identity = region['region_attributes']['id']
                 else:
-                    identity = 'unknown'
+                    identity = self.unknown_name
                 segmentation = np.zeros(2*len(region['shape_attributes']['all_points_x']))
                 segmentation[0::2] = region['shape_attributes']['all_points_x']
                 segmentation[1::2] = region['shape_attributes']['all_points_y']
@@ -867,7 +869,7 @@ class NDD20(DatasetFactory):
                 if 'id' in region['region_attributes']:
                     identity = region['region_attributes']['id']
                 else:
-                    identity = 'unknown'
+                    identity = self.unknown_name
                 segmentation = np.zeros(2*len(region['shape_attributes']['all_points_x']))
                 segmentation[0::2] = region['shape_attributes']['all_points_x']
                 segmentation[1::2] = region['shape_attributes']['all_points_y']
@@ -912,7 +914,7 @@ class NOAARightWhale(DatasetFactory):
         df2 = pd.DataFrame({
             'id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),
             'path': 'imgs' + os.path.sep + data['Image'],
-            'identity': 'unknown',
+            'identity': self.unknown_name,
             })
         
         # Finalize the dataframe
@@ -1093,7 +1095,7 @@ class StripeSpotter(DatasetFactory):
         # Load additional information
         data_aux = pd.read_csv(os.path.join(self.root, 'data', 'SightingData.csv'))
         data = pd.merge(data, data_aux, how='left', left_on='index', right_on='#imgindex')
-        data.loc[data['animal_name'].isnull(), 'animal_name'] = 'unknown'
+        data.loc[data['animal_name'].isnull(), 'animal_name'] = self.unknown_name
         
         # Finalize the dataframe
         df = pd.DataFrame({
@@ -1173,7 +1175,7 @@ class ZindiTurtleRecall(DatasetFactory):
         # Finalize the dataframe
         data = pd.concat([data_train, data_test, data_extra])
         data = data.reset_index(drop=True)        
-        data.loc[data['turtle_id'].isnull(), 'turtle_id'] = 'unknown'
+        data.loc[data['turtle_id'].isnull(), 'turtle_id'] = self.unknown_name
         df = pd.DataFrame({
             'id': data['image_id'],
             'path': 'images' + os.path.sep + data['image_id'] + '.JPG',
