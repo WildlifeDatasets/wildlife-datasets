@@ -11,44 +11,105 @@ from . import utils
 
 
 class DatasetFactory():
+    # TODO: add 'unknown' as an attribute
+    # TODO: change position to orientation or pose or something normal
+
+    """
+    The class `DatasetFactory` is a base class for creating datasets.
+
+    Attributes
+    ----------
+    root : str
+        Root directory for the data.
+    df : pd.DataFrame
+        A full dataframe of the data.
+    df_ml : pd.DataFrame
+        A dataframe of data for machine learning models.
+    """
+
     def __init__(
-        self, 
-        root: str,
-        df_full: Optional[pd.DataFrame] = None,
-        download: bool = False,
-        **kwargs
-        ):
+            self, 
+            root: str,
+            df: Optional[pd.DataFrame] = None,
+            download: bool = False,
+            **kwargs) -> None:
+        """Initializes the class.
+
+        If `download`, then it downloads the data.
+        If `df` is specified, it copies it. Otherwise, it creates it
+        by the `create_catalogue` method.
+        It creates `df_ml` by the `create_catalogue_ml` method.
+
+        Parameters
+        ----------
+        root : str
+            Root directory for the data
+        df : Optional[pd.DataFrame], optional
+            A full datafrmae of the data, by default None
+        download : bool, optional
+            Whether to download the data, by default False
+        """
 
         self.root = root
         if download and hasattr(self, 'download'): 
             self.download.get_data(root)
-        if df_full is None:
-            self.df_full = self.create_catalogue(**kwargs)
+        if df is None:
+            self.df = self.create_catalogue(**kwargs)
         else:
-            self.df_full = df_full
-        self.df = self.create_catalogue_trainable(self.df_full)
+            self.df = df
+        self.df_ml = self.create_catalogue_ml(self.df)
 
     def create_catalogue(self):
-        '''
-        Creates a dataframe catalogue summarizing the dataset.
-        This method is dataset specific and each dataset needs to override it.
-        '''
+        """Creates the dataframe.
+
+        Raises
+        ------
+        NotImplementedError
+            Needs to be implemented by subclasses.
+        """
+
         raise NotImplementedError()
 
-    def create_catalogue_trainable(self, df: pd.DataFrame) -> pd.DataFrame:
-        '''
-        Creates a dataframe catalogue summarizing the dataset.
-        It should be more prepared for machine learning techniques than create_catalogue().
-        '''
+    def create_catalogue_ml(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Creates the dataframe for machine learning models.
+
+        It removes classes with only one sample.
+        It removes unknown identities.
+        It reset the dataframe index.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            A full dataframe of the data.
+
+        Returns
+        -------
+        pd.DataFrame
+            A dataframe of data for machine learning models.
+        """
+
         df = df.groupby('identity').filter(lambda x : len(x) >= 2)
         df = df[df['identity'] != 'unknown']
         df.reset_index(drop=True, inplace=True)
         return df
     
     def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
-        '''
-        Finalizes catalogue dataframe and runs checks for errors.
-        '''
+        """Reorders the dataframe and check file paths.
+
+        Reorders the columns and removes constant columns.
+        Checks if ids are unique and if all files exist.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            A full dataframe of the data.
+
+        Returns
+        -------
+        pd.DataFrame
+            A full dataframe of the data, slightly modified.
+        """
+
         df = self.reorder_df(df)
         df = self.remove_constant_columns(df)
         self.check_unique_id(df)
@@ -58,10 +119,22 @@ class DatasetFactory():
         return df
 
     def reorder_df(self, df: pd.DataFrame) -> pd.DataFrame:
-        '''
-        Reorders columns in the dataframe.
-        Columns specified in default_order go first.
-        '''
+        """Reorders rows and columns in the dataframe.
+
+        Rows are sorted based on id.
+        Columns are reorder based on the `default_order` list.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            A full dataframe of the data.
+
+        Returns
+        -------
+        pd.DataFrame
+            A full dataframe of the data, slightly modified.
+        """
+
         default_order = ['id', 'identity', 'path', 'bbox', 'segmentation', 'position', 'species', 'keypoints']
         df_names = list(df.columns)
         col_names = []
@@ -76,47 +149,48 @@ class DatasetFactory():
         return df.reindex(columns=col_names)
 
     def remove_constant_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        '''
-        Removes columns with single unique value.
-        '''
+        """Removes columns with a single unique value.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            A full dataframe of the data.
+
+        Returns
+        -------
+        pd.DataFrame
+            A full dataframe of the data, slightly modified.
+        """
+
         for df_name in list(df.columns):
             if df[df_name].astype('str').nunique() == 1:
                 df = df.drop([df_name], axis=1)
         return df
 
     def check_unique_id(self, df: pd.DataFrame) -> None:
-        '''
-        Checks if values in the 'id' column are unique.
-        '''
+        """Checks if values in the id column are unique.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            A full dataframe of the data.
+        """
+
         if len(df['id'].unique()) != len(df):
             raise(Exception('Image ID not unique.'))
 
     def check_files_exist(self, col: pd.Series) -> None:
-        '''
-        Checks if paths in a given column exist.
-        '''
+        """Checks if paths in a given column exist.
+
+        Parameters
+        ----------
+        col : pd.Series
+            A column of a dataframe.
+        """
+
         for path in col:
             if type(path) == str and not os.path.exists(os.path.join(self.root, path)):
                 raise(Exception('Path does not exist:' + os.path.join(self.root, path)))
-
-    def split_data(self, splitter):
-        '''
-        Splits data by a splitter class with scikit-like API.
-        '''
-        indexes = np.arange(len(self.df))
-        labels = self.df['identity']
-
-        splits = []
-        for train, valid in splitter.split(indexes, labels):
-            splits.append([
-                self.df.iloc[indexes[train]],
-                self.df.iloc[indexes[valid]],
-            ])
-
-        if len(splits) == 1:
-            return splits[0]
-        else:
-            return splits
 
 
 class DatasetFactoryWildMe(DatasetFactory):
