@@ -119,21 +119,21 @@ def plot_grid(
             im_grid.paste(im, (pos_x,pos_y))
     return im_grid
 
-def display_statistics(df: pd.DataFrame) -> None:
+def display_statistics(df: pd.DataFrame, unknown_name: str = '') -> None:
     '''
     Prints statistics about the dataframe df.
     '''
     # Remove the unknown identities
-    df_red = df.loc[df['identity'] != 'unknown', 'identity']
+    df_red = df.loc[df['identity'] != unknown_name, 'identity']
     df_red.value_counts().reset_index(drop=True).plot()
     
     # Compute the total number of identities
-    if 'unknown' in list(df['identity'].unique()):
+    if unknown_name in list(df['identity'].unique()):
         n_identity = len(df.identity.unique()) - 1
     else:
         n_identity = len(df.identity.unique())    
     n_one = len(df.groupby('identity').filter(lambda x : len(x) == 1))
-    n_unidentified = sum(df['identity'] == 'unknown')
+    n_unidentified = sum(df['identity'] == unknown_name)
 
     # Print general statistics
     print(f"Number of identitites            {n_identity}")
