@@ -67,9 +67,9 @@ def load_dataset(
         dataset = class_dataset(root, None, download=False)
         if not os.path.exists(root_dataframe):
             os.makedirs(root_dataframe)
-        dataset.df_full.to_pickle(df_path)
+        dataset.df.to_pickle(df_path)
     else:
         # Load the dataframe and create the dataset
-        df_full = pd.read_pickle(df_path)
-        dataset = class_dataset(root, df_full, download=False)
+        df = pd.read_pickle(df_path)
+        dataset = class_dataset(root, df, download=False)
     return dataset
