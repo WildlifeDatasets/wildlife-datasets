@@ -14,6 +14,7 @@ class DatasetFactory():
     unknown_name = 'unknown'
     # TODO: change position to orientation or pose or something normal
     # TODO: add some examples of usage
+    # TODO: attributes download and metadata are missing
 
     """
     The class `DatasetFactory` is a base class for creating datasets.
