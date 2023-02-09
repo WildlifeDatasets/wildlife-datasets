@@ -9,26 +9,39 @@ from PIL import Image
 from ..datasets import utils
 
 def get_image(path: str) -> Image:
-    '''
-    Loads and image and converts it into PIL.Image.
-    We load it with OpenCV because PIL does not apply metadata.
-    '''    
+    """Loads an image.
+
+    Args:
+        path (str): Path of the image.
+
+    Returns:
+        Loaded image.
+    """
+
+    # We load it with OpenCV because PIL does not apply metadata.
     img = cv2.imread(path)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     return Image.fromarray(img)
 
 def plot_image(img: Image) -> None:
-    '''
-    Plots an image.
-    '''
+    """Plots an image.
+
+    Args:
+        img (Image): Image to be plotted.
+    """
+    
     fig, ax = plt.subplots()
     ax.imshow(img)
     plt.show()
 
 def plot_segmentation(img: Image, segmentation: List[float]) -> None:
-    '''
-    Plots an image and its segmentation mask.
-    '''
+    """Plots an image and its segmentation mask.
+
+    Args:
+        Plots an image and its segmentation mask.
+        segmentation (List[float]): Segmentation mask in the form [x1, y1, x2, y2, ...].
+    """
+
     if not np.isnan(segmentation).all():
         fig, ax = plt.subplots()
         ax.imshow(img)
@@ -36,10 +49,17 @@ def plot_segmentation(img: Image, segmentation: List[float]) -> None:
         plt.show()
 
 def plot_bbox_segmentation(df: pd.DataFrame, root: str, n: int) -> None:
-    '''
-    Plots n images from the dataframe df.
-    If bounding boxes or segmnetation masks are present, it plots them as well.
-    '''
+    """Plots n images from the dataframe `df`.
+
+    If bounding boxes or segmentation masks are present, it plots them as well.
+
+    Args:
+        df (pd.DataFrame): Dataframe with column `path` (relative path)
+            and possibly `bbox` and `segmentation`.
+        root (str): Root folder where the images are stored.
+        n (int): Number of images to plot.
+    """
+
     if 'bbox' not in df.columns and 'segmentation' not in df.columns:
         for i in range(n):
             img = get_image(os.path.join(root, df['path'].iloc[i]))
@@ -65,19 +85,29 @@ def plot_bbox_segmentation(df: pd.DataFrame, root: str, n: int) -> None:
                 plot_segmentation(img, segmentation)
 
 def plot_grid(
-    df: pd.DataFrame,
-    root: str,
-    n_rows: int = 5,
-    n_cols: int = 8,
-    offset: float = 10,
-    img_min: float = 100,
-    rotate: bool = True
-    ) -> Image:
-    '''
-    Plots a grid of size (n_rows, n_rows) with images from dataframe df.
-    It resizes them based on img_min and possibly rotates if rotate=True.
-    Offset specifies the pixel offset between images.
-    '''
+        df: pd.DataFrame,
+        root: str,
+        n_rows: int = 5,
+        n_cols: int = 8,
+        offset: float = 10,
+        img_min: float = 100,
+        rotate: bool = True
+        ) -> Image:
+    """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
+
+    Args:
+        df (pd.DataFrame): Dataframe with column `path` (relative path).
+        root (str): Root folder where the images are stored. 
+        n_rows (int, optional): The number of rows in the grid.
+        n_cols (int, optional): The number of columns in the grid.
+        offset (float, optional): The offset between images.
+        img_min (float, optional): The minimal size of the plotted images.
+        rotate (bool, optional): Rotates the images to have the same orientation.
+
+    Returns:
+        The plotted grid.
+    """
+
     # Select indices of images to be plotted
     idx = np.random.permutation(len(df))[:n_rows*n_cols]
 
@@ -120,9 +150,13 @@ def plot_grid(
     return im_grid
 
 def display_statistics(df: pd.DataFrame, unknown_name: str = '') -> None:
-    '''
-    Prints statistics about the dataframe df.
-    '''
+    """Prints statistics about the dataframe.
+
+    Args:
+        df (pd.DataFrame): A full dataframe of the data.
+        unknown_name (str, optional): Name of the unknown class.
+    """
+
     # Remove the unknown identities
     df_red = df.loc[df['identity'] != unknown_name, 'identity']
     df_red.value_counts().reset_index(drop=True).plot()
@@ -157,17 +191,32 @@ def display_statistics(df: pd.DataFrame, unknown_name: str = '') -> None:
             print(f"Images span                      %1.0f days" % (span_years * 365.25))
 
 def get_dates(dates: pd.Series, frmt: str) -> List[datetime.date]:
-    '''
-    Converts the dates into format frmt.
-    '''
+    """Converts the dates into the specified format.
+
+    Args:
+        dates (pd.Series): The series with dates.
+        frmt (str): The desired format.
+
+    Returns:
+        The converted dates.
+    """
+    
+    # TODO: mismatch between return types
     return np.array([datetime.datetime.strptime(date, frmt) for date in dates])
 
 def compute_span(df: pd.DataFrame) -> float:
-    '''
-    Compute the time span of the dataset.
-    It is defined as the latest time minus earliest time of image taken.
+    """Compute the time span of the dataset.
+
+    The span is defined as the latest time minus the earliest time of image taken.
     The times are computed separately for each individual.
-    '''
+
+    Args:
+        df (pd.DataFrame): A full dataframe of the data.
+
+    Returns:
+        The span of the dataset.
+    """
+
     # Convert the dates into timedelta
     df = df.loc[~df['date'].isnull()]
     dates = get_dates(df['date'].str[:10], '%Y-%m-%d')
