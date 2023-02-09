@@ -9,16 +9,16 @@ This package provides:
 
 ## Summary of datasets
 
-The package is able to handle the following datasets. We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and whether the images were taken in the wild, whether the animals have unique patterns and whether the images are cropped.
+The package is able to handle the following datasets. We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and additional information such as source, number of poses, inclusion of timestamps, whether the animals were captured in the wild and whether the dataset contain multiple species.
 
-Additional information including links to the original datasets is in a [separate Markdown file](datasets.md). Graphical summary is located in a [Jupyter notebook](notebooks/dataset_descriptions.ipynb).
+Graphical summary of datasets is located in a [Jupyter notebook](notebooks/dataset_descriptions.ipynb). Due to its size, it may be necessary to view it via [nbviewer](https://nbviewer.org/github/WildlifeDatasets/wildlife-datasets/blob/main/notebooks/dataset_descriptions.ipynb).
 
 ![](images/Datasets_Summary.png)
 
 
 ## Installation
 
-The installation is simple by
+The installation of the package is simple by
 ```
 pip install wildlife-datasets
 ```
@@ -36,7 +36,7 @@ datasets.MacaqueFaces.download.get_data('data/MacaqueFaces')
 dataset = datasets.MacaqueFaces('data/MacaqueFaces')
 ```
 
-The class `dataset` contains the summary of the dataset. The content depends on the dataset. Each dataset contains the identity and paths to images. This particular dataset also contains information about the date taken and contrast. Other datasets store information about bounding boxes, segmentation masks, position from which the image was taken, keypoints or various other information such as axe or gender.
+The class `dataset` contains the summary of the dataset. The content depends on the dataset. Each dataset contains the identity and paths to images. This particular dataset also contains information about the date taken and contrast. Other datasets store information about bounding boxes, segmentation masks, position from which the image was taken, keypoints or various other information such as age or gender.
 
 ```
 dataset.df
