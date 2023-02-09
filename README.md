@@ -60,3 +60,6 @@ utils.analysis.plot_grid(dataset.df, 'data/MacaqueFaces')
 
 ![](images/MacaqueFaces_Grid.png)
 
+<!---
+# TODO: add a section about splitting and evaluation
+-->
