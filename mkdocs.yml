@@ -8,13 +8,10 @@ plugins:
       handlers:
         python:
           paths: [wildlife_datasets]
-
+    
 nav:
   - Home: index.md
   - tutorials.md
   - How-To Guides: how-to-guides.md
-  - Datasets: datasets.md
-  - Analysis: analysis.md
-  - Utils: utils.md
-  - Reference: reference.md
-  - explanation.md
+  - Reference datasets: reference_datasets.md
+  - Reference utils: reference_utils.md
