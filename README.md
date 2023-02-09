@@ -1,9 +1,10 @@
 # Wildlife Re-Identification (Re-ID) Datasets
 
 This package provides:
-- overview of 30 publicly available wildlife re-identification datasets.
+- overview of 31 publicly available wildlife re-identification datasets.
 - utilities to mass download and convert them into a unified format.
-- splits for open and closed-set classification.
+- splitting functions for closed-set and open-set classification.
+- evaluation metrics for closed-set and open-set classification.
 
 
 ## Summary of datasets
