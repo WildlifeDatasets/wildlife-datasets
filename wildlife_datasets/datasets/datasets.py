@@ -37,22 +37,14 @@ class DatasetFactory():
             df: Optional[pd.DataFrame] = None,
             download: bool = False,
             **kwargs) -> None:
-        """Initializes the class.
+        """_summary_
 
-        If `download`, then it downloads the data.
-        If `df` is specified, it copies it. Otherwise, it creates it
-        by the `create_catalogue` method.
-        It creates `df_ml` by the `create_catalogue_ml` method.
-
-        Parameters
-        ----------
-        root : str
-            Root directory for the data
-        df : Optional[pd.DataFrame], optional
-            A full datafrmae of the data, by default None
-        download : bool, optional
-            Whether to download the data, by default False
+        Args:
+            root (str): _description_
+            df (Optional[pd.DataFrame], optional): _description_. Defaults to None.
+            download (bool, optional): _description_. Defaults to False.
         """
+
 
         self.root = root
         if download and hasattr(self, 'download'): 
