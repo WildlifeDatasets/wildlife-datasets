@@ -10,7 +10,8 @@ plugins:
           paths: [wildlife_datasets]
     
 nav:
-  - Home: index.md
+  - Introduction: index.md
+  - Oveview of datasets: datasets.md
   - tutorials.md
   - How-To Guides: how-to-guides.md
   - Reference datasets: reference_datasets.md
