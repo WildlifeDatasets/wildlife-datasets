@@ -11,10 +11,6 @@ from . import utils
 
 
 class DatasetFactory():
-    unknown_name = 'unknown'
-    # TODO: change position to orientation or pose or something normal
-    # TODO: add some examples of usage
-    # TODO: attributes download and metadata are missing
     """Base class for creating datasets.
 
     Attributes:
@@ -23,6 +19,10 @@ class DatasetFactory():
       df (pd.DataFrame): A full dataframe of the data.
       df_ml (pd.DataFrame): A dataframe of data for machine learning models.
     """
+    unknown_name = 'unknown'
+    # TODO: change position to orientation or pose or something normal
+    # TODO: add some examples of usage
+    # TODO: attributes download and metadata are missing
 
     def __init__(
             self, 
