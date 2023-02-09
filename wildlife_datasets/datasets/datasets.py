@@ -15,20 +15,13 @@ class DatasetFactory():
     # TODO: change position to orientation or pose or something normal
     # TODO: add some examples of usage
     # TODO: attributes download and metadata are missing
+    """Base class for creating datasets.
 
-    """
-    The class `DatasetFactory` is a base class for creating datasets.
-
-    Attributes
-    ----------
-    unknown_name : str
-        Name of the unknown class.
-    root : str
-        Root directory for the data.
-    df : pd.DataFrame
-        A full dataframe of the data.
-    df_ml : pd.DataFrame
-        A dataframe of data for machine learning models.
+    Attributes:
+      unknown_name (str): Name of the unknown class.
+      root (str): Root directory for the data.
+      df (pd.DataFrame): A full dataframe of the data.
+      df_ml (pd.DataFrame): A dataframe of data for machine learning models.
     """
 
     def __init__(
@@ -37,14 +30,18 @@ class DatasetFactory():
             df: Optional[pd.DataFrame] = None,
             download: bool = False,
             **kwargs) -> None:
-        """_summary_
+        """Initializes the class.
+
+        If `download`, then it downloads the data.
+        If `df` is specified, it copies it. Otherwise, it creates it
+        by the `create_catalogue` method.
+        It creates `df_ml` by the `create_catalogue_ml` method.
 
         Args:
-            root (str): _description_
-            df (Optional[pd.DataFrame], optional): _description_. Defaults to None.
-            download (bool, optional): _description_. Defaults to False.
+            root (str): Root directory for the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
+            download (bool, optional): Whether to download the data.
         """
-
 
         self.root = root
         if download and hasattr(self, 'download'): 
@@ -58,10 +55,8 @@ class DatasetFactory():
     def create_catalogue(self):
         """Creates the dataframe.
 
-        Raises
-        ------
-        NotImplementedError
-            Needs to be implemented by subclasses.
+        Raises:
+            NotImplementedError: Needs to be implemented by subclasses.
         """
 
         raise NotImplementedError()
@@ -73,14 +68,10 @@ class DatasetFactory():
         It removes unknown identities.
         It reset the dataframe index.
 
-        Parameters
-        ----------
-        df : pd.DataFrame
-            A full dataframe of the data.
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
 
-        Returns
-        -------
-        pd.DataFrame
+        Returns:
             A dataframe of data for machine learning models.
         """
 
@@ -95,14 +86,10 @@ class DatasetFactory():
         Reorders the columns and removes constant columns.
         Checks if ids are unique and if all files exist.
 
-        Parameters
-        ----------
-        df : pd.DataFrame
-            A full dataframe of the data.
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
 
-        Returns
-        -------
-        pd.DataFrame
+        Returns:
             A full dataframe of the data, slightly modified.
         """
 
@@ -120,14 +107,10 @@ class DatasetFactory():
         Rows are sorted based on id.
         Columns are reorder based on the `default_order` list.
 
-        Parameters
-        ----------
-        df : pd.DataFrame
-            A full dataframe of the data.
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
 
-        Returns
-        -------
-        pd.DataFrame
+        Returns:
             A full dataframe of the data, slightly modified.
         """
 
@@ -147,16 +130,12 @@ class DatasetFactory():
     def remove_constant_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         """Removes columns with a single unique value.
 
-        Parameters
-        ----------
-        df : pd.DataFrame
-            A full dataframe of the data.
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
 
-        Returns
-        -------
-        pd.DataFrame
+        Returns:
             A full dataframe of the data, slightly modified.
-        """
+        """ 
 
         for df_name in list(df.columns):
             if df[df_name].astype('str').nunique() == 1:
@@ -166,10 +145,8 @@ class DatasetFactory():
     def check_unique_id(self, df: pd.DataFrame) -> None:
         """Checks if values in the id column are unique.
 
-        Parameters
-        ----------
-        df : pd.DataFrame
-            A full dataframe of the data.
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
         """
 
         if len(df['id'].unique()) != len(df):
@@ -178,10 +155,8 @@ class DatasetFactory():
     def check_files_exist(self, col: pd.Series) -> None:
         """Checks if paths in a given column exist.
 
-        Parameters
-        ----------
-        col : pd.Series
-            A column of a dataframe.
+        Args:
+            col (pd.Series): A column of a dataframe.
         """
 
         for path in col:

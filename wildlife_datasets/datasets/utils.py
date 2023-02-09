@@ -12,16 +12,11 @@ def find_images(
         ) -> pd.DataFrame:
     """Finds all image files in folder and subfolders.
 
-    Parameters
-    ----------
-    root : str
-        The root folder where to look for images.
-    img_extensions : Tuple[str, ...], optional
-        Image extensions to look for, by default ('.png', '.jpg', '.jpeg')
+    Args:
+        root (str): The root folder where to look for images.
+        img_extensions (Tuple[str, ...], optional): Image extensions to look for, by default ('.png', '.jpg', '.jpeg').
 
-    Returns
-    -------
-    pd.DataFrame
+    Returns:
         Dataframe of relative paths of the images.
     """
 
@@ -35,14 +30,10 @@ def find_images(
 def create_id(string_col: pd.Series) -> pd.Series:
     """Creates unique ids from string based on MD5 hash.
 
-    Parameters
-    ----------
-    string_col : pd.Series
-        List of ids.
+    Args:
+        string_col (pd.Series): List of ids.
 
-    Returns
-    -------
-    pd.Series
+    Returns:
         List of encoded ids.
     """
 
@@ -53,15 +44,11 @@ def create_id(string_col: pd.Series) -> pd.Series:
 def bbox_segmentation(bbox: List[float]) -> List[float]:
     """Convert bounding box to segmentation.
 
-    Parameters
-    ----------
-    bbox : List[float]
-        Bounding box in the form [x, y, w, h].
+    Args:
+        bbox (List[float]): Bounding box in the form [x, y, w, h].
 
-    Returns
-    -------
-    List[float]
-        Segmentation mask in the form [x1, y1, x2, y2, ...]
+    Returns:
+        Segmentation mask in the form [x1, y1, x2, y2, ...].
     """
 
     return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
@@ -69,14 +56,10 @@ def bbox_segmentation(bbox: List[float]) -> List[float]:
 def segmentation_bbox(segmentation: List[float]) -> List[float]:
     """Convert segmentation to bounding box.
 
-    Parameters
-    ----------
-    segmentation : List[float]
-        Segmentation mask in the form [x1, y1, x2, y2, ...]
+    Args:
+        segmentation (List[float]): Segmentation mask in the form [x1, y1, x2, y2, ...].
 
-    Returns
-    -------
-    List[float]
+    Returns:
         Bounding box in the form [x, y, w, h].
     """
 
@@ -95,18 +78,12 @@ def is_annotation_bbox(
         ) -> bool:
     """Checks whether segmentation is bounding box.
 
-    Parameters
-    ----------
-    segmentation : List[float]
-        Segmentation mask in the form [x1, y1, x2, y2, ...]
-    bbox : List[float]
-        Bounding box in the form [x, y, w, h].
-    tol : float, optional
-        Tolerance for difference, by default 0
+    Args:
+        segmentation (List[float]): Segmentation mask in the form [x1, y1, x2, y2, ...].
+        bbox (List[float]): Bounding box in the form [x, y, w, h].
+        tol (float, optional): Tolerance for difference.
 
-    Returns
-    -------
-    bool
+    Returns:
         True if segmentation is bounding box within tolerance.
     """
 
