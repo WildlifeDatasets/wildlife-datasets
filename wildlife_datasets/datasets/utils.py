@@ -95,30 +95,3 @@ def is_annotation_bbox(
     else:
         return False
     return True
-
-def convert_keypoint(
-        keypoint: List[float],
-        keypoints_names: List[str]
-        ) -> Dict[str, object]:
-    # TODO: check if used. if yes, write documentation. if not, delete
-    '''
-    Converts list of keypoints into a dictionary named by keypoint_names.
-    '''
-    keypoint_dict = {}
-    if isinstance(keypoint, Iterable):
-        for i in range(len(keypoints_names)):
-            x = keypoint[2*i]
-            y = keypoint[2*i+1]
-            if np.isfinite(x) and np.isfinite(y):
-                keypoint_dict[keypoints_names[i]] = [x, y]
-    return keypoint_dict
-
-def convert_keypoints(
-        keypoints: pd.Series,
-        keypoints_names: List[str]
-        ) -> List[Dict[str, object]]:
-    # TODO: check if used. if yes, write documentation. if not, delete
-    '''
-    Converts dataframe of lists of keypoints into a dictionary named by keypoint_names.
-    '''
-    return [convert_keypoint(keypoint, keypoints_names) for keypoint in keypoints]
