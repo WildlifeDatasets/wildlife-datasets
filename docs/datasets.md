@@ -1,136 +1,124 @@
-# AAUZebraFishID
+## AAUZebraFishID
 
 ![](images/grid_AAUZebraFishID.png)
 
-# AerialCattle2017
+## AerialCattle2017
 
 ![](images/grid_AerialCattle2017.png)
 
-# ATRW
+## ATRW
 
 ![](images/grid_ATRW.png)
 
-# BelugaID
+## BelugaID
 
 ![](images/grid_BelugaID.png)
 
-# BirdIndividualID
+## BirdIndividualID
 
 ![](images/grid_BirdIndividualID.png)
 
-# BirdIndividualIDSegmented
-
-![](images/grid_BirdIndividualIDSegmented.png)
-
-# CTai
+## CTai
 
 ![](images/grid_CTai.png)
 
-# CZoo
+## CZoo
 
 ![](images/grid_CZoo.png)
 
-# Cows2021
+## Cows2021
 
 ![](images/grid_Cows2021.png)
 
-# Drosophila
+## Drosophila
 
 ![](images/grid_Drosophila.png)
 
-# FriesianCattle2015
+## FriesianCattle2015
 
 ![](images/grid_FriesianCattle2015.png)
 
-# FriesianCattle2017
+## FriesianCattle2017
 
 ![](images/grid_FriesianCattle2017.png)
 
-# GiraffeZebraID
+## GiraffeZebraID
 
 ![](images/grid_GiraffeZebraID.png)
 
-# Giraffes
+## Giraffes
 
 ![](images/grid_Giraffes.png)
 
-# HappyWhale
+## HappyWhale
 
 ![](images/grid_HappyWhale.png)
 
-# HumpbackWhaleID
+## HumpbackWhaleID
 
 ![](images/grid_HumpbackWhaleID.png)
 
-# HyenaID2022
+## HyenaID2022
 
 ![](images/grid_HyenaID2022.png)
 
-# IPanda50
+## IPanda50
 
 ![](images/grid_IPanda50.png)
 
-# LeopardID2022
+## LeopardID2022
 
 ![](images/grid_LeopardID2022.png)
 
-# LionData
+## LionData
 
 ![](images/grid_LionData.png)
 
-# MacaqueFaces
+## MacaqueFaces
 
 ![](images/grid_MacaqueFaces.png)
 
-# NDD20
+## NDD20
 
 ![](images/grid_NDD20.png)
 
-# NOAARightWhale
+## NOAARightWhale
 
 ![](images/grid_NOAARightWhale.png)
 
-# NyalaData
+## NyalaData
 
 ![](images/grid_NyalaData.png)
 
-# OpenCows2020
+## OpenCows2020
 
 ![](images/grid_OpenCows2020.png)
 
-# SealID
+## SealID
 
 ![](images/grid_SealID.png)
 
-# SealIDSegmented
-
-![](images/grid_SealIDSegmented.png)
-
-# SeaTurtleID
+## SeaTurtleID
 
 ![](images/grid_SeaTurtleID.png)
 
-# SeaTurtleIDHeads
-
-![](images/grid_SeaTurtleIDHeads.png)
-
-# SMALST
+## SMALST
 
 ![](images/grid_SMALST.png)
 
-# StripeSpotter
+## StripeSpotter
 
 ![](images/grid_StripeSpotter.png)
 
-# WhaleSharkID
+## WhaleSharkID
 
 ![](images/grid_WhaleSharkID.png)
 
-# WNIGiraffes
+## WNIGiraffes
 
 ![](images/grid_WNIGiraffes.png)
 
-# ZindiTurtleRecall
+## ZindiTurtleRecall
 
 ![](images/grid_ZindiTurtleRecall.png)
 
