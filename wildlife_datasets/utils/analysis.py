@@ -38,7 +38,7 @@ def plot_segmentation(img: Image, segmentation: List[float]) -> None:
     """Plots an image and its segmentation mask.
 
     Args:
-        Plots an image and its segmentation mask.
+        img (Image): Image to be plotted.
         segmentation (List[float]): Segmentation mask in the form [x1, y1, x2, y2, ...].
     """
 
