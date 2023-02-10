@@ -20,7 +20,6 @@ class DatasetFactory():
       df_ml (pd.DataFrame): A dataframe of data for machine learning models.
     """
     unknown_name = 'unknown'
-    # TODO: change position to orientation or pose or something normal
     # TODO: add some examples of usage
     # TODO: attributes download and metadata are missing
 
@@ -84,6 +83,7 @@ class DatasetFactory():
         """Reorders the dataframe and check file paths.
 
         Reorders the columns and removes constant columns.
+        Checks if columns are in correct formats.
         Checks if ids are unique and if all files exist.
 
         Args:
@@ -93,6 +93,8 @@ class DatasetFactory():
             A full dataframe of the data, slightly modified.
         """
 
+        self.check_required_columns(df)
+        self.check_types_columns(df)
         df = self.reorder_df(df)
         df = self.remove_constant_columns(df)
         self.check_unique_id(df)
@@ -100,6 +102,92 @@ class DatasetFactory():
         if 'segmentation' in df.columns:
             self.check_files_exist(df['segmentation'])
         return df
+
+    def check_required_columns(self, df: pd.DataFrame) -> None:
+        """Check if all required columns are present.
+
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
+        """
+
+        for col_name in ['id', 'identity', 'path']:
+            if col_name not in df.columns:
+                raise(Exception('Column %s must be in the dataframe columns.' % col_name))
+
+    def check_types_columns(self, df: pd.DataFrame) -> None:
+        """Checks if columns are in correct formats.
+
+        The format are specified in `requirements`, which is list
+        of tuples. The first value is the name of the column
+        and the second value is a list of formats. The column
+        must be at least one of the formats.
+
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
+        """
+
+        # TODO: check if all columns are specified
+        # List of specified formats
+        requirements = [
+            ('id', ['int', 'str']),
+            ('identity', ['int', 'str']),
+            ('path', ['str']),
+            ('bbox', ['list_numeric']),
+            ('date', ['date']),
+            ('keypoints', ['list_numeric']),
+            ('position', ['str']),
+            ('species', ['str', 'list']),
+            #('video', ['int']),
+        ]
+        # Verify if the columns are in correct formats
+        for col_name, allowed_types in requirements:
+            if col_name in df.columns:
+                # Remove empty values to be sure
+                col = df[col_name][~df[col_name].isnull()]
+                if len(col) > 0:
+                    self.check_types_column(col, col_name, allowed_types)
+    
+    def check_types_column(self, col: pd.Series, col_name: str, allowed_types: List[str]) -> None:
+        """Checks if the column `col` is in the format `allowed_types`.
+
+        Args:
+            col (pd.Series): Column to be checked.
+            col_name (str): Column name used only for raising exceptions.
+            allowed_types (List[str]): List of strings with allowed values:
+                `int` (all values must be integers),
+                `str` (strings),
+                `list` (lists),
+                `list_numeric` (lists with numeric values),
+                `date` (dates as tested by `pd.to_datetime`).
+        """
+
+        if 'int' in allowed_types and pd.api.types.is_integer_dtype(col):
+            return None
+        if 'str' in allowed_types and pd.api.types.is_string_dtype(col):
+            return None
+        if 'list' in allowed_types and pd.api.types.is_list_like(col):
+            check = True
+            for val in col:
+                if not pd.api.types.is_list_like(val):
+                    check = False
+                    break
+            if check:                
+                return None        
+        if 'list_numeric' in allowed_types and pd.api.types.is_list_like(col):
+            check = True
+            for val in col:            
+                if not pd.api.types.is_list_like(val) and not pd.api.types.is_numeric_dtype(pd.Series(val)):
+                    check = False
+                    break
+            if check:                
+                return None
+        if 'date' in allowed_types:
+            try:
+                pd.to_datetime(col)
+                return None
+            except:
+                pass
+        raise(Exception('Column %s has wrong type. Allowed types = %s' % (col_name, str(allowed_types))))
 
     def reorder_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders rows and columns in the dataframe.
@@ -114,7 +202,7 @@ class DatasetFactory():
             A full dataframe of the data, slightly modified.
         """
 
-        default_order = ['id', 'identity', 'path', 'bbox', 'date', 'keypoints', 'position', 'segmentation', 'species']
+        default_order = ['id', 'identity', 'path', 'bbox', 'date', 'keypoints', 'orientation', 'segmentation', 'species']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
@@ -180,7 +268,7 @@ class DatasetFactoryWildMe(DatasetFactory):
                 raise(Exception('Wrong number of segmentations'))
         
         # Extract the data from the JSON file
-        create_dict = lambda i: {'identity': i['name'], 'bbox': utils.segmentation_bbox(i['segmentation'][0]), 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'position': i['viewpoint']}
+        create_dict = lambda i: {'identity': i['name'], 'bbox': utils.segmentation_bbox(i['segmentation'][0]), 'image_id': i['image_id'], 'category_id': i['category_id'], 'segmentation': i['segmentation'][0], 'orientation': i['viewpoint']}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
         create_dict = lambda i: {'file_name': i['file_name'], 'image_id': i['id'], 'date': i['date_captured']}
         df_images = pd.DataFrame([create_dict(i) for i in data['images']])
@@ -238,9 +326,9 @@ class AAUZebraFishID(DatasetFactory):
         attributes = attributes.astype(int).astype(bool)
 
         # Split additional data into a separate structure
-        position = data['Right,Turning,Occlusion,Glitch'].str.split(',', expand=True)[0]
-        position.replace('1', 'right', inplace=True)
-        position.replace('0', 'left', inplace=True)
+        orientation = data['Right,Turning,Occlusion,Glitch'].str.split(',', expand=True)[0]
+        orientation.replace('1', 'right', inplace=True)
+        orientation.replace('0', 'left', inplace=True)
 
         # Modify information about video sources
         video = data['Filename'].str.split('_',  expand=True)[0]
@@ -253,7 +341,7 @@ class AAUZebraFishID(DatasetFactory):
             'identity': data['Object ID'],
             'video': video,
             'bbox': bbox,
-            'position': position,
+            'orientation': orientation,
         })
         df = df.join(attributes)
         return self.finalize_catalogue(df)
@@ -823,7 +911,7 @@ class NDD20(DatasetFactory):
                     'file_name': data[key]['filename'],
                     'reg_type': region['shape_attributes']['name'],
                     'segmentation': segmentation,
-                    'position': 'above'
+                    'orientation': 'above'
                 })
         
         # Load information about the below-water dataset
@@ -848,7 +936,7 @@ class NDD20(DatasetFactory):
                     'file_name': data[key]['filename'],
                     'reg_type': region['shape_attributes']['name'],
                     'segmentation': segmentation,
-                    'position': 'below'
+                    'orientation': 'below'
                 })
 
         # Create the dataframe from entries 
@@ -858,7 +946,7 @@ class NDD20(DatasetFactory):
 
         # Finalize the dataframe
         df['id'] = range(len(df))
-        df['path'] = df['position'].str.upper() + os.path.sep + df['file_name']
+        df['path'] = df['orientation'].str.upper() + os.path.sep + df['file_name']
         df = df.drop(['reg_type', 'file_name'], axis=1)
         return self.finalize_catalogue(df)
 
@@ -899,18 +987,18 @@ class NyalaData(DatasetFactory):
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
-        # Extract information from the folder structure and about position
+        # Extract information from the folder structure and about orientation
         identity = folders[3].astype(int)
-        position = np.full(len(data), np.nan, dtype=object)
-        position[['left' in filename for filename in data['file']]] = 'left'
-        position[['right' in filename for filename in data['file']]] = 'right'
+        orientation = np.full(len(data), np.nan, dtype=object)
+        orientation[['left' in filename for filename in data['file']]] = 'left'
+        orientation[['right' in filename for filename in data['file']]] = 'right'
 
         # Finalize the dataframe
         df = pd.DataFrame({
             'id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
-            'position': position,
+            'orientation': orientation,
         })
         return self.finalize_catalogue(df)   
 
@@ -977,7 +1065,7 @@ class SeaTurtleID(DatasetFactory):
             data = json.load(file)
 
         # Extract dtaa from the JSON file
-        create_dict = lambda i: {'id': i['id'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'identity': i['identity'], 'segmentation': i['segmentation'], 'position': i['position']}
+        create_dict = lambda i: {'id': i['id'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'identity': i['identity'], 'segmentation': i['segmentation'], 'orientation': i['position']}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
         create_dict = lambda i: {'file_name': i['path'].split('/')[-1], 'image_id': i['id'], 'date': i['date']}
         df_images = pd.DataFrame([create_dict(i) for i in data['images']])
@@ -1003,7 +1091,7 @@ class SeaTurtleIDHeads(DatasetFactory):
             data = json.load(file)
 
         # Extract dtaa from the JSON file
-        create_dict = lambda i: {'id': i['id'], 'image_id': i['image_id'], 'identity': i['identity'], 'position': i['position']}
+        create_dict = lambda i: {'id': i['id'], 'image_id': i['image_id'], 'identity': i['identity'], 'orientation': i['position']}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
         create_dict = lambda i: {'file_name': i['path'].split('/')[-1], 'image_id': i['id'], 'date': i['date']}
         df_images = pd.DataFrame([create_dict(i) for i in data['images']])
@@ -1071,7 +1159,7 @@ class StripeSpotter(DatasetFactory):
             'path':  data['path'] + os.path.sep + data['file'],
             'identity': data['animal_name'],
             'bbox': pd.Series([[int(a) for a in b.split(' ')] for b in data['roi']]),
-            'position': data['flank'],
+            'orientation': data['flank'],
             'photo_quality': data['photo_quality'],
         })
         return self.finalize_catalogue(df)  
@@ -1148,7 +1236,7 @@ class ZindiTurtleRecall(DatasetFactory):
             'id': data['image_id'],
             'path': 'images' + os.path.sep + data['image_id'] + '.JPG',
             'identity': data['turtle_id'],
-            'position': data['image_location'].str.lower(),
+            'orientation': data['image_location'].str.lower(),
             'split': data['split'],
         })
         return self.finalize_catalogue(df)
