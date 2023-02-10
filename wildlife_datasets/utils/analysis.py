@@ -159,7 +159,7 @@ def display_statistics(df: pd.DataFrame, unknown_name: str = '') -> None:
 
     # Remove the unknown identities
     df_red = df.loc[df['identity'] != unknown_name, 'identity']
-    df_red.value_counts().reset_index(drop=True).plot()
+    df_red.value_counts().reset_index(drop=True).plot(xlabel='identities', ylabel='counts')
     
     # Compute the total number of identities
     if unknown_name in list(df['identity'].unique()):
