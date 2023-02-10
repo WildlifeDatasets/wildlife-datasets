@@ -114,7 +114,7 @@ class DatasetFactory():
             A full dataframe of the data, slightly modified.
         """
 
-        default_order = ['id', 'identity', 'path', 'bbox', 'segmentation', 'position', 'species', 'keypoints']
+        default_order = ['id', 'identity', 'path', 'bbox', 'date', 'keypoints', 'position', 'segmentation', 'species']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
