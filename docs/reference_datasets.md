@@ -1,17 +1,17 @@
-::: datasets.datasets
+# Reference datasets
+
+<!---
+# TODO: finish
+-->
+
+## DatasetFactory
+
+::: datasets.datasets.DatasetFactory
     options:
-      heading_level: 0
-      show_source: False
-      show_bases: False
-      show_root_heading: True
-      show_submodules: True
-      docstring_section_style: table
+      heading_level: 3      
+
+## Utils
 
 ::: datasets.utils
     options:
-      heading_level: 0
-      show_source: False
-      show_bases: False
-      show_root_heading: True
-      show_submodules: True
-      docstring_section_style: table
+      heading_level: 3

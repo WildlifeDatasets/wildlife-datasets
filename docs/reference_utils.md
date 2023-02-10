@@ -1,17 +1,18 @@
+# Reference utils
+
+<!---
+# TODO: finish
+-->
+
+## Analysis
+
 ::: utils.analysis
     options:
-      heading_level: 0
-      show_source: False
-      show_bases: False
-      show_root_heading: True
-      show_submodules: True
-      docstring_section_style: table
+      heading_level: 3      
+
+## Loader
 
 ::: utils.loader
     options:
-      heading_level: 0
-      show_source: False
-      show_bases: False
-      show_root_heading: True
-      show_submodules: True
-      docstring_section_style: table
+      heading_level: 3
+
