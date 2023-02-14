@@ -4,8 +4,7 @@ import pandas as pd
 # TODO: add documentation
 class Metadata():
     def __init__(self, path):
-        dir = os.path.dirname(__file__)
-        df = pd.read_csv(os.path.join(dir, path), index_col='name')
+        df = pd.read_csv(path, index_col='name')
         if 'animals' in df.columns:
             df.loc[df['animals'].isnull(), 'animals'] = '{}'
             df['animals'] = df['animals'].apply(lambda x: eval(x))
@@ -14,4 +13,4 @@ class Metadata():
     def __getitem__(self, item):
         return self.df.loc[item].dropna().to_dict()
     
-metadata = Metadata('metadata.csv')
+metadata = Metadata(os.path.join(os.path.dirname(__file__), 'metadata.csv'))

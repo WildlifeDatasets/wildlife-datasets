@@ -33,6 +33,7 @@ from .datasets import StripeSpotter
 from .datasets import WhaleSharkID
 from .datasets import WNIGiraffes
 from .datasets import ZindiTurtleRecall
+from .metadata import Metadata
 
 dataset_names = [
     AAUZebraFishID,
