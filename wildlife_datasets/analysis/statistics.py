@@ -44,20 +44,6 @@ def display_statistics(df: pd.DataFrame, unknown_name: str = '') -> None:
         else:
             print(f"Images span                      %1.0f days" % (span_years * 365.25))
 
-def get_dates(dates: pd.Series, frmt: str) -> List[datetime.date]:
-    """Converts the dates into the specified format.
-
-    Args:
-        dates (pd.Series): The series with dates.
-        frmt (str): The desired format.
-
-    Returns:
-        The converted dates.
-    """
-    
-    # TODO: mismatch between return types
-    return np.array([datetime.datetime.strptime(date, frmt) for date in dates])
-
 def compute_span(df: pd.DataFrame) -> float:
     """Compute the time span of the dataset.
 
@@ -68,18 +54,17 @@ def compute_span(df: pd.DataFrame) -> float:
         df (pd.DataFrame): A full dataframe of the data.
 
     Returns:
-        The span of the dataset.
+        The span of the dataset in seconds.
     """
 
     # Convert the dates into timedelta
     df = df.loc[~df['date'].isnull()]
-    # TODO: fix this
-    dates = get_dates(df['date'].str[:10], '%Y-%m-%d')
+    dates = pd.to_datetime(df['date']).to_numpy()
 
     # Find the maximal span across individuals
     identities = df['identity'].unique()
-    span = -np.inf
+    span_seconds = -np.inf
     for identity in identities:
         idx = df['identity'] == identity
-        span = np.maximum(span, (max(dates[idx]) - min(dates[idx])).total_seconds())    
-    return span
+        span_seconds = np.maximum(span_seconds, (max(dates[idx]) - min(dates[idx])) / np.timedelta64(1, 's'))
+    return span_seconds
