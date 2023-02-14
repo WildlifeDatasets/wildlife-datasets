@@ -11,7 +11,7 @@ class BalancedSplit():
     Its children are ClosedSetSplit, OpenSetSplit, DisjointSetSplit and TimeAwareSplit.
     TimeAwareSplit furher has children TimeProportionSplit and TimeCutoffSplit.
     '''
-    def __init__(self, df: pd.DataFrame, seed: int, keep_unknown: bool=False) -> None:
+    def __init__(self, df: pd.DataFrame, seed: int, identity_skip: str = 'unknown') -> None:
         '''
         The split is based on the DataFrame df, which needs to contain the column identity.
         For TimeAwareSplit it also needs to contain the column date.
@@ -19,10 +19,7 @@ class BalancedSplit():
         '''
         # Potentially remove the unknown identities
         self.df = df.copy()
-        if keep_unknown:
-            self.df = self.df
-        else:
-            self.df = self.df[self.df['identity'] != 'unknown']
+        self.df = self.df[self.df['identity'] != identity_skip]
         # Initialize the random number generator
         self.change_seed(seed)
 
