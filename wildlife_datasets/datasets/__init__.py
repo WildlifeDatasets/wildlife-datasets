@@ -1,3 +1,4 @@
+from .datasets import DatasetFactory
 from .datasets import AAUZebraFishID
 from .datasets import AerialCattle2017
 from .datasets import ATRW
