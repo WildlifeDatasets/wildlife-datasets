@@ -1,13 +1,10 @@
 name: ci 
 
-
 on:
   push:
     branches:
-      - master 
+      - master
 
-
-      - main
 permissions:
   contents: write
 jobs:
