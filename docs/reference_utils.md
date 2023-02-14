@@ -6,13 +6,17 @@
 
 ## Analysis
 
-::: utils.analysis
+::: analysis.statistics
     options:
-      heading_level: 3      
+      heading_level: 3
+
+::: analysis.plots
+    options:
+      heading_level: 3
 
 ## Loader
 
-::: utils.loader
+::: loader.loader
     options:
       heading_level: 3
 
