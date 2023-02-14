@@ -29,7 +29,7 @@ To incorporate the new dataset into the list of all available datasets, the [ini
 
 ## Optional: including metadata
 
-The metadata can be added by saving them in a csv file (such as [mymetadata.csv](csv/mymetadata.csv)). Their full description is in a [separate file](../dataframe#metadata). Then they can be loaded into the class definition as a class attribute. 
+The metadata can be added by saving them in a csv file (such as [mymetadata.csv](../csv/mymetadata.csv)). Their full description is in a [separate file](../dataframe#metadata). Then they can be loaded into the class definition as a class attribute. 
 
     import pandas as pd
     from wildlife_datasets import datasets
