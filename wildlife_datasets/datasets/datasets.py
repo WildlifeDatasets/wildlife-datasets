@@ -14,14 +14,15 @@ class DatasetFactory():
     """Base class for creating datasets.
 
     Attributes:
-      unknown_name (str): Name of the unknown class.
-      root (str): Root directory for the data.
       df (pd.DataFrame): A full dataframe of the data.
       df_ml (pd.DataFrame): A dataframe of data for machine learning models.
+      download (module): Script for downloading the dataset.
+      metadata (dict): Metadata of the dataset.
+      root (str): Root directory for the data.
+      unknown_name (str): Name of the unknown class.
     """
+
     unknown_name = 'unknown'
-    # TODO: add some examples of usage
-    # TODO: attributes download and metadata are missing
 
     def __init__(
             self, 
