@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from typing import List
 
+# TODO: add documentation
 def get_dataset_folder(root_dataset: str, dataset_class) -> pd.DataFrame:
     '''
     Gets path to the saved dataset
