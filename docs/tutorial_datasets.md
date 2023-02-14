@@ -78,7 +78,7 @@ When a dataset is already downloaded, it can be loaded by
    
     dataset = datasets.MacaqueFaces(root='data/MacaqueFaces')
 
-Since this a subclass of the `DatasetFactory` parent class, it inherits all the methods and attributes listed in its [documentation](reference_datasets.md). Its main componenets is the pandas dataframe of all samples
+Since this a subclass of the `DatasetFactory` parent class, it inherits all the methods and attributes listed in its [documentation](reference_datasets.md). Its main component is the [pandas dataframe](../dataframe) of all samples
     
     dataset.df
 
@@ -94,7 +94,7 @@ The dataset can be graphically visualized by the grid plot
 or its basic numerical statistics can by printed by
 
     analysis.display_statistics(dataset.df)
-or metadata displayed by
+or [metadata](../dataframe#metadata) displayed by
 
     dataset.metadata
 

@@ -35,3 +35,28 @@ array(['age', 'age_group', 'bbox', 'category', 'gender', 'glitch',
        'occlusion', 'out_of_focus', 'photo_quality', 'reid_split', 
        'segmentation_split', 'split', 'turning', 'video'],
 -->
+
+
+## Metadata
+
+Besides the dataframe, each dataset also contains some metadata. The metadata are saved in a separate csv file, which currently contains the following information. All entries are optional.
+
+| Column | Description |
+|--------|-------------|
+| name | Name of the dataset. |
+| licenses | License file for the dataset. |
+| licenses_url | URL for the license file. |
+| url | URL for the dataset. |
+| cite | Citation in Google Scholar type of the paper. |
+| animals | List of all animal species in the dataset. |
+| real_animals | Determines whether the dataset contains real animals. |
+| reported_n_total | The reported number of total animals. |
+| reported_n_identified | The reported number of identified animals. |
+| reported_n_photos | The reported number of photos. |
+| wild | Determines whether the photos were taken in the wild. |
+| clear_photos | Determines whether the photos are clear. |
+| pose | Determines whether the photos have one orientation (single), two orientation such as left and right flanks (double) or more (multiple). |
+| unique_pattern | Determines whether the animals have unique features (fur patern, fin shape) for recognition. |
+| from_video | Determines whether the dataset was created from photos or videos. |
+| cropped | Determines whether the photos are cropped. |
+| span | The span of the dataset (the time difference between the last and first photos). |
