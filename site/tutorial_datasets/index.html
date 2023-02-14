@@ -1,0 +1,808 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.5.3">
+    
+    
+      
+        <title>Tutorial - datasets - Wildlife Datasets</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7a952b86.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-to-use-datasets" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Wildlife Datasets" class="md-header__button md-logo" aria-label="Wildlife Datasets" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Wildlife Datasets
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tutorial - datasets
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Wildlife Datasets" class="md-nav__button md-logo" aria-label="Wildlife Datasets" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Wildlife Datasets
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../datasets/" class="md-nav__link">
+        Oveview of datasets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataframe/" class="md-nav__link">
+        Dataframe description
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Tutorial - datasets
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Tutorial - datasets
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#downloading-datasets" class="md-nav__link">
+    Downloading datasets
+  </a>
+  
+    <nav class="md-nav" aria-label="Downloading datasets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-script" class="md-nav__link">
+    Using script
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-dataset-module" class="md-nav__link">
+    Using dataset module
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#listing-datasets" class="md-nav__link">
+    Listing datasets
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-one-dataset" class="md-nav__link">
+    Working with one dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-multiple-datasets" class="md-nav__link">
+    Working with multiple datasets
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_splits/" class="md-nav__link">
+        Tutorial - splits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_evaluation/" class="md-nav__link">
+        Tutorial - evaluation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adding/" class="md-nav__link">
+        Adding new datasets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference_datasets/" class="md-nav__link">
+        Reference - datasets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference_utils/" class="md-nav__link">
+        Reference - utils
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference_splits/" class="md-nav__link">
+        Reference - splits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference_evaluation/" class="md-nav__link">
+        Reference - evaluation
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#downloading-datasets" class="md-nav__link">
+    Downloading datasets
+  </a>
+  
+    <nav class="md-nav" aria-label="Downloading datasets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-script" class="md-nav__link">
+    Using script
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-dataset-module" class="md-nav__link">
+    Using dataset module
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#listing-datasets" class="md-nav__link">
+    Listing datasets
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-one-dataset" class="md-nav__link">
+    Working with one dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-multiple-datasets" class="md-nav__link">
+    Working with multiple datasets
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="how-to-use-datasets">How to use datasets</h1>
+<p>The central part of the library is the <code>DatasetFactory</code> class, more specifically its subclasses. They represent wildlife datasets and manage any operations on them. <code>DatasetFactory</code> handles downloads, conversions to dataframes, and splitting to training and testing set. Additionally, <code>DatasetFactory</code> can create dataset summary and provides access to its metadata.</p>
+<p>The commands listed at this page require the following imports:</p>
+<pre><code>from wildlife_datasets import datasets
+from wildlife_datasets.utils import analysis, loader
+</code></pre>
+<h2 id="downloading-datasets">Downloading datasets</h2>
+<p>Most of the datasets used in this library can be downloaded fully automatically either via a script or via a <code>dataset</code> module. However, some of them are require linux-specific libraries. </p>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th align="center">Method</th>
+<th align="right">Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/aalborguniversity/aau-zebrafish-reid">AAUZebrafish</a></td>
+<td align="center">AUTO</td>
+<td align="right">Kaggle - CLI</td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh">AerialCattle2017</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/atrw">ATRW</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/beluga-id-2022/">BelugaID</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/AndreCFerreira/Bird_individualID">BirdIndividualID</a></td>
+<td align="center">MANUAL</td>
+<td align="right">Manual G-Drive + Kaggle CLI</td>
+</tr>
+<tr>
+<td><a href="https://github.com/cvjena/chimpanzee_faces">C-Tai</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/cvjena/chimpanzee_faces">C-Zoo</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7">Cows2021</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/j-schneider/fly_eye">Drosophila</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/wurzq71kfm561ljahbwjhx9n3">FriesianCattle2015</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r">FriesianCattle2017</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021">Giraffes</a></td>
+<td align="center">AUTO</td>
+<td align="right">Only linux: download</td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/great-zebra-giraffe-id">GiraffeZebraID</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/competitions/happy-whale-and-dolphin">HappyWhale</a></td>
+<td align="center">MANUAL</td>
+<td align="right">Kaggle - Need to agree terms</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/competitions/humpback-whale-identification">HumpbackWhale</a></td>
+<td align="center">MANUAL</td>
+<td align="right">Kaggle - Need to agree terms</td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/hyena-id-2022/">HyenaID</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/iPandaDateset/iPanda-50">iPanda-50</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/leopard-id-2022/">LeopardID</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/tvanzyl/wildlife_reidentification">LionData</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/clwitham/MacaqueFaces">MacaqueFaces</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.25405/data.ncl.c.4982342">NDD20</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/c/noaa-right-whale-recognition">NOAARightWhale</a></td>
+<td align="center">MANUAL</td>
+<td align="right">Kaggle - Need to agree terms</td>
+</tr>
+<tr>
+<td><a href="https://github.com/tvanzyl/wildlife_reidentification">NyalaData</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17">OpenCows2020</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53">SealID</a></td>
+<td align="center">MANUAL</td>
+<td align="right">Download with single use token</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid">SeaTurtleID</a></td>
+<td align="center">AUTO</td>
+<td align="right">Kaggle - CLI</td>
+</tr>
+<tr>
+<td><a href="https://github.com/silviazuffi/smalst">SMALST</a></td>
+<td align="center">AUTO</td>
+<td align="right">Only linux: extract</td>
+</tr>
+<tr>
+<td><a href="https://code.google.com/archive/p/stripespotter/downloads">StripeSpotter</a></td>
+<td align="center">AUTO</td>
+<td align="right">Only linux: extract</td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/whale-shark-id">WhaleSharkID</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/wni-giraffes">WNIGiraffes</a></td>
+<td align="center">AUTO</td>
+<td align="right">Only linux: download</td>
+</tr>
+<tr>
+<td><a href="https://zindi.africa/competitions/turtle-recall-conservation-challenge">ZindiTurtleRecall</a></td>
+<td align="center">AUTO</td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="using-script">Using script</h3>
+<p>You can use python scripts that are located in the <code>download</code> module.
+Each script can be used as follows:</p>
+<pre><code>python3 macaque_faces.py
+</code></pre>
+<p>You can also manually specify the location and name of the dataset folder by the optional flags:</p>
+<pre><code>python3 macaque_faces.py --name 'MacaqueFaces' --output 'data'
+</code></pre>
+<h3 id="using-dataset-module">Using dataset module</h3>
+<p>You can download any dataset with autmatic download when creating <code>DatasetFactory</code> instances.</p>
+<pre><code>dataset = datasets.MacaqueFaces(root='data/MacaqueFaces', download=True)
+</code></pre>
+<p>Or by calling the asociated download script directly</p>
+<pre><code>datasets.MacaqueFaces.download.get_data('data/MacaqueFaces')
+</code></pre>
+<h2 id="listing-datasets">Listing datasets</h2>
+<p>All exported datasets can be listed by</p>
+<pre><code>datasets.dataset_names
+</code></pre>
+<p>All these classes are subclasses of the parent class <code>DatasetFactory</code>.</p>
+<h2 id="working-with-one-dataset">Working with one dataset</h2>
+<p>When a dataset is already downloaded, it can be loaded by</p>
+<pre><code>dataset = datasets.MacaqueFaces(root='data/MacaqueFaces')
+</code></pre>
+<p>Since this a subclass of the <code>DatasetFactory</code> parent class, it inherits all the methods and attributes listed in its <a href="../reference_datasets/">documentation</a>. Its main componenets is the pandas dataframe of all samples</p>
+<pre><code>dataset.df
+</code></pre>
+<p>and its reduced version possibly more suitable for machine learning tasks</p>
+<pre><code>dataset.df_ml
+</code></pre>
+<p>This second dataframe removed all individual which were not known or which had only one photo.</p>
+<p>The dataset can be graphically visualized by the grid plot</p>
+<pre><code>analysis.plot_grid(dataset.df, 'data/MacaqueFaces')
+</code></pre>
+<p>or its basic numerical statistics can by printed by</p>
+<pre><code>analysis.display_statistics(dataset.df)
+</code></pre>
+<p>or metadata displayed by</p>
+<pre><code>analysis.display_statistics(dataset.metadata)
+</code></pre>
+<h2 id="working-with-multiple-datasets">Working with multiple datasets</h2>
+<p>Since the above-mentioned way of creating the datasets always recreates the dataframe, it will be slow for larger datasets. For this reason, we provide an alternative way</p>
+<pre><code>loader.load_dataset(datasets.MacaqueFaces, 'data', 'dataframes')
+</code></pre>
+<p>This function first checks whether <code>dataframes/MacaqueFaces.pkl</code> exists. If so, it will load the dataframe stored there, otherwise, it will create this file. Therefore, the first call of this function may be slow but the following calls are fast.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The following code needs to have all datasets downloaded. If you have downloaded only some of them, select the appropriate subset of <code>datasets.dataset_names</code>.</p>
+</div>
+<p>To work with all provided datasets, we can easily put this function call into a loop</p>
+<pre><code>ds = []
+for dataset in datasets.dataset_names:
+    d = loader.load_dataset(dataset, 'data', 'dataframes')
+    ds.append(d)
+</code></pre>
+<p>or equivalently by</p>
+<pre><code>loader.load_datasets(datasets.dataset_names, 'data', 'dataframes')
+</code></pre>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../dataframe/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Dataframe description" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Dataframe description
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../tutorial_splits/" class="md-footer__link md-footer__link--next" aria-label="Next: Tutorial - splits" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Tutorial - splits
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.37e9125f.min.js"></script>
+      
+    
+  </body>
+</html>

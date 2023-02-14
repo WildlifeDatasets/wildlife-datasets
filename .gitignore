@@ -12,7 +12,6 @@ logs/
 ibeis_database*
 jupyter.sh
 jupyter_gpu.sh
-site/
 
 *.pkl
 token.txt
