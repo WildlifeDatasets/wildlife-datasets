@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from typing import List, Tuple
 
-
+# TODO: add documentation
 class Lcg():
     '''        
     Simple Linear congruential generator for generating random numbers.

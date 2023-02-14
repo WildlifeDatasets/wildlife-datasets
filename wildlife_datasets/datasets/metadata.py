@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 
+# TODO: add documentation
 class Metadata():
     def __init__(self, path):
         dir = os.path.dirname(__file__)

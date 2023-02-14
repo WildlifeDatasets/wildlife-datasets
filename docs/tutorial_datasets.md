@@ -4,8 +4,7 @@ The central part of the library is the `DatasetFactory` class, more specifically
 
 The commands listed at this page require the following imports:
 
-    from wildlife_datasets import datasets
-    from wildlife_datasets.utils import analysis, loader
+    from wildlife_datasets import datasets, analysis, loader
 
 ## Downloading datasets
 
@@ -97,7 +96,7 @@ or its basic numerical statistics can by printed by
     analysis.display_statistics(dataset.df)
 or metadata displayed by
 
-    analysis.display_statistics(dataset.metadata)
+    dataset.metadata
 
 ## Working with multiple datasets
 Since the above-mentioned way of creating the datasets always recreates the dataframe, it will be slow for larger datasets. For this reason, we provide an alternative way
