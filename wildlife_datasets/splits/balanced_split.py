@@ -32,35 +32,55 @@ class BalancedSplit():
         self.df = df.copy()
         self.df = self.df[self.df['identity'] != identity_skip]
         # Initialize the random number generator
-        self.change_seed(seed)
+        self.set_seed(seed)
 
-    def change_seed(self, seed: int) -> None:
-        '''
-        Changes the seed of the random number generator.
-        '''
+    def set_seed(self, seed: int) -> None:
+        """Changes the seed of the random number generator.
+
+        Args:
+            seed (int): The desired seed.
+        """
+        
         self.lcg = Lcg(seed)
     
     def split(self, *args, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
-        '''
-        Splitting method which needs to be implemented by subclasses.
+        """Splitting method which needs to be implemented by subclasses.
 
-        It splits the DataFrame self.df into indices idx_train and idx_test.
-        The subdataset is obtained by loc (not iloc), therefore self.df.loc[idx_train].
-        '''
+        It splits the dataframe `self.df` into labels `idx_train` and `idx_test`.
+        The subdataset is obtained by `self.df.loc[idx_train]` (not `iloc`).
+
+        Returns:
+            List of labels of the training and testing sets.
+        """
+
         raise(NotImplementedError('Subclasses should implement this. \n You may want to use ClosedSetSplit instead of BalancedSplit.'))
 
-    def general_split(self, ratio_train, individual_train, individual_test,
-        ratio_train_min: float=0, ratio_train_max: float=1
-        ) -> Tuple[np.ndarray, np.ndarray]:
-        '''
-        For a general idea, see the documentation of the BalancedSplit.split() function.
-        This split is a general purpose split with the following arguments:
-            ratio_train is the !approximate! size of the training set. It is applied to each individual separately.
-            individual_train are the names of individuals which go ALL to the training set.
-            individual_test are the names of individuals which go ALL to the testing set.            
-        Since some individuals may go only one of the sets, some recomputation of ratio_train is needed.
-        The recomputed value will always lie in the interval [ratio_train_min, ratio_train_max].
-        '''
+    # TODO: remove ratio_train_min and ratio_train_max
+    def general_split(
+            self,
+            ratio_train: float,
+            individual_train: List[str],
+            individual_test: List[str],
+            ratio_train_min: float = 0,
+            ratio_train_max: float = 1
+            ) -> Tuple[np.ndarray, np.ndarray]:
+        """General-purpose split into the training and testing sets.
+
+        It puts all samples of `individual_train` into the training set
+        and all samples of `individual_test` into the testing set.
+        The splitting is performed for each individual separately.
+        The split will result in at least one sample in both the training and testing sets.
+        If only one sample is available for an individual, it will be in the training set.
+                
+        Args:
+            ratio_train (float): *Approximate* size of the training set.
+            individual_train (List[str]): Individuals to be only in the training test.
+            individual_test (List[str]): Individuals to be only in the testing test.
+
+        Returns:
+            List of labels of the training and testing sets.
+        """
+
         # Compute how many samples go automatically to the training and testing sets
         n_train = sum(self.y_counts[[k in individual_train for k in self.y_unique]])
         n_test = sum(self.y_counts[[k in individual_test for k in self.y_unique]])
