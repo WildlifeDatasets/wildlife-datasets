@@ -28,7 +28,7 @@ class Lcg():
         """Generates a new random integer from the current state.
 
         Returns:
-            int: New random integer.
+            New random integer.
         """
 
         self.state = (self.state * 1103515245 + 12345) & 0x7FFFFFFF
@@ -41,7 +41,7 @@ class Lcg():
             n (int): Length of the sequence to be permuted.
 
         Returns:
-            np.ndarray: Permuted sequence.
+            Permuted sequence.
         """
         
         rnd = []
@@ -57,7 +57,7 @@ class Lcg():
             x (np.ndarray): Array to be permuted.
 
         Returns:
-            np.ndarray: Shuffled array.
+            Shuffled array.
         """
 
         return x[self.random_permutation(len(x))]

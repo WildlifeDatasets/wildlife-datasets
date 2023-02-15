@@ -3,22 +3,34 @@ import pandas as pd
 from typing import List, Tuple
 from .lcg import Lcg
 
-# TODO: add documentation
+
 class BalancedSplit():
     """Base class for splitting datasets into training and testing sets.
 
-    Its subclasses need to implement the split() method.
+    Implements methods from [this paper](https://arxiv.org/abs/2211.10307).
+    Its subclasses need to implement the `split` method.
     It should perform balanced splits separately for all classes.
-    Its children are ClosedSetSplit, OpenSetSplit, DisjointSetSplit and TimeAwareSplit.
-    TimeAwareSplit furher has children TimeProportionSplit and TimeCutoffSplit.
+    Its children are `IdentitySplit` and `TimeAwareSplit`.
+    `IdentitySplit` has children `ClosedSetSplit`, `OpenSetSplit` and `DisjointSetSplit`.
+    `TimeAwareSplit` has children `TimeProportionSplit` and `TimeCutoffSplit`.
 
     Attributes:
       df (pd.DataFrame): A dataframe of the data. It must contain columns
         `identity` for all splits and `date` for time-aware splits.
-      # TODO: finish
+      lcg (Lcg): Random number generator LCG.
+      n (int): Number of samples.
+      n_class (int): Number of unique identities.
+      y (np.ndarray): List of identities.
+      y_counts (np.ndarray): List of sample counts for each unique identity.
+      y_unique (np.ndarray): List of unique sorted identities.
     """
 
-    def __init__(self, df: pd.DataFrame, seed: int, identity_skip: str = 'unknown') -> None:
+    def __init__(
+            self,
+            df: pd.DataFrame,
+            seed: int,
+            identity_skip: str = 'unknown'
+            ) -> None:
         """Initializes the class.
 
         Args:

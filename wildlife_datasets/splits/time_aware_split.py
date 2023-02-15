@@ -5,15 +5,13 @@ from .balanced_split import BalancedSplit
 
 
 class TimeAwareSplit(BalancedSplit):
-    '''
-    Time-aware splits are based on https://arxiv.org/abs/2211.10307
-    The split is not created randomly but based on time from self.df['date'].
-    This creates more complicated split that the time-unaware (random) one.
-    '''
+    """Base class for `TimeProportionSplit` and `TimeCutoffSplit`.
+    """
+
     def __init__(self, *args, **kwargs) -> None:
-        '''
-        For a general idea, see the documentation of the BalancedSplit.__init__() function.
-        '''
+        """Initializes the class with the same arguments as its [parent contructor](../reference_splits#splits.balanced_split.BalancedSplit.__init__).
+        """      
+
         super().__init__(*args, **kwargs)
         if 'date' not in self.df.columns:
             # Check if the DataFrame contain the column date.
@@ -21,18 +19,33 @@ class TimeAwareSplit(BalancedSplit):
         self.y_unique = np.sort(self.df['identity'].unique())
         # Convert date to datetime format (from possibly strings) and drop hours
         self.df['date'] = pd.to_datetime(self.df['date']).apply(lambda x: x.date())
+        # TODO: rewrite
         if 'year' not in self.df.columns:
             # Extract year from the date format
             self.df['year'] = self.df['date'].apply(lambda x: x.year).to_numpy()
 
-    def resplit_random(self, idx_train, idx_test, year_max=np.inf):
-        '''
-        For a general idea, see the documentation of the BalancedSplit.split() function.
-        This function creates a random re-split of an already generated split.
-        The re-split mimics the split as the training set contains the same number of samples for EACH individual.
+    def resplit_random(
+            self,
+            idx_train: np.ndarray,
+            idx_test: np.ndarray,
+            year_max: int = np.inf
+            ) -> Tuple[np.ndarray, np.ndarray]:
+        """Creates a random re-split of an already existing split.
+
+        The re-split mimics the split as the training set contains
+        the same number of samples for EACH individual.
         The same goes for the testing set.
-        The re-split samples may be drawn only from self.df['year'] <= year_max.
-        '''
+        The re-split samples may be drawn only from `self.df['year'] <= year_max`.
+
+        Args:
+            idx_train (np.ndarray): Labels of the training set.
+            idx_test (np.ndarray): Labels of the testing set.
+            year_max (int, optional): Considers only entries with `self.df['year'] <= year_max`.
+
+        Returns:
+            List of labels of the training and testing sets.
+        """
+
         # Compute the number of samples for each individual in the training set
         counts_train = {}
         for x in self.df.loc[idx_train].groupby('identity'):
@@ -49,6 +62,7 @@ class TimeAwareSplit(BalancedSplit):
             # Extract the number of individuals in the training and testing sets
             n_train = counts_train.get(identity, 0)
             n_test = counts_test.get(identity, 0)
+            # TODO: only if for speed-up
             # Get randomly permuted indices of the corresponding identity
             idx = np.where(self.df['identity'] == identity)[0]
             idx = idx[self.df.iloc[idx]['year'] <= year_max]
@@ -61,16 +75,22 @@ class TimeAwareSplit(BalancedSplit):
         return np.array(self.df.index.values)[idx_train_new], np.array(self.df.index.values)[idx_test_new]
 
 
-class TimeProportionSplit(TimeAwareSplit):    
-    '''
-    Time-proportion split is based on https://arxiv.org/abs/2211.10307
-    For each individual, it extracts unique observation dates and puts half to the training to the testing set.    
+class TimeProportionSplit(TimeAwareSplit):
+    """Time-proportion non-random splitting method into training and testing sets.
+
+    For each individual, it extracts unique observation dates
+    and puts half to the training to the testing set.
     Ignores individuals with only one observation date.
-    '''    
+    Implementation of [this paper](https://arxiv.org/abs/2211.10307).
+    """
+
     def split(self) -> Tuple[np.ndarray, np.ndarray]:
-        '''
-        For a general idea, see the documentation of the BalancedSplit.split() function.
-        '''
+        """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
+
+        Returns:
+            List of labels of the training and testing sets.
+        """
+        
         idx_train = []
         idx_test = []
         # Loop over all identities; x is a tuple (identity, df with unique identity)
@@ -89,24 +109,37 @@ class TimeProportionSplit(TimeAwareSplit):
 
 
 class TimeCutoffSplit(TimeAwareSplit):
-    '''
-    Time-cutoff split is based on https://arxiv.org/abs/2211.10307
-    Puts all individuals observed before 'year' into the training test.
-    Puts all individuals observed during 'year' into the testing test.
-    Ignores all individuals observed after 'year'.
-    '''     
+    """Time-cutoff non-random splitting method into training and testing sets.
+
+    Puts all individuals observed before `year` into the training test.
+    Puts all individuals observed during `year` into the testing test.
+    Ignores all individuals observed after `year`.
+    Implementation of [this paper](https://arxiv.org/abs/2211.10307).
+    """
+
+    # TODO: add an optional argument
     def split(self, year: int) -> Tuple[np.ndarray, np.ndarray]:
-        '''
-        For a general idea, see the documentation of the BalancedSplit.split() function.
-        '''
+        """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
+
+        Args:
+            year (int): Splitting year.
+
+        Returns:
+            List of labels of the training and testing sets.
+        """
+
         idx_train = list(np.where(self.df['year'] < year)[0])
         idx_test = list(np.where(self.df['year'] == year)[0])
         return np.array(self.df.index.values)[idx_train], np.array(self.df.index.values)[idx_test]
 
     def splits_all(self) -> Tuple[List[Tuple[np.ndarray, np.ndarray]], np.ndarray]:
-        '''
-        Creates splits for all possible splitting years
-        '''
+        """Creates `TimeCutoffSplit` splits for all possible splitting years.
+
+        Returns:
+            List of lists of labels of the training and testing sets.
+            List of splitting years.
+        """
+
         # Ignores the first year because otherwise the training set would be empty
         years = np.sort(self.df['year'].unique())[1:]
         splits = []

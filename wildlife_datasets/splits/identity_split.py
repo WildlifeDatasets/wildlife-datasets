@@ -1,13 +1,17 @@
 import numpy as np
+import pandas as pd
 from typing import List, Tuple
 from .balanced_split import BalancedSplit
 
 
 class IdentitySplit(BalancedSplit):
+    """Base class for `ClosedSetSplit`, `OpenSetSplit` and `DisjointSetSplit`.
+    """
+
     def __init__(self, *args, **kwargs) -> None:
-        '''
-        For a general idea, see the documentation of the BalancedSplit.__init__() function.
-        '''
+        """Initializes the class with the same arguments as its [parent contructor](../reference_splits#splits.balanced_split.BalancedSplit.__init__).
+        """      
+
         super().__init__(*args, **kwargs)
         # Compute unique classes (y_unique) and their counts (y_counts)
         y = self.df['identity'].to_numpy()                
@@ -24,33 +28,57 @@ class IdentitySplit(BalancedSplit):
 
 
 class ClosedSetSplit(IdentitySplit):
-    '''
-    ClosedSetSplit is the split where all individuals are in the training and testing set.
-    The only exception is that individuals with one sample are in the training set only.
-    '''
+    """Closed-set splitting method into training and testing sets.
+
+    All individuals are both in the training and testing set.
+    The only exception is that individuals with only one sample are in the training set.
+    Implementation of [this paper](https://arxiv.org/abs/2211.10307).
+    """
+
     def split(self, ratio_train: float) -> Tuple[np.ndarray, np.ndarray]:
-        '''
-        For a general idea, see the documentation of the BalancedSplit.split() function.
-        The size of the training set is approximately ratio_train.
-        '''
+        """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
+
+        Args:
+            ratio_train (float): *Approximate* size of the training set.
+
+        Returns:
+            List of labels of the training and testing sets.
+        """
+
         individual_train = np.array([], dtype=object)
         individual_test = np.array([], dtype=object)
         return self.general_split(ratio_train, individual_train, individual_test)
 
 
 class OpenSetSplit(IdentitySplit):
-    '''
-    OpenSetSplit is the split where some individuals are in the testing but not in the training set.
-    These are the newly observed individuals.
-    '''
-    def split(self, ratio_train, ratio_class_test: float=None, n_class_test: int=None) -> Tuple[np.ndarray, np.ndarray]:
-        '''
-        For a general idea, see the documentation of the BalancedSplit.split() function.
-        The size of the training set is approximately ratio_train.
-        The classes in the testing set can be determined by:
-            ratio_class_test: !approximate! relative number of the samples (not individuals) in the testing set.
-            n_class_test: absolute number of the individuals (classes) in the testing sets.
-        '''
+    """Open-set splitting method into training and testing sets.
+
+    Some individuals are in the testing but not in the training set.
+    Implementation of [this paper](https://arxiv.org/abs/2211.10307).
+    """
+    
+    def split(
+            self,
+            ratio_train: float,
+            ratio_class_test: float = None,
+            n_class_test: int = None
+            ) -> Tuple[np.ndarray, np.ndarray]:
+        """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
+
+        The user must provide exactly one from `ratio_class_test` and `n_class_test`.
+        The latter specifies the number of individuals to be only in the testing set.
+        The former specified the ratio of samples of individuals (not individuals themselves)
+        to be only in the testing set.
+
+        Args:
+            ratio_train (float): *Approximate* size of the training set.
+            ratio_class_test (float, optional): *Approximate* ratio of samples of individuals only in the testing set.
+            n_class_test (int, optional): Number of individuals only in the testing set.
+
+        Returns:
+            List of labels of the training and testing sets.
+        """
+        
         if ratio_class_test is None and n_class_test is None:
             raise(Exception('Either ratio_class_test or n_class_test must be provided.'))
         elif ratio_class_test is not None and n_class_test is not None:
@@ -70,16 +98,32 @@ class OpenSetSplit(IdentitySplit):
 
 
 class DisjointSetSplit(IdentitySplit):
-    '''
-    DisjointSetSplit is the split where NO individual is both in the training and testing set.
-    '''
-    def split(self, ratio_class_test: float=None, n_class_test: int=None) -> Tuple[np.ndarray, np.ndarray]:
-        '''
-        For a general idea, see the documentation of the BalancedSplit.split() function.
-        The classes in the testing set can be determined by:
-            ratio_class_test: !approximate! relative number of the samples (not individuals) in the testing set.
-            n_class_test: absolute number of the individuals (classes) in the testing sets.
-        '''
+    """Disjoint-set splitting method into training and testing sets.
+
+    No individuals are in both the training and testing sets.
+    Implementation of [this paper](https://arxiv.org/abs/2211.10307).
+    """
+
+    def split(
+            self,
+            ratio_class_test: float = None,
+            n_class_test: int = None
+            ) -> Tuple[np.ndarray, np.ndarray]:
+        """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
+
+        The user must provide exactly one from `ratio_class_test` and `n_class_test`.
+        The latter specifies the number of individuals to be only in the testing set.
+        The former specified the ratio of samples of individuals (not individuals themselves)
+        to be only in the testing set.
+
+        Args:
+            ratio_class_test (float, optional): *Approximate* ratio of samples of individuals only in the testing set.
+            n_class_test (int, optional): Number of individuals only in the testing set.
+
+        Returns:
+            List of labels of the training and testing sets.
+        """
+        
         if ratio_class_test is None and n_class_test is None:
             raise(Exception('Either ratio_class_test or n_class_test must be provided.'))
         elif ratio_class_test is not None and n_class_test is not None:
