@@ -59,7 +59,7 @@ You can also manually specify the location and name of the dataset folder by the
 ### Using dataset module
 You can download any dataset with autmatic download when creating `DatasetFactory` instances.
 
-    dataset = datasets.MacaqueFaces(root='data/MacaqueFaces', download=True)
+    dataset = datasets.MacaqueFaces('data/MacaqueFaces', download=True)
 
 Or by calling the asociated download script directly
 
@@ -76,7 +76,7 @@ All these classes are subclasses of the parent class `DatasetFactory`.
 ## Working with one dataset
 When a dataset is already downloaded, it can be loaded by
    
-    dataset = datasets.MacaqueFaces(root='data/MacaqueFaces')
+    dataset = datasets.MacaqueFaces('data/MacaqueFaces')
 
 Since this a subclass of the `DatasetFactory` parent class, it inherits all the methods and attributes listed in its [documentation](reference_datasets.md). Its main component is the [pandas dataframe](../dataframe) of all samples
     
