@@ -3,12 +3,9 @@ import pandas as pd
 from typing import List
 from ..datasets import DatasetFactory
 
-# TODO: change this after you separate datasets
+
 def get_dataset_folder(root_dataset: str, class_dataset: type) -> str:
     """Creates path to the dataset data.
-
-    Datasets `BirdIndividualIDSegmented` and `SealIDSegmented` are stored
-    in `BirdIndividualID` and `SealID`.
 
     Args:
         root_dataset (str): Path where all datasets are stored.
@@ -18,10 +15,7 @@ def get_dataset_folder(root_dataset: str, class_dataset: type) -> str:
         Path to the stored data.
     """
 
-    if class_dataset.__name__.endswith('Segmented'):
-        return os.path.join(root_dataset, class_dataset.__name__[:-9])
-    else:
-        return os.path.join(root_dataset, class_dataset.__name__)
+    return os.path.join(root_dataset, class_dataset.__name__)
 
 def get_dataframe_path(root_dataframe: str, class_dataset: type) -> str:
     """Creates path to the pickled dataframe.
