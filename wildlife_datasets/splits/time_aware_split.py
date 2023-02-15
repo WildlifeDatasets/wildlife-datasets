@@ -16,13 +16,13 @@ class TimeAwareSplit(BalancedSplit):
         if 'date' not in self.df.columns:
             # Check if the DataFrame contain the column date.
             raise(Exception('Dataframe df does not contain column date.'))
-        self.y_unique = np.sort(self.df['identity'].unique())
+        # Removes entries without dates
+        self.df = self.df[~self.df['date'].isnull()]
         # Convert date to datetime format (from possibly strings) and drop hours
         self.df['date'] = pd.to_datetime(self.df['date']).apply(lambda x: x.date())
-        # TODO: rewrite
-        if 'year' not in self.df.columns:
-            # Extract year from the date format
-            self.df['year'] = self.df['date'].apply(lambda x: x.year).to_numpy()
+        self.df['year'] = self.df['date'].apply(lambda x: x.year).to_numpy()            
+        # Extract unique inidividuals
+        self.y_unique = np.sort(self.df['identity'].unique())
 
     def resplit_random(
             self,
@@ -62,16 +62,16 @@ class TimeAwareSplit(BalancedSplit):
             # Extract the number of individuals in the training and testing sets
             n_train = counts_train.get(identity, 0)
             n_test = counts_test.get(identity, 0)
-            # TODO: only if for speed-up
-            # Get randomly permuted indices of the corresponding identity
-            idx = np.where(self.df['identity'] == identity)[0]
-            idx = idx[self.df.iloc[idx]['year'] <= year_max]
-            idx = self.lcg.random_shuffle(idx)
-            if len(idx) < n_train+n_test:
-                raise(Exception('The set is too small.'))
-            # Get the correct number of indices in both sets
-            idx_train_new += list(idx[:n_train])
-            idx_test_new += list(idx[n_train:n_train+n_test])
+            if n_train+n_test > 0:
+                # Get randomly permuted indices of the corresponding identity
+                idx = np.where(self.df['identity'] == identity)[0]
+                idx = idx[self.df.iloc[idx]['year'] <= year_max]
+                idx = self.lcg.random_shuffle(idx)
+                if len(idx) < n_train+n_test:
+                    raise(Exception('The set is too small.'))
+                # Get the correct number of indices in both sets
+                idx_train_new += list(idx[:n_train])
+                idx_test_new += list(idx[n_train:n_train+n_test])
         return np.array(self.df.index.values)[idx_train_new], np.array(self.df.index.values)[idx_test_new]
 
 
@@ -117,22 +117,25 @@ class TimeCutoffSplit(TimeAwareSplit):
     Implementation of [this paper](https://arxiv.org/abs/2211.10307).
     """
 
-    # TODO: add an optional argument
-    def split(self, year: int) -> Tuple[np.ndarray, np.ndarray]:
+    def split(self, year: int, test_only_year: bool = True) -> Tuple[np.ndarray, np.ndarray]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
             year (int): Splitting year.
+            test_only_year (exact, optional): Whether the test set is `self.df['year'] == year` or `self.df['year'] >= year`.
 
         Returns:
             List of labels of the training and testing sets.
         """
 
         idx_train = list(np.where(self.df['year'] < year)[0])
-        idx_test = list(np.where(self.df['year'] == year)[0])
+        if test_only_year:
+            idx_test = list(np.where(self.df['year'] == year)[0])
+        else:
+            idx_test = list(np.where(self.df['year'] >= year)[0])
         return np.array(self.df.index.values)[idx_train], np.array(self.df.index.values)[idx_test]
 
-    def splits_all(self) -> Tuple[List[Tuple[np.ndarray, np.ndarray]], np.ndarray]:
+    def splits_all(self, **kwargs) -> Tuple[List[Tuple[np.ndarray, np.ndarray]], np.ndarray]:
         """Creates `TimeCutoffSplit` splits for all possible splitting years.
 
         Returns:
@@ -144,5 +147,5 @@ class TimeCutoffSplit(TimeAwareSplit):
         years = np.sort(self.df['year'].unique())[1:]
         splits = []
         for year in years:
-            splits.append(self.split(year))
+            splits.append(self.split(year, **kwargs))
         return splits, years
