@@ -127,8 +127,6 @@ class DatasetFactory():
             df (pd.DataFrame): A full dataframe of the data.
         """
 
-        # TODO: check if all columns are specified
-        # List of specified formats
         requirements = [
             ('id', ['int', 'str']),
             ('identity', ['int', 'str']),
@@ -138,7 +136,7 @@ class DatasetFactory():
             ('keypoints', ['list_numeric']),
             ('position', ['str']),
             ('species', ['str', 'list']),
-            #('video', ['int']),
+            ('video', ['int']),
         ]
         # Verify if the columns are in correct formats
         for col_name, allowed_types in requirements:
@@ -362,7 +360,7 @@ class AerialCattle2017(DatasetFactory):
             'id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1].astype(int),
-            'video': folders[2],
+            'video': folders[2].astype(int),
         })
         return self.finalize_catalogue(df)
 

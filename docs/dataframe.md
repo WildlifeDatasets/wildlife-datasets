@@ -19,22 +19,12 @@ The following columns may be present in the dataframe. Besides these columns, it
 | Column | Type | Description |
 |--------|------|-------------|
 | bbox | `List[float]` | Bounding box in the form [x, y, w, h]. Therefore, the topleft corner has coordinates [x, y], while the bottomright corner has coordinates [x+w, y+h]. |
-| date | special | Timestamp of the photo. The preferable format is `%Y-%m-%d %H:%M:%S` from the `datetime` package but it is sufficient to be amenable to `pd.to_datetime(x)`. |
+| date | special | Timestamp of the photo. The preferred format is `%Y-%m-%d %H:%M:%S` from the `datetime` package but it is sufficient to be amenable to `pd.to_datetime(x)`. |
 | keypoints | `List[float]` | Keypoints coordinates in the image such as eyes or joints. |
 | position | `str` | Position from each the photo was taken. The usual values are left and right. |
 | segmentation | `List[float]` or special | Segmentation mask in the form [x1, y1, x2, y2, ...]. Additional format are possible such as file path to a mask image, or `pytorch` RLE. |
 | species | `str` or `List[str]` | The depicted species for datasets with multiple species. |
-
-
-<!---
-TODO: add date to the list
-
-TODO: do something about the other arguments
-
-array(['age', 'age_group', 'bbox', 'category', 'gender', 'glitch',
-       'occlusion', 'out_of_focus', 'photo_quality', 'reid_split', 
-       'segmentation_split', 'split', 'turning', 'video'],
--->
+| video | `int` | The index of a video. |
 
 
 ## Metadata
