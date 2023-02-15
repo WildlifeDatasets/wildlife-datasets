@@ -32,8 +32,7 @@ pip install wildlife-datasets
 We show an example of downloading, extracting and processing the MacaqueFaces dataset.
 
 ```
-from wildlife_datasets import datasets
-from wildlife_datasets import utils
+from wildlife_datasets import analysis, datasets
 
 datasets.MacaqueFaces.download.get_data('data/MacaqueFaces')
 dataset = datasets.MacaqueFaces('data/MacaqueFaces')
@@ -58,7 +57,7 @@ dataset.metadata
 This particular dataset already contains cropped images of faces. Other datasets may contain uncropped images with bounding boxes or even segmentation masks.
 
 ```
-utils.analysis.plot_grid(dataset.df, 'data/MacaqueFaces')
+analysis.plot_grid(dataset.df, 'data/MacaqueFaces')
 ```
 
 ![](images/MacaqueFaces_Grid.png)
