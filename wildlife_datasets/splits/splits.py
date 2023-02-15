@@ -5,18 +5,29 @@ from .lcg import Lcg
 
 # TODO: add documentation
 class BalancedSplit():
-    '''
-    Basic splitter class, which should implement the split() method.
+    """Base class for splitting datasets into training and testing sets.
+
+    Its subclasses need to implement the split() method.
     It should perform balanced splits separately for all classes.
     Its children are ClosedSetSplit, OpenSetSplit, DisjointSetSplit and TimeAwareSplit.
     TimeAwareSplit furher has children TimeProportionSplit and TimeCutoffSplit.
-    '''
+
+    Attributes:
+      df (pd.DataFrame): A dataframe of the data. It must contain columns
+        `identity` for all splits and `date` for time-aware splits.
+      # TODO: finish
+    """
+
     def __init__(self, df: pd.DataFrame, seed: int, identity_skip: str = 'unknown') -> None:
-        '''
-        The split is based on the DataFrame df, which needs to contain the column identity.
-        For TimeAwareSplit it also needs to contain the column date.
-        It may remove the unknown identities based on the keyword argument keep_unknown.
-        '''
+        """Initializes the class.
+
+        Args:
+            df (pd.DataFrame): A dataframe of the data. It must contain columns
+                `identity` for all splits and `date` for time-aware splits.
+            seed (int): Initial seed for the LCG random generator.
+            identity_skip (str, optional): Name of the identities to ignore.
+        """
+
         # Potentially remove the unknown identities
         self.df = df.copy()
         self.df = self.df[self.df['identity'] != identity_skip]

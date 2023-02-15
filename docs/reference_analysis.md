@@ -1,8 +1,6 @@
 # Reference utils
 
-<!---
-# TODO: finish
--->
+This file describes methods associated with dataset analysis and loading.
 
 ## Analysis
 
@@ -14,7 +12,7 @@
     options:
       heading_level: 3
 
-## Loader
+## Loading
 
 ::: loader.loader
     options:

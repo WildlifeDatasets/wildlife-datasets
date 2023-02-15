@@ -455,6 +455,7 @@ class BelugaID(DatasetFactoryWildMe):
 
 
 class BirdIndividualID(DatasetFactory):
+    # TODO: rewrite download to save to two separate folders
     download = downloads.bird_individual_id
     metadata = metadata['BirdIndividualID']
     prefix1 = 'Original_pictures'
@@ -1032,6 +1033,7 @@ class OpenCows2020(DatasetFactory):
 
 
 class SealID(DatasetFactory):
+    # TODO: rewrite download to save to two separate folders
     download = downloads.seal_id
     metadata = metadata['SealID']
     prefix = 'source_'
@@ -1051,7 +1053,7 @@ class SealID(DatasetFactory):
         return self.finalize_catalogue(df)
 
 
-class SealIDSegmented(SealID):
+class SealIDSegmented(SealID):    
     prefix = 'segmented_'
 
 
