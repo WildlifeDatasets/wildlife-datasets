@@ -1,6 +1,6 @@
 # Wildlife Re-Identification (Re-ID) Datasets
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/VaclavMacha/JuliaCourse/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/LICENSE)
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://wildlifedatasets.github.io/wildlife-datasets/)
 
 This package provides:
