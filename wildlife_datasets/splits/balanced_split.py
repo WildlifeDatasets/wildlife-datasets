@@ -55,14 +55,11 @@ class BalancedSplit():
 
         raise(NotImplementedError('Subclasses should implement this. \n You may want to use ClosedSetSplit instead of BalancedSplit.'))
 
-    # TODO: remove ratio_train_min and ratio_train_max
     def general_split(
             self,
             ratio_train: float,
             individual_train: List[str],
             individual_test: List[str],
-            ratio_train_min: float = 0,
-            ratio_train_max: float = 1
             ) -> Tuple[np.ndarray, np.ndarray]:
         """General-purpose split into the training and testing sets.
 
@@ -88,7 +85,7 @@ class BalancedSplit():
         # Recompute ratio_train and adjust it to proper bounds 
         if n_train + n_test > 0 and n_train + n_test < self.n:
             ratio_train = (self.n*ratio_train - n_train) / (self.n - n_test - n_train)
-        ratio_train = np.minimum(np.maximum(ratio_train, ratio_train_min), ratio_train_max)
+        ratio_train = np.clip(ratio_train, 0, 1)
         
         idx_train = np.empty(self.n, dtype='bool')
         # Make a loop over all individuals
