@@ -68,3 +68,14 @@ Creating the download scripts should be done in the same way are the one in [dow
                 'path': ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'],
             })
             return df
+
+## Optional: integrating into core package
+
+New datasets may be integrated into the core package by pull requests on the [Github repo](https://github.com/WildlifeDatasets/wildlife-datasets). In such a case, the dataset should be freely downloadable and both download script and metadata should be provided. The fuctions should be included in the following files:
+
+  - `DatasetFactory` definition in [datasets.py](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/wildlife_datasets/datasets).
+  - Download script as a separate script in the folder [downloads](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/wildlife_datasets/downloads).
+  - Metadata as an extension to the existing [metadata.csv](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/wildlife_datasets/datasets).
+
+The name of the download script should be the same as the name of the dataset. This name must also be the same as the first column in the metadata.
+

@@ -2,6 +2,8 @@ site_name: Wildlife Datasets
 
 theme:
   name: "material"
+  features:
+    - navigation.sections
 
 markdown_extensions:
   - admonition
@@ -18,12 +20,15 @@ nav:
   - Introduction: index.md  
   - Installation: installation.md
   - Oveview of datasets: datasets.md
-  - Dataset description: dataframe.md
-  - Tutorial - datasets: tutorial_datasets.md
-  - Tutorial - splits: tutorial_splits.md
-  - Tutorial - evaluation: tutorial_evaluation.md
-  - Adding new datasets: adding.md
-  - Reference - datasets: reference_datasets.md
-  - Reference - analysis: reference_analysis.md
-  - Reference - splits: reference_splits.md
-  - Reference - evaluation: reference_evaluation.md
+  - Tutorials:
+    - Datasets: tutorial_datasets.md
+    - Splits: tutorial_splits.md
+    - Evaluation: tutorial_evaluation.md
+    - Dataset description: dataframe.md
+  - Customization:
+    - Adding new datasets: adding.md
+  - Reference:
+    - Datasets: reference_datasets.md
+    - Analysis: reference_analysis.md
+    - Splits: reference_splits.md
+    - Evaluation: reference_evaluation.md
