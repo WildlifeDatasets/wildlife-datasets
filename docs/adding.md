@@ -69,7 +69,7 @@ Creating the download scripts should be done in the same way are the one in [dow
             })
             return df
 
-## Optional: integrating into core package
+## Optional: integrating into package
 
 New datasets may be integrated into the core package by pull requests on the [Github repo](https://github.com/WildlifeDatasets/wildlife-datasets). In such a case, the dataset should be freely downloadable and both download script and metadata should be provided. The fuctions should be included in the following files:
 
