@@ -1,13 +1,23 @@
 [project]
 name = "wildlife-datasets"
-version = "0.0.6"
+version = "0.1.0"
 authors = [
-  { name="Lukas Adam", email="lukas.adam.cr@gmail.com" },
-  { name="Vojtech Cermak", email="cermak.vojtech@seznam.cz" },
+  { name="Lukáš Adam", email="lukas.adam.cr@gmail.com" },
+  { name="Vojtěch Čermák", email="cermak.vojtech@seznam.cz" },
+]
+maintainers = [
+  { name="Lukáš Adam", email="lukas.adam.cr@gmail.com" },
+  { name="Vojtěch Čermák", email="cermak.vojtech@seznam.cz" },
 ]
 description = "Library for easier access and research of wildlife re-identification datasets"
 readme = "README.md"
 requires-python = ">=3.8"
+license = {file = "LICENSE"}
+keywords = [
+    "wildlife",
+    "re-identification",
+    "datasets",
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -28,13 +38,14 @@ dependencies=[
 "Documentation" = "https://wildlifedatasets.github.io/wildlife-datasets/"
 "Bug Tracker" = "https://github.com/WildlifeDatasets/wildlife-datasets/issues"
 
-
 [tool.setuptools]
 packages = [
   "wildlife_datasets",
+  "wildlife_datasets.analysis",
   "wildlife_datasets.datasets",
   "wildlife_datasets.downloads",
-  "wildlife_datasets.utils",
+  "wildlife_datasets.loader",
+  "wildlife_datasets.splits",  
 ]
 
 [tool.setuptools.package-data]
