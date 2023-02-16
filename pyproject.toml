@@ -1,6 +1,6 @@
 [project]
 name = "wildlife-datasets"
-version = "0.0.4"
+version = "0.0.6"
 authors = [
   { name="Lukas Adam", email="lukas.adam.cr@gmail.com" },
   { name="Vojtech Cermak", email="cermak.vojtech@seznam.cz" },
@@ -25,6 +25,7 @@ dependencies=[
 
 [project.urls]
 "Homepage" = "https://github.com/WildlifeDatasets/wildlife-datasets"
+"Documentation" = "https://wildlifedatasets.github.io/wildlife-datasets/"
 "Bug Tracker" = "https://github.com/WildlifeDatasets/wildlife-datasets/issues"
 
 
