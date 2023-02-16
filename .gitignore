@@ -1,5 +1,6 @@
 data/
 venv/
+venv*
 venv_gpu/
 venv_test/
 venv_docs/
