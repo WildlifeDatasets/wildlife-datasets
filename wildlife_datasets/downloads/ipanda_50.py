@@ -7,6 +7,7 @@ else:
 
 def get_data(root):
     import gdown
+    utils.print_start(root)
     with utils.data_directory(root):
         downloads = [
             ('https://drive.google.com/uc?id=1nkh-g6a8JvWy-XsMaZqrN2AXoPlaXuFg', 'iPanda50-images.zip'),
@@ -17,6 +18,7 @@ def get_data(root):
         for url, archive in downloads:
             gdown.download(url, archive, quiet=False)
             utils.extract_archive(archive, delete=True)
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

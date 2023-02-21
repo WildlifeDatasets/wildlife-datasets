@@ -6,11 +6,13 @@ else:
     from . import utils
 
 def get_data(root):
+    utils.print_start(root)
     with utils.data_directory(root):
         url = 'https://lilablobssc.blob.core.windows.net/liladata/wild-me/hyena.coco.tar.gz'
         archive = 'hyena.coco.tar.gz'
         utils.download_url(url, archive)
         utils.extract_archive(archive, delete=True)
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

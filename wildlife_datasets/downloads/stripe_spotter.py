@@ -6,6 +6,7 @@ else:
     from . import utils
 
 def get_data(root):
+    utils.print_start(root)
     with utils.data_directory(root):
         # Download
         urls = [
@@ -25,6 +26,7 @@ def get_data(root):
         os.remove('data-20110718.z01')
         os.remove('data-20110718.z02')
         os.remove('data-full.zip')
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

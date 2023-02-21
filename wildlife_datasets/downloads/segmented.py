@@ -7,10 +7,9 @@ else:
 
 def get_data(root):
     with utils.data_directory(root):
-        import warnings        
-        warnings.warn("You are trying to download a segmented dataset %s. \
-                      It is already included in its non-segmented version download. \
-                      Skipping." % os.path.split(root)[1])
+        print("You are trying to download a segmented dataset %s. \
+                It is already included in its non-segmented version download. \
+                Skipping." % os.path.split(root)[1])
 
 
 if __name__ == '__main__':

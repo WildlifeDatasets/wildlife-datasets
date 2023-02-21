@@ -6,6 +6,7 @@ else:
     from . import utils
 
 def get_data(root):
+    utils.print_start(root)
     with utils.data_directory(root):
         downloads = [
             ('https://storage.googleapis.com/dm-turtle-recall/train.csv', 'train.csv'),
@@ -16,6 +17,7 @@ def get_data(root):
         for url, file in downloads:
             utils.download_url(url, file)
         utils.extract_archive('images.tar', 'images', delete=True)
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

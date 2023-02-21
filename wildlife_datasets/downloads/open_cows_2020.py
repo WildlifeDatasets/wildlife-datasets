@@ -6,11 +6,13 @@ else:
     from . import utils
 
 def get_data(root):
+    utils.print_start(root)
     with utils.data_directory(root):
         url = 'https://data.bris.ac.uk/datasets/tar/10m32xl88x2b61zlkkgz3fml17.zip'
         archive = '10m32xl88x2b61zlkkgz3fml17.zip'
         utils.download_url(url, archive)
         utils.extract_archive(archive, delete=True)
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

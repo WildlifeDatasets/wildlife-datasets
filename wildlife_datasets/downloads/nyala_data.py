@@ -7,6 +7,7 @@ else:
     from . import utils
 
 def get_data(root):
+    utils.print_start(root)
     with utils.data_directory(root):
         url = 'https://github.com/tvanzyl/wildlife_reidentification/archive/refs/heads/main.zip'
         archive = 'main.zip'
@@ -15,6 +16,7 @@ def get_data(root):
 
         # Cleanup
         shutil.rmtree('wildlife_reidentification-main/Lion_Data_Zero')
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

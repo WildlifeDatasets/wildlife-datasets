@@ -6,9 +6,11 @@ else:
     from . import utils
 
 def get_data(root):
+    utils.print_start(root)
     with utils.data_directory(root):
         url = 'ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021/'
         os.system(f"wget -rpk -l 10 -np -c --random-wait -U Mozilla {url} -P '.' ")
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

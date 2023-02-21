@@ -7,8 +7,8 @@ else:
     from . import utils
 
 
-def get_data(root):
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+def get_data(root):    
+    utils.print_start(root)
     with utils.data_directory(root):
         # TODO: does not work. it is specific for specific distros, isnt it?
         # TODO: Yes this is Ubuntu/linux specific.
@@ -26,6 +26,7 @@ def get_data(root):
         archive = 'wni_giraffes_train.zip'
         utils.download_url(url, archive)
         utils.extract_archive(archive, delete=True)
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

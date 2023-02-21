@@ -6,6 +6,7 @@ else:
     from . import utils
 
 def get_data(root):
+    utils.print_start(root)
     with utils.data_directory(root):
         downloads = [
             ('https://dataverse.scholarsportal.info/api/access/datafile/71066', 'week1_Day1_train_01to05.zip'),
@@ -63,6 +64,7 @@ def get_data(root):
         url = 'https://dataverse.scholarsportal.info/api/access/datafile/71134'
         file = 'ReadMe_Drosophila.pdf'
         utils.download_url(url, file)
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

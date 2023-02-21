@@ -7,6 +7,7 @@ else:
     from . import utils
 
 def get_data(root):
+    utils.print_start(root)
     with utils.data_directory(root):
         url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
         archive = 'master.zip'
@@ -15,6 +16,7 @@ def get_data(root):
 
         # Cleanup
         shutil.rmtree('chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CZoo')
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

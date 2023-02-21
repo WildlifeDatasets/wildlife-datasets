@@ -7,6 +7,7 @@ else:
     from . import utils
 
 def get_data(root):
+    utils.print_start(root)
     with utils.data_directory(root):        
         url = "https://ida191.csc.fi:4430/download?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTU3OTYwMjEsImRhdGFzZXQiOiIyMmI1MTkxZS1mMjRiLTQ0NTctOTNkMy05NTc5N2M5MDBmYzAiLCJwYWNrYWdlIjoiMjJiNTE5MWUtZjI0Yi00NDU3LTkzZDMtOTU3OTdjOTAwZmMwX3VpNjV6aXBrLnppcCJ9.00GP5nsjsH1KnnLVeVKMQhUxM53SAs1AKJreGiUnp3A&dataset=22b5191e-f24b-4457-93d3-95797c900fc0&package=22b5191e-f24b-4457-93d3-95797c900fc0_ui65zipk.zip"
         archive = '22b5191e-f24b-4457-93d3-95797c900fc0_ui65zipk.zip'
@@ -31,6 +32,7 @@ def get_data(root):
         shutil.copy(file_copy, os.path.join(folder_new, file_copy))
         file_copy = os.path.join('full images', 'annotation.csv')
         shutil.copy(file_copy, os.path.join(folder_new, file_copy))        
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

@@ -34,3 +34,11 @@ def data_directory(dir):
         yield
     finally:
         os.chdir(current_dir)
+
+
+def print_start(root):
+    print('DATASET %s: DOWNLOAD STARTED.' % os.path.split(root)[1])
+
+def print_finish(root):
+    print('DATASET %s: DOWNLOAD FINISHED. If mass downloading, you can remove it from the list.' % os.path.split(root)[1])
+    print('')

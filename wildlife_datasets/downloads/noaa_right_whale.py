@@ -7,6 +7,7 @@ else:
     from . import utils
 
 def get_data(root):
+    utils.print_start(root)
     with utils.data_directory(root):
         os.system(f"kaggle competitions download -c noaa-right-whale-recognition")
         utils.extract_archive('noaa-right-whale-recognition.zip', delete=True)
@@ -15,6 +16,7 @@ def get_data(root):
         # Move misplaced image
         shutil.move('w_7489.jpg', 'imgs')
         os.remove('w_7489.jpg.zip')
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':

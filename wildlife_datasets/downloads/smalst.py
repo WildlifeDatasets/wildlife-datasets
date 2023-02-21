@@ -8,6 +8,7 @@ else:
 
 def get_data(root):
     import gdown
+    utils.print_start(root)
     with utils.data_directory(root):
         url = 'https://drive.google.com/uc?id=1yVy4--M4CNfE5x9wUr1QBmAXEcWb6PWF'
         archive = 'zebra_training_set.zip'
@@ -18,6 +19,7 @@ def get_data(root):
         shutil.rmtree(os.path.join('zebra_training_set', 'annotations'))
         shutil.rmtree(os.path.join('zebra_training_set', 'texmap'))
         shutil.rmtree(os.path.join('zebra_training_set', 'uvflow'))
+    utils.print_finish(root)
 
 
 if __name__ == '__main__':
