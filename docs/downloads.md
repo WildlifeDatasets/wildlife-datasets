@@ -42,6 +42,14 @@ Some of the datasets require special treatment or the download of extraction wor
 TODO: finish
 -->
 
+## HappyWhale
+
+Go to the [competition website](https://www.kaggle.com/competitions/happy-whale-and-dolphin), the Data tab and agree with terms.
+
+## HumpbackWhale
+
+Go to the [competition website](https://www.kaggle.com/competitions/humpback-whale-identification), the Data tab and agree with terms.
+
 ## SealID
 
 SealID requires a one-time token for download. Please go their [download website](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53), click the Data tab, then three dots next to the Download button and copy the `URL` link. Then use
