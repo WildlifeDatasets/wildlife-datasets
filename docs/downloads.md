@@ -44,9 +44,10 @@ TODO: finish
 
 ## SealID
 
-<!---
-TODO: finish
--->
+SealID requires a one-time token for download. Please go their [download website](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53), click the Data tab, then three dots next to the Download button and copy the `URL` link. Then use
+
+    url = '' # Paste the URL here
+    datasets.SealID.download.get_data('data/SealID', url=url)
 
 ## WNIGiraffes
 
