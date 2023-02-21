@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from typing import List
-from ..datasets import DatasetFactory
+from ..datasets import DatasetFactory, SealID
 
 
 def get_dataset_folder(root_dataset: str, class_dataset: type) -> str:
@@ -29,34 +29,6 @@ def get_dataframe_path(root_dataframe: str, class_dataset: type) -> str:
     """
 
     return os.path.join(root_dataframe, class_dataset.__name__ + '.pkl')
-
-def download_datasets(
-        class_datasets: List[type],
-        root_dataset: str
-        ) -> None:
-    """Downloads multiple datasets.
-
-    Args:
-        class_datasets (List[type]): List of types of DatasetFactory to download.
-        root_dataset (str): Path where all datasets are stored.
-    """
-
-    for class_dataset in class_datasets:
-        download_dataset(class_dataset, root_dataset)
-
-def download_dataset(
-        class_dataset: type,
-        root_dataset: str,
-        ) -> None:
-    """Downloads a dataset.
-
-    Args:
-        class_dataset (type): Type of DatasetFactory to download.
-        root_dataset (str): Path where all datasets are stored.
-    """
-    
-    root = get_dataset_folder(root_dataset, class_dataset)
-    class_dataset.download.get_data(root)
     
 def load_datasets(
         class_datasets: List[type],
