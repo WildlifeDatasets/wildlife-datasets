@@ -11,7 +11,7 @@ The commands listed at this page require the following imports:
 Most of the datasets used in this library can be downloaded fully automatically either via a script or via a `dataset` module. However, some of them are require special handling as described in a [special page](../downloads). 
 
 ### Using script
-You can use python scripts that are located in the `download` module.
+You can use Python scripts that are located in the `download` module.
 Each script can be used as follows:
 
     python3 macaque_faces.py
@@ -21,11 +21,7 @@ You can also manually specify the location and name of the dataset folder by the
     python3 macaque_faces.py --name 'MacaqueFaces' --output 'data'
 
 ### Using dataset module
-You can download any dataset with autmatic download when creating `DatasetFactory` instances.
-
-    dataset = datasets.MacaqueFaces('data/MacaqueFaces', download=True)
-
-Or by calling the asociated download script directly
+The Python script can be also called from the `DatasetFactory` class
 
     datasets.MacaqueFaces.download.get_data('data/MacaqueFaces')
 

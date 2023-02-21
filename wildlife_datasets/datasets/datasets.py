@@ -28,11 +28,9 @@ class DatasetFactory():
             self, 
             root: str,
             df: Optional[pd.DataFrame] = None,
-            download: bool = False,
             **kwargs) -> None:
         """Initializes the class.
 
-        If `download`, then it downloads the data.
         If `df` is specified, it copies it. Otherwise, it creates it
         by the `create_catalogue` method.
         It creates `df_ml` by the `create_catalogue_ml` method.
@@ -40,12 +38,9 @@ class DatasetFactory():
         Args:
             root (str): Root directory for the data.
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
-            download (bool, optional): Whether to download the data.
         """
 
         self.root = root
-        if download and hasattr(self, 'download'): 
-            self.download.get_data(root)
         if df is None:
             self.df = self.create_catalogue(**kwargs)
         else:
