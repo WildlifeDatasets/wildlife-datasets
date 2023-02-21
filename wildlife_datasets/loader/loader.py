@@ -32,8 +32,7 @@ def get_dataframe_path(root_dataframe: str, class_dataset: type) -> str:
 
 def download_datasets(
         class_datasets: List[type],
-        root_dataset: str,
-        **kwargs
+        root_dataset: str
         ) -> None:
     """Downloads multiple datasets.
 
@@ -43,24 +42,21 @@ def download_datasets(
     """
 
     for class_dataset in class_datasets:
-        download_dataset(class_dataset, root_dataset, **kwargs)
+        download_dataset(class_dataset, root_dataset)
 
 def download_dataset(
         class_dataset: type,
         root_dataset: str,
-        overwrite: bool = False
         ) -> None:
     """Downloads a dataset.
 
     Args:
         class_dataset (type): Type of DatasetFactory to download.
         root_dataset (str): Path where all datasets are stored.
-        overwrite (bool, optional): Whether an existing dataset should be overwritten.
     """
     
     root = get_dataset_folder(root_dataset, class_dataset)
-    if overwrite or not os.path.exists(root):
-        class_dataset.download.get_data(root)
+    class_dataset.download.get_data(root)
     
 def load_datasets(
         class_datasets: List[type],
