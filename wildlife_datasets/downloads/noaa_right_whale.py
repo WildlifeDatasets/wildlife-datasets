@@ -9,7 +9,7 @@ else:
 def get_data(root):
     utils.print_start(root)
     with utils.data_directory(root):
-        os.system(f"kaggle competitions download -c noaa-right-whale-recognition")
+        utils.kaggle_download(f"competitions download -c noaa-right-whale-recognition")
         utils.extract_archive('noaa-right-whale-recognition.zip', delete=True)
         utils.extract_archive('imgs.zip', delete=True)
 

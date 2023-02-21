@@ -21,7 +21,7 @@ def get_data(root):
         url = 'https://drive.google.com/drive/folders/1YkH_2DNVBOKMNGxDinJb97y2T8_wRTZz'
 
         # Upload to kaggle and download
-        os.system(f"kaggle datasets download -d 'vojtacermak/birds' --unzip")
+        utils.kaggle_download(f"datasets download -d 'vojtacermak/birds' --unzip")
 
         # Create new folder for segmented images
         folder_new = os.getcwd() + 'Segmented'

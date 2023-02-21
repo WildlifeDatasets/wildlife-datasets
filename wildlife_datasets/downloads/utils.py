@@ -42,3 +42,8 @@ def print_start(root):
 def print_finish(root):
     print('DATASET %s: DOWNLOAD FINISHED. If mass downloading, you can remove it from the list.' % os.path.split(root)[1])
     print('')
+
+def kaggle_download(command):
+    # TODO: add a check that kaggle is installed
+    # TODO: add kaggle as package requirements
+    os.system(f"kaggle {command}")

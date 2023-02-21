@@ -8,7 +8,7 @@ else:
 def get_data(root):
     utils.print_start(root)
     with utils.data_directory(root):
-        os.system(f"kaggle competitions download -c humpback-whale-identification")
+        utils.kaggle_download(f"competitions download -c humpback-whale-identification")
         utils.extract_archive('humpback-whale-identification.zip', delete=True)
     utils.print_finish(root)
 

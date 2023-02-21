@@ -8,7 +8,7 @@ else:
 def get_data(root):
     utils.print_start(root)
     with utils.data_directory(root):
-        os.system(f"kaggle datasets download -d 'wildlifedatasets/seaturtleidheads' --unzip")
+        utils.kaggle_download(f"datasets download -d 'wildlifedatasets/seaturtleidheads' --unzip")
     utils.print_finish(root)
 
 
