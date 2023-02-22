@@ -6,11 +6,19 @@ else:
     from . import utils
 
 def get_data(root):
-    utils.print_start(root)
+    download(root)
+    extract(root)
+    utils.print_finish(root)
+
+def download(root):
+    utils.print_start1(root)
     with utils.data_directory(root):
         utils.kaggle_download(f"competitions download -c humpback-whale-identification")
+
+def extract(root):
+    utils.print_start2(root)
+    with utils.data_directory(root):
         utils.extract_archive('humpback-whale-identification.zip', delete=True)
-    utils.print_finish(root)
 
 
 if __name__ == '__main__':

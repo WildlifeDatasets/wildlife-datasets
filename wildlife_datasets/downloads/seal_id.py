@@ -6,13 +6,23 @@ if __name__ == '__main__':
 else:
     from . import utils
 
-def get_data(root, url=''):
-    utils.print_start(root)
+def get_data(root, url):
+    download(root, url)
+    extract(root)
+    utils.print_finish(root)
+
+def download(root, url):
+    utils.print_start1(root)
     if url == '':
         raise(Exception('URL must be provided for SealID.\nCheck https://wildlifedatasets.github.io/wildlife-datasets/downloads/#sealid'))
     with utils.data_directory(root):        
         archive = '22b5191e-f24b-4457-93d3-95797c900fc0_ui65zipk.zip'
         utils.download_url(url, archive)
+
+def extract(root):
+    utils.print_start2(root)
+    with utils.data_directory(root):
+        archive = '22b5191e-f24b-4457-93d3-95797c900fc0_ui65zipk.zip'
         utils.extract_archive(archive, delete=True)
         utils.extract_archive(os.path.join('SealID', 'full images.zip'), delete=True)
         utils.extract_archive(os.path.join('SealID', 'patches.zip'), delete=True)
@@ -33,7 +43,6 @@ def get_data(root, url=''):
         shutil.copy(file_copy, os.path.join(folder_new, file_copy))
         file_copy = os.path.join('full images', 'annotation.csv')
         shutil.copy(file_copy, os.path.join(folder_new, file_copy))        
-    utils.print_finish(root)
 
 
 if __name__ == '__main__':

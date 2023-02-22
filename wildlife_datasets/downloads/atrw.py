@@ -6,7 +6,35 @@ else:
     from . import utils
 
 def get_data(root):
-    utils.print_start(root)
+    download(root)
+    extract(root)
+    utils.print_finish(root)
+
+def download(root):
+    utils.print_start1(root)
+    with utils.data_directory(root):
+        downloads = [
+            # Wild dataset (Detection)
+            ('https://lilablobssc.blob.core.windows.net/cvwc2019/test/atrw_detection_test.tar.gz', 'atrw_detection_test.tar.gz'),
+
+            # Re-ID dataset
+            ('https://lilablobssc.blob.core.windows.net/cvwc2019/train/atrw_reid_train.tar.gz', 'atrw_reid_train.tar.gz'),
+            ('https://lilablobssc.blob.core.windows.net/cvwc2019/train/atrw_anno_reid_train.tar.gz', 'atrw_anno_reid_train.tar.gz'),
+            ('https://lilablobssc.blob.core.windows.net/cvwc2019/test/atrw_reid_test.tar.gz', 'atrw_reid_test.tar.gz'),
+            ('https://lilablobssc.blob.core.windows.net/cvwc2019/test/atrw_anno_reid_test.tar.gz', 'atrw_anno_reid_test.tar.gz'),
+            ]
+
+        # Download
+        for url, archive in downloads:
+            utils.download_url(url, archive)
+
+        # Download evaluation scripts
+        url = 'https://github.com/cvwc2019/ATRWEvalScript/archive/refs/heads/main.zip'
+        archive = 'main.zip'
+        utils.download_url(url, archive)
+
+def extract(root):
+    utils.print_start2(root)
     with utils.data_directory(root):
         downloads = [
             # Wild dataset (Detection)
@@ -21,16 +49,12 @@ def get_data(root):
 
         # Download and extract
         for url, archive in downloads:
-            utils.download_url(url, archive)
             archive_name = archive.split('.')[0]
             utils.extract_archive(archive, archive_name, delete=True)
 
         # Download evaluation scripts
-        url = 'https://github.com/cvwc2019/ATRWEvalScript/archive/refs/heads/main.zip'
         archive = 'main.zip'
-        utils.download_url(url, archive)
         utils.extract_archive(archive, 'eval_script', delete=True)
-    utils.print_finish(root)
 
 
 if __name__ == '__main__':

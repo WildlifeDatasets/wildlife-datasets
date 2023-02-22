@@ -7,7 +7,12 @@ else:
     from . import utils
 
 def get_data(root):
-    utils.print_start(root)
+    download(root)
+    extract(root)
+    utils.print_finish(root)
+
+def download(root):
+    utils.print_start1(root)
     with utils.data_directory(root):
         # TODO: why not the automatic download?
         # Try automatic download
@@ -23,6 +28,9 @@ def get_data(root):
         # Upload to kaggle and download
         utils.kaggle_download(f"datasets download -d 'vojtacermak/birds' --unzip")
 
+def extract(root):
+    utils.print_start2(root)
+    with utils.data_directory(root):
         # Create new folder for segmented images
         folder_new = os.getcwd() + 'Segmented'
         if not os.path.exists(folder_new):
@@ -31,7 +39,6 @@ def get_data(root):
         # Move segmented images to new folder
         folder_move = 'Cropped_pictures'
         shutil.move(folder_move, os.path.join(folder_new, folder_move))
-    utils.print_finish(root)
 
 
 if __name__ == '__main__':

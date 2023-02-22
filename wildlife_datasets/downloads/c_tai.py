@@ -7,16 +7,25 @@ else:
     from . import utils
 
 def get_data(root):
-    utils.print_start(root)
+    download(root)
+    extract(root)
+    utils.print_finish(root)
+
+def download(root):
+    utils.print_start1(root)
     with utils.data_directory(root):
         url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
         archive = 'master.zip'
         utils.download_url(url, archive)
+
+def extract(root):
+    utils.print_start2(root)
+    with utils.data_directory(root):
+        archive = 'master.zip'
         utils.extract_archive(archive, delete=True)
 
         # Cleanup
         shutil.rmtree('chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CZoo')
-    utils.print_finish(root)
 
 
 if __name__ == '__main__':

@@ -6,10 +6,17 @@ else:
     from . import utils
 
 def get_data(root):
-    utils.print_start(root)
+    download(root)
+    extract(root)
+    utils.print_finish(root)
+
+def download(root):
+    utils.print_start1(root)
     with utils.data_directory(root):
         utils.kaggle_download(f"datasets download -d 'wildlifedatasets/seaturtleidheads' --unzip")
-    utils.print_finish(root)
+
+def extract(root):
+    utils.print_start2(root)
 
 
 if __name__ == '__main__':

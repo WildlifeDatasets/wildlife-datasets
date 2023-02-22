@@ -6,7 +6,12 @@ else:
     from . import utils
 
 def get_data(root):
-    utils.print_start(root)
+    download(root)
+    extract(root)
+    utils.print_finish(root)
+
+def download(root):
+    utils.print_start1(root)
     with utils.data_directory(root):
         # Download
         urls = [
@@ -17,6 +22,9 @@ def get_data(root):
         for url in urls:
             os.system(f"wget -P '.' {url}")
 
+def extract(root):
+    utils.print_start2(root)
+    with utils.data_directory(root):
         # Extract
         os.system(f"zip -s- data-20110718.zip -O data-full.zip")
         os.system(f"unzip data-full.zip")
@@ -26,7 +34,6 @@ def get_data(root):
         os.remove('data-20110718.z01')
         os.remove('data-20110718.z02')
         os.remove('data-full.zip')
-    utils.print_finish(root)
 
 
 if __name__ == '__main__':
