@@ -11,6 +11,10 @@ The following three columns must be part of all dataframes.
 | identity | `int` or `str` | Identity (or label) of the depicted individual animal. |
 | path | `str` | Relative path to the image. |
 
+<!---
+TODO: identity unknown.
+-->
+
 
 ## Optional columns
 
