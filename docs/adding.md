@@ -2,21 +2,37 @@
 
 Adding new datasets is relatively easy. It is sufficient to create a subclass of `DatasetFactory` with the `create_catalogue` method. A simple example is
 
-    import pandas as pd
-    from wildlife_datasets import datasets
+```python exec="true" source="above"
+import pandas as pd
+from wildlife_datasets import datasets
 
-    class Test(datasets.DatasetFactory):
-        def create_catalogue(self) -> pd.DataFrame:
-            df = pd.DataFrame({
-                'id': [1, 2, 3, 4],
-                'identity': ['Lukas', 'Vojta', 'Lukas', 'Vojta'],
-                'path': ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'],
-            })
-            return df
+class Test(datasets.DatasetFactory):
+    def create_catalogue(self) -> pd.DataFrame:
+        df = pd.DataFrame({
+            'id': [1, 2, 3, 4],
+            'identity': ['Lukas', 'Vojta', 'Lukas', 'Vojta'],
+            'path': ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'],
+        })
+        return df
+```
 
 The class is then created by `Test('')`. The empty argument should point to the location where the images are stored. The dataframe can then be accessed by
 
-    Test('').df
+```python exec="true" source="above" result="console"
+import pandas as pd # markdown-exec: hide
+from wildlife_datasets import datasets # markdown-exec: hide
+ # markdown-exec: hide
+class Test(datasets.DatasetFactory): # markdown-exec: hide
+    def create_catalogue(self) -> pd.DataFrame: # markdown-exec: hide
+        df = pd.DataFrame({ # markdown-exec: hide
+            'id': [1, 2, 3, 4], # markdown-exec: hide
+            'identity': ['Lukas', 'Vojta', 'Lukas', 'Vojta'], # markdown-exec: hide
+            'path': ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'], # markdown-exec: hide
+        }) # markdown-exec: hide
+        return df # markdown-exec: hide
+Test('').df
+print(Test('').df) # markdown-exec: hide
+```
 
 The dataframe `df` must satisfy [some requirements](../dataframe).
 
@@ -31,43 +47,62 @@ To incorporate the new dataset into the list of all available datasets, the [ini
 
 The metadata can be added by saving them in a csv file (such as [mymetadata.csv](../csv/mymetadata.csv)). Their full description is in a [separate file](../dataframe#metadata). Then they can be loaded into the class definition as a class attribute. 
 
-    import pandas as pd
-    from wildlife_datasets import datasets
+```python exec="true" source="above"
+import pandas as pd
+from wildlife_datasets import datasets
 
-    class Test(datasets.DatasetFactory):
-        metadata = datasets.Metadata('mymetadata.csv')['Test']
+class Test(datasets.DatasetFactory):
+    metadata = datasets.Metadata('docs/csv/mymetadata.csv')['Test']
 
-        def create_catalogue(self) -> pd.DataFrame:
-            df = pd.DataFrame({
-                'id': [1, 2, 3, 4],
-                'identity': ['Lukas', 'Vojta', 'Lukas', 'Vojta'],
-                'path': ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'],
-            })
-            return df
+    def create_catalogue(self) -> pd.DataFrame:
+        df = pd.DataFrame({
+            'id': [1, 2, 3, 4],
+            'identity': ['Lukas', 'Vojta', 'Lukas', 'Vojta'],
+            'path': ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'],
+        })
+        return df
+```
 
 The metadata can be accessed by
 
-    Test('').metadata
-
+```python exec="true" source="above" result="console"
+import pandas as pd # markdown-exec: hide
+from wildlife_datasets import datasets # markdown-exec: hide
+ # markdown-exec: hide
+class Test(datasets.DatasetFactory): # markdown-exec: hide
+    metadata = datasets.Metadata('docs/csv/mymetadata.csv')['Test'] # markdown-exec: hide
+ # markdown-exec: hide
+    def create_catalogue(self) -> pd.DataFrame: # markdown-exec: hide
+        df = pd.DataFrame({ # markdown-exec: hide
+            'id': [1, 2, 3, 4], # markdown-exec: hide
+            'identity': ['Lukas', 'Vojta', 'Lukas', 'Vojta'], # markdown-exec: hide
+            'path': ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'], # markdown-exec: hide
+        }) # markdown-exec: hide
+        return df # markdown-exec: hide
+Test('').metadata
+print(Test('').metadata) # markdown-exec: hide
+```
 
 ## Optional: including download
 
 Creating the download scripts should be done in the same way are the one in [download folder](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/wildlife_datasets/downloads). Besides dowloading, it must also extract the files. We do not specify the exact way as downloading is different for different hosting servers. When the download is saved into the `test.py` file and placed in the above folder, it may be loaded by
 
-    import pandas as pd
-    from wildlife_datasets import datasets, downloads
+```python
+import pandas as pd
+from wildlife_datasets import datasets, downloads
 
-    class Test(datasets.DatasetFactory):
-        download = downloads.Test
-        metadata = datasets.Metadata('mymetadata.csv')['Test']
+class Test(datasets.DatasetFactory):
+    download = downloads.Test
+    metadata = datasets.Metadata('docs/csv/mymetadata.csv')['Test']
 
-        def create_catalogue(self) -> pd.DataFrame:
-            df = pd.DataFrame({
-                'id': [1, 2, 3, 4],
-                'identity': ['Lukas', 'Vojta', 'Lukas', 'Vojta'],
-                'path': ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'],
-            })
-            return df
+    def create_catalogue(self) -> pd.DataFrame:
+        df = pd.DataFrame({
+            'id': [1, 2, 3, 4],
+            'identity': ['Lukas', 'Vojta', 'Lukas', 'Vojta'],
+            'path': ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'],
+        })
+        return df
+```
 
 ## Optional: integrating into package
 
