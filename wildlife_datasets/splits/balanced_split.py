@@ -28,7 +28,7 @@ class BalancedSplit():
     def __init__(
             self,
             df: pd.DataFrame,
-            seed: int,
+            seed: int = 666,
             identity_skip: str = 'unknown'
             ) -> None:
         """Initializes the class.
@@ -36,7 +36,7 @@ class BalancedSplit():
         Args:
             df (pd.DataFrame): A dataframe of the data. It must contain columns
                 `identity` for all splits and `date` for time-aware splits.
-            seed (int): Initial seed for the LCG random generator.
+            seed (int, optional): Initial seed for the LCG random generator.
             identity_skip (str, optional): Name of the identities to ignore.
         """
 
