@@ -70,8 +70,10 @@ Downloading works only on Linux. Download it manually from the [FTP server](ftp:
 
 SealID requires a one-time token for download. Please go their [download website](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53), click the Data tab, then three dots next to the Download button and copy the `URL` link. Then use
 
-    url = '' # Paste the URL here
-    datasets.SealID.download.get_data('data/SealID', url=url)
+```python
+url = '' # Paste the URL here
+datasets.SealID.download.get_data('data/SealID', url=url)
+```
 
 ## SeaTurtleID
 
@@ -81,7 +83,9 @@ SealID requires a one-time token for download. Please go their [download website
 
 Extracting works only on Linux. Use
 
-    datasets.SMALST.download.download('data/SMALST')
+```python
+datasets.SMALST.download.download('data/SMALST')
+```
 
 to download the dataset and then extract it manually.
 
@@ -89,7 +93,9 @@ to download the dataset and then extract it manually.
 
 Extracting works only on Linux. Use
 
-    datasets.StripeSpotter.download.download('data/StripeSpotter')
+```python
+datasets.StripeSpotter.download.download('data/StripeSpotter')
+```
 
 to download the dataset and then extract it manually.
 
