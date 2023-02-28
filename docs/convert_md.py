@@ -1,10 +1,10 @@
 import os
 
-def convert_file(filename):
+def convert_file(filename1, filename2):
     # TODO: name must be last
     # TODO: must be name="..."
 
-    with open(filename) as f:
+    with open(filename1) as f:
         content = f.readlines()
 
     in_block = False
@@ -48,17 +48,15 @@ def convert_file(filename):
         if setup_finish:
             setup = False
 
-    folder, filename = os.path.split(filename)
-    filename, ext = os.path.splitext(filename)
-    file_name_new = os.path.join(folder, filename + '_mod' + ext)
-    with open(file_name_new, 'w') as f:
+    with open(filename2, 'w') as f:
         f.writelines(content_new)
 
 
 filenames = [
-    "docs/adding.md"
+    ["docs/.adding.md", "docs/adding.md"],
+    ["docs/.tutorial_datasets.md", "docs/tutorial_datasets.md"]
 ]
 
-for filename in filenames:
-    convert_file(filename)
+for filename1, filename2 in filenames:
+    convert_file(filename1, filename2)
 
