@@ -44,5 +44,5 @@ soupsieve==2.4
 tqdm==4.64.1
 urllib3==1.26.12
 watchdog==2.1.9
-wildlife-datasets==0.1.2
+wildlife-datasets==0.1.3
 zipp==3.8.1

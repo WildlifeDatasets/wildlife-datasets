@@ -54,7 +54,8 @@ def convert_file(filename1, filename2):
 
 filenames = [
     ["docs/.adding.md", "docs/adding.md"],
-    ["docs/.tutorial_datasets.md", "docs/tutorial_datasets.md"]
+    ["docs/.tutorial_datasets.md", "docs/tutorial_datasets.md"],
+    ["docs/.tutorial_splits.md", "docs/tutorial_splits.md"]
 ]
 
 for filename1, filename2 in filenames:
