@@ -14,9 +14,12 @@ ibeis_database*
 jupyter.sh
 jupyter_gpu.sh
 site/
-docs/*_mod.md
 
 *.pkl
 token.txt
 *.egg-info
 dist/
+
+docs/adding.md
+docs/tutorial_datasets.md
+docs/tutorial_splits.md
