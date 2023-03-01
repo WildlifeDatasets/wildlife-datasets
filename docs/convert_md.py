@@ -8,12 +8,10 @@ def convert_file(filename1, filename2):
         content = f.readlines()
 
     in_block = False
-    setup = False
     blocks = {}
     content_new = []
     for line in content:
         print_line = True
-        setup_finish = False    
         if not in_block and line.startswith('```'):
             line_split = line.split(' ')
             if line_split[-1].startswith('name'):
@@ -27,13 +25,6 @@ def convert_file(filename1, filename2):
                         content_new.append(qwe[:-1] + ' # markdown-exec: hide\n')
                 else:
                     blocks[name] = []
-            elif line_split[-1].startswith('setup'):
-                setup = True
-                name = line_split[-1][7:-2]
-                if name in blocks:
-                    raise(Exception('Setup already run'))
-                else:
-                    blocks[name] = []
             else:
                 name = None
             in_block = True
@@ -43,10 +34,8 @@ def convert_file(filename1, filename2):
         elif in_block and line.startswith('```'):
             in_block = False
             setup_finish = True
-        if print_line and not setup:
+        if print_line:
             content_new.append(line)
-        if setup_finish:
-            setup = False
 
     with open(filename2, 'w') as f:
         f.writelines(content_new)
