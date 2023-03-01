@@ -38,7 +38,7 @@ def convert_file(filename1, filename2):
                 name = None
             in_block = True
         elif in_block and not line.startswith('```'):
-            if name is not None and not line.endswith(' # markdown-exec: hide\n'): 
+            if name is not None and not line.startswith('print'): 
                 blocks[name].append(line)
         elif in_block and line.startswith('```'):
             in_block = False
@@ -54,6 +54,7 @@ def convert_file(filename1, filename2):
 
 filenames = [
     ["docs/.adding.md", "docs/adding.md"],
+    ["docs/.methods.md", "docs/methods.md"],
     ["docs/.tutorial_datasets.md", "docs/tutorial_datasets.md"],
     ["docs/.tutorial_splits.md", "docs/tutorial_splits.md"]
 ]
