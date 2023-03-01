@@ -23,12 +23,12 @@ nav:
   - Oveview of datasets: datasets.md
   - Tutorials:
     - Datasets: tutorial_datasets.md
-    #- Testing ML methods: methods.md
+    - Testing ML methods: methods.md
   - Advanced:
-    - Adding new datasets: adding.md
     - Splits: tutorial_splits.md
-    #- Evaluation: tutorial_evaluation.md
+    - Evaluation: tutorial_evaluation.md
     - Dataset representation: dataframe.md
+    - Adding new datasets: adding.md
   - Troubleshooting:
     - Downloads: downloads.md
   - Reference:
