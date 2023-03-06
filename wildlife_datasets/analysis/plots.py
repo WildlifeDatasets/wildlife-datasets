@@ -60,7 +60,7 @@ def plot_bbox_segmentation(df: pd.DataFrame, root: str, n: int) -> None:
     """
 
     if 'bbox' not in df.columns and 'segmentation' not in df.columns:
-        for i in range(n):
+        for i in range(min(n, len(df))):
             img = get_image(os.path.join(root, df['path'].iloc[i]))
             plot_image(img)
     if 'bbox' in df.columns:
@@ -108,7 +108,8 @@ def plot_grid(
     """
 
     # Select indices of images to be plotted
-    idx = np.random.permutation(len(df))[:n_rows*n_cols]
+    n = min(len(df), n_rows*n_cols)
+    idx = np.random.permutation(len(df))[:n]
 
     # Load images and compute their ratio
     ratios = []
@@ -128,22 +129,23 @@ def plot_grid(
     im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, n_rows*img_h + (n_rows-1)*offset))
 
     # Fill the grid image by image
-    for i in range(n_rows):
-        for j in range(n_cols):
-            # Load the image
-            k = n_cols*i + j
-            file_path = os.path.join(root, df.iloc[idx[k]]['path'])
-            im = get_image(file_path)
+    for k in range(n):
+        i = k // n_cols
+        j = k % n_cols
 
-            # Possibly rotate the image
-            if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
-                im = im.transpose(Image.ROTATE_90)
+        # Load the image
+        file_path = os.path.join(root, df.iloc[idx[k]]['path'])
+        im = get_image(file_path)
 
-            # Rescale the image
-            im.thumbnail((img_w,img_h))
+        # Possibly rotate the image
+        if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
+            im = im.transpose(Image.ROTATE_90)
 
-            # Place the image on the grid
-            pos_x = j*img_w + j*offset
-            pos_y = i*img_h + i*offset        
-            im_grid.paste(im, (pos_x,pos_y))
+        # Rescale the image
+        im.thumbnail((img_w,img_h))
+
+        # Place the image on the grid
+        pos_x = j*img_w + j*offset
+        pos_y = i*img_h + i*offset        
+        im_grid.paste(im, (pos_x,pos_y))
     return im_grid
