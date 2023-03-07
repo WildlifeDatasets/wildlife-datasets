@@ -1,4 +1,7 @@
 def recognize_id_split(ids_train, ids_test):
+    ids_train = set(ids_train)
+    ids_test = set(ids_test)
+    
     ids_test_only = ids_test - ids_train
     ids_joint = ids_train.intersection(ids_test)
     id_split = 'closed-set'
