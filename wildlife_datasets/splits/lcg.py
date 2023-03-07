@@ -60,4 +60,4 @@ class Lcg():
             Shuffled array.
         """
 
-        return x[self.random_permutation(len(x))]
+        return np.array(x)[self.random_permutation(len(x))]
