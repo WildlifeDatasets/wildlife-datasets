@@ -129,6 +129,7 @@ class TimeCutoffSplit(TimeAwareSplit):
         """
 
         idx_train = list(np.where(self.df['year'] < year)[0])
+        # TODO: how do we want to name it and implement it?
         if test_only_year:
             idx_test = list(np.where(self.df['year'] == year)[0])
         else:
