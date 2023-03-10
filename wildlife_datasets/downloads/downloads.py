@@ -101,7 +101,7 @@ class BirdIndividualID(Downloader):
     def download(self, root):
         with utils.data_directory(root):
             import gdown
-            exception_text = '''Dataset must be downloaded manually.\n
+            exception_text = '''Dataset must be downloaded manually.
                 Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#birdindividualid'''
             try:
                 gdown.download(self.url, self.archive, quiet=False)
@@ -275,22 +275,40 @@ class Giraffes(Downloader):
         pass
 
 class HappyWhale(Downloader):
+    archive = 'happy-whale-and-dolphin.zip'
+
     def download(self, root):
         with utils.data_directory(root):
-            utils.kaggle_download(f"competitions download -c happy-whale-and-dolphin")
+            exception_text = '''Kaggle terms must be agreed with.
+                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#happywhale'''
+            try:
+                utils.kaggle_download(f"competitions download -c happy-whale-and-dolphin")
+            except:
+                raise Exception(exception_text)
+            if not os.path.exists(self.archive):
+                raise Exception(exception_text)
 
     def extract(self, root):
         with utils.data_directory(root):
-            utils.extract_archive('happy-whale-and-dolphin.zip', delete=True)
+            utils.extract_archive(self.archive, delete=True)
 
 class HumpbackWhaleID(Downloader):
+    archive = 'humpback-whale-identification.zip'
+
     def download(self, root):
         with utils.data_directory(root):
-            utils.kaggle_download(f"competitions download -c humpback-whale-identification")
+            exception_text = '''Kaggle terms must be agreed with.
+                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#humpbackwhale'''
+            try:
+                utils.kaggle_download(f"competitions download -c humpback-whale-identification")
+            except:
+                raise Exception(exception_text)
+            if not os.path.exists(self.archive):
+                raise Exception(exception_text)
 
     def extract(self, root):
         with utils.data_directory(root):
-            utils.extract_archive('humpback-whale-identification.zip', delete=True)
+            utils.extract_archive(self.archive, delete=True)
 
 class HyenaID2022(Downloader):
     url = 'https://lilablobssc.blob.core.windows.net/liladata/wild-me/hyena.coco.tar.gz'
@@ -376,13 +394,22 @@ class NDD20(Downloader):
             utils.extract_archive(self.archive, delete=True)    
 
 class NOAARightWhale(Downloader):
+    archive = 'noaa-right-whale-recognition.zip'
+
     def download(self, root):
         with utils.data_directory(root):
-            utils.kaggle_download(f"competitions download -c noaa-right-whale-recognition")
+            exception_text = '''Kaggle terms must be agreed with.
+                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#noaarightwhale'''
+            try:
+                utils.kaggle_download(f"competitions download -c noaa-right-whale-recognition")
+            except:
+                raise Exception(exception_text)
+            if not os.path.exists(self.archive):
+                raise Exception(exception_text)
 
     def extract(self, root):
         with utils.data_directory(root):
-            utils.extract_archive('noaa-right-whale-recognition.zip', delete=True)
+            utils.extract_archive(self.archive, delete=True)
             utils.extract_archive('imgs.zip', delete=True)
 
             # Move misplaced image
