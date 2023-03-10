@@ -33,6 +33,7 @@ dependencies=[
           'tqdm>=4.62.3',
           'opencv-python>=4.5.5.62',
           'Pillow>=7.1.2',
+          'scikit-learn'>=1.0.1,
           'matplotlib>=3.5.1',
           'gdown',
 ]
