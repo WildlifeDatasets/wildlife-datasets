@@ -95,29 +95,25 @@ class BelugaID(Downloader):
             utils.extract_archive(self.archive, delete=True)
 
 class BirdIndividualID(Downloader):
+    url = 'https://drive.google.com/uc?id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA'
+    archive = 'ferreira_et_al_2020.zip'
+
     def download(self, root):
         with utils.data_directory(root):
-            # TODO: why not the automatic download?
-            # Try automatic download
             import gdown
-            url = 'https://drive.google.com/uc?id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA'
-            archive = 'ferreira_et_al_2020.zip'
-            #gdown.download(
-            #    f"https://drive.google.com/uc?export=download&confirm=pbef&id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA",
-            #    'qwe.zip'
-            #)
-            #qwqjwdoijqwo
-            gdown.download(url, archive, quiet=False)
-            #utils.extract_archive(archive, delete=True)
-
-            # Download manually from:
-            url = 'https://drive.google.com/drive/folders/1YkH_2DNVBOKMNGxDinJb97y2T8_wRTZz'
-
-            # Upload to kaggle and download
-            utils.kaggle_download(f"datasets download -d 'vojtacermak/birds' --unzip")
-
+            exception_text = '''Dataset must be downloaded manually.\n
+                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#birdindividualid'''
+            try:
+                gdown.download(self.url, self.archive, quiet=False)
+            except:
+                raise Exception(exception_text)
+            if not os.path.exists(self.archive):
+                raise Exception(exception_text)
+            
     def extract(self, root):
         with utils.data_directory(root):
+            utils.extract_archive(self.archive, delete=True)
+
             # Create new folder for segmented images
             folder_new = os.getcwd() + 'Segmented'
             if not os.path.exists(folder_new):
