@@ -67,16 +67,14 @@ def recall(
         y_true,
         y_pred,
         unknown_class=None,
-        modify_confusion_table=None
+        ignore_empty=False
     ):
     y_true, y_pred, unknown_class = unify_types(y_true, y_pred, unknown_class)
-    if modify_confusion_table is None:
-        return skm.recall_score(y_true, y_pred, average='macro')
-    elif modify_confusion_table == 'ignore_empty':
+    if ignore_empty:
         C = skm.multilabel_confusion_matrix(y_true, y_pred)
         return np.mean([C_i[1,1]/(C_i[1,0]+C_i[1,1]) for C_i in C if C_i[1,0]+C_i[1,1] > 0])
     else:
-        raise(Exception())
+        return skm.recall_score(y_true, y_pred, average='macro')
 
 def f1(
         y_true,
