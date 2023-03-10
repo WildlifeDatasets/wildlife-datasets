@@ -36,16 +36,6 @@ def data_directory(dir):
         os.chdir(current_dir)
 
 
-def print_start1(root):
-    print('DATASET %s: DOWNLOADING STARTED.' % os.path.split(root)[1])
-
-def print_start2(root):
-    print('DATASET %s: EXTRACTING STARTED.' % os.path.split(root)[1])
-
-def print_finish(root):
-    print('DATASET %s: FINISHED. If mass downloading, you can remove it from the list.' % os.path.split(root)[1])
-    print('')
-
 def kaggle_download(command):
     # TODO: add a check that kaggle is installed
     # TODO: add kaggle as package requirements
