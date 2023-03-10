@@ -34,7 +34,7 @@ We show an example of downloading, extracting and processing the MacaqueFaces da
 ```
 from wildlife_datasets import analysis, datasets
 
-datasets.MacaqueFaces.download.get_data('data/MacaqueFaces')
+datasets.MacaqueFaces.download().get_data('data')
 dataset = datasets.MacaqueFaces('data/MacaqueFaces')
 ```
 
