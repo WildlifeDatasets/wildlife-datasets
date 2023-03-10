@@ -123,19 +123,6 @@ class BirdIndividualID(Downloader):
             folder_move = 'Cropped_pictures'
             shutil.move(folder_move, os.path.join(folder_new, folder_move))
 
-class BristolGorillas2020(Downloader):
-    url = 'https://data.bris.ac.uk/datasets/tar/jf0859kboy8k2ufv60dqeb2t8.zip'
-    archive = 'jf0859kboy8k2ufv60dqeb2t8.zip'
-
-    def download(self, root):
-        with utils.data_directory(root):
-            # TODO: does not work
-            utils.download_url(self.url, self.archive)
-
-    def extract(self, root):
-        with utils.data_directory(root):
-            utils.extract_archive(self.archive, delete=True)
-
 class CTai(Downloader):
     url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
     archive = 'master.zip'
