@@ -25,7 +25,7 @@ def unify_types(y_true, y_pred, unknown_class):
         unknown_class = encoder[unknown_class]
     return y_true, y_pred, unknown_class
 
-def modify_classes(y_true, y_pred, forbidden=''):
+def change_predictions(y_true, y_pred, forbidden=''):
     classes_true = set(y_true)
     classes_n = len(classes_true)        
     if classes_n > 1:
@@ -76,7 +76,7 @@ def precision(
     if modify_confusion_table is None:
         return skm.precision_score(y_true, y_pred, average='macro')
     elif modify_confusion_table == 'relabel':
-        y_true, y_pred = modify_classes(y_true, y_pred, forbidden=unknown_class)
+        y_true, y_pred = change_predictions(y_true, y_pred, forbidden=unknown_class)
         return skm.recall_score(y_true, y_pred, average='macro')
     else:
         raise(Exception())
@@ -94,7 +94,7 @@ def recall(
         C = skm.multilabel_confusion_matrix(y_true, y_pred)
         return np.mean([C_i[1,1]/(C_i[1,0]+C_i[1,1]) for C_i in C if C_i[1,0]+C_i[1,1] > 0])
     elif modify_confusion_table == 'relabel':
-        y_true, y_pred = modify_classes(y_true, y_pred, forbidden=unknown_class)
+        y_true, y_pred = change_predictions(y_true, y_pred, forbidden=unknown_class)
         return skm.recall_score(y_true, y_pred, average='macro')
     else:
         raise(Exception())
