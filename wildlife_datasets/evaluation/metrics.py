@@ -91,11 +91,12 @@ def normalized_accuracy(
         mu
     ):
     y_true, y_pred, unknown_class = unify_types(y_true, y_pred, unknown_class)
-    # TODO: maybe does not work
-    if not any(y_true == unknown_class):
+    y_true = np.array(y_true)    
+    y_pred = np.array(y_pred)
+    known = y_true == unknown_class
+    if sum(known) == 0:
         raise(Exception('Some true labels must be of the unknown class.'))
-    C = skm.multilabel_confusion_matrix(y_true, y_pred)
-    # TODO: does not work. position wrong
-    aks = sum([C_i[1,1] for C_i in C[:-1]]) / sum(np.array(y_true) != self.new_class_inner)
-    aus = C[-1][1,1] / sum(np.array(y_true) == self.new_class_inner)
+    
+    aks = np.mean(y_true[known] == y_pred[known])
+    aus = np.mean(y_true[~known] == y_pred[~known])
     return mu*aks + (1-mu)*aus
