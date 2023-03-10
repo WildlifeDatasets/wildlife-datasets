@@ -1,6 +1,7 @@
 from ..splits import Lcg
 import numpy as np
 import sklearn.metrics as skm
+import copy
 
 # TODO: add documentation
 # TODO: check all code
@@ -26,6 +27,7 @@ def unify_types(y_true, y_pred, unknown_class):
     return y_true, y_pred, unknown_class
 
 def change_predictions(y_true, y_pred, forbidden=''):
+    y_pred = copy.copy(y_pred)
     classes_true = set(y_true)
     classes_n = len(classes_true)        
     if classes_n > 1:
