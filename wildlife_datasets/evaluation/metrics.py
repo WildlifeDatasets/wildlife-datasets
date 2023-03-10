@@ -77,7 +77,7 @@ def precision(
         return skm.precision_score(y_true, y_pred, average='macro')
     elif modify_confusion_table == 'relabel':
         y_true, y_pred = change_predictions(y_true, y_pred, forbidden=unknown_class)
-        return skm.recall_score(y_true, y_pred, average='macro')
+        return skm.precision_score(y_true, y_pred, average='macro')
     else:
         raise(Exception())
 
@@ -109,8 +109,8 @@ def f1(
     if modify_confusion_table is None:
         return skm.f1_score(y_true, y_pred, average='macro')
     elif modify_confusion_table == 'relabel':
-        y_true, y_pred = modify_classes(y_true, y_pred, forbidden=unknown_class)        
-        return skm.recall_score(y_true, y_pred, average='macro')
+        y_true, y_pred = change_predictions(y_true, y_pred, forbidden=unknown_class)        
+        return skm.f1_score(y_true, y_pred, average='macro')
     else:
         raise(Exception())
     
