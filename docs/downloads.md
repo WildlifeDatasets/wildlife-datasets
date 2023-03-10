@@ -8,7 +8,7 @@ Some of the datasets require special treatment or the download of extraction wor
 | [AerialCattle2017](https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh)          | AUTO    |                                |
 | [ATRW](https://lila.science/datasets/atrw)                   | AUTO    |                                |
 | [BelugaID](https://lila.science/datasets/beluga-id-2022/)              | AUTO    |                                |
-| [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID)     | MANUAL  | Manual G-Drive + Kaggle required    |
+| [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID)     | MANUAL  | Manual download    |
 | [C-Tai](https://github.com/cvjena/chimpanzee_faces)       | AUTO    |                                |
 | [C-Zoo](https://github.com/cvjena/chimpanzee_faces)       | AUTO    |                                |
 | [Cows2021](https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7)              | AUTO    |                                |
@@ -46,9 +46,13 @@ Some datasets are stored on Kaggle. To use our automatic download method, follow
 
 ## BirdIndividualID
 
-<!---
-TODO: finish
--->
+The dataset is stored on [Google drive](https://drive.google.com/uc?id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA) but needs to be downloaded manually due to its size. After downloading it, place it into folder ``BirdIndividualID'' and run
+
+```python
+datasets.SealID.download().extract('data/BirdIndividualID')
+```
+
+to extract it. Do not extract it manually because there is some postprocessing involved.
 
 ## Giraffes
 
@@ -72,7 +76,7 @@ SealID requires a one-time token for download. Please go their [download website
 
 ```python
 url = '' # Paste the URL here
-datasets.SealID.download.get_data('data/SealID', url=url)
+datasets.SealID.download().get_data('data/SealID', url=url)
 ```
 
 ## SeaTurtleID
@@ -84,7 +88,7 @@ datasets.SealID.download.get_data('data/SealID', url=url)
 Extracting works only on Linux. Use
 
 ```python
-datasets.SMALST.download.download('data/SMALST')
+datasets.SMALST.download().download('data/SMALST')
 ```
 
 to download the dataset and then extract it manually.
@@ -94,7 +98,7 @@ to download the dataset and then extract it manually.
 Extracting works only on Linux. Use
 
 ```python
-datasets.StripeSpotter.download.download('data/StripeSpotter')
+datasets.StripeSpotter.download().download('data/StripeSpotter')
 ```
 
 to download the dataset and then extract it manually.
