@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from wildlife_datasets import evaluation
+from wildlife_datasets import metrics
 
 tol = 0.000001
 
@@ -23,7 +23,7 @@ def macro_f1(ps, rs):
 class TestEvaluation(unittest.TestCase):   
     def test_accuracy1(self):
         expected_value = 4/5
-        metric = evaluation.accuracy
+        metric = metrics.accuracy
         y_true_basis = y_true1
         y_pred_basis = y_pred1
 
@@ -47,7 +47,7 @@ class TestEvaluation(unittest.TestCase):
 
     def test_accuracy2(self):
         expected_value = 4/5
-        metric = evaluation.accuracy
+        metric = metrics.accuracy
         y_true_basis = y_true2
         y_pred_basis = y_pred2
 
@@ -71,7 +71,7 @@ class TestEvaluation(unittest.TestCase):
 
     def test_balanced_accuracy1(self):
         expected_value = 5/6
-        metric = evaluation.balanced_accuracy
+        metric = metrics.balanced_accuracy
         y_true_basis = y_true1
         y_pred_basis = y_pred1
 
@@ -95,7 +95,7 @@ class TestEvaluation(unittest.TestCase):
 
     def test_balanced_accuracy2(self):
         expected_value = 5/6
-        metric = evaluation.balanced_accuracy
+        metric = metrics.balanced_accuracy
         y_true_basis = y_true2
         y_pred_basis = y_pred2
 
@@ -119,7 +119,7 @@ class TestEvaluation(unittest.TestCase):
 
     def test_class_average_accuracy1(self):
         expected_value = 13/15
-        metric = evaluation.class_average_accuracy
+        metric = metrics.class_average_accuracy
         y_true_basis = y_true1
         y_pred_basis = y_pred1
 
@@ -143,7 +143,7 @@ class TestEvaluation(unittest.TestCase):
 
     def test_class_average_accuracy2(self):
         expected_value = 9/10
-        metric = evaluation.class_average_accuracy
+        metric = metrics.class_average_accuracy
         y_true_basis = y_true2
         y_pred_basis = y_pred2
 
@@ -167,7 +167,7 @@ class TestEvaluation(unittest.TestCase):
 
     def test_precision1(self):
         expected_value = 8/9
-        metric = evaluation.precision
+        metric = metrics.precision
         y_true_basis = y_true1
         y_pred_basis = y_pred1
 
@@ -191,7 +191,7 @@ class TestEvaluation(unittest.TestCase):
 
     def test_precision2(self):
         expected_value = 3/4
-        metric = evaluation.precision
+        metric = metrics.precision
         y_true_basis = y_true2
         y_pred_basis = y_pred2
         
@@ -215,7 +215,7 @@ class TestEvaluation(unittest.TestCase):
 
     def test_recall1(self):
         expected_value = 5/6
-        metric = evaluation.recall
+        metric = metrics.recall
         y_true_basis = y_true1
         y_pred_basis = y_pred1
 
@@ -246,7 +246,7 @@ class TestEvaluation(unittest.TestCase):
     def test_recall2(self):
         expected_value = 5/8
         expected_value_mod = 5/6
-        metric = evaluation.recall
+        metric = metrics.recall
         y_true_basis = y_true2
         y_pred_basis = y_pred2
 
@@ -276,7 +276,7 @@ class TestEvaluation(unittest.TestCase):
 
     def test_f11(self):
         expected_value = macro_f1([2/3,1/1,1/1], [2/2,1/1,1/2])
-        metric = evaluation.f1
+        metric = metrics.f1
         y_true_basis = y_true1
         y_pred_basis = y_pred1
 
@@ -300,7 +300,7 @@ class TestEvaluation(unittest.TestCase):
 
     def test_f12(self):
         expected_value = macro_f1([2/2,1/1,1/1,0/1], [2/2,1/1,1/2,0])
-        metric = evaluation.f1
+        metric = metrics.f1
         y_true_basis = y_true2
         y_pred_basis = y_pred2
 
@@ -325,7 +325,7 @@ class TestEvaluation(unittest.TestCase):
     def test_normalized_accuracy1(self):
         expected_value1 = 1
         expected_value2 = 2/3
-        metric = evaluation.normalized_accuracy
+        metric = metrics.normalized_accuracy
         y_true_basis = y_true1
         y_pred_basis = y_pred1
 
