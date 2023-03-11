@@ -105,7 +105,8 @@ to download the dataset and then extract it manually.
 
 ## WNIGiraffes
 
-<!---
-TODO: finish
--->
+Even though it is possible to download WNIGiraffes automatically, due to its size, it is highly recommended to use AzCopy. Go to the [download side](https://lila.science/datasets/wni-giraffes) and download the two files using [AzCopy](https://lila.science/faq#downloadtips). Then either manually extract them or run
 
+```python
+datasets.WNIGiraffes.download().extract('data/WNIGiraffes')
+```
