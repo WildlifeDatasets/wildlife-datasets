@@ -552,12 +552,11 @@ class WNIGiraffes(Downloader):
 
     def download(self, root):
         with utils.data_directory(root):
-            # TODO: does not work. it is specific for specific distros, isnt it?
-            # TODO: Yes this is Ubuntu/linux specific.
-            # TODO: this requires azcopy
-            # Copy azcopy from utils to working directory.
-            os.system(f'azcopy cp {self.url} {self.archive}')
-            utils.download_url(self.url2, self.archive2)
+            exception_text = '''Dataset must be downloaded manually.
+                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#wnigiraffes'''
+            raise Exception(exception_text)
+            #os.system(f'azcopy cp {self.url} {self.archive}')
+            #utils.download_url(self.url2, self.archive2)
 
     def extract(self, root):
         with utils.data_directory(root):
