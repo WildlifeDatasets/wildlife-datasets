@@ -11,9 +11,16 @@ The following three columns must be part of all dataframes.
 | identity | `int` or `str` | Identity (or label) of the depicted individual animal. |
 | path | `str` | Relative path to the image. |
 
-<!---
-TODO: identity unknown.
--->
+There is a special value for `identity` which describes an unknown individual. Its default value is
+
+```python exec="true" source="above" result="console"
+from wildlife_datasets import datasets
+
+datasets.DatasetFactory.unknown_name
+print(datasets.DatasetFactory.unknown_name) # markdown-exec: hide
+```
+
+When a dataset contains unknown inidividuals, there identities should be changed to the default value.
 
 
 ## Optional columns
