@@ -1,7 +1,5 @@
-from ..splits import Lcg
 import numpy as np
 import sklearn.metrics as skm
-import copy
 
 # TODO: add documentation
 # TODO: check all code
