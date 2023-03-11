@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wildlife-datasets"
-version = "0.2.20"
+version = "0.2.21"
 authors = [
   { name="Lukáš Adam", email="lukas.adam.cr@gmail.com" },
   { name="Vojtěch Čermák", email="cermak.vojtech@seznam.cz" },
@@ -50,6 +50,7 @@ packages = [
   "wildlife_datasets.datasets",
   "wildlife_datasets.downloads",
   "wildlife_datasets.loader",
+  "wildlife_datasets.metrics",
   "wildlife_datasets.splits",  
 ]
 
