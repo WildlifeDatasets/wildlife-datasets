@@ -32,12 +32,18 @@ class Downloader():
 
 
 class AAUZebraFish(Downloader):
+    archive = 'aau-zebrafish-reid.zip'
+
     def download(self, root):
         with utils.data_directory(root):
-            utils.kaggle_download(f"datasets download -d 'aalborguniversity/aau-zebrafish-reid' --unzip")
+            command = f"datasets download -d 'aalborguniversity/aau-zebrafish-reid'"
+            exception_text = '''Kaggle must be setup.
+                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#aauzebrafish'''
+            utils.kaggle_download(command, exception_text=exception_text, required_file=self.archive)
 
     def extract(self, root):
-        pass
+        with utils.data_directory(root):
+            utils.extract_archive(self.archive, delete=True)
 
 class AerialCattle2017(Downloader):
     url = 'https://data.bris.ac.uk/datasets/tar/3owflku95bxsx24643cybxu3qh.zip'
@@ -279,36 +285,40 @@ class HappyWhale(Downloader):
 
     def download(self, root):
         with utils.data_directory(root):
+            command = f"competitions download -c happy-whale-and-dolphin --force"
             exception_text = '''Kaggle terms must be agreed with.
                 Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#happywhale'''
-            try:
-                utils.kaggle_download(f"competitions download -c happy-whale-and-dolphin")
-            except:
-                raise Exception(exception_text)
-            if not os.path.exists(self.archive):
-                raise Exception(exception_text)
+            utils.kaggle_download(command, exception_text=exception_text, required_file=self.archive)
 
     def extract(self, root):
         with utils.data_directory(root):
-            utils.extract_archive(self.archive, delete=True)
+            try:
+                utils.extract_archive(self.archive, delete=True)
+            except:
+                exception_text = '''Extracting failed.
+                    Either the download was not completed or the Kaggle terms were not agreed with.
+                    Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#happywhale'''
+                raise Exception(exception_text)
 
 class HumpbackWhaleID(Downloader):
     archive = 'humpback-whale-identification.zip'
 
     def download(self, root):
         with utils.data_directory(root):
+            command = f"competitions download -c humpback-whale-identification --force"
             exception_text = '''Kaggle terms must be agreed with.
                 Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#humpbackwhale'''
-            try:
-                utils.kaggle_download(f"competitions download -c humpback-whale-identification")
-            except:
-                raise Exception(exception_text)
-            if not os.path.exists(self.archive):
-                raise Exception(exception_text)
+            utils.kaggle_download(command, exception_text=exception_text, required_file=self.archive)
 
     def extract(self, root):
         with utils.data_directory(root):
-            utils.extract_archive(self.archive, delete=True)
+            try:
+                utils.extract_archive(self.archive, delete=True)
+            except:
+                exception_text = '''Extracting failed.
+                    Either the download was not completed or the Kaggle terms were not agreed with.
+                    Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#humpbackwhale'''
+                raise Exception(exception_text)
 
 class HyenaID2022(Downloader):
     url = 'https://lilablobssc.blob.core.windows.net/liladata/wild-me/hyena.coco.tar.gz'
@@ -363,8 +373,6 @@ class LionData(Downloader):
     def extract(self, root):
         with utils.data_directory(root):
             utils.extract_archive(self.archive, delete=True)
-
-            # Cleanup
             shutil.rmtree('wildlife_reidentification-main/Nyala_Data_Zero')
 
 class MacaqueFaces(Downloader):
@@ -398,23 +406,23 @@ class NOAARightWhale(Downloader):
 
     def download(self, root):
         with utils.data_directory(root):
+            command = f"competitions download -c noaa-right-whale-recognition --force"
             exception_text = '''Kaggle terms must be agreed with.
                 Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#noaarightwhale'''
-            try:
-                utils.kaggle_download(f"competitions download -c noaa-right-whale-recognition")
-            except:
-                raise Exception(exception_text)
-            if not os.path.exists(self.archive):
-                raise Exception(exception_text)
+            utils.kaggle_download(command, exception_text=exception_text, required_file=self.archive)
 
     def extract(self, root):
         with utils.data_directory(root):
-            utils.extract_archive(self.archive, delete=True)
-            utils.extract_archive('imgs.zip', delete=True)
-
-            # Move misplaced image
-            shutil.move('w_7489.jpg', 'imgs')
-            os.remove('w_7489.jpg.zip')
+            try:
+                utils.extract_archive(self.archive, delete=True)
+                # Move misplaced image
+                shutil.move('w_7489.jpg', 'imgs')
+                os.remove('w_7489.jpg.zip')
+            except:
+                exception_text = '''Extracting failed.
+                    Either the download was not completed or the Kaggle terms were not agreed with.
+                    Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#noaarightwhale'''
+                raise Exception(exception_text)
 
 class NyalaData(Downloader):
     url = 'https://github.com/tvanzyl/wildlife_reidentification/archive/refs/heads/main.zip'
@@ -426,10 +434,7 @@ class NyalaData(Downloader):
 
     def extract(self, root):
         with utils.data_directory(root):        
-            archive = 'main.zip'
             utils.extract_archive(self.archive, delete=True)
-
-            # Cleanup
             shutil.rmtree('wildlife_reidentification-main/Lion_Data_Zero')
 
 class OpenCows2020(Downloader):
@@ -445,20 +450,32 @@ class OpenCows2020(Downloader):
             utils.extract_archive(self.archive, delete=True)
 
 class SeaTurtleIDHeads(Downloader):
+    archive = 'seaturtleidheads.zip'
+
     def download(self, root):
         with utils.data_directory(root):
-            utils.kaggle_download(f"datasets download -d 'wildlifedatasets/seaturtleidheads' --unzip")
+            command = f"datasets download -d 'wildlifedatasets/seaturtleidheads' --force"
+            exception_text = '''Kaggle must be setup.
+                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
+            utils.kaggle_download(command, exception_text=exception_text, required_file=self.archive)
 
     def extract(self, root):
-        pass
+        with utils.data_directory(root):
+            utils.extract_archive(self.archive, delete=True)
 
 class SeaTurtleID(Downloader):
+    archive = 'seaturtleid.zip'
+
     def download(self, root):
         with utils.data_directory(root):
-            utils.kaggle_download(f"datasets download -d 'wildlifedatasets/seaturtleid' --unzip")
+            command = f"datasets download -d 'wildlifedatasets/seaturtleid' --force"
+            exception_text = '''Kaggle must be setup.
+                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
+            utils.kaggle_download(command, exception_text=exception_text, required_file=self.archive)
 
     def extract(self, root):
-        pass
+        with utils.data_directory(root):
+            utils.extract_archive(self.archive, delete=True)
 
 class SealID(Downloader):
     archive = '22b5191e-f24b-4457-93d3-95797c900fc0_ui65zipk.zip'

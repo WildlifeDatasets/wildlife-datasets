@@ -36,7 +36,11 @@ def data_directory(dir):
         os.chdir(current_dir)
 
 
-def kaggle_download(command):
-    # TODO: add a check that kaggle is installed
-    # TODO: add kaggle as package requirements
-    os.system(f"kaggle {command}")
+def kaggle_download(command, exception_text='', required_file=None):
+    # TODO: add kaggle as package requirements    
+    try:
+        os.system(f"kaggle {command}")
+    except:
+        raise Exception(exception_text)
+    if required_file is not None and not os.path.exists(required_file):
+        raise Exception(exception_text)
