@@ -47,6 +47,18 @@ class DatasetFactory():
             self.df = df
         self.df_ml = self.create_catalogue_ml(self.df)
 
+    @classmethod
+    def get_data(cls, root, **kwargs):
+        cls.downloader().get_data(root, **kwargs)
+
+    @classmethod
+    def extract(cls, root, **kwargs):
+        cls.downloader().download(root, **kwargs)
+    
+    @classmethod
+    def download(cls, root, **kwargs):
+        cls.downloader().extract(root, **kwargs)
+    
     def create_catalogue(self):
         """Creates the dataframe.
 
@@ -295,7 +307,7 @@ class DatasetFactoryWildMe(DatasetFactory):
 
 
 class AAUZebraFish(DatasetFactory):
-    download = downloads.AAUZebraFish
+    downloader = downloads.AAUZebraFish
     metadata = metadata['AAUZebraFish']
     
     def create_catalogue(self) -> pd.DataFrame:
@@ -342,7 +354,7 @@ class AAUZebraFish(DatasetFactory):
 
 
 class AerialCattle2017(DatasetFactory):
-    download = downloads.AerialCattle2017
+    downloader = downloads.AerialCattle2017
     metadata = metadata['AerialCattle2017']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -361,7 +373,7 @@ class AerialCattle2017(DatasetFactory):
 
 
 class ATRW(DatasetFactory):
-    download = downloads.ATRW
+    downloader = downloads.ATRW
     metadata = metadata['ATRW']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -439,7 +451,7 @@ class ATRW(DatasetFactory):
 
 
 class BelugaID(DatasetFactoryWildMe):
-    download = downloads.BelugaID
+    downloader = downloads.BelugaID
     metadata = metadata['BelugaID']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -448,7 +460,7 @@ class BelugaID(DatasetFactoryWildMe):
 
 
 class BirdIndividualID(DatasetFactory):
-    download = downloads.BirdIndividualID
+    downloader = downloads.BirdIndividualID
     metadata = metadata['BirdIndividualID']
     prefix1 = 'Original_pictures'
     prefix2 = 'IndividualID'
@@ -500,13 +512,13 @@ class BirdIndividualID(DatasetFactory):
 
 
 class BirdIndividualIDSegmented(BirdIndividualID):
-    download = downloads.Segmented
+    downloader = downloads.Segmented
     prefix1 = 'Cropped_pictures'
     prefix2 = 'IndividuaID'
 
 
 class CTai(DatasetFactory):
-    download = downloads.CTai
+    downloader = downloads.CTai
     metadata = metadata['CTai']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -548,7 +560,7 @@ class CTai(DatasetFactory):
 
 
 class CZoo(DatasetFactory):
-    download = downloads.CZoo
+    downloader = downloads.CZoo
     metadata = metadata['CZoo']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -575,7 +587,7 @@ class CZoo(DatasetFactory):
 
 
 class Cows2021(DatasetFactory):
-    download = downloads.Cows2021
+    downloader = downloads.Cows2021
     metadata = metadata['Cows2021']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -610,7 +622,7 @@ class Cows2021(DatasetFactory):
 
 
 class Drosophila(DatasetFactory):
-    download = downloads.Drosophila
+    downloader = downloads.Drosophila
     metadata = metadata['Drosophila']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -639,7 +651,7 @@ class Drosophila(DatasetFactory):
 
 
 class FriesianCattle2015(DatasetFactory):
-    download = downloads.FriesianCattle2015
+    downloader = downloads.FriesianCattle2015
     metadata = metadata['FriesianCattle2015']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -662,7 +674,7 @@ class FriesianCattle2015(DatasetFactory):
 
 
 class FriesianCattle2017(DatasetFactory):
-    download = downloads.FriesianCattle2017
+    downloader = downloads.FriesianCattle2017
     metadata = metadata['FriesianCattle2017']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -680,7 +692,7 @@ class FriesianCattle2017(DatasetFactory):
 
 
 class GiraffeZebraID(DatasetFactoryWildMe):
-    download = downloads.GiraffeZebraID
+    downloader = downloads.GiraffeZebraID
     metadata = metadata['GiraffeZebraID']
     
     def create_catalogue(self) -> pd.DataFrame:
@@ -688,7 +700,7 @@ class GiraffeZebraID(DatasetFactoryWildMe):
 
 
 class Giraffes(DatasetFactory):
-    download = downloads.Giraffes
+    downloader = downloads.Giraffes
     metadata = metadata['Giraffes']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -711,7 +723,7 @@ class Giraffes(DatasetFactory):
 
 
 class HappyWhale(DatasetFactory):
-    download = downloads.HappyWhale
+    downloader = downloads.HappyWhale
     metadata = metadata['HappyWhale']
     
     def create_catalogue(self) -> pd.DataFrame:
@@ -754,7 +766,7 @@ class HappyWhale(DatasetFactory):
 
 
 class HumpbackWhaleID(DatasetFactory):
-    download = downloads.HumpbackWhaleID
+    downloader = downloads.HumpbackWhaleID
     metadata = metadata['HumpbackWhaleID']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -787,7 +799,7 @@ class HumpbackWhaleID(DatasetFactory):
 
 
 class HyenaID2022(DatasetFactoryWildMe):
-    download = downloads.HyenaID2022
+    downloader = downloads.HyenaID2022
     metadata = metadata['HyenaID2022']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -795,7 +807,7 @@ class HyenaID2022(DatasetFactoryWildMe):
 
 
 class IPanda50(DatasetFactory):
-    download = downloads.IPanda50
+    downloader = downloads.IPanda50
     metadata = metadata['IPanda50']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -833,7 +845,7 @@ class IPanda50(DatasetFactory):
 
 
 class LeopardID2022(DatasetFactoryWildMe):
-    download = downloads.LeopardID2022
+    downloader = downloads.LeopardID2022
     metadata = metadata['LeopardID2022']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -841,7 +853,7 @@ class LeopardID2022(DatasetFactoryWildMe):
 
 
 class LionData(DatasetFactory):
-    download = downloads.LionData
+    downloader = downloads.LionData
     metadata = metadata['LionData']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -859,7 +871,7 @@ class LionData(DatasetFactory):
 
 
 class MacaqueFaces(DatasetFactory):
-    download = downloads.MacaqueFaces
+    downloader = downloads.MacaqueFaces
     metadata = metadata['MacaqueFaces']
     
     def create_catalogue(self) -> pd.DataFrame:
@@ -879,7 +891,7 @@ class MacaqueFaces(DatasetFactory):
 
 
 class NDD20(DatasetFactory):
-    download = downloads.NDD20
+    downloader = downloads.NDD20
     metadata = metadata['NDD20']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -947,7 +959,7 @@ class NDD20(DatasetFactory):
 
 
 class NOAARightWhale(DatasetFactory):
-    download = downloads.NOAARightWhale
+    downloader = downloads.NOAARightWhale
     metadata = metadata['NOAARightWhale']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -974,7 +986,7 @@ class NOAARightWhale(DatasetFactory):
 
 
 class NyalaData(DatasetFactory):
-    download = downloads.NyalaData
+    downloader = downloads.NyalaData
     metadata = metadata['NyalaData']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -999,7 +1011,7 @@ class NyalaData(DatasetFactory):
 
 
 class OpenCows2020(DatasetFactory):
-    download = downloads.OpenCows2020
+    downloader = downloads.OpenCows2020
     metadata = metadata['OpenCows2020']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -1026,7 +1038,7 @@ class OpenCows2020(DatasetFactory):
 
 
 class SealID(DatasetFactory):
-    download = downloads.SealID
+    downloader = downloads.SealID
     metadata = metadata['SealID']
     prefix = 'source_'
 
@@ -1046,12 +1058,12 @@ class SealID(DatasetFactory):
 
 
 class SealIDSegmented(SealID):
-    download = downloads.Segmented
+    downloader = downloads.Segmented
     prefix = 'segmented_'
 
 
 class SeaTurtleID(DatasetFactory):
-    download = downloads.SeaTurtleID
+    downloader = downloads.SeaTurtleID
     metadata = metadata['SeaTurtleID']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -1077,7 +1089,7 @@ class SeaTurtleID(DatasetFactory):
 
 
 class SeaTurtleIDHeads(DatasetFactory):
-    download = downloads.SeaTurtleIDHeads
+    downloader = downloads.SeaTurtleIDHeads
     metadata = metadata['SeaTurtleIDHeads']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -1103,7 +1115,7 @@ class SeaTurtleIDHeads(DatasetFactory):
 
 
 class SMALST(DatasetFactory):
-    download = downloads.SMALST
+    downloader = downloads.SMALST
     metadata = metadata['SMALST']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -1132,7 +1144,7 @@ class SMALST(DatasetFactory):
 
 
 class StripeSpotter(DatasetFactory):
-    download = downloads.StripeSpotter
+    downloader = downloads.StripeSpotter
     metadata = metadata['StripeSpotter']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -1162,7 +1174,7 @@ class StripeSpotter(DatasetFactory):
 
 
 class WhaleSharkID(DatasetFactoryWildMe):
-    download = downloads.WhaleSharkID
+    downloader = downloads.WhaleSharkID
     metadata = metadata['WhaleSharkID']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -1170,7 +1182,7 @@ class WhaleSharkID(DatasetFactoryWildMe):
 
 
 class WNIGiraffes(DatasetFactory):
-    download = downloads.WNIGiraffes
+    downloader = downloads.WNIGiraffes
     metadata = metadata['WNIGiraffes']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -1208,7 +1220,7 @@ class WNIGiraffes(DatasetFactory):
 
 
 class ZindiTurtleRecall(DatasetFactory):
-    download = downloads.ZindiTurtleRecall
+    downloader = downloads.ZindiTurtleRecall
     metadata = metadata['ZindiTurtleRecall']
 
     def create_catalogue(self) -> pd.DataFrame:
