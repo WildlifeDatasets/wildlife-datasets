@@ -1,5 +1,5 @@
 from .datasets import DatasetFactory
-from .datasets import AAUZebraFishID
+from .datasets import AAUZebraFish
 from .datasets import AerialCattle2017
 from .datasets import ATRW
 from .datasets import BelugaID
@@ -36,7 +36,7 @@ from .datasets import ZindiTurtleRecall
 from .metadata import Metadata
 
 dataset_names = [
-    AAUZebraFishID,
+    AAUZebraFish,
     AerialCattle2017,
     ATRW,
     BelugaID,

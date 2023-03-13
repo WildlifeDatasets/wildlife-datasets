@@ -294,9 +294,9 @@ class DatasetFactoryWildMe(DatasetFactory):
         return self.finalize_catalogue(df)
 
 
-class AAUZebraFishID(DatasetFactory):
+class AAUZebraFish(DatasetFactory):
     download = downloads.AAUZebraFish
-    metadata = metadata['AAUZebraFishID']
+    metadata = metadata['AAUZebraFish']
     
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'annotations.csv'), sep=';')
