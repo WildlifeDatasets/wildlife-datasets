@@ -37,7 +37,6 @@ def data_directory(dir):
 
 
 def kaggle_download(command, exception_text='', required_file=None):
-    # TODO: add kaggle as package requirements    
     try:
         os.system(f"kaggle {command}")
     except:
