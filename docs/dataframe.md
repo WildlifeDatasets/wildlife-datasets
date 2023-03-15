@@ -10,8 +10,9 @@ The following three columns must be part of all dataframes.
 | id | `int` or `str` | Unique id of the entry. |
 | identity | `int` or `str` | Identity (or label) of the depicted individual animal. |
 | path | `str` | Relative path to the image. |
+| split | `str` | Automatically generated. Determines whether the sample belongs to the training or testing set. It is `null` whenever the animal identity is unknown. |
 
-There is a special value for `identity` which describes an unknown individual. Its default value is
+There is a special value for `identity` which describes an unknown individual. Its default value for unknown animals is
 
 ```python exec="true" source="above" result="console"
 from wildlife_datasets import datasets
