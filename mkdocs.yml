@@ -24,8 +24,9 @@ nav:
   - Tutorials:
     - Getting started: tutorial_datasets.md
     - Testing ML methods: methods.md
+    - Default splits: default_splits.md
   - Advanced:
-    - Splits: tutorial_splits.md
+    - Advanced splits: tutorial_splits.md
     - Evaluation: tutorial_evaluation.md
     - Dataset representation: dataframe.md
     - Adding new datasets: adding.md

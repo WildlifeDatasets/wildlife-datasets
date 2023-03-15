@@ -33,7 +33,7 @@ Some of the datasets require special treatment or the download of extraction wor
 | [SMALST](https://github.com/silviazuffi/smalst)                 | AUTO    | Only linux: extracting            |
 | [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads)          | AUTO    | Only linux: extracting            |
 | [WhaleSharkID](https://lila.science/datasets/whale-shark-id)         | AUTO    |                                |
-| [WNIGiraffes](https://lila.science/datasets/wni-giraffes)           | AUTO    | Only linux: downloading          |
+| [WNIGiraffes](https://lila.science/datasets/wni-giraffes)           | MANUAL    | Manual download          |
 | [ZindiTurtleRecall](https://zindi.africa/competitions/turtle-recall-conservation-challenge)    | AUTO    |                                |
 
 ## Kaggle CLI
