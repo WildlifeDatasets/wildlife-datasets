@@ -5,7 +5,7 @@ from typing import Optional, List
 import json
 import datetime
 
-from .. import downloads
+from .. import downloads, splits
 from .metadata import metadata
 from . import utils
 
@@ -45,6 +45,7 @@ class DatasetFactory():
             self.df = self.create_catalogue(**kwargs)
         else:
             self.df = df
+        self.add_splits()
 
     @classmethod
     def get_data(cls, root, **kwargs):
@@ -67,6 +68,37 @@ class DatasetFactory():
 
         raise NotImplementedError('Needs to be implemented by subclasses.')
     
+    def add_splits(self) -> None:
+        """Drops existing splits and adds automatically generated split.
+
+        The split ignores individuals named `self.unknown_name`.
+        Some rows will not belong to a split.
+        The added split is machine-independent.
+        It is the closed-set (random) split with 80% in the training set.
+        """
+        # Drop already existing splits
+        cols_to_drop = ['split', 'reid_split', 'segmentation_split']
+        self.df = self.df.drop(cols_to_drop, axis=1, errors='ignore')
+        
+        # Add the deafult split
+        splitter = splits.ClosedSetSplit(self.df, identity_skip=self.unknown_name)
+        self.add_split(splitter, 'split', 0.8)
+
+    def add_split(self, splitter: splits.BalancedSplit, col_name: str, *args, **kwargs) -> None:       
+        """Adds a split to the column named col_name.
+
+        Args:
+            splitter (splits.BalancedSplit): Any class with `split` method
+                returning training and testing set indices.                
+            col_name (str): Name of the column.
+        """
+        idx_train, idx_test = splitter.split(*args, **kwargs)
+        n_col = min(3, len(self.df.columns))
+        self.df.insert(n_col, col_name, '')
+        self.df[col_name].loc[idx_train] = 'train'
+        self.df[col_name].loc[idx_test] = 'test'
+        self.df[col_name].replace('', np.nan, inplace=True)
+        
     def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
 
