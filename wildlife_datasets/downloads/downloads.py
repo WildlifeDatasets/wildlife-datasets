@@ -2,6 +2,8 @@ import os
 import shutil
 from . import utils
 
+# TODO: add checks for manual datasets (icnluding linux only)
+
 class Downloader():
     def get_data(self, root, name=None, **kwargs):
         if name is None:
