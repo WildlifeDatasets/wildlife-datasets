@@ -52,11 +52,11 @@ class DatasetFactory():
         cls.downloader().get_data(root, **kwargs)
 
     @classmethod
-    def extract(cls, root, **kwargs):
+    def download(cls, root, **kwargs):
         cls.downloader().download(root, **kwargs)
     
     @classmethod
-    def download(cls, root, **kwargs):
+    def extract(cls, root, **kwargs):
         cls.downloader().extract(root, **kwargs)
     
     def create_catalogue(self):
