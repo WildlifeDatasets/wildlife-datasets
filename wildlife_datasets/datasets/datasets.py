@@ -45,7 +45,6 @@ class DatasetFactory():
             self.df = self.create_catalogue(**kwargs)
         else:
             self.df = df
-        self.df_ml = self.create_catalogue_ml(self.df)
 
     @classmethod
     def get_data(cls, root, **kwargs):
@@ -67,25 +66,6 @@ class DatasetFactory():
         """
 
         raise NotImplementedError('Needs to be implemented by subclasses.')
-
-    def create_catalogue_ml(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Creates the dataframe for machine learning models.
-
-        It removes classes with only one sample.
-        It removes unknown identities.
-        It reset the dataframe index.
-
-        Args:
-            df (pd.DataFrame): A full dataframe of the data.
-
-        Returns:
-            A dataframe of data for machine learning models.
-        """
-
-        df = df.groupby('identity').filter(lambda x : len(x) >= 2)
-        df = df[df['identity'] != self.unknown_name]
-        df.reset_index(drop=True, inplace=True)
-        return df
     
     def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
