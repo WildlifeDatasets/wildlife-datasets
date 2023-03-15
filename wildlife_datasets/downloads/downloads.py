@@ -92,15 +92,11 @@ class BirdIndividualID(Downloader):
     archive = 'ferreira_et_al_2020.zip'
 
     def _download(self):
-        import gdown
         exception_text = '''Dataset must be downloaded manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#birdindividualid'''
-        try:
-            gdown.download(self.url, self.archive, quiet=False)
-        except:
-            raise Exception(exception_text)
-        if not os.path.exists(self.archive):
-            raise Exception(exception_text)
+        raise Exception(exception_text)
+        # import gdown
+        # gdown.download(self.url, self.archive, quiet=False)
             
     def _extract(self):
         utils.extract_archive(self.archive, delete=True)
@@ -535,8 +531,15 @@ class ZindiTurtleRecall(Downloader):
 
 
 class Segmented(Downloader):
+    warning = '''You are trying to download a segmented dataset.
+        It is already included in its non-segmented version download.
+        Skipping.'''
+    
     def get_data(self, root, name=None):
-        print("You are trying to download a segmented dataset %s. \
-                It is already included in its non-segmented version download. \
-                Skipping." % os.path.split(root)[1])
+        print(self.warning)
 
+    def _download(self):
+        print(self.warning)
+
+    def _extract(self):
+        print(self.warning)
