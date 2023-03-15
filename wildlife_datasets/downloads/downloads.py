@@ -2,7 +2,6 @@ import os
 import shutil
 from . import utils
 
-# TODO: add checks for manual datasets (icnluding linux only)
 
 class Downloader():
     def get_data(self, root, name=None, **kwargs):
@@ -237,7 +236,13 @@ class GiraffeZebraID(Downloader):
 class Giraffes(Downloader):
     def _download(self):
         url = 'ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021/'
-        os.system(f"wget -rpk -l 10 -np -c --random-wait -U Mozilla {url} -P '.' ")
+        command = f"wget -rpk -l 10 -np -c --random-wait -U Mozilla {url} -P '.' "
+        exception_text = '''Download works only on Linux. Please download it manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#giraffes'''
+        if os.name == 'posix':
+            os.system(command)
+        else:
+            raise Exception(exception_text)
 
     def _extract(self):
         pass
@@ -452,11 +457,17 @@ class SMALST(Downloader):
         gdown.download(self.url, self.archive, quiet=False)
 
     def _extract(self):
-        os.system('jar xvf ' + self.archive)
-        os.remove(self.archive)
-        shutil.rmtree(os.path.join('zebra_training_set', 'annotations'))
-        shutil.rmtree(os.path.join('zebra_training_set', 'texmap'))
-        shutil.rmtree(os.path.join('zebra_training_set', 'uvflow'))
+        exception_text = '''Extracting works only on Linux. Please extract it manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#smalst'''
+        if os.name == 'posix':
+            os.system('jar xvf ' + self.archive)
+            os.remove(self.archive)
+            shutil.rmtree(os.path.join('zebra_training_set', 'annotations'))
+            shutil.rmtree(os.path.join('zebra_training_set', 'texmap'))
+            shutil.rmtree(os.path.join('zebra_training_set', 'uvflow'))
+
+        else:
+            raise Exception(exception_text)
 
 class StripeSpotter(Downloader):
     def _download(self):
@@ -469,12 +480,17 @@ class StripeSpotter(Downloader):
             os.system(f"wget -P '.' {url}")
 
     def _extract(self):
-        os.system(f"zip -s- data-20110718.zip -O data-full.zip")
-        os.system(f"unzip data-full.zip")
-        os.remove('data-20110718.zip')
-        os.remove('data-20110718.z01')
-        os.remove('data-20110718.z02')
-        os.remove('data-full.zip')
+        exception_text = '''Extracting works only on Linux. Please extract it manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#stripespotter'''
+        if os.name == 'posix':
+            os.system(f"zip -s- data-20110718.zip -O data-full.zip")
+            os.system(f"unzip data-full.zip")
+            os.remove('data-20110718.zip')
+            os.remove('data-20110718.z01')
+            os.remove('data-20110718.z02')
+            os.remove('data-full.zip')
+        else:
+            raise Exception(exception_text)       
 
 class WhaleSharkID(Downloader):
     url = 'https://lilablobssc.blob.core.windows.net/whale-shark-id/whaleshark.coco.tar.gz'
