@@ -22,7 +22,7 @@ nav:
   - Installation: installation.md
   - Oveview of datasets: datasets.md
   - Tutorials:
-    - Datasets: tutorial_datasets.md
+    - Getting started: tutorial_datasets.md
     - Testing ML methods: methods.md
   - Advanced:
     - Splits: tutorial_splits.md
