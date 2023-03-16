@@ -88,7 +88,7 @@ transfer_giraffes = [
     WNIGiraffes,
 ]
 
-tranfer_primates = [
+transfer_primates = [
     CTai,
     CZoo,
     MacaqueFaces,
@@ -99,7 +99,7 @@ transfer_turtles = [
     ZindiTurtleRecall,
 ]
 
-tranfer_whales = [
+transfer_whales = [
     BelugaID,
     HappyWhale,
     HumpbackWhaleID,
