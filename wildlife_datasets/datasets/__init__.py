@@ -69,5 +69,41 @@ dataset_names = [
     StripeSpotter,
     WhaleSharkID,
     WNIGiraffes,
-    ZindiTurtleRecall
+    ZindiTurtleRecall,
+]
+
+transfer_cows = [
+    AerialCattle2017,
+    Cows2021,
+    FriesianCattle2015,
+    FriesianCattle2017,
+    OpenCows2020,
+]
+
+transfer_giraffes = [
+    GiraffeZebraID,
+    Giraffes,
+    SMALST,
+    StripeSpotter,
+    WNIGiraffes,
+]
+
+tranfer_primates = [
+    CTai,
+    CZoo,
+    MacaqueFaces,
+]
+
+transfer_turtles = [
+    SeaTurtleIDHeads,
+    ZindiTurtleRecall,
+]
+
+tranfer_whales = [
+    BelugaID,
+    HappyWhale,
+    HumpbackWhaleID,
+    NDD20,
+    NOAARightWhale,
+    WhaleSharkID,
 ]
