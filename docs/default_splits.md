@@ -30,7 +30,7 @@ df = dataset.df
 
 # Default splits
 
-The dataset already contain a split. However, this split can be used only the the closed-set setting. This is the most common case in machine learning, where the identities (classes) in the training and testing sets coincide. Researcher may want to perform experiments on [other splits](../tutorial_splits) such as the open-set or disjoint-set splits. For comparability of methods, here we list the recommended way to creating splits. We note that the resulting splits are machine-independent and that it is possible to generate additional splits by using different seed or proportion of the two sets.
+The dataset already contains a default split. However, this split can be used only the the closed-set setting. This is the most common case in machine learning, where the identities (classes) in the training and testing sets coincide. Researcher may want to perform experiments on [other splits](../tutorial_splits) such as the open-set or disjoint-set splits. For comparability of methods, here we list the recommended way of creating splits. We note that the resulting splits are machine-independent and that it is possible to generate additional splits by using different seeds or proportion of the two sets.
 
 ## Splits based on identities
 

@@ -36,7 +36,7 @@ Some of the datasets require special treatment or the download of extraction wor
 | [WNIGiraffes](https://lila.science/datasets/wni-giraffes)           | MANUAL    | Manual download          |
 | [ZindiTurtleRecall](https://zindi.africa/competitions/turtle-recall-conservation-challenge)    | AUTO    |                                |
 
-## Kaggle CLI
+## Kaggle
 
 Some datasets are stored on Kaggle. To use our automatic download method, follow the [steps](https://www.kaggle.com/docs/api) described in the Installation and Authentication sections.
 

@@ -94,6 +94,7 @@ filenames = [
     ["docs/.adding.md", "docs/adding.md"],
     ["docs/.default_splits.md", "docs/default_splits.md"],
     ["docs/.methods.md", "docs/methods.md"],
+    ["docs/.recommended.md", "docs/recommended.md"],
     ["docs/.tutorial_datasets.md", "docs/tutorial_datasets.md"],
     ["docs/.tutorial_splits.md", "docs/tutorial_splits.md"],
 ]
