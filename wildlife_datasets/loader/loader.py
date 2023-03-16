@@ -79,12 +79,12 @@ def load_dataset(
     df_path = get_dataframe_path(root_dataframe, class_dataset)
     if overwrite or not os.path.exists(df_path):
         # Create the dataframe, save it and create the dataset
-        dataset = class_dataset(root, None, download=False)
+        dataset = class_dataset(root, None)
         if not os.path.exists(root_dataframe):
             os.makedirs(root_dataframe)
         dataset.df.to_pickle(df_path)
     else:
         # Load the dataframe and create the dataset
         df = pd.read_pickle(df_path)
-        dataset = class_dataset(root, df, download=False)
+        dataset = class_dataset(root, df)
     return dataset
