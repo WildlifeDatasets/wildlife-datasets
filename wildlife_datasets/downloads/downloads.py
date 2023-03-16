@@ -95,8 +95,7 @@ class BirdIndividualID(Downloader):
         exception_text = '''Dataset must be downloaded manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#birdindividualid'''
         raise Exception(exception_text)
-        # import gdown
-        # gdown.download(self.url, self.archive, quiet=False)
+        # utils.gdown_download(self.url, self.archive, exception_text=exception_text)
             
     def _extract(self):
         utils.extract_archive(self.archive, delete=True)
@@ -297,9 +296,8 @@ class IPanda50(Downloader):
     ]
 
     def _download(self):
-        import gdown
         for url, archive in self.downloads:
-            gdown.download(url, archive, quiet=False)
+            utils.gdown_download(url, archive)
 
     def _extract(self):
         for url, archive in self.downloads:
@@ -449,8 +447,9 @@ class SMALST(Downloader):
     archive = 'zebra_training_set.zip'
 
     def _download(self):
-        import gdown
-        gdown.download(self.url, self.archive, quiet=False)
+        exception_text = '''Download filed. GDown quota probably reached. Download dataset manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#smalst'''
+        utils.gdown_download(self.url, self.archive, exception_text)
 
     def _extract(self):
         exception_text = '''Extracting works only on Linux. Please extract it manually.

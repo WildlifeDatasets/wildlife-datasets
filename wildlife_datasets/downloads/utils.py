@@ -43,3 +43,10 @@ def kaggle_download(command, exception_text='', required_file=None):
         raise Exception(exception_text)
     if required_file is not None and not os.path.exists(required_file):
         raise Exception(exception_text)
+
+
+def gdown_download(url, archive, exception_text=''):
+    import gdown
+    gdown.download(url, archive, quiet=False)
+    if not os.path.exists(archive):
+        raise Exception(exception_text)
