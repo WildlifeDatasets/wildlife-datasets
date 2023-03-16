@@ -44,7 +44,7 @@ class DatasetFactory():
         if df is None:
             self.df = self.create_catalogue(**kwargs)
         else:
-            self.df = df
+            self.df = df.copy()
         self.add_splits()
 
     @classmethod
@@ -82,22 +82,25 @@ class DatasetFactory():
         
         # Add the deafult split
         splitter = splits.ClosedSetSplit(self.df, identity_skip=self.unknown_name)
-        self.add_split(splitter, 'split', 0.8)
+        self.add_split(3, 'split', splitter, 0.8)
 
-    def add_split(self, splitter: splits.BalancedSplit, col_name: str, *args, **kwargs) -> None:       
+    def add_split(self, position: int, col_name: str, splitter: splits.BalancedSplit, *args, **kwargs) -> None:       
         """Adds a split to the column named col_name.
 
         Args:
+            position (int): Where the split should be placed.
+            col_name (str): Name of the column.
             splitter (splits.BalancedSplit): Any class with `split` method
                 returning training and testing set indices.                
-            col_name (str): Name of the column.
         """
         idx_train, idx_test = splitter.split(*args, **kwargs)
-        n_col = min(3, len(self.df.columns))
-        self.df.insert(n_col, col_name, '')
-        self.df[col_name].loc[idx_train] = 'train'
-        self.df[col_name].loc[idx_test] = 'test'
-        self.df[col_name].replace('', np.nan, inplace=True)
+        add = {}
+        for i in idx_train:
+            add[i] = 'train'
+        for i in idx_test:
+            add[i] = 'test'
+        n_col = min(position, len(self.df.columns))
+        self.df.insert(n_col, col_name, pd.Series(add))
         
     def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
