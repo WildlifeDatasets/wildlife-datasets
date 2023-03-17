@@ -35,7 +35,7 @@ from .datasets import WNIGiraffes
 from .datasets import ZindiTurtleRecall
 from .metadata import Metadata
 
-dataset_names = [
+names_all = [
     AAUZebraFish,
     AerialCattle2017,
     ATRW,
@@ -72,7 +72,7 @@ dataset_names = [
     ZindiTurtleRecall,
 ]
 
-dataset_small = [
+names_small = [
     AerialCattle2017,
     BelugaID,
     CTai,
@@ -86,7 +86,7 @@ dataset_small = [
     StripeSpotter,
 ]
 
-transfer_cows = [
+names_cows = [
     AerialCattle2017,
     Cows2021,
     FriesianCattle2015,
@@ -94,7 +94,7 @@ transfer_cows = [
     OpenCows2020,
 ]
 
-transfer_giraffes = [
+names_giraffes = [
     GiraffeZebraID,
     Giraffes,
     SMALST,
@@ -102,18 +102,18 @@ transfer_giraffes = [
     WNIGiraffes,
 ]
 
-transfer_primates = [
+names_primates = [
     CTai,
     CZoo,
     MacaqueFaces,
 ]
 
-transfer_turtles = [
+names_turtles = [
     SeaTurtleIDHeads,
     ZindiTurtleRecall,
 ]
 
-transfer_whales = [
+names_whales = [
     BelugaID,
     HappyWhale,
     HumpbackWhaleID,
