@@ -530,8 +530,8 @@ class ZindiTurtleRecall(Downloader):
 
 
 class Segmented(Downloader):
-    warning = '''You are trying to download a segmented dataset.
-        It is already included in its non-segmented version download.
+    warning = '''You are trying to download or extract a segmented dataset.
+        It is already included in its non-segmented version.
         Skipping.'''
     
     def get_data(self, root, name=None):
