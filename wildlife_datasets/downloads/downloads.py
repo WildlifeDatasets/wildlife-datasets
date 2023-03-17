@@ -358,6 +358,7 @@ class NOAARightWhale(Downloader):
     def _extract(self):
         try:
             utils.extract_archive(self.archive, delete=True)
+            utils.extract_archive('imgs.zip', delete=True)
             # Move misplaced image
             shutil.move('w_7489.jpg', 'imgs')
             os.remove('w_7489.jpg.zip')

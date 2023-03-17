@@ -1083,7 +1083,7 @@ class SeaTurtleID(DatasetFactory):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load annotations JSON file
-        path_json = 'annotations_new.json'
+        path_json = 'annotations.json'
         with open(os.path.join(self.root, path_json)) as file:
             data = json.load(file)
 
