@@ -72,6 +72,20 @@ dataset_names = [
     ZindiTurtleRecall,
 ]
 
+dataset_small = [
+    AerialCattle2017,
+    BelugaID,
+    CTai,
+    CZoo,
+    FriesianCattle2015,
+    FriesianCattle2017,
+    IPanda50,
+    MacaqueFaces,
+    NyalaData,
+    SeaTurtleIDHeads,
+    StripeSpotter,
+]
+
 transfer_cows = [
     AerialCattle2017,
     Cows2021,
