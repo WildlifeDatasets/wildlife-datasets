@@ -117,20 +117,19 @@ class TimeCutoffSplit(TimeAwareSplit):
     Implementation of [this paper](https://arxiv.org/abs/2211.10307).
     """
 
-    def split(self, year: int, test_only_year: bool = True) -> Tuple[np.ndarray, np.ndarray]:
+    def split(self, year: int, test_one_year_only: bool = True) -> Tuple[np.ndarray, np.ndarray]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
             year (int): Splitting year.
-            test_only_year (exact, optional): Whether the test set is `self.df['year'] == year` or `self.df['year'] >= year`.
+            test_one_year_only (exact, optional): Whether the test set is `self.df['year'] == year` or `self.df['year'] >= year`.
 
         Returns:
             List of labels of the training and testing sets.
         """
 
         idx_train = list(np.where(self.df['year'] < year)[0])
-        # TODO: how do we want to name it and implement it?
-        if test_only_year:
+        if test_one_year_only:
             idx_test = list(np.where(self.df['year'] == year)[0])
         else:
             idx_test = list(np.where(self.df['year'] >= year)[0])
