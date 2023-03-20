@@ -72,6 +72,23 @@ names_all = [
     ZindiTurtleRecall,
 ]
 
+names_wild = [
+    BelugaID,
+    GiraffeZebraID,
+    HappyWhale,
+    HumpbackWhaleID,
+    HyenaID2022,
+    LeopardID2022,
+    NDD20,
+    NOAARightWhale,
+    NyalaData,
+    SealID,
+    SeaTurtleID,
+    StripeSpotter,
+    WhaleSharkID,
+    WNIGiraffes,
+]
+
 names_small = [
     AerialCattle2017,
     BelugaID,
