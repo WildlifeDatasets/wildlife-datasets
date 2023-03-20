@@ -3,10 +3,11 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/LICENSE)
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://wildlifedatasets.github.io/wildlife-datasets/)
 
-This package provides:
+The aim of the project is to provide comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
+
 - overview of 31 publicly available wildlife re-identification datasets.
 - utilities to mass download and convert them into a unified format.
-- splitting functions for closed-set and open-set classification.
+- default splits for several machine learning tasks including the ability create additional splits.
 - evaluation metrics for closed-set and open-set classification.
 
 
