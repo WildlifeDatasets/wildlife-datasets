@@ -94,7 +94,7 @@ class DatasetFactory():
             splitter (splits.BalancedSplit): Any class with `split` method
                 returning training and testing set indices.                
         """
-        idx_train, idx_test = splitter.split(self.df)
+        idx_train, idx_test = splitter.split(self.df)[0]
         add = {}
         for i in idx_train:
             add[i] = 'train'
