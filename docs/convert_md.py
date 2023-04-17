@@ -1,5 +1,23 @@
 import numpy as np
 
+def header_to_dict(header):
+    header_split = header.split(' ')
+    header_dict = {}
+    for x in header_split[1:]:
+        y = x.split('=')
+        header_key = y[0]
+        value = y[1]
+        value = value.strip()
+        header_dict[header_key] = value.strip('"')
+    return header_dict, header_split[0]
+
+def dict_to_header(header, header_lead):
+    line = header_lead
+    for key in header.keys():
+        line += f' {key}="{header[key]}"'
+    line += '\n'
+    return line
+
 def convert_file(filename1: str, filename2: str) -> None:
     """Converts files allowing to use named blocks for markdown-exec.
 
@@ -43,25 +61,19 @@ def convert_file(filename1: str, filename2: str) -> None:
         lines_old = f.readlines()
 
     in_block = False # Checks whether we are in a block started by ```
+    keep_print = False # Whether print should be added to the new block
     blocks = {}  # Dictionary of the saved blocks. Keys are block names
     lines_new = [] # Lines of the new file
     for line in lines_old:
         if not in_block and line.startswith('```'):
             # Starting a new block (header)
             in_block = True
-            line_split = line.split(' ')
-            ii = np.where([x.startswith('name') for x in line_split])[0]
+            header, header_lead = header_to_dict(line)
+            block_name = header.pop('name', "")
+            keep_print = eval(header.pop('keep_print', "False"))
             # Checks whether it is a named block
-            if len(ii) == 1:
-                # Extract the name of the block and remove it from the header
-                block_name = line_split.pop(ii[0])
-                block_name = block_name[6:]
-                line = ' '.join(line_split)
-                if block_name.endswith('\n'):
-                    line += '\n'
-                    block_name = block_name[:-2]
-                else:
-                    block_name = block_name[:-1]
+            if block_name != "":
+                line = dict_to_header(header, header_lead)
                 # Add the content of the previous blocks with the same name to the new file
                 lines_new.append(line)
                 if block_name in blocks:
@@ -74,12 +86,15 @@ def convert_file(filename1: str, filename2: str) -> None:
                 lines_new.append(line)
         elif in_block and not line.startswith('```'):
             # Inside a block
-            if block_name is not None and not line.startswith('print'): 
-                blocks[block_name].append(line)
+            n_spaces = len(line) - len(line.lstrip(' '))
+            if block_name is not None:
+                if keep_print or not line[n_spaces:].startswith('print'): 
+                    blocks[block_name].append(line)
             lines_new.append(line)
         elif in_block and line.startswith('```'):
             # Finishing a block (footer)
             in_block = False
+            keep_print = False
             lines_new.append(line)
         else:
             # Outside of a block
@@ -88,7 +103,6 @@ def convert_file(filename1: str, filename2: str) -> None:
     # Save to the converted file
     with open(filename2, 'w') as f:
         f.writelines(lines_new)
-
 
 filenames = [
     ["docs/.adding.md", "docs/adding.md"],
