@@ -54,25 +54,64 @@ df = pd.read_csv('docs/csv/MacaqueFaces.csv') # markdown-exec: hide
 df = df.drop('Unnamed: 0', axis=1) # markdown-exec: hide
 dataset = datasets.MacaqueFaces('', df) # markdown-exec: hide
 df = dataset.df # markdown-exec: hide
-splitter = splits.ClosedSetSplit(df)
-idx_train, idx_test = splitter.split(0.8)
-df_train, df_test = df.loc[idx_train], df.loc[idx_test]
+splitter = splits.ClosedSetSplit(0.8)
+for idx_train, idx_test in splitter.split(df):
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test]
 ```
 
 ### Open-set split
 
-```python
-splitter = splits.OpenSetSplit(df)
-idx_train, idx_test = splitter.split(0.8, 0.1)
-df_train, df_test = df.loc[idx_train], df.loc[idx_test]
+```python exec="true" source="above"
+import contextlib, io # markdown-exec: hide
+ # markdown-exec: hide
+def run(str): # markdown-exec: hide
+    f = io.StringIO() # markdown-exec: hide
+    with contextlib.redirect_stdout(f): # markdown-exec: hide
+        eval(str) # markdown-exec: hide
+    output = f.getvalue() # markdown-exec: hide
+    return output # markdown-exec: hide
+from wildlife_datasets import datasets, splits # markdown-exec: hide
+import pandas as pd # markdown-exec: hide
+ # markdown-exec: hide
+df = pd.read_csv('docs/csv/MacaqueFaces.csv') # markdown-exec: hide
+df = df.drop('Unnamed: 0', axis=1) # markdown-exec: hide
+dataset = datasets.MacaqueFaces('', df) # markdown-exec: hide
+df = dataset.df # markdown-exec: hide
+splitter = splits.ClosedSetSplit(0.8) # markdown-exec: hide
+for idx_train, idx_test in splitter.split(df): # markdown-exec: hide
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
+splitter = splits.OpenSetSplit(0.8, 0.1)
+for idx_train, idx_test in splitter.split(df):
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test]
 ```
 
 ### Disjoint-set split
 
-```python
-splitter = splits.DisjointSetSplit(df)
-idx_train, idx_test = splitter.split(0.2)
-df_train, df_test = df.loc[idx_train], df.loc[idx_test]
+```python exec="true" source="above"
+import contextlib, io # markdown-exec: hide
+ # markdown-exec: hide
+def run(str): # markdown-exec: hide
+    f = io.StringIO() # markdown-exec: hide
+    with contextlib.redirect_stdout(f): # markdown-exec: hide
+        eval(str) # markdown-exec: hide
+    output = f.getvalue() # markdown-exec: hide
+    return output # markdown-exec: hide
+from wildlife_datasets import datasets, splits # markdown-exec: hide
+import pandas as pd # markdown-exec: hide
+ # markdown-exec: hide
+df = pd.read_csv('docs/csv/MacaqueFaces.csv') # markdown-exec: hide
+df = df.drop('Unnamed: 0', axis=1) # markdown-exec: hide
+dataset = datasets.MacaqueFaces('', df) # markdown-exec: hide
+df = dataset.df # markdown-exec: hide
+splitter = splits.ClosedSetSplit(0.8) # markdown-exec: hide
+for idx_train, idx_test in splitter.split(df): # markdown-exec: hide
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
+splitter = splits.OpenSetSplit(0.8, 0.1) # markdown-exec: hide
+for idx_train, idx_test in splitter.split(df): # markdown-exec: hide
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
+splitter = splits.DisjointSetSplit(0.2)
+for idx_train, idx_test in splitter.split(df):
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test]
 ```
 
 
@@ -98,12 +137,18 @@ df = pd.read_csv('docs/csv/MacaqueFaces.csv') # markdown-exec: hide
 df = df.drop('Unnamed: 0', axis=1) # markdown-exec: hide
 dataset = datasets.MacaqueFaces('', df) # markdown-exec: hide
 df = dataset.df # markdown-exec: hide
-splitter = splits.ClosedSetSplit(df) # markdown-exec: hide
-idx_train, idx_test = splitter.split(0.8) # markdown-exec: hide
-df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
-splitter = splits.TimeProportionSplit(df)
-idx_train, idx_test = splitter.split()
-df_train, df_test = df.loc[idx_train], df.loc[idx_test]
+splitter = splits.ClosedSetSplit(0.8) # markdown-exec: hide
+for idx_train, idx_test in splitter.split(df): # markdown-exec: hide
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
+splitter = splits.OpenSetSplit(0.8, 0.1) # markdown-exec: hide
+for idx_train, idx_test in splitter.split(df): # markdown-exec: hide
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
+splitter = splits.DisjointSetSplit(0.2) # markdown-exec: hide
+for idx_train, idx_test in splitter.split(df): # markdown-exec: hide
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
+splitter = splits.TimeProportionSplit()
+for idx_train, idx_test in splitter.split(df):
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test]
 ```
 
 ### Time-cutoff split
@@ -124,14 +169,19 @@ df = pd.read_csv('docs/csv/MacaqueFaces.csv') # markdown-exec: hide
 df = df.drop('Unnamed: 0', axis=1) # markdown-exec: hide
 dataset = datasets.MacaqueFaces('', df) # markdown-exec: hide
 df = dataset.df # markdown-exec: hide
-splitter = splits.ClosedSetSplit(df) # markdown-exec: hide
-idx_train, idx_test = splitter.split(0.8) # markdown-exec: hide
-df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
-splitter = splits.TimeProportionSplit(df) # markdown-exec: hide
-idx_train, idx_test = splitter.split() # markdown-exec: hide
-df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
-splitter = splits.TimeCutoffSplit(df)
-splitss, years = splitter.splits_all()
-for ((idx_train, idx_test), year) in zip(splitss, years):
+splitter = splits.ClosedSetSplit(0.8) # markdown-exec: hide
+for idx_train, idx_test in splitter.split(df): # markdown-exec: hide
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
+splitter = splits.OpenSetSplit(0.8, 0.1) # markdown-exec: hide
+for idx_train, idx_test in splitter.split(df): # markdown-exec: hide
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
+splitter = splits.DisjointSetSplit(0.2) # markdown-exec: hide
+for idx_train, idx_test in splitter.split(df): # markdown-exec: hide
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
+splitter = splits.TimeProportionSplit() # markdown-exec: hide
+for idx_train, idx_test in splitter.split(df): # markdown-exec: hide
+    df_train, df_test = df.loc[idx_train], df.loc[idx_test] # markdown-exec: hide
+splitter = splits.TimeCutoffSplitAll()
+for idx_train, idx_test in splitter.split(df):
     df_train, df_test = df.loc[idx_train], df.loc[idx_test]
 ```
