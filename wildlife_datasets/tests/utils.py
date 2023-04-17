@@ -13,16 +13,23 @@ def load_datasets(dataset_names):
         dfs.append(df)
     return dfs
 
-def add_datasets(dfs, skip_rows=100, ratio_unknown=0.2):
+def add_datasets(dfs, skip_rows=100, ratio_unknown=0.2, ratio_years=0.2):
     for i in range(len(dfs)):
-        df = dfs[i].copy()
         # Change indexing
+        df = dfs[i].copy()            
         if len(df) >= 2*skip_rows:
             df = df.iloc[skip_rows:]
             dfs.append(df)
         # Add unknown individuals
+        df = dfs[i].copy()
         n_unknown = np.round(len(df)*ratio_unknown).astype(int)
         idx = np.random.permutation(range(len(df)))[:n_unknown]
         df['identity'].iloc[idx] = 'unknown'
         dfs.append(df)
+        # Add new years
+        if 'date' in df.columns:
+            df = dfs[i].copy()        
+            n_years = np.round(len(df)*ratio_years).astype(int)
+            df['date'] = pd.to_datetime(df['date']).apply(lambda x: x.date())
+            df['date'].iloc[:n_years] = df['date'].iloc[:n_years] + pd.offsets.DateOffset(years=10)
     return dfs

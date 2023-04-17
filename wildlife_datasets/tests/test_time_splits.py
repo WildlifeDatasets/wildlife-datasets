@@ -43,7 +43,22 @@ class TestTimeSplits(unittest.TestCase):
 
                     split_type = splits.recognize_time_split(df_train, df_test)
                     self.assertEqual(split_type, 'time-cutoff')
-                
+
+    def test_time_cutoff_all(self):
+        for df in dfs:
+            if 'date' not in df.columns:
+                splitter = splits.TimeCutoffSplitAll(0)
+                self.assertRaises(Exception, splitter.split, df)
+            else:
+                years = pd.to_datetime(df['date']).apply(lambda x: x.year)
+                splitter = splits.TimeCutoffSplitAll()
+                for idx_train, idx_test in splitter.split(df):
+                    df_train = df.loc[idx_train]
+                    df_test = df.loc[idx_test]
+
+                    split_type = splits.recognize_time_split(df_train, df_test)
+                    self.assertEqual(split_type, 'time-cutoff')
+                    
     def test_resplit_random(self):
         for df in dfs:
             if 'date' not in df.columns:
