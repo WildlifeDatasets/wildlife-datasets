@@ -141,7 +141,7 @@ class TimeProportionSplit(TimeAwareSplit):
                         idx_train += list(y[1].index)
                     else:
                         idx_test += list(y[1].index)
-        return [(idx_train, idx_test)]
+        return [(np.array(idx_train), np.array(idx_test))]
 
 
 class TimeCutoffSplit(TimeAwareSplit):
