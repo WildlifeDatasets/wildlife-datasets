@@ -72,19 +72,20 @@ class DatasetFactory():
         """Drops existing splits and adds automatically generated split.
 
         The split ignores individuals named `self.unknown_name`.
-        Some rows will not belong to a split.
+        These rows will not belong to a split.
         The added split is machine-independent.
         It is the closed-set (random) split with 80% in the training set.
         """
+
         # Drop already existing splits
         cols_to_drop = ['split', 'reid_split', 'segmentation_split']
         self.df = self.df.drop(cols_to_drop, axis=1, errors='ignore')
         
-        # Add the deafult split
-        splitter = splits.ClosedSetSplit(self.df, identity_skip=self.unknown_name)
-        self.add_split(3, 'split', splitter, 0.8)
+        # Add the default split
+        splitter = splits.ClosedSetSplit(0.8, identity_skip=self.unknown_name)
+        self.add_split(3, 'split', splitter)
 
-    def add_split(self, position: int, col_name: str, splitter: splits.BalancedSplit, *args, **kwargs) -> None:       
+    def add_split(self, position: int, col_name: str, splitter: splits.BalancedSplit) -> None:       
         """Adds a split to the column named col_name.
 
         Args:
@@ -93,7 +94,7 @@ class DatasetFactory():
             splitter (splits.BalancedSplit): Any class with `split` method
                 returning training and testing set indices.                
         """
-        idx_train, idx_test = splitter.split(*args, **kwargs)
+        idx_train, idx_test = splitter.split(self.df)
         add = {}
         for i in idx_train:
             add[i] = 'train'

@@ -5,6 +5,7 @@ from .lcg import Lcg
 
 
 class BalancedSplit():
+    # TODO: change docs
     """Base class for splitting datasets into training and testing sets.
 
     Implements methods from [this paper](https://arxiv.org/abs/2211.10307).
@@ -25,27 +26,6 @@ class BalancedSplit():
       y_unique (np.ndarray): List of unique sorted identities.
     """
 
-    def __init__(
-            self,
-            df: pd.DataFrame,
-            seed: int = 666,
-            identity_skip: str = 'unknown'
-            ) -> None:
-        """Initializes the class.
-
-        Args:
-            df (pd.DataFrame): A dataframe of the data. It must contain columns
-                `identity` for all splits and `date` for time-aware splits.
-            seed (int, optional): Initial seed for the LCG random generator.
-            identity_skip (str, optional): Name of the identities to ignore.
-        """
-
-        # Potentially remove the unknown identities
-        self.df = df.copy()
-        self.df = self.df[self.df['identity'] != identity_skip]
-        # Initialize the random number generator
-        self.set_seed(seed)
-
     def set_seed(self, seed: int) -> None:
         """Changes the seed of the random number generator.
 
@@ -58,8 +38,8 @@ class BalancedSplit():
     def split(self, *args, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
         """Splitting method which needs to be implemented by subclasses.
 
-        It splits the dataframe `self.df` into labels `idx_train` and `idx_test`.
-        The subdataset is obtained by `self.df.loc[idx_train]` (not `iloc`).
+        It splits the dataframe `df` into labels `idx_train` and `idx_test`.
+        The subdataset is obtained by `df.loc[idx_train]` (not `iloc`).
 
         Returns:
             List of labels of the training and testing sets.
@@ -69,7 +49,7 @@ class BalancedSplit():
 
     def general_split(
             self,
-            ratio_train: float,
+            df: pd.DataFrame,
             individual_train: List[str],
             individual_test: List[str],
             ) -> Tuple[np.ndarray, np.ndarray]:
@@ -82,7 +62,7 @@ class BalancedSplit():
         If only one sample is available for an individual, it will be in the training set.
                 
         Args:
-            ratio_train (float): *Approximate* size of the training set.
+            df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
             individual_train (List[str]): Individuals to be only in the training test.
             individual_test (List[str]): Individuals to be only in the testing test.
 
@@ -91,17 +71,20 @@ class BalancedSplit():
         """
 
         # Compute how many samples go automatically to the training and testing sets
-        n_train = sum(self.y_counts[[k in individual_train for k in self.y_unique]])
-        n_test = sum(self.y_counts[[k in individual_test for k in self.y_unique]])
+        y_counts = df['identity'].value_counts()
+        n_train = sum([y_counts.loc[y] for y in individual_train])
+        n_test = sum([y_counts.loc[y] for y in individual_test])
         
-        # Recompute ratio_train and adjust it to proper bounds 
-        if n_train + n_test > 0 and n_train + n_test < self.n:
-            ratio_train = (self.n*ratio_train - n_train) / (self.n - n_test - n_train)
+        # Recompute ratio_train and adjust it to proper bounds
+        n = len(df)
+        ratio_train = self.ratio_train
+        if n_train + n_test > 0 and n_train + n_test < n:
+            ratio_train = (n*ratio_train - n_train) / (n - n_test - n_train)
         ratio_train = np.clip(ratio_train, 0, 1)
         
-        idx_train = np.empty(self.n, dtype='bool')
+        idx_train = np.empty(n, dtype='bool')
         # Make a loop over all individuals
-        for individual, y_count in zip(self.y_unique, self.y_counts):            
+        for individual, y_count in y_counts.iteritems():
             if individual in individual_train and individual in individual_test:
                 # Check if the class does not belong to both sets
                 raise(Exception('Individual cannot be both in individual_train and individual_test.'))
@@ -124,6 +107,6 @@ class BalancedSplit():
                 idx_train_class[:n_train] = True                
                 idx_train_class = idx_train_class[idx_permutation]
             # Save the indices
-            idx_train[self.y == individual] = idx_train_class
-        return np.array(self.df.index.values)[idx_train], np.array(self.df.index.values)[~idx_train]
+            idx_train[df['identity'] == individual] = idx_train_class
+        return np.array(df.index.values)[idx_train], np.array(df.index.values)[~idx_train]
 

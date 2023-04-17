@@ -16,12 +16,13 @@ class TestTimeSplits(unittest.TestCase):
         self.assertGreaterEqual(len(dfs), 1)
     
     def test_time_proportion(self):
+        splitter = splits.TimeProportionSplit()
         for df in dfs:
             if 'date' not in df.columns:
-                self.assertRaises(Exception, splits.TimeProportionSplit, df)
+                splitter = splits.TimeProportionSplit()
+                self.assertRaises(Exception, splitter.split, df)
             else:
-                splitter = splits.TimeProportionSplit(df)
-                idx_train, idx_test = splitter.split()
+                idx_train, idx_test = splitter.split(df)
                 df_train = df.loc[idx_train]
                 df_test = df.loc[idx_test]
 
@@ -31,11 +32,12 @@ class TestTimeSplits(unittest.TestCase):
     def test_time_cutoff(self):
         for df in dfs:
             if 'date' not in df.columns:
-                self.assertRaises(Exception, splits.TimeCutoffSplit, df)
+                splitter = splits.TimeCutoffSplit(0)
+                self.assertRaises(Exception, splitter.split, df)
             else:
                 years = pd.to_datetime(df['date']).apply(lambda x: x.year)
-                splitter = splits.TimeCutoffSplit(df)
-                idx_train, idx_test = splitter.split(max(years))
+                splitter = splits.TimeCutoffSplit(max(years))
+                idx_train, idx_test = splitter.split(df)
                 df_train = df.loc[idx_train]
                 df_test = df.loc[idx_test]
 
@@ -45,11 +47,12 @@ class TestTimeSplits(unittest.TestCase):
     def test_resplit_random(self):
         for df in dfs:
             if 'date' not in df.columns:
-                self.assertRaises(Exception, splits.TimeProportionSplit, df)
+                splitter = splits.TimeProportionSplit()
+                self.assertRaises(Exception, splitter.split, df)
             else:
-                splitter = splits.TimeProportionSplit(df)
-                idx_train1, idx_test1 = splitter.split()
-                idx_train2, idx_test2 = splitter.resplit_random(idx_train1, idx_test1)
+                splitter = splits.TimeProportionSplit()
+                idx_train1, idx_test1 = splitter.split(df)
+                idx_train2, idx_test2 = splitter.resplit_random(df, idx_train1, idx_test1)
                 
                 df_train1 = df.loc[idx_train1]
                 df_test1 = df.loc[idx_test1]

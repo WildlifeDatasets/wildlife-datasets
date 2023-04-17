@@ -8,24 +8,39 @@ class TimeAwareSplit(BalancedSplit):
     """Base class for `TimeProportionSplit` and `TimeCutoffSplit`.
     """
 
-    def __init__(self, *args, **kwargs) -> None:
-        """Initializes the class with the same arguments as its [parent contructor](../reference_splits#splits.balanced_split.BalancedSplit.__init__).
-        """      
+    def modify_df(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Prepares dataframe for splits.
 
-        super().__init__(*args, **kwargs)
-        if 'date' not in self.df.columns:
-            # Check if the DataFrame contain the column date.
+        Removes identities specified in `self.identity_skip` (usually unknown identities).
+        Convert the `date` column into a unified format.
+        Add the `year` column.
+
+        Args:
+            df (pd.DataFrame): A dataframe of the data. It must contain columns `identity` and `date`.
+
+        Returns:
+            Modified dataframe of the data.
+        """
+        
+        # Check if the DataFrame contain the column date.
+        if 'date' not in df.columns:
             raise(Exception('Dataframe df does not contain column date.'))
+        
+        # Remove identities to be skipped
+        df = df.copy()
+        df = df[df['identity'] != self.identity_skip]
+
         # Removes entries without dates
-        self.df = self.df[~self.df['date'].isnull()]
+        df = df[~df['date'].isnull()]
+        
         # Convert date to datetime format (from possibly strings) and drop hours
-        self.df['date'] = pd.to_datetime(self.df['date']).apply(lambda x: x.date())
-        self.df['year'] = self.df['date'].apply(lambda x: x.year).to_numpy()            
-        # Extract unique inidividuals
-        self.y_unique = np.sort(self.df['identity'].unique())
+        df['date'] = pd.to_datetime(df['date']).apply(lambda x: x.date())
+        df['year'] = df['date'].apply(lambda x: x.year).to_numpy()            
+        return df
 
     def resplit_random(
             self,
+            df: pd.DataFrame,
             idx_train: np.ndarray,
             idx_test: np.ndarray,
             year_max: int = np.inf
@@ -35,44 +50,46 @@ class TimeAwareSplit(BalancedSplit):
         The re-split mimics the split as the training set contains
         the same number of samples for EACH individual.
         The same goes for the testing set.
-        The re-split samples may be drawn only from `self.df['year'] <= year_max`.
+        The re-split samples may be drawn only from `df['year'] <= year_max`.
 
         Args:
+            df (pd.DataFrame): A dataframe of the data. It must contain columns `identity` and `date`.
             idx_train (np.ndarray): Labels of the training set.
             idx_test (np.ndarray): Labels of the testing set.
-            year_max (int, optional): Considers only entries with `self.df['year'] <= year_max`.
+            year_max (int, optional): Considers only entries with `df['year'] <= year_max`.
 
         Returns:
             List of labels of the training and testing sets.
         """
 
+        df = self.modify_df(df)
         # Compute the number of samples for each individual in the training set
         counts_train = {}
-        for x in self.df.loc[idx_train].groupby('identity'):
+        for x in df.loc[idx_train].groupby('identity'):
             counts_train[x[0]] = len(x[1])
         # Compute the number of samples for each individual in the testing set
         counts_test = {}
-        for x in self.df.loc[idx_test].groupby('identity'):
+        for x in df.loc[idx_test].groupby('identity'):
             counts_test[x[0]] = len(x[1])
 
         idx_train_new = []
         idx_test_new = []
         # Loop over all individuals
-        for identity in self.y_unique:
+        for identity in df['identity'].unique():
             # Extract the number of individuals in the training and testing sets
             n_train = counts_train.get(identity, 0)
             n_test = counts_test.get(identity, 0)
             if n_train+n_test > 0:
                 # Get randomly permuted indices of the corresponding identity
-                idx = np.where(self.df['identity'] == identity)[0]
-                idx = idx[self.df.iloc[idx]['year'] <= year_max]
+                idx = np.where(df['identity'] == identity)[0]
+                idx = idx[df.iloc[idx]['year'] <= year_max]
                 idx = self.lcg.random_shuffle(idx)
                 if len(idx) < n_train+n_test:
                     raise(Exception('The set is too small.'))
                 # Get the correct number of indices in both sets
                 idx_train_new += list(idx[:n_train])
                 idx_test_new += list(idx[n_train:n_train+n_test])
-        return np.array(self.df.index.values)[idx_train_new], np.array(self.df.index.values)[idx_test_new]
+        return np.array(df.index.values)[idx_train_new], np.array(df.index.values)[idx_test_new]
 
 
 class TimeProportionSplit(TimeAwareSplit):
@@ -84,17 +101,36 @@ class TimeProportionSplit(TimeAwareSplit):
     Implementation of [this paper](https://arxiv.org/abs/2211.10307).
     """
 
-    def split(self) -> Tuple[np.ndarray, np.ndarray]:
+    def __init__(
+            self,
+            seed: int = 666,
+            identity_skip: str = 'unknown',
+            ):
+        """Initializes the class.
+
+        Args:
+            seed (int, optional): Initial seed for the LCG random generator.
+            identity_skip (str, optional): Name of the identities to ignore.
+        """
+
+        self.identity_skip = identity_skip
+        self.set_seed(seed)
+
+    def split(self, df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
+
+        Args:
+            df (pd.DataFrame): A dataframe of the data. It must contain columns `identity` and `date`.
 
         Returns:
             List of labels of the training and testing sets.
         """
         
+        df = self.modify_df(df)
         idx_train = []
         idx_test = []
         # Loop over all identities; x is a tuple (identity, df with unique identity)
-        for x in self.df.groupby('identity'):            
+        for x in df.groupby('identity'):            
             dates = x[1].groupby('date')
             n_dates = len(dates)
             if n_dates > 1:
@@ -117,35 +153,86 @@ class TimeCutoffSplit(TimeAwareSplit):
     Implementation of [this paper](https://arxiv.org/abs/2211.10307).
     """
 
-    def split(self, year: int, test_one_year_only: bool = True) -> Tuple[np.ndarray, np.ndarray]:
-        """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
+    def __init__(
+            self,
+            year: int,
+            test_one_year_only: bool = True,
+            seed: int = 666,
+            identity_skip: str = 'unknown',
+            ) -> None:
+        """Initializes the class.
 
         Args:
             year (int): Splitting year.
-            test_one_year_only (exact, optional): Whether the test set is `self.df['year'] == year` or `self.df['year'] >= year`.
+            test_one_year_only (bool, optional): Whether the test set is `df['year'] == year` or `df['year'] >= year`.
+            seed (int, optional): Initial seed for the LCG random generator.            
+            identity_skip (str, optional): Name of the identities to ignore.
+        """
+
+        self.year = year
+        self.test_one_year_only = test_one_year_only
+        self.identity_skip = identity_skip
+        self.set_seed(seed)
+    
+    def split(self, df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+        """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
+
+        Args:
+            df (pd.DataFrame): A dataframe of the data. It must contain columns `identity` and `date`.
 
         Returns:
             List of labels of the training and testing sets.
         """
 
-        idx_train = list(np.where(self.df['year'] < year)[0])
-        if test_one_year_only:
-            idx_test = list(np.where(self.df['year'] == year)[0])
+        df = self.modify_df(df)
+        idx_train = list(np.where(df['year'] < self.year)[0])
+        if self.test_one_year_only:
+            idx_test = list(np.where(df['year'] == self.year)[0])
         else:
-            idx_test = list(np.where(self.df['year'] >= year)[0])
-        return np.array(self.df.index.values)[idx_train], np.array(self.df.index.values)[idx_test]
+            idx_test = list(np.where(df['year'] >= self.year)[0])
+        return np.array(df.index.values)[idx_train], np.array(df.index.values)[idx_test]
 
-    def splits_all(self, **kwargs) -> Tuple[List[Tuple[np.ndarray, np.ndarray]], np.ndarray]:
-        """Creates `TimeCutoffSplit` splits for all possible splitting years.
 
-        Returns:
-            List of lists of labels of the training and testing sets.
-            List of splitting years.
+class TimeCutoffSplitAll(TimeAwareSplit):
+    """Sequence of time-cutoff splits TimeCutoffSplit for all possible years.
+
+    Puts all individuals observed before `year` into the training test.
+    Puts all individuals observed during `year` into the testing test.
+    Implementation of [this paper](https://arxiv.org/abs/2211.10307).
+    """
+
+    def __init(
+            self,
+            test_one_year_only: bool = True,
+            seed: int = 666,
+            identity_skip: str = 'unknown',
+            ) -> None:
+        """Initializes the class.
+
+        Args:
+            test_one_year_only (bool, optional): Whether the test set is `df['year'] == year` or `df['year'] >= year`.
+            seed (int, optional): Initial seed for the LCG random generator.
+            identity_skip (str, optional): Name of the identities to ignore.
         """
 
-        # Ignores the first year because otherwise the training set would be empty
-        years = np.sort(self.df['year'].unique())[1:]
+        self.test_one_year_only = test_one_year_only
+        self.identity_skip = identity_skip
+        self.set_seed(seed)
+    
+    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
+        """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
+
+        Args:
+            df (pd.DataFrame): A dataframe of the data. It must contain columns `identity` and `date`.
+
+        Returns:
+            List of list of labels of the training and testing sets.
+        """
+
+        df = self.modify_df(df)
+        years = np.sort(df['year'].unique())[1:]
         splits = []
         for year in years:
-            splits.append(self.split(year, **kwargs))
-        return splits, years
+            splitter = TimeCutoffSplit(year, self.test_one_year_only)
+            splits.append(splitter.split(df))
+        return splits
