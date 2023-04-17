@@ -22,12 +22,12 @@ class TestTimeSplits(unittest.TestCase):
                 splitter = splits.TimeProportionSplit()
                 self.assertRaises(Exception, splitter.split, df)
             else:
-                idx_train, idx_test = splitter.split(df)
-                df_train = df.loc[idx_train]
-                df_test = df.loc[idx_test]
+                for idx_train, idx_test in splitter.split(df):
+                    df_train = df.loc[idx_train]
+                    df_test = df.loc[idx_test]
 
-                split_type = splits.recognize_time_split(df_train, df_test)
-                self.assertEqual(split_type, 'time-proportion')
+                    split_type = splits.recognize_time_split(df_train, df_test)
+                    self.assertEqual(split_type, 'time-proportion')
 
     def test_time_cutoff(self):
         for df in dfs:
@@ -37,12 +37,12 @@ class TestTimeSplits(unittest.TestCase):
             else:
                 years = pd.to_datetime(df['date']).apply(lambda x: x.year)
                 splitter = splits.TimeCutoffSplit(max(years))
-                idx_train, idx_test = splitter.split(df)
-                df_train = df.loc[idx_train]
-                df_test = df.loc[idx_test]
+                for idx_train, idx_test in splitter.split(df):
+                    df_train = df.loc[idx_train]
+                    df_test = df.loc[idx_test]
 
-                split_type = splits.recognize_time_split(df_train, df_test)
-                self.assertEqual(split_type, 'time-cutoff')
+                    split_type = splits.recognize_time_split(df_train, df_test)
+                    self.assertEqual(split_type, 'time-cutoff')
                 
     def test_resplit_random(self):
         for df in dfs:
@@ -51,20 +51,20 @@ class TestTimeSplits(unittest.TestCase):
                 self.assertRaises(Exception, splitter.split, df)
             else:
                 splitter = splits.TimeProportionSplit()
-                idx_train1, idx_test1 = splitter.split(df)
-                idx_train2, idx_test2 = splitter.resplit_random(df, idx_train1, idx_test1)
-                
-                df_train1 = df.loc[idx_train1]
-                df_test1 = df.loc[idx_test1]
-                df_train2 = df.loc[idx_train2]
-                df_test2 = df.loc[idx_test2]
+                for idx_train1, idx_test1 in splitter.split(df):
+                    idx_train2, idx_test2 = splitter.resplit_random(df, idx_train1, idx_test1)
+                    
+                    df_train1 = df.loc[idx_train1]
+                    df_test1 = df.loc[idx_test1]
+                    df_train2 = df.loc[idx_train2]
+                    df_test2 = df.loc[idx_test2]
 
-                self.assertEqual(set(df_train1['identity']), set(df_train2['identity']))
-                self.assertEqual(set(df_test1['identity']), set(df_test2['identity']))
-                for id in set(df_train1['identity']):
-                    self.assertEqual(len(df_train1['identity']==id), len(df_train2['identity']==id))
-                for id in set(df_test1['identity']):
-                    self.assertEqual(len(df_test1['identity']==id), len(df_test2['identity']==id))
+                    self.assertEqual(set(df_train1['identity']), set(df_train2['identity']))
+                    self.assertEqual(set(df_test1['identity']), set(df_test2['identity']))
+                    for id in set(df_train1['identity']):
+                        self.assertEqual(len(df_train1['identity']==id), len(df_train2['identity']==id))
+                    for id in set(df_test1['identity']):
+                        self.assertEqual(len(df_test1['identity']==id), len(df_test2['identity']==id))
 
 
 if __name__ == '__main__':

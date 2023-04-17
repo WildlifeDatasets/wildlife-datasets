@@ -114,20 +114,20 @@ class ClosedSetSplit(IdentitySplit):
         self.identity_skip = identity_skip
         self.set_seed(seed)
     
-    def split(self, df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
             df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
 
         Returns:
-            List of labels of the training and testing sets.
+            List of splits. Each split is list of labels of the training and testing sets.
         """
 
         df = self.modify_df(df)
         individual_train = np.array([], dtype=object)
         individual_test = np.array([], dtype=object)
-        return self.general_split(df, individual_train, individual_test)
+        return [self.general_split(df, individual_train, individual_test)]
 
 
 class OpenSetSplit(IdentitySplit):
@@ -171,14 +171,14 @@ class OpenSetSplit(IdentitySplit):
         self.identity_skip = identity_skip
         self.set_seed(seed)
 
-    def split(self, df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
             df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
 
         Returns:
-            List of labels of the training and testing sets.
+            List of splits. Each split is list of labels of the training and testing sets.
         """
         
         df = self.modify_df(df)
@@ -200,7 +200,7 @@ class OpenSetSplit(IdentitySplit):
         # Specify individuals going purely into training and testing sets
         individual_train = np.array([], dtype=object)
         individual_test = np.array(y_counts.index[:n_class_test])
-        return self.general_split(df, individual_train, individual_test)
+        return [self.general_split(df, individual_train, individual_test)]
 
 
 class DisjointSetSplit(IdentitySplit):
@@ -242,14 +242,14 @@ class DisjointSetSplit(IdentitySplit):
         self.identity_skip = identity_skip
         self.set_seed(seed)
 
-    def split(self, df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
             df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
         
         Returns:
-            List of labels of the training and testing sets.
+            List of splits. Each split is list of labels of the training and testing sets.
         """
 
         df = self.modify_df(df)
@@ -271,5 +271,5 @@ class DisjointSetSplit(IdentitySplit):
         # Specify individuals going purely into training and testing sets
         individual_train = np.array(y_counts.index[n_class_test:])
         individual_test = np.array(y_counts.index[:n_class_test])
-        return self.general_split(df, individual_train, individual_test)
+        return [self.general_split(df, individual_train, individual_test)]
 

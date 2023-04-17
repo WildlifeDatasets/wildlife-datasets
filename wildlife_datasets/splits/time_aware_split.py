@@ -116,14 +116,14 @@ class TimeProportionSplit(TimeAwareSplit):
         self.identity_skip = identity_skip
         self.set_seed(seed)
 
-    def split(self, df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
             df (pd.DataFrame): A dataframe of the data. It must contain columns `identity` and `date`.
 
         Returns:
-            List of labels of the training and testing sets.
+            List of splits. Each split is list of labels of the training and testing sets.
         """
         
         df = self.modify_df(df)
@@ -141,7 +141,7 @@ class TimeProportionSplit(TimeAwareSplit):
                         idx_train += list(y[1].index)
                     else:
                         idx_test += list(y[1].index)
-        return idx_train, idx_test
+        return [(idx_train, idx_test)]
 
 
 class TimeCutoffSplit(TimeAwareSplit):
@@ -174,7 +174,7 @@ class TimeCutoffSplit(TimeAwareSplit):
         self.identity_skip = identity_skip
         self.set_seed(seed)
     
-    def split(self, df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
@@ -190,7 +190,7 @@ class TimeCutoffSplit(TimeAwareSplit):
             idx_test = list(np.where(df['year'] == self.year)[0])
         else:
             idx_test = list(np.where(df['year'] >= self.year)[0])
-        return np.array(df.index.values)[idx_train], np.array(df.index.values)[idx_test]
+        return [(np.array(df.index.values)[idx_train], np.array(df.index.values)[idx_test])]
 
 
 class TimeCutoffSplitAll(TimeAwareSplit):
@@ -226,7 +226,7 @@ class TimeCutoffSplitAll(TimeAwareSplit):
             df (pd.DataFrame): A dataframe of the data. It must contain columns `identity` and `date`.
 
         Returns:
-            List of list of labels of the training and testing sets.
+            List of splits. Each split is list of labels of the training and testing sets.
         """
 
         df = self.modify_df(df)

@@ -35,14 +35,14 @@ class BalancedSplit():
         
         self.lcg = Lcg(seed)
     
-    def split(self, *args, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
+    def split(self, *args, **kwargs) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Splitting method which needs to be implemented by subclasses.
 
         It splits the dataframe `df` into labels `idx_train` and `idx_test`.
         The subdataset is obtained by `df.loc[idx_train]` (not `iloc`).
 
         Returns:
-            List of labels of the training and testing sets.
+            List of splits. Each split is list of labels of the training and testing sets.
         """
 
         raise(NotImplementedError('Subclasses should implement this. \n You may want to use ClosedSetSplit instead of BalancedSplit.'))
