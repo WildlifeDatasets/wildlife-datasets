@@ -201,7 +201,7 @@ class TimeCutoffSplitAll(TimeAwareSplit):
     Implementation of [this paper](https://arxiv.org/abs/2211.10307).
     """
 
-    def __init(
+    def __init__(
             self,
             test_one_year_only: bool = True,
             seed: int = 666,
@@ -234,5 +234,6 @@ class TimeCutoffSplitAll(TimeAwareSplit):
         splits = []
         for year in years:
             splitter = TimeCutoffSplit(year, self.test_one_year_only)
-            splits.append(splitter.split(df))
+            for split in splitter.split(df):
+                splits.append(split)
         return splits
