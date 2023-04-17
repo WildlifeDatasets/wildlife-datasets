@@ -75,21 +75,21 @@ class TimeAwareSplit(BalancedSplit):
         idx_train_new = []
         idx_test_new = []
         # Loop over all individuals
-        for identity in df['identity'].unique():
+        for individual, df_individual in df.groupby('identity'):
             # Extract the number of individuals in the training and testing sets
-            n_train = counts_train.get(identity, 0)
-            n_test = counts_test.get(identity, 0)
+            n_train = counts_train.get(individual, 0)
+            n_test = counts_test.get(individual, 0)
             if n_train+n_test > 0:
                 # Get randomly permuted indices of the corresponding identity
-                idx = np.where(df['identity'] == identity)[0]
-                idx = idx[df.iloc[idx]['year'] <= year_max]
-                idx = self.lcg.random_shuffle(idx)
-                if len(idx) < n_train+n_test:
+                df_individual = df_individual[df_individual['year'] <= year_max]
+                if len(df_individual) < n_train+n_test:
                     raise(Exception('The set is too small.'))
                 # Get the correct number of indices in both sets
-                idx_train_new += list(idx[:n_train])
-                idx_test_new += list(idx[n_train:n_train+n_test])
-        return np.array(df.index.values)[idx_train_new], np.array(df.index.values)[idx_test_new]
+                idx_permutation = self.lcg.random_permutation(n_train+n_test)
+                idx_permutation = np.array(idx_permutation)
+                idx_train_new += list(df_individual.index[idx_permutation[:n_train]])
+                idx_test_new += list(df_individual.index[idx_permutation[n_train:n_train+n_test]])
+        return np.array(idx_train_new), np.array(idx_test_new)
 
 
 class TimeProportionSplit(TimeAwareSplit):

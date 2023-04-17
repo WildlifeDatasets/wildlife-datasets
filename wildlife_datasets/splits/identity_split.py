@@ -58,34 +58,34 @@ class IdentitySplit(BalancedSplit):
         if n_train + n_test > 0 and n_train + n_test < n:
             ratio_train = (n*ratio_train - n_train) / (n - n_test - n_train)
         ratio_train = np.clip(ratio_train, 0, 1)
-        
-        idx_train = np.empty(n, dtype='bool')
+
+        idx_train = []
+        idx_test = []        
         # Make a loop over all individuals
-        for individual, y_count in y_counts.iteritems():
+        for individual, df_individual in df.groupby('identity'):
             if individual in individual_train and individual in individual_test:
                 # Check if the class does not belong to both sets
                 raise(Exception('Individual cannot be both in individual_train and individual_test.'))
             elif individual in individual_train:
                 # Check if the class does not belong to the training set
-                idx_train_class = np.ones(y_count, dtype='bool')
+                idx_train += list(df_individual.index)
             elif individual in individual_test:
                 # Check if the class does not belong to the testing set
-                idx_train_class = np.zeros(y_count, dtype='bool')
+                idx_test += list(df_individual.index)
             else:
-                idx_train_class = np.zeros(y_count, dtype='bool')
                 # Otherwise compute the number of samples in the training set
-                n_train = np.round(ratio_train * y_count).astype(int)
-                if n_train == y_count and n_train > 1:
+                n_individual = len(df_individual)
+                n_train = np.round(ratio_train * n_individual).astype(int)
+                if n_train == n_individual and n_train > 1:
                     n_train -= 1
                 if n_train == 0:
                     n_train = 1
                 # Create indices to the training set and randomly permute them                
-                idx_permutation = self.lcg.random_permutation(y_count)
-                idx_train_class[:n_train] = True                
-                idx_train_class = idx_train_class[idx_permutation]
-            # Save the indices
-            idx_train[df['identity'] == individual] = idx_train_class
-        return np.array(df.index.values)[idx_train], np.array(df.index.values)[~idx_train]
+                idx_permutation = self.lcg.random_permutation(n_individual)
+                idx_permutation = np.array(idx_permutation)
+                idx_train += list(df_individual.index[idx_permutation[:n_train]])
+                idx_test += list(df_individual.index[idx_permutation[n_train:]])
+        return np.array(idx_train), np.array(idx_test)
     
 
 class ClosedSetSplit(IdentitySplit):
