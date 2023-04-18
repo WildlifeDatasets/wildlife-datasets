@@ -4,18 +4,42 @@ from . import utils
 
 
 class Downloader():
-    def get_data(self, root, name=None, **kwargs):
+    download_warning = '''You are trying to download an already downloaded dataset.
+        This message may have happened to due interrupted download or extract.
+        To force the download use the `force=True` keyword such as
+        get_data(..., force=True) or download(..., force=True).
+        '''
+    download_mark_name = 'already_downloaded'
+        
+    def get_data(self, root, name=None, force=False, **kwargs):
         if name is None:
             name = self.__class__.__name__
-        print('DATASET %s: DOWNLOADING STARTED.' % name)        
-        self.download(os.path.join(root, name), **kwargs)
-        print('DATASET %s: EXTRACTING STARTED.' % name)
-        self.extract(os.path.join(root, name), **kwargs)
-        print('DATASET %s: FINISHED. If mass downloading, you can remove it from the list.\n' % name)
+        root = os.path.join(root, name)
+        
+        already_downloaded = self.check_downloaded_mark(root)
+        if already_downloaded and not force:
+            print('DATASET %s: DOWNLOADING STARTED.' % name)
+            print(self.download_warning)
+        else:
+            print('DATASET %s: DOWNLOADING STARTED.' % name)
+            self.download(root, name=name, force=force, **kwargs)
+            print('DATASET %s: EXTRACTING STARTED.' % name)
+            self.extract(root,  **kwargs)
+            print('DATASET %s: FINISHED.\n' % name)
 
-    def download(self, root, **kwargs):
-        with utils.data_directory(root):
-            self._download(**kwargs)
+    def download(self, root, name=None, force=False, **kwargs):
+        if name is None:
+            name = self.__class__.__name__
+
+        already_downloaded = self.check_downloaded_mark(root)
+        if already_downloaded and not force:
+            print('DATASET %s: DOWNLOADING STARTED.' % name)            
+            print(self.download_warning)
+        else:
+            self.remove_download_mark(root)
+            with utils.data_directory(root):
+                self._download(**kwargs)
+            self.add_downloaded_mark(root)
     
     def extract(self, root, **kwargs):
         with utils.data_directory(root):
@@ -27,6 +51,20 @@ class Downloader():
     def _extract(self, *args, **kwargs):
         raise NotImplemented('Needs to be implemented by subclasses.')
 
+    def check_downloaded_mark(self, root):
+        file_name = os.path.join(root, self.download_mark_name)
+        return os.path.exists(file_name)
+
+    def add_downloaded_mark(self, root):
+        if not os.path.exists(root):
+            os.makedirs(root)
+        file_name = os.path.join(root, self.download_mark_name)
+        open(file_name, 'a').close()
+
+    def remove_download_mark(self, root):
+        file_name = os.path.join(root, self.download_mark_name)
+        if os.path.exists(file_name):
+            os.remove(file_name)
 
 class AAUZebraFish(Downloader):
     archive = 'aau-zebrafish-reid.zip'
