@@ -11,10 +11,8 @@ class Downloader():
         '''
     download_mark_name = 'already_downloaded'
         
-    def get_data(self, root, name=None, force=False, **kwargs):
-        if name is None:
-            name = self.__class__.__name__
-        root = os.path.join(root, name)
+    def get_data(self, root, force=False, **kwargs):
+        name = self.__class__.__name__
         
         already_downloaded = self.check_downloaded_mark(root)
         if already_downloaded and not force:
@@ -22,14 +20,13 @@ class Downloader():
             print(self.download_warning)
         else:
             print('DATASET %s: DOWNLOADING STARTED.' % name)
-            self.download(root, name=name, force=force, **kwargs)
+            self.download(root, force=force, **kwargs)
             print('DATASET %s: EXTRACTING STARTED.' % name)
             self.extract(root,  **kwargs)
             print('DATASET %s: FINISHED.\n' % name)
 
-    def download(self, root, name=None, force=False, **kwargs):
-        if name is None:
-            name = self.__class__.__name__
+    def download(self, root, force=False, **kwargs):
+        name = self.__class__.__name__
 
         already_downloaded = self.check_downloaded_mark(root)
         if already_downloaded and not force:
