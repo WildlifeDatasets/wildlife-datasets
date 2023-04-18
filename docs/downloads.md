@@ -49,7 +49,7 @@ Some datasets are stored on Kaggle. To use our automatic download method, follow
 The dataset is stored on [Google drive](https://drive.google.com/uc?id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA) but needs to be downloaded manually due to its size. After downloading it, place it into folder ``BirdIndividualID'' and run
 
 ```python
-datasets.SealID.extract('data/BirdIndividualID')
+datasets.BirdIndividualID.extract('data/BirdIndividualID')
 ```
 
 to extract it. Do not extract it manually because there is some postprocessing involved.
