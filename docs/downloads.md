@@ -9,8 +9,8 @@ Some of the datasets require special treatment or the download of extraction wor
 | [ATRW](https://lila.science/datasets/atrw)                   | AUTO    |                                |
 | [BelugaID](https://lila.science/datasets/beluga-id-2022/)              | AUTO    |                                |
 | [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID)     | MANUAL  | Manual download    |
-| [C-Tai](https://github.com/cvjena/chimpanzee_faces)       | AUTO    |                                |
-| [C-Zoo](https://github.com/cvjena/chimpanzee_faces)       | AUTO    |                                |
+| [CTai](https://github.com/cvjena/chimpanzee_faces)       | AUTO    |                                |
+| [CZoo](https://github.com/cvjena/chimpanzee_faces)       | AUTO    |                                |
 | [Cows2021](https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7)              | AUTO    |                                |
 | [Drosophila](https://github.com/j-schneider/fly_eye)             | AUTO    |                                |
 | [FriesianCattle2015](https://data.bris.ac.uk/data/dataset/wurzq71kfm561ljahbwjhx9n3)   | AUTO    |                                |
@@ -18,10 +18,10 @@ Some of the datasets require special treatment or the download of extraction wor
 | [Giraffes](ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021)       | AUTO    | Only linux: downloading                               |
 | [GiraffeZebraID](https://lila.science/datasets/great-zebra-giraffe-id)       | AUTO    |                                |
 | [HappyWhale](https://www.kaggle.com/competitions/happy-whale-and-dolphin)             | MANUAL  | Kaggle required + terms   |
-| [HumpbackWhale](https://www.kaggle.com/competitions/humpback-whale-identification)          | MANUAL  | Kaggle required + terms   |
-| [HyenaID](https://lila.science/datasets/hyena-id-2022/)               | AUTO    |                                |
-| [iPanda-50](https://github.com/iPandaDateset/iPanda-50)              | AUTO    |                                |
-| [LeopardID](https://lila.science/datasets/leopard-id-2022/)             | AUTO    |                                |
+| [HumpbackWhaleID](https://www.kaggle.com/competitions/humpback-whale-identification)          | MANUAL  | Kaggle required + terms   |
+| [HyenaID2022](https://lila.science/datasets/hyena-id-2022/)               | AUTO    |                                |
+| [IPanda50](https://github.com/iPandaDateset/iPanda-50)              | AUTO    |                                |
+| [LeopardID2022](https://lila.science/datasets/leopard-id-2022/)             | AUTO    |                                |
 | [LionData](https://github.com/tvanzyl/wildlife_reidentification)              | AUTO    |                                |
 | [MacaqueFaces](https://github.com/clwitham/MacaqueFaces)          | AUTO    |                                |
 | [NDD20](https://doi.org/10.25405/data.ncl.c.4982342)                  | AUTO    |                                |
