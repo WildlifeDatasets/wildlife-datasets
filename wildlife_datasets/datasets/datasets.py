@@ -1091,6 +1091,8 @@ class SeaTurtleID(DatasetFactory):
         # Extract dtaa from the JSON file
         create_dict = lambda i: {'id': i['id'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'identity': i['identity'], 'segmentation': i['segmentation'], 'orientation': i['position']}
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
+        idx_bbox = ~df_annotation['bbox'].isnull()
+        df_annotation.loc[idx_bbox,'bbox'] = df_annotation.loc[idx_bbox,'bbox'].apply(lambda x: eval(x))
         create_dict = lambda i: {'file_name': i['path'].split('/')[-1], 'image_id': i['id'], 'date': i['date']}
         df_images = pd.DataFrame([create_dict(i) for i in data['images']])
 

@@ -4,6 +4,26 @@ from typing import List, Tuple
 from .balanced_split import BalancedSplit
 
 
+class FullSplit(BalancedSplit):
+    """Simplest split returning the whole dataset.
+    """
+
+    def __init__(self):
+        pass
+
+    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
+        """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
+
+        Args:
+            df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
+
+        Returns:
+            List of splits. Each split is list of labels of the training and testing sets.
+        """
+
+        return [ (df.index.values, np.array([], dtype=int)) ]
+    
+
 class IdentitySplit(BalancedSplit):
     """Base class for `ClosedSetSplit`, `OpenSetSplit` and `DisjointSetSplit`.
     """
@@ -193,7 +213,7 @@ class OpenSetSplit(IdentitySplit):
         n = len(df)
         if self.n_class_test is None:
             n_test = np.round(n*self.ratio_class_test).astype(int)
-            n_class_test = np.where(np.cumsum(y_counts) >= n_test)[0][0]
+            n_class_test = np.where(np.cumsum(y_counts) >= n_test)[0][0] + 1
         else:
             n_class_test = self.n_class_test
 
@@ -264,7 +284,7 @@ class DisjointSetSplit(IdentitySplit):
         n = len(df)
         if self.n_class_test is None:
             n_test = np.round(n*self.ratio_class_test).astype(int)
-            n_class_test = np.where(np.cumsum(y_counts) >= n_test)[0][0]
+            n_class_test = np.where(np.cumsum(y_counts) >= n_test)[0][0] + 1
         else:
             n_class_test = self.n_class_test
 
