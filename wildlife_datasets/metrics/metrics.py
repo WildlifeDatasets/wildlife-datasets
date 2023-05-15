@@ -81,6 +81,34 @@ def f1(
     ):
     y_true, y_pred, unknown_class = unify_types(y_true, y_pred, unknown_class)
     return skm.f1_score(y_true, y_pred, average='macro')
+
+def accuracy_known_samples(
+        y_true,
+        y_pred,
+        unknown_class,
+    ):
+    y_true, y_pred, unknown_class = unify_types(y_true, y_pred, unknown_class)
+    y_true = np.array(y_true)    
+    y_pred = np.array(y_pred)
+    known = y_true != unknown_class
+    if sum(known) > 0:
+        return np.mean(y_true[known] == y_pred[known])
+    else:
+        return np.nan
+
+def accuracy_unknown_samples(
+        y_true,
+        y_pred,
+        unknown_class,
+    ):
+    y_true, y_pred, unknown_class = unify_types(y_true, y_pred, unknown_class)
+    y_true = np.array(y_true)    
+    y_pred = np.array(y_pred)
+    unknown = y_true == unknown_class
+    if sum(unknown) > 0:
+        return np.mean(y_true[unknown] == y_pred[unknown])
+    else:
+        return np.nan
     
 def normalized_accuracy(
         y_true,
@@ -88,13 +116,6 @@ def normalized_accuracy(
         unknown_class,
         mu
     ):
-    y_true, y_pred, unknown_class = unify_types(y_true, y_pred, unknown_class)
-    y_true = np.array(y_true)    
-    y_pred = np.array(y_pred)
-    known = y_true == unknown_class
-    if sum(known) == 0:
-        raise(Exception('Some true labels must be of the unknown class.'))
-    
-    aks = np.mean(y_true[known] == y_pred[known])
-    aus = np.mean(y_true[~known] == y_pred[~known])
+    aks = accuracy_known_samples(y_true, y_pred, unknown_class)
+    aus = accuracy_unknown_samples(y_true, y_pred, unknown_class)
     return mu*aks + (1-mu)*aus
