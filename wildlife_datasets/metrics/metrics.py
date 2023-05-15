@@ -127,7 +127,10 @@ def average_precision(
     unify_types([y_true], y_pred, None)
     a = np.array(y_pred) == y_true
     b = np.linspace(1, 0, len(y_pred))
-    return skm.average_precision_score(a, b)
+    if sum(a) == 0:
+        return 0
+    else:
+        return skm.average_precision_score(a, b)
 
 def mean_average_precision(
         y_true,
