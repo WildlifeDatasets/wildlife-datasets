@@ -136,3 +136,15 @@ def mean_average_precision(
     y_true = np.array(y_true)
     y_pred = np.array(y_pred)
     return np.mean([average_precision(y_t, y_p) for y_t, y_p in zip(y_true, y_pred)])
+
+def auc_roc_new_class(
+        y_true,
+        y_score,
+        unknown_class,
+    ):
+    # TODO: check if it is correct
+    # TODO: low y_score means high chance of new individual
+    y_true, _, unknown_class = unify_types(y_true, [], unknown_class)    
+    a = np.array(y_true) == unknown_class
+    b = -np.array(y_score)
+    return skm.roc_auc_score(a, b)
