@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
 from wildlife_datasets import metrics
+from collections.abc import Iterable
 
 tol = 0.000001
 
@@ -10,12 +11,21 @@ y_pred1 = [1,1,2,3,1]
 y_true2 = [1,1,2,3,3]
 y_pred2 = [1,1,2,3,4]
 
+y_true_rank1 = 1
+y_pred_rank1 = [1, 2, 2]
+
+y_true_rank2 = 2
+y_pred_rank2 = [1, 2, 2]
+
 encoder1 = {1: 'a', 2: 'b', 3: 'c', 4: 'd'}
 encoder2 = {1: 'new', 2: 2, 3: 3, 4: 4}
 encoder3 = {1: 0, 2: 'b', 3: 'c', 4: 'd'}
 
 def encode(y, encoder):
-    return [encoder[x] for x in y]
+    if isinstance(y, Iterable):
+        return [encoder[x] for x in y]
+    else:
+        return encoder[y]
 
 def macro_f1(ps, rs):
     return np.mean([0 if (p,r)==(0,0) else 2*p*r/(p+r) for (p, r) in zip(ps, rs)])
@@ -343,6 +353,43 @@ class TestEvaluation(unittest.TestCase):
         for mu in np.arange(0, 1, step=0.2):
             self.assertAlmostEqual(metric(y_true, y_pred, 'a', mu), mu*expected_value1+(1-mu)*expected_value2, delta=tol)
 
+    def test_average_precision1(self):
+        expected_value = 1
+        metric = metrics.average_precision
+        y_true_basis = y_true_rank1
+        y_pred_basis = y_pred_rank1
+
+        y_true = y_true_basis
+        y_pred = y_pred_basis        
+        self.assertAlmostEqual(metric(y_true, y_pred), expected_value, delta=tol)
+        
+        y_true = encode(y_true_basis, encoder1)
+        y_pred = encode(y_pred_basis, encoder1)
+        self.assertAlmostEqual(metric(y_true, y_pred), expected_value, delta=tol)
+
+    def test_average_precision2(self):
+        expected_value = 7/12
+        metric = metrics.average_precision
+        y_true_basis = y_true_rank2
+        y_pred_basis = y_pred_rank2
+
+        y_true = y_true_basis
+        y_pred = y_pred_basis        
+        self.assertAlmostEqual(metric(y_true, y_pred), expected_value, delta=tol)
+        
+        y_true = encode(y_true_basis, encoder1)
+        y_pred = encode(y_pred_basis, encoder1)
+        self.assertAlmostEqual(metric(y_true, y_pred), expected_value, delta=tol)
+
+    def test_mean_average_precision1(self):
+        expected_value = (1+7/12)/2
+        metric = metrics.mean_average_precision
+        y_true_basis = [y_true_rank1, y_true_rank2]
+        y_pred_basis = [y_pred_rank1, y_pred_rank2]
+
+        y_true = y_true_basis
+        y_pred = y_pred_basis        
+        self.assertAlmostEqual(metric(y_true, y_pred), expected_value, delta=tol)
 
 if __name__ == '__main__':
     unittest.main()
