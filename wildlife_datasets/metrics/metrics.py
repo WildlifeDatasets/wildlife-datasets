@@ -8,7 +8,7 @@ def unify_types(y_true, y_pred, unknown_class):
     y_all = list(set(y_true).union(set(y_pred)) - set([unknown_class]))        
     y_types = set([type(y) for y in y_all])
     if len(y_types) > 1:
-        raise(Exception('Mixed labels found.'))
+        raise(Exception('Labels have mixed types. Convert all to int or str.'))
     if str in y_types and isinstance(unknown_class, int):
         encoder = {unknown_class: unknown_class}
         for i, y in enumerate(y_all):
