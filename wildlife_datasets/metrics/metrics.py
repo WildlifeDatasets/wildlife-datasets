@@ -119,3 +119,20 @@ def normalized_accuracy(
     aks = accuracy_known_samples(y_true, y_pred, unknown_class)
     aus = accuracy_unknown_samples(y_true, y_pred, unknown_class)
     return mu*aks + (1-mu)*aus
+
+def average_precision(
+        y_true,
+        y_pred
+    ):
+    unify_types([y_true], y_pred, None)
+    a = np.array(y_pred) == y_true
+    b = np.linspace(1, 0, len(y_pred))
+    return skm.average_precision_score(a, b)
+
+def mean_average_precision(
+        y_true,
+        y_pred
+    ):
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
+    return np.mean([average_precision(y_t, y_p) for y_t, y_p in zip(y_true, y_pred)])
