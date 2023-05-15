@@ -134,7 +134,7 @@ class DatasetFactory():
             df (pd.DataFrame): A full dataframe of the data.
         """
 
-        for col_name in ['id', 'identity', 'path']:
+        for col_name in ['image_id', 'identity', 'path']:
             if col_name not in df.columns:
                 raise(Exception('Column %s must be in the dataframe columns.' % col_name))
 
@@ -151,7 +151,7 @@ class DatasetFactory():
         """
 
         requirements = [
-            ('id', ['int', 'str']),
+            ('image_id', ['int', 'str']),
             ('identity', ['int', 'str']),
             ('path', ['str']),
             ('bbox', ['list_numeric']),
@@ -224,7 +224,7 @@ class DatasetFactory():
             A full dataframe of the data, slightly modified.
         """
 
-        default_order = ['id', 'identity', 'path', 'bbox', 'date', 'keypoints', 'orientation', 'segmentation', 'species']
+        default_order = ['image_id', 'identity', 'path', 'bbox', 'date', 'keypoints', 'orientation', 'segmentation', 'species']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
@@ -234,7 +234,7 @@ class DatasetFactory():
             if name not in default_order:
                 col_names.append(name)
         
-        df = df.sort_values('id').reset_index(drop=True)
+        df = df.sort_values('image_id').reset_index(drop=True)
         return df.reindex(columns=col_names)
 
     def remove_constant_columns(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -259,7 +259,7 @@ class DatasetFactory():
             df (pd.DataFrame): A full dataframe of the data.
         """
 
-        if len(df['id'].unique()) != len(df):
+        if len(df['image_id'].unique()) != len(df):
             raise(Exception('Image ID not unique.'))
 
     def check_files_exist(self, col: pd.Series) -> None:
@@ -319,6 +319,7 @@ class DatasetFactoryWildMe(DatasetFactory):
         df = df.drop(['image_id', 'file_name', 'supercategory', 'category_id'], axis=1)
         if len(df['species'].unique()) == 1:
             df = df.drop(['species'], axis=1)
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -366,6 +367,7 @@ class AAUZebraFish(DatasetFactory):
             'orientation': orientation,
         })
         df = df.join(attributes)
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -385,6 +387,7 @@ class AerialCattle2017(DatasetFactory):
             'identity': folders[1].astype(int),
             'video': folders[2].astype(int),
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -462,7 +465,8 @@ class ATRW(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.concat([df_train, df_test1, df_test2])
-        df['id'] = utils.create_id(df.id.astype(str))
+        df['id'] = utils.create_id(df['id'].astype(str))
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -524,7 +528,9 @@ class BirdIndividualID(DatasetFactory):
             'species': species,
             'split': 'unassigned',
         })
-        return self.finalize_catalogue(pd.concat([df1, df2]))
+        df = pd.concat([df1, df2])
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
+        return self.finalize_catalogue(df)
 
 
 class BirdIndividualIDSegmented(BirdIndividualID):
@@ -572,6 +578,7 @@ class CTai(DatasetFactory):
         # Replace the wrong identities
         for replace_tuple in replace_names:
             df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -599,6 +606,7 @@ class CZoo(DatasetFactory):
             'age_group': data[7],
             'gender': data[9],
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -623,6 +631,7 @@ class Cows2021(DatasetFactory):
             'identity': folders[4].astype(int),
         })
         df['date'] = df['path'].apply(lambda x: self.extract_date(x))
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
     def extract_date(self, x):
@@ -663,6 +672,7 @@ class Drosophila(DatasetFactory):
         
         # Finalize the dataframe
         df = data.drop(['file'], axis=1)
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -686,6 +696,7 @@ class FriesianCattle2015(DatasetFactory):
             'identity': identity,
             'split': split
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -704,6 +715,7 @@ class FriesianCattle2017(DatasetFactory):
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1].astype(int),
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -735,6 +747,7 @@ class Giraffes(DatasetFactory):
             'path': path + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': folders[1],
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -777,7 +790,8 @@ class HappyWhale(DatasetFactory):
             })
         
         # Finalize the dataframe        
-        df = pd.concat([df1, df2])    
+        df = pd.concat([df1, df2])
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -810,7 +824,8 @@ class HumpbackWhaleID(DatasetFactory):
             })
         
         # Finalize the dataframe
-        df = pd.concat([df1, df2])    
+        df = pd.concat([df1, df2])
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -857,6 +872,7 @@ class IPanda50(DatasetFactory):
             'identity': folders[1],
             'keypoints': keypoints
             })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -883,6 +899,7 @@ class LionData(DatasetFactory):
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[3],
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -903,6 +920,7 @@ class MacaqueFaces(DatasetFactory):
             'date': pd.Series(date_taken),
             'category': data['Category']
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -971,6 +989,7 @@ class NDD20(DatasetFactory):
         df['id'] = range(len(df))
         df['path'] = df['orientation'].str.upper() + os.path.sep + df['file_name']
         df = df.drop(['reg_type', 'file_name'], axis=1)
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -997,7 +1016,8 @@ class NOAARightWhale(DatasetFactory):
             })
         
         # Finalize the dataframe
-        df = pd.concat([df1, df2])    
+        df = pd.concat([df1, df2])
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1023,6 +1043,7 @@ class NyalaData(DatasetFactory):
             'identity': identity,
             'orientation': orientation,
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)   
 
 
@@ -1050,6 +1071,7 @@ class OpenCows2020(DatasetFactory):
             'identity': identity,
             'split': split
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)    
 
 
@@ -1070,6 +1092,7 @@ class SealID(DatasetFactory):
             'reid_split': data['reid_split'],
             'segmentation_split': data['segmentation_split'],
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1103,6 +1126,7 @@ class SeaTurtleID(DatasetFactory):
         df['date'] = df['date'].apply(lambda x: x[:4] + '-' + x[5:7] + '-' + x[8:])
 
         # Finalize the dataframe
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1129,6 +1153,7 @@ class SeaTurtleIDHeads(DatasetFactory):
         df['date'] = df['date'].apply(lambda x: x[:4] + '-' + x[5:7] + '-' + x[8:])
 
         # Finalize the dataframe
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1158,6 +1183,7 @@ class SMALST(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.merge(data, masks, on='id')
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1188,6 +1214,7 @@ class StripeSpotter(DatasetFactory):
             'orientation': data['flank'],
             'photo_quality': data['photo_quality'],
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)  
 
 
@@ -1224,6 +1251,7 @@ class WNIGiraffes(DatasetFactory):
         data = data.drop(['file'], axis=1)
 
         # Finalize the dataframe
+        data.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(data)
 
     def extract_keypoints(self, row: pd.DataFrame) -> List[float]:
@@ -1265,4 +1293,5 @@ class ZindiTurtleRecall(DatasetFactory):
             'orientation': data['image_location'].str.lower(),
             'split': data['split'],
         })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
