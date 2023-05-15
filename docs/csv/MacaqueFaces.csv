@@ -1,4 +1,4 @@
-,id,identity,path,split,date,category
+,image_id,identity,path,split,date,category
 0,0,Dan,MacaqueFaces/Contrast/Dan/Macaque_Face_1.jpg,train,2014-07-03,Contrast
 1,1,Dan,MacaqueFaces/Contrast/Dan/Macaque_Face_2.jpg,train,2014-07-03,Contrast
 2,2,Dan,MacaqueFaces/Contrast/Dan/Macaque_Face_3.jpg,train,2014-08-06,Contrast
