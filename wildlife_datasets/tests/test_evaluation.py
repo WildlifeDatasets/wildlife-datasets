@@ -38,12 +38,12 @@ class TestEvaluation(unittest.TestCase):
         y_true = encode(y_true_basis, encoder2)
         y_pred = encode(y_pred_basis, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
 
     def test_accuracy2(self):
         expected_value = 4/5
@@ -62,12 +62,12 @@ class TestEvaluation(unittest.TestCase):
         y_true = encode(y_true_basis, encoder2)
         y_pred = encode(y_pred_basis, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
 
     def test_balanced_accuracy1(self):
         expected_value = 5/6
@@ -86,12 +86,12 @@ class TestEvaluation(unittest.TestCase):
         y_true = encode(y_true_basis, encoder2)
         y_pred = encode(y_pred_basis, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
 
     def test_balanced_accuracy2(self):
         expected_value = 5/6
@@ -110,12 +110,12 @@ class TestEvaluation(unittest.TestCase):
         y_true = encode(y_true_basis, encoder2)
         y_pred = encode(y_pred_basis, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
 
     def test_class_average_accuracy1(self):
         expected_value = 13/15
@@ -134,12 +134,12 @@ class TestEvaluation(unittest.TestCase):
         y_true = encode(y_true_basis, encoder2)
         y_pred = encode(y_pred1, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
 
     def test_class_average_accuracy2(self):
         expected_value = 9/10
@@ -158,12 +158,12 @@ class TestEvaluation(unittest.TestCase):
         y_true = encode(y_true_basis, encoder2)
         y_pred = encode(y_pred_basis, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)        
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
 
     def test_precision1(self):
         expected_value = 8/9
@@ -182,12 +182,12 @@ class TestEvaluation(unittest.TestCase):
         y_true = encode(y_true_basis, encoder2)
         y_pred = encode(y_pred_basis, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
 
     def test_precision2(self):
         expected_value = 3/4
@@ -206,12 +206,12 @@ class TestEvaluation(unittest.TestCase):
         y_true = encode(y_true_basis, encoder2)
         y_pred = encode(y_pred_basis, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
 
     def test_recall1(self):
         expected_value = 5/6
@@ -233,15 +233,15 @@ class TestEvaluation(unittest.TestCase):
         y_pred = encode(y_pred_basis, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)
         self.assertRaises(Exception, metric, y_true, y_pred, ignore_empty=True)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new', ignore_empty=True), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new', ignore_empty=True), expected_value, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)
         self.assertRaises(Exception, metric, y_true, y_pred, ignore_empty=True)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0, ignore_empty=True), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0, ignore_empty=True), expected_value, delta=tol)
 
     def test_recall2(self):
         expected_value = 5/8
@@ -264,15 +264,15 @@ class TestEvaluation(unittest.TestCase):
         y_pred = encode(y_pred_basis, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)
         self.assertRaises(Exception, metric, y_true, y_pred, ignore_empty=True)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new', ignore_empty=True), expected_value_mod, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new', ignore_empty=True), expected_value_mod, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)
         self.assertRaises(Exception, metric, y_true, y_pred, ignore_empty=True)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0, ignore_empty=True), expected_value_mod, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0, ignore_empty=True), expected_value_mod, delta=tol)
 
     def test_f11(self):
         expected_value = macro_f1([2/3,1/1,1/1], [2/2,1/1,1/2])
@@ -291,12 +291,12 @@ class TestEvaluation(unittest.TestCase):
         y_true = encode(y_true_basis, encoder2)
         y_pred = encode(y_pred_basis, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
 
     def test_f12(self):
         expected_value = macro_f1([2/2,1/1,1/1,0/1], [2/2,1/1,1/2,0])
@@ -315,16 +315,16 @@ class TestEvaluation(unittest.TestCase):
         y_true = encode(y_true_basis, encoder2)
         y_pred = encode(y_pred_basis, encoder2)
         self.assertRaises(Exception, metric, y_true, y_pred)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class='new'), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class='new'), expected_value, delta=tol)
 
         y_true = encode(y_true_basis, encoder3)
         y_pred = encode(y_pred_basis, encoder3)
         self.assertRaises(Exception, metric, y_true, y_pred)
-        self.assertAlmostEqual(metric(y_true, y_pred, unknown_class=0), expected_value, delta=tol)
+        self.assertAlmostEqual(metric(y_true, y_pred, new_class=0), expected_value, delta=tol)
 
     def test_normalized_accuracy1(self):
-        expected_value1 = 1
-        expected_value2 = 2/3
+        expected_value1 = 2/3
+        expected_value2 = 1
         metric = metrics.normalized_accuracy
         y_true_basis = y_true1
         y_pred_basis = y_pred1
@@ -333,7 +333,6 @@ class TestEvaluation(unittest.TestCase):
         y_pred = y_pred_basis
         self.assertRaises(Exception, metric, y_true, y_pred)
         self.assertRaises(Exception, metric, y_true, y_pred, 1)
-        self.assertRaises(Exception, metric, y_true, y_pred, -1, 1)
         for mu in np.arange(0, 1, step=0.2):
             self.assertAlmostEqual(metric(y_true, y_pred, 1, mu), mu*expected_value1+(1-mu)*expected_value2, delta=tol)
         
@@ -341,7 +340,6 @@ class TestEvaluation(unittest.TestCase):
         y_pred = encode(y_pred_basis, encoder1)
         self.assertRaises(Exception, metric, y_true, y_pred)
         self.assertRaises(Exception, metric, y_true, y_pred, 1)
-        self.assertRaises(Exception, metric, y_true, y_pred, -1, 1)
         for mu in np.arange(0, 1, step=0.2):
             self.assertAlmostEqual(metric(y_true, y_pred, 'a', mu), mu*expected_value1+(1-mu)*expected_value2, delta=tol)
 
