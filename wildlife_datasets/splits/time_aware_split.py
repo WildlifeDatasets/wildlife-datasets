@@ -63,6 +63,10 @@ class TimeAwareSplit(BalancedSplit):
         """
 
         df = self.modify_df(df)
+
+        # Initialize the random number generator
+        lcg = self.initialize_lcg()
+        
         # Compute the number of samples for each individual in the training set
         counts_train = {}
         for x in df.loc[idx_train].groupby('identity'):
@@ -85,7 +89,7 @@ class TimeAwareSplit(BalancedSplit):
                 if len(df_individual) < n_train+n_test:
                     raise(Exception('The set is too small.'))
                 # Get the correct number of indices in both sets
-                idx_permutation = self.lcg.random_permutation(n_train+n_test)
+                idx_permutation = lcg.random_permutation(n_train+n_test)
                 idx_permutation = np.array(idx_permutation)
                 idx_train_new += list(df_individual.index[idx_permutation[:n_train]])
                 idx_test_new += list(df_individual.index[idx_permutation[n_train:n_train+n_test]])
@@ -114,7 +118,7 @@ class TimeProportionSplit(TimeAwareSplit):
         """
 
         self.identity_skip = identity_skip
-        self.set_seed(seed)
+        self.seed = seed
 
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -172,7 +176,7 @@ class TimeCutoffSplit(TimeAwareSplit):
         self.year = year
         self.test_one_year_only = test_one_year_only
         self.identity_skip = identity_skip
-        self.set_seed(seed)
+        self.seed = seed
     
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -217,7 +221,7 @@ class TimeCutoffSplitAll(TimeAwareSplit):
 
         self.test_one_year_only = test_one_year_only
         self.identity_skip = identity_skip
-        self.set_seed(seed)
+        self.seed = seed
     
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).

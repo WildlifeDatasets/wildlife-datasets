@@ -18,7 +18,7 @@ class BalancedSplit():
     Attributes:
       df (pd.DataFrame): A dataframe of the data. It must contain columns
         `identity` for all splits and `date` for time-aware splits.
-      lcg (Lcg): Random number generator LCG.
+      seed (int): Initial seed for the random number generator LCG.
       n (int): Number of samples.
       n_class (int): Number of unique identities.
       y (np.ndarray): List of identities.
@@ -26,14 +26,14 @@ class BalancedSplit():
       y_unique (np.ndarray): List of unique sorted identities.
     """
 
-    def set_seed(self, seed: int) -> None:
-        """Changes the seed of the random number generator.
+    def initialize_lcg(self) -> Lcg:
+        """Returns the random number generator.
 
         Args:
             seed (int): The desired seed.
         """
         
-        self.lcg = Lcg(seed)
+        return Lcg(self.seed)
     
     def split(self, *args, **kwargs) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Splitting method which needs to be implemented by subclasses.

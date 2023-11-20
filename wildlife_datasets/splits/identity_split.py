@@ -66,6 +66,9 @@ class IdentitySplit(BalancedSplit):
         Returns:
             List of labels of the training and testing sets.
         """
+        
+        # Initialize the random number generator
+        lcg = self.initialize_lcg()
 
         # Compute how many samples go automatically to the training and testing sets
         y_counts = df['identity'].value_counts()
@@ -101,7 +104,7 @@ class IdentitySplit(BalancedSplit):
                 if n_train == 0:
                     n_train = 1
                 # Create indices to the training set and randomly permute them                
-                idx_permutation = self.lcg.random_permutation(n_individual)
+                idx_permutation = lcg.random_permutation(n_individual)
                 idx_permutation = np.array(idx_permutation)
                 idx_train += list(df_individual.index[idx_permutation[:n_train]])
                 idx_test += list(df_individual.index[idx_permutation[n_train:]])
@@ -132,7 +135,7 @@ class ClosedSetSplit(IdentitySplit):
 
         self.ratio_train = ratio_train
         self.identity_skip = identity_skip
-        self.set_seed(seed)
+        self.seed = seed
     
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -189,7 +192,7 @@ class OpenSetSplit(IdentitySplit):
         self.ratio_class_test = ratio_class_test
         self.n_class_test = n_class_test
         self.identity_skip = identity_skip
-        self.set_seed(seed)
+        self.seed = seed
 
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -203,10 +206,13 @@ class OpenSetSplit(IdentitySplit):
         
         df = self.modify_df(df)
 
+        # Initialize the random number generator
+        lcg = self.initialize_lcg()
+
         # Compute the counts and randomly permute them
         y_counts = df['identity'].value_counts()
         n_class = len(y_counts)
-        idx = self.lcg.random_permutation(n_class)
+        idx = lcg.random_permutation(n_class)
         y_counts = y_counts.iloc[idx]
 
         # Compute number of identities in the testing set
@@ -260,7 +266,7 @@ class DisjointSetSplit(IdentitySplit):
         self.ratio_class_test = ratio_class_test
         self.n_class_test = n_class_test
         self.identity_skip = identity_skip
-        self.set_seed(seed)
+        self.seed = seed
 
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -274,10 +280,13 @@ class DisjointSetSplit(IdentitySplit):
 
         df = self.modify_df(df)
         
+        # Initialize the random number generator
+        lcg = self.initialize_lcg()
+
         # Compute the counts and randomly permute them
         y_counts = df['identity'].value_counts()
         n_class = len(y_counts)
-        idx = self.lcg.random_permutation(n_class)
+        idx = lcg.random_permutation(n_class)
         y_counts = y_counts.iloc[idx]
 
         # Compute number of identities in the testing set
