@@ -15,6 +15,16 @@ class TestTimeSplits(unittest.TestCase):
     def test_df(self):
         self.assertGreaterEqual(len(dfs), 1)
     
+    def test_seed(self):
+        splitter = splits.TimeProportionSplit()
+        for df in dfs:
+            if 'date' in df.columns:
+                idx_train, idx_test = splitter.split(df)[0]
+                idx_train1, idx_test1 = splitter.resplit_random(df, idx_train, idx_test)
+                idx_train2, idx_test2 = splitter.resplit_random(df, idx_train, idx_test)
+                self.assertEqual(idx_train1.tolist(), idx_train2.tolist())
+                self.assertEqual(idx_test1.tolist(), idx_test2.tolist())
+
     def test_time_proportion(self):
         splitter = splits.TimeProportionSplit()
         for df in dfs:
