@@ -144,7 +144,7 @@ class TimeProportionSplit(TimeAwareSplit):
                 # Loop over all dates; y is a tuple (date, df with unique date and identity)
                 for i, (_, df_date) in enumerate(dates):
                     # Add half dates to the training and half to the testing set
-                    if i < int(np.round(n_dates/2)):
+                    if i < int(np.round(self.ratio*n_dates)):
                         idx_train += list(df_date.index)
                     else:
                         idx_test += list(df_date.index)
