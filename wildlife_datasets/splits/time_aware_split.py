@@ -69,30 +69,30 @@ class TimeAwareSplit(BalancedSplit):
         
         # Compute the number of samples for each individual in the training set
         counts_train = {}
-        for x in df.loc[idx_train].groupby('identity'):
-            counts_train[x[0]] = len(x[1])
+        for name, df_name in df.loc[idx_train].groupby('identity'):
+            counts_train[name] = len(df_name)
         # Compute the number of samples for each individual in the testing set
         counts_test = {}
-        for x in df.loc[idx_test].groupby('identity'):
-            counts_test[x[0]] = len(x[1])
+        for name, df_name in df.loc[idx_test].groupby('identity'):
+            counts_test[name] = len(df_name)
 
         idx_train_new = []
         idx_test_new = []
         # Loop over all individuals
-        for individual, df_individual in df.groupby('identity'):
+        for name, df_name in df.groupby('identity'):
             # Extract the number of individuals in the training and testing sets
-            n_train = counts_train.get(individual, 0)
-            n_test = counts_test.get(individual, 0)
+            n_train = counts_train.get(name, 0)
+            n_test = counts_test.get(name, 0)
             if n_train+n_test > 0:
                 # Get randomly permuted indices of the corresponding identity
-                df_individual = df_individual[df_individual['year'] <= year_max]
-                if len(df_individual) < n_train+n_test:
+                df_name = df_name[df_name['year'] <= year_max]
+                if len(df_name) < n_train+n_test:
                     raise(Exception('The set is too small.'))
                 # Get the correct number of indices in both sets
                 idx_permutation = lcg.random_permutation(n_train+n_test)
                 idx_permutation = np.array(idx_permutation)
-                idx_train_new += list(df_individual.index[idx_permutation[:n_train]])
-                idx_test_new += list(df_individual.index[idx_permutation[n_train:n_train+n_test]])
+                idx_train_new += list(df_name.index[idx_permutation[:n_train]])
+                idx_test_new += list(df_name.index[idx_permutation[n_train:n_train+n_test]])
         return np.array(idx_train_new), np.array(idx_test_new)
 
 
@@ -107,16 +107,19 @@ class TimeProportionSplit(TimeAwareSplit):
 
     def __init__(
             self,
+            ratio: float = 0.5,
             seed: int = 666,
             identity_skip: str = 'unknown',
             ):
         """Initializes the class.
 
         Args:
+            ratio (float, optional): The fraction of dates going to the testing set.
             seed (int, optional): Initial seed for the LCG random generator.
             identity_skip (str, optional): Name of the identities to ignore.
         """
 
+        self.ratio = ratio
         self.identity_skip = identity_skip
         self.seed = seed
 
@@ -134,17 +137,17 @@ class TimeProportionSplit(TimeAwareSplit):
         idx_train = []
         idx_test = []
         # Loop over all identities; x is a tuple (identity, df with unique identity)
-        for x in df.groupby('identity'):            
-            dates = x[1].groupby('date')
+        for _, df_name in df.groupby('identity'):            
+            dates = df_name.groupby('date')
             n_dates = len(dates)
             if n_dates > 1:
                 # Loop over all dates; y is a tuple (date, df with unique date and identity)
-                for i, y in enumerate(dates):
+                for i, (_, df_date) in enumerate(dates):
                     # Add half dates to the training and half to the testing set
                     if i < int(np.round(n_dates/2)):
-                        idx_train += list(y[1].index)
+                        idx_train += list(df_date.index)
                     else:
-                        idx_test += list(y[1].index)
+                        idx_test += list(df_date.index)
         return [(np.array(idx_train), np.array(idx_test))]
 
 
