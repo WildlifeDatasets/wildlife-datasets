@@ -149,7 +149,7 @@ class TimeProportionSplit(TimeAwareSplit):
                     else:
                         idx_test += list(df_date.index)
             else:
-                idx_train = df_name.index
+                idx_train += list(df_name.index)
         return [(np.array(idx_train), np.array(idx_test))]
 
 
