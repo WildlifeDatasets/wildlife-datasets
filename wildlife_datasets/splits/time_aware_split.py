@@ -148,6 +148,8 @@ class TimeProportionSplit(TimeAwareSplit):
                         idx_train += list(df_date.index)
                     else:
                         idx_test += list(df_date.index)
+            else:
+                idx_train = df_name.index
         return [(np.array(idx_train), np.array(idx_test))]
 
 
@@ -248,7 +250,7 @@ class TimeCutoffSplitAll(TimeAwareSplit):
 
 class RandomProportion():
     # TODO: add documentation
-    
+
     def __init__(self, **kwargs):
         self.splitter = TimeProportionSplit(**kwargs)
     
