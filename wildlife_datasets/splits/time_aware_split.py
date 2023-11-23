@@ -244,3 +244,16 @@ class TimeCutoffSplitAll(TimeAwareSplit):
             for split in splitter.split(df):
                 splits.append(split)
         return splits
+
+
+class RandomProportion():
+    # TODO: add documentation
+    
+    def __init__(self, **kwargs):
+        self.splitter = TimeProportionSplit(**kwargs)
+    
+    def split(self, df):
+        splits = []
+        for idx_train, idx_test in self.splitter.split(df):
+            splits.append(self.splitter.resplit_random(df, idx_train, idx_test))
+        return splits

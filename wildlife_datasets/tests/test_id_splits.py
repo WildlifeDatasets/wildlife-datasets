@@ -9,19 +9,25 @@ dataset_names = [
 n_orig_datasets = len(dataset_names)
 seed1 = 666
 seed2 = 12345
-splitters1 = [
+splitters1_all = [
     splits.ClosedSetSplit(0.5, seed=seed1),
     splits.OpenSetSplit(0.5, 0.1, seed=seed1),
     splits.OpenSetSplit(0.5, n_class_test=5, seed=seed1),
     splits.DisjointSetSplit(0.1, seed=seed1),
-    splits.DisjointSetSplit(n_class_test=5, seed=seed1)
+    splits.DisjointSetSplit(n_class_test=5, seed=seed1),   
 ]
-splitters2 = [
+splitters1_date = [
+    splits.RandomProportion(seed=seed1)
+]
+splitters2_all = [
     splits.ClosedSetSplit(0.5, seed=seed2),
     splits.OpenSetSplit(0.5, 0.1, seed=seed2),
     splits.OpenSetSplit(0.5, n_class_test=5, seed=seed2),
     splits.DisjointSetSplit(0.1, seed=seed2),
     splits.DisjointSetSplit(n_class_test=5, seed=seed2)
+]
+splitters2_date = [
+    splits.RandomProportion(seed=seed2)
 ]
 tol = 0.1
 dfs = load_datasets(dataset_names)
@@ -46,20 +52,32 @@ class TestIdSplits(unittest.TestCase):
             self.assertAlmostEqual(len(df_train), expected_value, delta=expected_value*tol)
 
     def test_seed(self):
-        for splitter in splitters1:
+        for splitter in splitters1_all:
             for df in dfs:
-                df_red = df[df['identity'] != 'unknown'] 
                 idx_train1, idx_test1 = splitter.split(df)[0]
                 idx_train2, idx_test2 = splitter.split(df)[0]
                 self.assertEqual(idx_train1.tolist(), idx_train2.tolist())
                 self.assertEqual(idx_test1.tolist(), idx_test2.tolist())
-        for splitter1, splitter2 in zip(splitters1, splitters2):
+        for splitter in splitters1_date:
             for df in dfs:
-                df_red = df[df['identity'] != 'unknown'] 
+                if 'date' in df.columns:
+                    idx_train1, idx_test1 = splitter.split(df)[0]
+                    idx_train2, idx_test2 = splitter.split(df)[0]
+                    self.assertEqual(idx_train1.tolist(), idx_train2.tolist())
+                    self.assertEqual(idx_test1.tolist(), idx_test2.tolist())
+        for splitter1, splitter2 in zip(splitters1_all, splitters2_all):
+            for df in dfs:
                 idx_train1, idx_test1 = splitter1.split(df)[0]
                 idx_train2, idx_test2 = splitter2.split(df)[0]
                 self.assertNotEqual(idx_train1.tolist(), idx_train2.tolist())
                 self.assertNotEqual(idx_test1.tolist(), idx_test2.tolist())        
+        for splitter1, splitter2 in zip(splitters1_date, splitters2_date):
+            for df in dfs:
+                if 'date' in df.columns:
+                    idx_train1, idx_test1 = splitter1.split(df)[0]
+                    idx_train2, idx_test2 = splitter2.split(df)[0]
+                    self.assertNotEqual(idx_train1.tolist(), idx_train2.tolist())
+                    self.assertNotEqual(idx_test1.tolist(), idx_test2.tolist())        
         
             
     def test_closed_set(self):
