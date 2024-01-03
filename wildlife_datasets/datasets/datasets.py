@@ -361,7 +361,7 @@ class AAUZebraFish(DatasetFactory):
 
     @classmethod
     def _download(cls):
-        command = f"datasets download -d 'aalborguniversity/aau-zebrafish-reid'"
+        command = f"datasets download -d aalborguniversity/aau-zebrafish-reid"
         exception_text = '''Kaggle must be setup.
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#aauzebrafish'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
@@ -1532,7 +1532,7 @@ class SeaTurtleID(DatasetFactory):
 
     @classmethod
     def _download(cls):
-        command = f"datasets download -d 'wildlifedatasets/seaturtleid' --force"
+        command = f"datasets download -d wildlifedatasets/seaturtleid --force"
         exception_text = '''Kaggle must be setup.
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
@@ -1572,7 +1572,7 @@ class SeaTurtleIDHeads(DatasetFactory):
 
     @classmethod
     def _download(cls):
-        command = f"datasets download -d 'wildlifedatasets/seaturtleidheads' --force"
+        command = f"datasets download -d wildlifedatasets/seaturtleidheads --force"
         exception_text = '''Kaggle must be setup.
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
