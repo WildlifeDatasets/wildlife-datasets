@@ -1,11 +1,12 @@
 import os
+import shutil
 import pandas as pd
 import numpy as np
 from typing import Optional, List
 import json
 import datetime
 
-from .. import downloads, splits
+from .. import splits
 from .metadata import metadata
 from . import utils
 
@@ -23,6 +24,12 @@ class DatasetFactory():
     """
 
     unknown_name = 'unknown'
+    download_warning = '''You are trying to download an already downloaded dataset.
+        This message may have happened to due interrupted download or extract.
+        To force the download use the `force=True` keyword such as
+        get_data(..., force=True) or download(..., force=True).
+        '''
+    download_mark_name = 'already_downloaded'
 
     def __init__(
             self, 
@@ -48,17 +55,42 @@ class DatasetFactory():
         self.add_splits()
 
     @classmethod
-    def get_data(cls, root, **kwargs):
-        cls.downloader().get_data(root, **kwargs)
+    def get_data(cls, root, force=False, **kwargs):
+        dataset_name = cls.__name__
+        mark_file_name = os.path.join(root, cls.download_mark_name)
+        
+        already_downloaded = os.path.exists(mark_file_name)
+        if already_downloaded and not force:
+            print('DATASET %s: DOWNLOADING STARTED.' % dataset_name)
+            print(cls.download_warning)
+        else:
+            print('DATASET %s: DOWNLOADING STARTED.' % dataset_name)
+            cls.download(root, force=force, **kwargs)
+            print('DATASET %s: EXTRACTING STARTED.' % dataset_name)
+            cls.extract(root,  **kwargs)
+            print('DATASET %s: FINISHED.\n' % dataset_name)
 
     @classmethod
-    def download(cls, root, **kwargs):
-        cls.downloader().download(root, **kwargs)
-    
-    @classmethod
+    def download(cls, root, force=False, **kwargs):
+        dataset_name = cls.__name__
+        mark_file_name = os.path.join(root, cls.download_mark_name)
+        
+        already_downloaded = os.path.exists(mark_file_name)
+        if already_downloaded and not force:
+            print('DATASET %s: DOWNLOADING STARTED.' % dataset_name)            
+            print(cls.download_warning)
+        else:
+            if os.path.exists(mark_file_name):
+                os.remove(mark_file_name)
+            with utils.data_directory(root):
+                cls._download(**kwargs)
+            open(mark_file_name, 'a').close()
+        
+    @classmethod    
     def extract(cls, root, **kwargs):
-        cls.downloader().extract(root, **kwargs)
-    
+        with utils.data_directory(root):
+            cls._extract(**kwargs)
+        
     def create_catalogue(self):
         """Creates the dataframe.
 
@@ -324,9 +356,20 @@ class DatasetFactoryWildMe(DatasetFactory):
 
 
 class AAUZebraFish(DatasetFactory):
-    downloader = downloads.AAUZebraFish
     metadata = metadata['AAUZebraFish']
-    
+    archive = 'aau-zebrafish-reid.zip'
+
+    @classmethod
+    def _download(cls):
+        command = f"datasets download -d 'aalborguniversity/aau-zebrafish-reid'"
+        exception_text = '''Kaggle must be setup.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#aauzebrafish'''
+        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+        
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'annotations.csv'), sep=';')
 
@@ -372,9 +415,18 @@ class AAUZebraFish(DatasetFactory):
 
 
 class AerialCattle2017(DatasetFactory):
-    downloader = downloads.AerialCattle2017
     metadata = metadata['AerialCattle2017']
+    url = 'https://data.bris.ac.uk/datasets/tar/3owflku95bxsx24643cybxu3qh.zip'
+    archive = '3owflku95bxsx24643cybxu3qh.zip'
 
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+    
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
         data = utils.find_images(self.root)
@@ -392,9 +444,35 @@ class AerialCattle2017(DatasetFactory):
 
 
 class ATRW(DatasetFactory):
-    downloader = downloads.ATRW
     metadata = metadata['ATRW']
+    url = 'https://github.com/cvwc2019/ATRWEvalScript/archive/refs/heads/main.zip'
+    archive = 'main.zip'
+    downloads = [
+        # Wild dataset (Detection)
+        ('https://lilablobssc.blob.core.windows.net/cvwc2019/test/atrw_detection_test.tar.gz', 'atrw_detection_test.tar.gz'),
 
+        # Re-ID dataset
+        ('https://lilablobssc.blob.core.windows.net/cvwc2019/train/atrw_reid_train.tar.gz', 'atrw_reid_train.tar.gz'),
+        ('https://lilablobssc.blob.core.windows.net/cvwc2019/train/atrw_anno_reid_train.tar.gz', 'atrw_anno_reid_train.tar.gz'),
+        ('https://lilablobssc.blob.core.windows.net/cvwc2019/test/atrw_reid_test.tar.gz', 'atrw_reid_test.tar.gz'),
+        ('https://lilablobssc.blob.core.windows.net/cvwc2019/test/atrw_anno_reid_test.tar.gz', 'atrw_anno_reid_test.tar.gz'),
+    ]
+
+    @classmethod
+    def _download(cls):
+        for url, archive in cls.downloads:
+            utils.download_url(url, archive)
+        # Evaluation scripts
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        for url, archive in cls.downloads:
+            archive_name = archive.split('.')[0]
+            utils.extract_archive(archive, archive_name, delete=True)
+        # Evaluation scripts
+        utils.extract_archive(cls.archive, 'eval_script', delete=True)
+    
     def create_catalogue(self) -> pd.DataFrame:
         # Load information for the reid_train part of the dataset
         ids = pd.read_csv(os.path.join(self.root, 'atrw_anno_reid_train', 'reid_list_train.csv'),
@@ -471,19 +549,48 @@ class ATRW(DatasetFactory):
 
 
 class BelugaID(DatasetFactoryWildMe):
-    downloader = downloads.BelugaID
     metadata = metadata['BelugaID']
+    url = 'https://lilablobssc.blob.core.windows.net/liladata/wild-me/beluga.coco.tar.gz'
+    archive = 'beluga.coco.tar.gz'
 
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('beluga', 2022)
 
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
 
 
 class BirdIndividualID(DatasetFactory):
-    downloader = downloads.BirdIndividualID
     metadata = metadata['BirdIndividualID']
     prefix1 = 'Original_pictures'
     prefix2 = 'IndividualID'
+    url = 'https://drive.google.com/uc?id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA'
+    archive = 'ferreira_et_al_2020.zip'
+
+    @classmethod
+    def _download(cls):
+        exception_text = '''Dataset must be downloaded manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#birdindividualid'''
+        raise Exception(exception_text)
+        # utils.gdown_download(cls.url, cls.archive, exception_text=exception_text)
+    
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+
+        # Create new folder for segmented images
+        folder_new = os.getcwd() + 'Segmented'
+        if not os.path.exists(folder_new):
+            os.makedirs(folder_new)
+
+        # Move segmented images to new folder
+        folder_move = 'Cropped_pictures'
+        shutil.move(folder_move, os.path.join(folder_new, folder_move))
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -534,14 +641,37 @@ class BirdIndividualID(DatasetFactory):
 
 
 class BirdIndividualIDSegmented(BirdIndividualID):
-    downloader = downloads.Segmented
     prefix1 = 'Cropped_pictures'
     prefix2 = 'IndividuaID'
+    warning = '''You are trying to download or extract a segmented dataset.
+        It is already included in its non-segmented version.
+        Skipping.'''
+    
+    @classmethod
+    def get_data(cls, root, name=None):
+        print(cls.warning)
 
+    @classmethod
+    def _download(cls):
+        print(cls.warning)
+
+    @classmethod
+    def _extract(cls):
+        print(cls.warning)
 
 class CTai(DatasetFactory):
-    downloader = downloads.CTai
     metadata = metadata['CTai']
+    url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
+    archive = 'master.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+        shutil.rmtree('chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CZoo')
 
     def create_catalogue(self) -> pd.DataFrame:
         # Define the wrong identity names
@@ -583,8 +713,18 @@ class CTai(DatasetFactory):
 
 
 class CZoo(DatasetFactory):
-    downloader = downloads.CZoo
     metadata = metadata['CZoo']
+    url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
+    archive = 'master.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+        shutil.rmtree('chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CTai')
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset
@@ -611,9 +751,18 @@ class CZoo(DatasetFactory):
 
 
 class Cows2021(DatasetFactory):
-    downloader = downloads.Cows2021
     metadata = metadata['Cows2021']
+    url = 'https://data.bris.ac.uk/datasets/tar/4vnrca7qw1642qlwxjadp87h7.zip'
+    archive = '4vnrca7qw1642qlwxjadp87h7.zip'
 
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+    
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
         data = utils.find_images(self.root)
@@ -647,8 +796,64 @@ class Cows2021(DatasetFactory):
 
 
 class Drosophila(DatasetFactory):
-    downloader = downloads.Drosophila
     metadata = metadata['Drosophila']
+    downloads = [
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71066', 'week1_Day1_train_01to05.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71067', 'week1_Day1_train_06to10.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71068', 'week1_Day1_train_11to15.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71069', 'week1_Day1_train_16to20.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71065', 'week1_Day1_val.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71071', 'week1_Day2_train_01to05.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71072', 'week1_Day2_train_06to10.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71073', 'week1_Day2_train_11to15.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71075', 'week1_Day2_train_16to20.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71070', 'week1_Day2_val.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71077', 'week1_Day3_01to04.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71078', 'week1_Day3_05to08.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71079', 'week1_Day3_09to12.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71080', 'week1_Day3_13to16.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71081', 'week1_Day3_17to20.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71083', 'week2_Day1_train_01to05.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71084', 'week2_Day1_train_06to10.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71085', 'week2_Day1_train_11to15.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71086', 'week2_Day1_train_16to20.zip'),        
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71082', 'week2_Day1_val.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71094', 'week2_Day2_train_01to05.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71095', 'week2_Day2_train_06to10.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71109', 'week2_Day2_train_11to15.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71110', 'week2_Day2_train_16to20.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71093', 'week2_Day2_val.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71111', 'week2_Day3_01to04.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71112', 'week2_Day3_05to08.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71115', 'week2_Day3_09to12.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71117', 'week2_Day3_13to16.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71118', 'week2_Day3_17to20.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71119', 'week3_Day1_train_01to05.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71120', 'week3_Day1_train_06to10.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71121', 'week3_Day1_train_11to15.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71124', 'week3_Day1_train_16to20.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71097', 'week3_Day1_val.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71125', 'week3_Day2_train_01to05.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71126', 'week3_Day2_train_06to10.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71127', 'week3_Day2_train_11to15.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71128', 'week3_Day2_train_16to20.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71107', 'week3_Day2_val.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71129', 'week3_Day3_01to04.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71130', 'week3_Day3_05to08.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71131', 'week3_Day3_09to12.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71132', 'week3_Day3_13to16.zip'),
+        ('https://dataverse.scholarsportal.info/api/access/datafile/71133', 'week3_Day3_17to20.zip'),
+    ]
+
+    @classmethod
+    def _download(cls):
+        for url, archive in cls.downloads:
+            utils.download_url(url, archive)
+
+    @classmethod
+    def _extract(cls):
+        for url, archive in cls.downloads:
+            utils.extract_archive(archive, extract_path=os.path.splitext(archive)[0], delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -677,8 +882,17 @@ class Drosophila(DatasetFactory):
 
 
 class FriesianCattle2015(DatasetFactory):
-    downloader = downloads.FriesianCattle2015
     metadata = metadata['FriesianCattle2015']
+    url = 'https://data.bris.ac.uk/datasets/wurzq71kfm561ljahbwjhx9n3/wurzq71kfm561ljahbwjhx9n3.zip'
+    archive = 'wurzq71kfm561ljahbwjhx9n3.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -701,8 +915,17 @@ class FriesianCattle2015(DatasetFactory):
 
 
 class FriesianCattle2017(DatasetFactory):
-    downloader = downloads.FriesianCattle2017
     metadata = metadata['FriesianCattle2017']
+    url = 'https://data.bris.ac.uk/datasets/2yizcfbkuv4352pzc32n54371r/2yizcfbkuv4352pzc32n54371r.zip'
+    archive = '2yizcfbkuv4352pzc32n54371r.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -720,16 +943,39 @@ class FriesianCattle2017(DatasetFactory):
 
 
 class GiraffeZebraID(DatasetFactoryWildMe):
-    downloader = downloads.GiraffeZebraID
     metadata = metadata['GiraffeZebraID']
+    url = 'https://lilablobssc.blob.core.windows.net/giraffe-zebra-id/gzgc.coco.tar.gz'
+    archive = 'gzgc.coco.tar.gz'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
     
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('gzgc', 2020)
 
 
 class Giraffes(DatasetFactory):
-    downloader = downloads.Giraffes
     metadata = metadata['Giraffes']
+
+    @classmethod
+    def _download(cls):
+        url = 'ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021/'
+        command = f"wget -rpk -l 10 -np -c --random-wait -U Mozilla {url} -P '.' "
+        exception_text = '''Download works only on Linux. Please download it manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#giraffes'''
+        if os.name == 'posix':
+            os.system(command)
+        else:
+            raise Exception(exception_text)
+
+    @classmethod
+    def _extract(cls):
+        pass
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -752,8 +998,25 @@ class Giraffes(DatasetFactory):
 
 
 class HappyWhale(DatasetFactory):
-    downloader = downloads.HappyWhale
     metadata = metadata['HappyWhale']
+    archive = 'happy-whale-and-dolphin.zip'
+
+    @classmethod
+    def _download(cls):
+        command = f"competitions download -c happy-whale-and-dolphin --force"
+        exception_text = '''Kaggle terms must be agreed with.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#happywhale'''
+        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        try:
+            utils.extract_archive(cls.archive, delete=True)
+        except:
+            exception_text = '''Extracting failed.
+                Either the download was not completed or the Kaggle terms were not agreed with.
+                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#happywhale'''
+            raise Exception(exception_text)
     
     def create_catalogue(self) -> pd.DataFrame:
         # Define the wrong species names
@@ -796,8 +1059,25 @@ class HappyWhale(DatasetFactory):
 
 
 class HumpbackWhaleID(DatasetFactory):
-    downloader = downloads.HumpbackWhaleID
     metadata = metadata['HumpbackWhaleID']
+    archive = 'humpback-whale-identification.zip'
+
+    @classmethod
+    def _download(cls):
+        command = f"competitions download -c humpback-whale-identification --force"
+        exception_text = '''Kaggle terms must be agreed with.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#humpbackwhale'''
+        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        try:
+            utils.extract_archive(cls.archive, delete=True)
+        except:
+            exception_text = '''Extracting failed.
+                Either the download was not completed or the Kaggle terms were not agreed with.
+                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#humpbackwhale'''
+            raise Exception(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load the training data
@@ -830,16 +1110,39 @@ class HumpbackWhaleID(DatasetFactory):
 
 
 class HyenaID2022(DatasetFactoryWildMe):
-    downloader = downloads.HyenaID2022
     metadata = metadata['HyenaID2022']
+    url = 'https://lilablobssc.blob.core.windows.net/liladata/wild-me/hyena.coco.tar.gz'
+    archive = 'hyena.coco.tar.gz'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('hyena', 2022)
 
 
 class IPanda50(DatasetFactory):
-    downloader = downloads.IPanda50
     metadata = metadata['IPanda50']
+    downloads = [
+        ('https://drive.google.com/uc?id=1nkh-g6a8JvWy-XsMaZqrN2AXoPlaXuFg', 'iPanda50-images.zip'),
+        ('https://drive.google.com/uc?id=1gVREtFWkNec4xwqOyKkpuIQIyWU_Y_Ob', 'iPanda50-split.zip'),
+        ('https://drive.google.com/uc?id=1jdACN98uOxedZDT-6X3rpbooLAAUEbNY', 'iPanda50-eyes-labels.zip'),
+    ]
+
+    @classmethod
+    def _download(cls):
+        for url, archive in cls.downloads:
+            utils.gdown_download(url, archive)
+
+    @classmethod
+    def _extract(cls):
+        for url, archive in cls.downloads:
+            utils.extract_archive(archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -877,16 +1180,35 @@ class IPanda50(DatasetFactory):
 
 
 class LeopardID2022(DatasetFactoryWildMe):
-    downloader = downloads.LeopardID2022
     metadata = metadata['LeopardID2022']
+    url = 'https://lilablobssc.blob.core.windows.net/liladata/wild-me/leopard.coco.tar.gz'
+    archive = 'leopard.coco.tar.gz'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('leopard', 2022)
 
 
 class LionData(DatasetFactory):
-    downloader = downloads.LionData
     metadata = metadata['LionData']
+    url = 'https://github.com/tvanzyl/wildlife_reidentification/archive/refs/heads/main.zip'
+    archive = 'main.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+        shutil.rmtree('wildlife_reidentification-main/Nyala_Data_Zero')
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -904,9 +1226,21 @@ class LionData(DatasetFactory):
 
 
 class MacaqueFaces(DatasetFactory):
-    downloader = downloads.MacaqueFaces
     metadata = metadata['MacaqueFaces']
     
+    @classmethod
+    def _download(cls):
+        downloads = [
+            ('https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces.zip', 'MacaqueFaces.zip'),
+            ('https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces_ImageInfo.csv', 'MacaqueFaces_ImageInfo.csv'),
+        ]
+        for url, file in downloads:
+            utils.download_url(url, file)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive('MacaqueFaces.zip', delete=True)
+
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset
         data = pd.read_csv(os.path.join(self.root, 'MacaqueFaces_ImageInfo.csv'))
@@ -925,8 +1259,17 @@ class MacaqueFaces(DatasetFactory):
 
 
 class NDD20(DatasetFactory):
-    downloader = downloads.NDD20
     metadata = metadata['NDD20']
+    url = 'https://data.ncl.ac.uk/ndownloader/files/22774175'
+    archive = 'NDD20.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)    
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the above-water dataset
@@ -994,8 +1337,29 @@ class NDD20(DatasetFactory):
 
 
 class NOAARightWhale(DatasetFactory):
-    downloader = downloads.NOAARightWhale
     metadata = metadata['NOAARightWhale']
+    archive = 'noaa-right-whale-recognition.zip'
+
+    @classmethod
+    def _download(cls):
+        command = f"competitions download -c noaa-right-whale-recognition --force"
+        exception_text = '''Kaggle terms must be agreed with.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#noaarightwhale'''
+        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        try:
+            utils.extract_archive(cls.archive, delete=True)
+            utils.extract_archive('imgs.zip', delete=True)
+            # Move misplaced image
+            shutil.move('w_7489.jpg', 'imgs')
+            os.remove('w_7489.jpg.zip')
+        except:
+            exception_text = '''Extracting failed.
+                Either the download was not completed or the Kaggle terms were not agreed with.
+                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#noaarightwhale'''
+            raise Exception(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the training dataset
@@ -1022,8 +1386,18 @@ class NOAARightWhale(DatasetFactory):
 
 
 class NyalaData(DatasetFactory):
-    downloader = downloads.NyalaData
     metadata = metadata['NyalaData']
+    url = 'https://github.com/tvanzyl/wildlife_reidentification/archive/refs/heads/main.zip'
+    archive = 'main.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+        shutil.rmtree('wildlife_reidentification-main/Lion_Data_Zero')
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -1048,8 +1422,17 @@ class NyalaData(DatasetFactory):
 
 
 class OpenCows2020(DatasetFactory):
-    downloader = downloads.OpenCows2020
     metadata = metadata['OpenCows2020']
+    url = 'https://data.bris.ac.uk/datasets/tar/10m32xl88x2b61zlkkgz3fml17.zip'
+    archive = '10m32xl88x2b61zlkkgz3fml17.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -1076,9 +1459,38 @@ class OpenCows2020(DatasetFactory):
 
 
 class SealID(DatasetFactory):
-    downloader = downloads.SealID
     metadata = metadata['SealID']
     prefix = 'source_'
+    archive = '22b5191e-f24b-4457-93d3-95797c900fc0_ui65zipk.zip'
+    
+    @classmethod
+    def _download(cls, url=None):
+        if url is None:
+            raise(Exception('URL must be provided for SealID.\nCheck https://wildlifedatasets.github.io/wildlife-datasets/downloads/#sealid'))
+        utils.download_url(url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+        utils.extract_archive(os.path.join('SealID', 'full images.zip'), delete=True)
+        utils.extract_archive(os.path.join('SealID', 'patches.zip'), delete=True)
+        
+        # Create new folder for segmented images
+        folder_new = os.getcwd() + 'Segmented'
+        if not os.path.exists(folder_new):
+            os.makedirs(folder_new)
+        
+        # Move segmented images to new folder
+        folder_move = os.path.join('patches', 'segmented')
+        shutil.move(folder_move, os.path.join(folder_new, folder_move))
+        folder_move = os.path.join('full images', 'segmented_database')
+        shutil.move(folder_move, os.path.join(folder_new, folder_move))
+        folder_move = os.path.join('full images', 'segmented_query')
+        shutil.move(folder_move, os.path.join(folder_new, folder_move))
+        file_copy = os.path.join('patches', 'annotation.csv')
+        shutil.copy(file_copy, os.path.join(folder_new, file_copy))
+        file_copy = os.path.join('full images', 'annotation.csv')
+        shutil.copy(file_copy, os.path.join(folder_new, file_copy))            
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset
@@ -1097,13 +1509,37 @@ class SealID(DatasetFactory):
 
 
 class SealIDSegmented(SealID):
-    downloader = downloads.Segmented
     prefix = 'segmented_'
+    warning = '''You are trying to download or extract a segmented dataset.
+        It is already included in its non-segmented version.
+        Skipping.'''
+    
+    @classmethod
+    def get_data(cls, root, name=None):
+        print(cls.warning)
 
+    @classmethod
+    def _download(cls):
+        print(cls.warning)
+
+    @classmethod
+    def _extract(cls):
+        print(cls.warning)
 
 class SeaTurtleID(DatasetFactory):
-    downloader = downloads.SeaTurtleID
     metadata = metadata['SeaTurtleID']
+    archive = 'seaturtleid.zip'
+
+    @classmethod
+    def _download(cls):
+        command = f"datasets download -d 'wildlifedatasets/seaturtleid' --force"
+        exception_text = '''Kaggle must be setup.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
+        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load annotations JSON file
@@ -1131,8 +1567,19 @@ class SeaTurtleID(DatasetFactory):
 
 
 class SeaTurtleIDHeads(DatasetFactory):
-    downloader = downloads.SeaTurtleIDHeads
     metadata = metadata['SeaTurtleIDHeads']
+    archive = 'seaturtleidheads.zip'
+
+    @classmethod
+    def _download(cls):
+        command = f"datasets download -d 'wildlifedatasets/seaturtleidheads' --force"
+        exception_text = '''Kaggle must be setup.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
+        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load annotations JSON file
@@ -1158,8 +1605,29 @@ class SeaTurtleIDHeads(DatasetFactory):
 
 
 class SMALST(DatasetFactory):
-    downloader = downloads.SMALST
     metadata = metadata['SMALST']
+    url = 'https://drive.google.com/uc?id=1yVy4--M4CNfE5x9wUr1QBmAXEcWb6PWF'
+    archive = 'zebra_training_set.zip'
+
+    @classmethod
+    def _download(cls):
+        exception_text = '''Download filed. GDown quota probably reached. Download dataset manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#smalst'''
+        utils.gdown_download(cls.url, cls.archive, exception_text)
+
+    @classmethod
+    def _extract(cls):
+        exception_text = '''Extracting works only on Linux. Please extract it manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#smalst'''
+        if os.name == 'posix':
+            os.system('jar xvf ' + cls.archive)
+            os.remove(cls.archive)
+            shutil.rmtree(os.path.join('zebra_training_set', 'annotations'))
+            shutil.rmtree(os.path.join('zebra_training_set', 'texmap'))
+            shutil.rmtree(os.path.join('zebra_training_set', 'uvflow'))
+
+        else:
+            raise Exception(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -1188,8 +1656,31 @@ class SMALST(DatasetFactory):
 
 
 class StripeSpotter(DatasetFactory):
-    downloader = downloads.StripeSpotter
     metadata = metadata['StripeSpotter']
+
+    @classmethod
+    def _download(cls):
+        urls = [
+            'https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/stripespotter/data-20110718.zip',
+            'https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/stripespotter/data-20110718.z02',
+            'https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/stripespotter/data-20110718.z01',
+            ]
+        for url in urls:
+            os.system(f"wget -P '.' {url}")
+
+    @classmethod
+    def _extract(cls):
+        exception_text = '''Extracting works only on Linux. Please extract it manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#stripespotter'''
+        if os.name == 'posix':
+            os.system(f"zip -s- data-20110718.zip -O data-full.zip")
+            os.system(f"unzip data-full.zip")
+            os.remove('data-20110718.zip')
+            os.remove('data-20110718.z01')
+            os.remove('data-20110718.z02')
+            os.remove('data-full.zip')
+        else:
+            raise Exception(exception_text)       
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -1219,16 +1710,41 @@ class StripeSpotter(DatasetFactory):
 
 
 class WhaleSharkID(DatasetFactoryWildMe):
-    downloader = downloads.WhaleSharkID
     metadata = metadata['WhaleSharkID']
+    url = 'https://lilablobssc.blob.core.windows.net/whale-shark-id/whaleshark.coco.tar.gz'
+    archive = 'whaleshark.coco.tar.gz'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('whaleshark', 2020)
 
 
 class WNIGiraffes(DatasetFactory):
-    downloader = downloads.WNIGiraffes
     metadata = metadata['WNIGiraffes']
+    url = "https://lilablobssc.blob.core.windows.net/wni-giraffes/wni_giraffes_train_images.zip"
+    archive = 'wni_giraffes_train_images.zip'
+    url2 = 'https://lilablobssc.blob.core.windows.net/wni-giraffes/wni_giraffes_train.zip'
+    archive2 = 'wni_giraffes_train.zip'
+
+    @classmethod
+    def _download(cls):
+        exception_text = '''Dataset must be downloaded manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#wnigiraffes'''
+        raise Exception(exception_text)
+        #os.system(f'azcopy cp {cls.url} {cls.archive}')
+        #utils.download_url(cls.url2, cls.archive2)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+        utils.extract_archive(cls.archive2, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -1266,8 +1782,22 @@ class WNIGiraffes(DatasetFactory):
 
 
 class ZindiTurtleRecall(DatasetFactory):
-    downloader = downloads.ZindiTurtleRecall
     metadata = metadata['ZindiTurtleRecall']
+
+    @classmethod
+    def _download(cls):
+        downloads = [
+            ('https://storage.googleapis.com/dm-turtle-recall/train.csv', 'train.csv'),
+            ('https://storage.googleapis.com/dm-turtle-recall/extra_images.csv', 'extra_images.csv'),
+            ('https://storage.googleapis.com/dm-turtle-recall/test.csv', 'test.csv'),
+            ('https://storage.googleapis.com/dm-turtle-recall/images.tar', 'images.tar'),
+        ]
+        for url, file in downloads:
+            utils.download_url(url, file)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive('images.tar', 'images', delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the training images
