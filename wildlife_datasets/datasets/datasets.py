@@ -1458,6 +1458,38 @@ class OpenCows2020(DatasetFactory):
         return self.finalize_catalogue(df)    
 
 
+class PolarBearVidID(DatasetFactory):
+    # TODO: metadata missing
+    url = 'https://zenodo.org/records/7564529/files/PolarBearVidID.zip?download=1'
+    archive = 'PolarBearVidID.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+
+    def create_catalogue(self) -> pd.DataFrame:
+        metadata = pd.read_csv(os.path.join(self.root, 'animal_db.csv'))
+        data = utils.find_images(self.root)
+
+        # Convert numbers into animal names
+        path_to_names = {}
+        for _, metadata_row in metadata.iterrows():
+            path_to_names[metadata_row['id']] = metadata_row['name']
+        
+        # Finalize the dataframe
+        # TODO: video is missing
+        df = pd.DataFrame({
+            'image_id': data['file'].apply(lambda x: os.path.splitext(x)[0]),
+            'path': data['path'] + os.path.sep + data['file'],
+            'identity': data['path'].apply(lambda x: path_to_names[int(x)]),
+        })
+        return self.finalize_catalogue(df)
+
+
 class SealID(DatasetFactory):
     metadata = metadata['SealID']
     prefix = 'source_'

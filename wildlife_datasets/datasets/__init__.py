@@ -24,6 +24,7 @@ from .datasets import NDD20
 from .datasets import NOAARightWhale
 from .datasets import NyalaData
 from .datasets import OpenCows2020
+from .datasets import PolarBearVidID
 from .datasets import SealID
 from .datasets import SealIDSegmented
 from .datasets import SeaTurtleID
