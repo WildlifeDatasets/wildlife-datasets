@@ -62,6 +62,7 @@ names_all = [
     NOAARightWhale,
     NyalaData,
     OpenCows2020,
+    PolarBearVidID,
     SealID,
     SealIDSegmented,
     SeaTurtleID,
@@ -100,6 +101,7 @@ names_small = [
     IPanda50,
     MacaqueFaces,
     NyalaData,
+    PolarBearVidID,
     SeaTurtleIDHeads,
     StripeSpotter,
 ]

@@ -1461,7 +1461,7 @@ class OpenCows2020(DatasetFactory):
 
 
 class PolarBearVidID(DatasetFactory):
-    # TODO: metadata missing
+    metadata = metadata['PolarBearVidID']
     url = 'https://zenodo.org/records/7564529/files/PolarBearVidID.zip?download=1'
     archive = 'PolarBearVidID.zip'
 
@@ -1483,11 +1483,11 @@ class PolarBearVidID(DatasetFactory):
             path_to_names[metadata_row['id']] = metadata_row['name']
         
         # Finalize the dataframe
-        # TODO: video is missing
         df = pd.DataFrame({
             'image_id': data['file'].apply(lambda x: os.path.splitext(x)[0]),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': data['path'].apply(lambda x: path_to_names[int(x)]),
+            'video': data['file'].apply(lambda x: int(x[7:10]))
         })
         return self.finalize_catalogue(df)
 
