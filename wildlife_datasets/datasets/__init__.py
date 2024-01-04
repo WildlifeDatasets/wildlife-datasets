@@ -32,7 +32,6 @@ from .datasets import SeaTurtleIDHeads
 from .datasets import SMALST
 from .datasets import StripeSpotter
 from .datasets import WhaleSharkID
-from .datasets import WNIGiraffes
 from .datasets import ZindiTurtleRecall
 from .metadata import Metadata
 
@@ -70,7 +69,6 @@ names_all = [
     SMALST,
     StripeSpotter,
     WhaleSharkID,
-    WNIGiraffes,
     ZindiTurtleRecall,
 ]
 
@@ -88,7 +86,6 @@ names_wild = [
     SeaTurtleID,
     StripeSpotter,
     WhaleSharkID,
-    WNIGiraffes,
 ]
 
 names_small = [
@@ -119,7 +116,6 @@ names_giraffes = [
     Giraffes,
     SMALST,
     StripeSpotter,
-    WNIGiraffes,
 ]
 
 names_primates = [
