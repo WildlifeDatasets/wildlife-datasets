@@ -981,19 +981,19 @@ class Giraffes(DatasetFactory):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        path = os.path.join('pbil.univ-lyon1.fr', 'pub', 'datasets', 'miele2021')
-        data = utils.find_images(os.path.join(self.root, path))
+        data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
+        n_folders = max(folders.columns)
 
         # Extract information from the folder structure
-        clusters = folders[0] == 'clusters'
+        clusters = folders[n_folders-1] == 'clusters'
         data, folders = data[clusters], folders[clusters]
 
         # Finalize the dataframe
         df = pd.DataFrame({    
             'id': utils.create_id(data['file']),
-            'path': path + os.path.sep + data['path'] + os.path.sep + data['file'],
-            'identity': folders[1],
+            'path': data['path'] + os.path.sep + data['file'],
+            'identity': folders[n_folders],
         })
         df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
