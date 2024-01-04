@@ -90,6 +90,8 @@ class DatasetFactory():
     def extract(cls, root, **kwargs):
         with utils.data_directory(root):
             cls._extract(**kwargs)
+        mark_file_name = os.path.join(root, cls.download_mark_name)
+        open(mark_file_name, 'a').close()
         
     def create_catalogue(self):
         """Creates the dataframe.
@@ -1502,7 +1504,7 @@ class SealID(DatasetFactory):
         utils.download_url(url, cls.archive)
 
     @classmethod
-    def _extract(cls):
+    def _extract(cls, **kwargs):
         utils.extract_archive(cls.archive, delete=True)
         utils.extract_archive(os.path.join('SealID', 'full images.zip'), delete=True)
         utils.extract_archive(os.path.join('SealID', 'patches.zip'), delete=True)
@@ -1547,15 +1549,15 @@ class SealIDSegmented(SealID):
         Skipping.'''
     
     @classmethod
-    def get_data(cls, root, name=None):
+    def get_data(cls, *args, **kwargs):
         print(cls.warning)
 
     @classmethod
-    def _download(cls):
+    def _download(cls, *args, **kwargs):
         print(cls.warning)
 
     @classmethod
-    def _extract(cls):
+    def _extract(cls, *args, **kwargs):
         print(cls.warning)
 
 class SeaTurtleID(DatasetFactory):
