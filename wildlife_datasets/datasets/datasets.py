@@ -1249,8 +1249,11 @@ class MacaqueFaces(DatasetFactory):
         date_taken = [datetime.datetime.strptime(date, '%d-%m-%Y').strftime('%Y-%m-%d') for date in data['DateTaken']]
         
         # Finalize the dataframe
+        data['Path'] = data['Path'].str.replace('/', os.path.sep)
+        #display(data['Path'].str.strip(os.path.sep))
+        #display(os.path.sep)
         df = pd.DataFrame({
-            'id': pd.Series(range(len(data))),
+            'id': pd.Series(range(len(data))),            
             'path': 'MacaqueFaces' + os.path.sep + data['Path'].str.strip(os.path.sep) + os.path.sep + data['FileName'],
             'identity': data['ID'],
             'date': pd.Series(date_taken),
