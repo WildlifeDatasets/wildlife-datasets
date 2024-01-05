@@ -10,12 +10,13 @@ The aim of the project is to provide comprehensive overview of datasets for wild
 - default splits for several machine learning tasks including the ability create additional splits.
 - evaluation metrics for closed-set and open-set classification.
 
+We provide [documentation](https://wildlifedatasets.github.io/wildlife-datasets/) and examples in [notebooks](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/notebooks). The package provides a natural synergy with [Wildlife tools](https://github.com/WildlifeDatasets/wildlife-tools), which provides out MegaDescriptor model and tools for training neural networks.
 
 ## Summary of datasets
 
-The package is able to handle the following datasets. We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and additional information such as source, number of poses, inclusion of timestamps, whether the animals were captured in the wild and whether the dataset contain multiple species.
+An overview of the provided datasets is available in the [documentation](https://wildlifedatasets.github.io/wildlife-datasets/datasets/), while the more numerical summary is located in a [Jupyter notebook](notebooks/dataset_descriptions.ipynb). Due to its size, it may be necessary to view it via [nbviewer](https://nbviewer.org/github/WildlifeDatasets/wildlife-datasets/blob/main/notebooks/dataset_descriptions.ipynb).
 
-Graphical summary of datasets is located in a [Jupyter notebook](notebooks/dataset_descriptions.ipynb). Due to its size, it may be necessary to view it via [nbviewer](https://nbviewer.org/github/WildlifeDatasets/wildlife-datasets/blob/main/notebooks/dataset_descriptions.ipynb).
+We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and additional information such as source, number of poses, inclusion of timestamps, whether the animals were captured in the wild and whether the dataset contain multiple species.
 
 ![](images/Datasets_Summary.png)
 
