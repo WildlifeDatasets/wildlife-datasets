@@ -107,6 +107,9 @@ def plot_grid(
         The plotted grid.
     """
 
+    if len(df) == 0:
+        return None
+    
     # Select indices of images to be plotted
     n = min(len(df), n_rows*n_cols)
     idx = np.random.permutation(len(df))[:n]

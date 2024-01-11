@@ -28,7 +28,6 @@ def display_statistics(df: pd.DataFrame, unknown_name: str = '') -> None:
     print(f"Number of all animals            {len(df)}")
     print(f"Number of animals with one image {n_one}")
     print(f"Number of unidentified animals   {n_unidentified}")
-    print(f"Number of animals in dataframe   {len(df)-n_one-n_unidentified}")
 
     # Print statistics about video if present
     if 'video' in df.columns:
