@@ -7,11 +7,12 @@ from matplotlib import pyplot as plt
 from PIL import Image
 from ..datasets import utils
 
-def get_image(path: str) -> Image:
+def get_image(path: str, max_size: int = None) -> Image:
     """Loads an image.
 
     Args:
         path (str): Path of the image.
+        max_size(int, optional): Maximal size of the image or None (no restriction).
 
     Returns:
         Loaded image.
@@ -20,7 +21,13 @@ def get_image(path: str) -> Image:
     # We load it with OpenCV because PIL does not apply metadata.
     img = cv2.imread(path)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    return Image.fromarray(img)
+    img = Image.fromarray(img)
+    if max_size is not None:
+        w, h = img.size
+        if max(w, h) > max_size:
+            c = max_size / max(w, h)
+            img = img.resize((int(c*w), int(c*h)))
+    return img
 
 def plot_image(img: Image) -> None:
     """Plots an image.
