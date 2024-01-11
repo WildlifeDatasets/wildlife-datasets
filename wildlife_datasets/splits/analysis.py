@@ -1,3 +1,6 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
 def recognize_id_split(ids_train, ids_test):
     ids_train = set(ids_train)
     ids_test = set(ids_test)
@@ -60,3 +63,20 @@ def analyze_split(df, idx_train, idx_test):
     print('')    
     print('Fraction of train set     = %1.2f%%' % (100*ratio_train))
     print('Fraction of test set only = %1.2f%%' % (100*ratio_test_only))
+
+def visualize_split(df_train, df_test, selection=None, ylabels=True):
+    if selection == None:
+        selection = pd.concat((df_train, df_test))['identity'].sort_values().unique()
+    elif isinstance(selection, int):
+        selection = pd.concat((df_train, df_test))['identity'].sort_values().unique()[:selection]
+    for i, identity in enumerate(selection):
+        date_train = df_train[df_train['identity'] == identity]['date']
+        plt.scatter(date_train, len(date_train)*[i], color='blue')
+        date_test = df_test[df_test['identity'] == identity]['date']
+        plt.scatter(date_test, len(date_test)*[i], color='black', marker='*')
+    if ylabels:
+        plt.yticks(range(len(selection)), selection)
+        plt.ylabel('Turtle name')
+    plt.scatter([], [], color='blue', label='Training set')
+    plt.scatter([], [], color='black', marker='*', label='Testing set')
+    plt.legend()
