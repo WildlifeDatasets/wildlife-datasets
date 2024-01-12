@@ -19,9 +19,3 @@ site/
 token.txt
 *.egg-info
 dist/
-
-docs/adding.md
-docs/methods.md
-docs/recommended.md
-docs/tutorial_datasets.md
-docs/tutorial_splits.md
