@@ -68,3 +68,17 @@ analysis.plot_grid(dataset.df, 'data/MacaqueFaces')
 
 For additional functionality including mass loading, datasets splitting or evaluation metrics we refer to the [documentation](https://wildlifedatasets.github.io/wildlife-datasets/).
 
+## Citation
+
+If you like our package, please cite us.
+
+```
+@InProceedings{Cermak_2024_WACV,
+    author    = {\v{C}erm\'ak, Vojt\v{e}ch and Picek, Luk\'a\v{s} and Adam, Luk\'a\v{s} and Papafitsoros, Kostas},
+    title     = {{WildlifeDatasets: An Open-Source Toolkit for Animal Re-Identification}},
+    booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+    month     = {January},
+    year      = {2024},
+    pages     = {5953-5963}
+}
+```
