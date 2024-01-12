@@ -12,7 +12,7 @@ def get_image(path: str, max_size: int = None) -> Image:
 
     Args:
         path (str): Path of the image.
-        max_size(int, optional): Maximal size of the image or None (no restriction).
+        max_size (int, optional): Maximal size of the image or None (no restriction).
 
     Returns:
         Loaded image.

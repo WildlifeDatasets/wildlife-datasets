@@ -29,8 +29,8 @@ class BalancedSplit():
     def initialize_lcg(self) -> Lcg:
         """Returns the random number generator.
 
-        Args:
-            seed (int): The desired seed.
+        Returns:
+            The random number generator.
         """
         
         return Lcg(self.seed)
