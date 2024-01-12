@@ -22,5 +22,4 @@ jobs:
           key: ${{ github.ref }}
           path: .cache
       - run: pip install -r docs/requirements.txt
-      - run: python docs/convert_md.py
       - run: mkdocs gh-deploy --force
