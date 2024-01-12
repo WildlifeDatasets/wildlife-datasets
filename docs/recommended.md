@@ -37,6 +37,7 @@ print_list_red(datasets.names_small) # markdown-exec: hide
 ![](images/grid_IPanda50.png)
 ![](images/grid_MacaqueFaces.png)
 ![](images/grid_NyalaData.png)
+![](images/grid_PolarBearVidID.png)
 ![](images/grid_SeaTurtleIDHeads.png)
 ![](images/grid_StripeSpotter.png)
 
@@ -64,7 +65,6 @@ print_list_red(datasets.names_wild) # markdown-exec: hide
 ![](images/grid_SeaTurtleID.png)
 ![](images/grid_StripeSpotter.png)
 ![](images/grid_WhaleSharkID.png)
-![](images/grid_WNIGiraffes.png)
 
 
 ## Transfer learning
@@ -103,7 +103,7 @@ print_list_red(datasets.names_cows) # markdown-exec: hide
 
 ### Giraffes
 
-There are five datasets with zebras. GiraffeZebraID contains both giraffes and zebras, StripeSpotter is the oldest public wildlife dataset and WNIGiraffes is a dataset of huge giraffe images. The other two datasets pose certain issues, namely, Giraffes is automatically labelled by Hotspotter (there is no guarantee of the label correctness), SMALST does not depict real animals but generated images from 3D models (based on real animals). 
+There are four datasets with zebras. GiraffeZebraID contains both giraffes and zebras and StripeSpotter is the oldest public wildlife dataset. The other two datasets pose certain issues, namely, Giraffes is automatically labelled by Hotspotter (there is no guarantee of the label correctness), SMALST does not depict real animals but generated images from 3D models (based on real animals). 
 
 ```python exec="true" source="above" result="console" session="run"
 datasets.names_giraffes
@@ -115,7 +115,6 @@ print_list_red(datasets.names_giraffes) # markdown-exec: hide
 ![](images/grid_Giraffes.png)
 ![](images/grid_SMALST.png)
 ![](images/grid_StripeSpotter.png)
-![](images/grid_WNIGiraffes.png)
 
 ### Primates
 

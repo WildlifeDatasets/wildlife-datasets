@@ -141,6 +141,12 @@ See the description in [AerialCattle2017](#aerialcattle2017).
 
 ![](images/grid_OpenCows2020.png)
 
+## PolarBearVidID
+
+PolarBearVidID is a dataset of 13 individual polar bears from 6 German zoos. The photos are extracted from 1431 video sequences at 12.5 fps totalling around 138 thousand images. Since the cameras were stationary, the background was cropped to prevent background overfitting.
+
+![](images/grid_PolarBearVidID.png)
+
 ## SealID
 
 SealID is a Saimaa ringed seals database from the Lake Saimaa in Finland. The data were collected annually during the Saimaa ringed seal molting season from 2010 to 2019 by both ordinary digital cameras during boat surveys and game camera traps. The GPS coordinates, the observation times, and the numbers of the seals were noted.  Seal images were matched by an expert using individually characteristic fur patterns. The dataset contains patches and syandard images. Patches show small patterned body parts which are sufficient for seal identification. Standard images are presented both as full images and their segmented version with seal only and black background.
@@ -176,12 +182,6 @@ StripeSpotter is the first published dataset. For seven consecutive days, the au
 WhaleSharkID contains images of whale sharks and represents a collaborative effort based on the data collection and population modeling efforts conducted at Ningaloo Marine Park in Western Australia from 1995 to 2008. Images are annotated with bounding boxes around each visible whale shark and viewpoints.
 
 ![](images/grid_WhaleSharkID.png)
-
-## WNIGiraffes
-
-WNIGiraffes is the largest dataset due to provided high-resolution photos. Tens of thousands of photographs of free-ranging Masai giraffe were collected during a long-term demographic study in the Tarangire Ecosystem, Tanzania, between 2012 and 2019. Active encounter photographic capture-mark-recapture surveys were conducted for giraffes in a 1,500 km2 area along dirt road transects. During photographic sampling, each giraffe's right side was slowly approached and photographed from within a distance of approximately 100m at an angle as close to perpendicular as possible. For every image, sex and age were recorded. The authors employed citizen-science volunteers on Zooniverse to create annotations of the positions of ossicones, head, chest and frnt hoof. Around 40,000 images were annotated in total; this dataset excludes images that were annotated by fewer than five volunteers.
-
-![](images/grid_WNIGiraffes.png)
 
 ## ZindiTurtleRecall
 

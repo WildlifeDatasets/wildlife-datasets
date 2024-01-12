@@ -28,12 +28,12 @@ Some of the datasets require special treatment or the download of extraction wor
 | [NOAARightWhale](https://www.kaggle.com/c/noaa-right-whale-recognition)        | MANUAL  | Kaggle required + terms   |
 | [NyalaData](https://github.com/tvanzyl/wildlife_reidentification)             | AUTO    |                                |
 | [OpenCows2020](https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17)           | AUTO    |                                |
+| [PolarBearVidID](https://zenodo.org/records/7564529)          | AUTO    |                                |
 | [SealID](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53)                 | MANUAL  | Download with single use token |
 | [SeaTurtleID](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid)                 | AUTO    | Kaggle required                   |
 | [SMALST](https://github.com/silviazuffi/smalst)                 | AUTO    | Only linux: extracting            |
 | [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads)          | AUTO    | Only linux: extracting            |
 | [WhaleSharkID](https://lila.science/datasets/whale-shark-id)         | AUTO    |                                |
-| [WNIGiraffes](https://lila.science/datasets/wni-giraffes)           | MANUAL    | Manual download          |
 | [ZindiTurtleRecall](https://zindi.africa/competitions/turtle-recall-conservation-challenge)    | AUTO    |                                |
 
 ## Kaggle
@@ -102,11 +102,3 @@ datasets.StripeSpotter.download('data/StripeSpotter')
 ```
 
 to download the dataset and then extract it manually.
-
-## WNIGiraffes
-
-Even though it is possible to download WNIGiraffes automatically, due to its size, it is highly recommended to use AzCopy. Go to the [download side](https://lila.science/datasets/wni-giraffes) and download the two files using [AzCopy](https://lila.science/faq#downloadtips). Then either manually extract them or run
-
-```python
-datasets.WNIGiraffes.extract('data/WNIGiraffes')
-```
