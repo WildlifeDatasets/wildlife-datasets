@@ -20,6 +20,7 @@ from .datasets import IPanda50
 from .datasets import LeopardID2022
 from .datasets import LionData
 from .datasets import MacaqueFaces
+from .datasets import MPDD
 from .datasets import NDD20
 from .datasets import NOAARightWhale
 from .datasets import NyalaData
@@ -57,6 +58,7 @@ names_all = [
     LeopardID2022,
     LionData,
     MacaqueFaces,
+    MPDD,
     NDD20,
     NOAARightWhale,
     NyalaData,
@@ -97,6 +99,7 @@ names_small = [
     FriesianCattle2017,
     IPanda50,
     MacaqueFaces,
+    MPDD,
     NyalaData,
     PolarBearVidID,
     SeaTurtleIDHeads,

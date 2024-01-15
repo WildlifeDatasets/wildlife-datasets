@@ -1263,6 +1263,36 @@ class MacaqueFaces(DatasetFactory):
         return self.finalize_catalogue(df)
 
 
+class MPDD(DatasetFactory):
+    metadata = metadata['MPDD']
+    
+    @classmethod
+    def _download(cls):
+        downloads = [
+            ('https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/v5j6m8dzhv-1.zip', 'MPDD.zip'),
+        ]
+        for url, file in downloads:
+            utils.download_url(url, file)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive('MPDD.zip', delete=True)
+        utils.extract_archive(os.path.join('Multi-pose dog dataset', 'MPDD.zip'), delete=True)
+
+    def create_catalogue(self) -> pd.DataFrame:
+        data = utils.find_images(self.root)
+        identity = data['file'].apply(lambda x: int(x.split('_')[0]))
+
+        # Finalize the dataframe
+        df = pd.DataFrame({
+            'id': data['file'],
+            'path': data['path'] + os.path.sep + data['file'],
+            'identity': identity
+        })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
+        return self.finalize_catalogue(df)
+
+
 class NDD20(DatasetFactory):
     metadata = metadata['NDD20']
     url = 'https://data.ncl.ac.uk/ndownloader/files/22774175'
