@@ -1265,18 +1265,16 @@ class MacaqueFaces(DatasetFactory):
 
 class MPDD(DatasetFactory):
     metadata = metadata['MPDD']
+    url = 'https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/v5j6m8dzhv-1.zip'
+    archive = 'MPDD.zip'
     
     @classmethod
     def _download(cls):
-        downloads = [
-            ('https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/v5j6m8dzhv-1.zip', 'MPDD.zip'),
-        ]
-        for url, file in downloads:
-            utils.download_url(url, file)
+        utils.download_url(cls.url, cls.archive)
 
     @classmethod
     def _extract(cls):
-        utils.extract_archive('MPDD.zip', delete=True)
+        utils.extract_archive(cls.archive, delete=True)
         utils.extract_archive(os.path.join('Multi-pose dog dataset', 'MPDD.zip'), delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -1592,6 +1590,38 @@ class SealIDSegmented(SealID):
     @classmethod
     def _extract(cls, *args, **kwargs):
         print(cls.warning)
+
+
+class SeaStarReID2023(DatasetFactory):
+    metadata = metadata['SeaStarReID2023']
+    url = 'https://storage.googleapis.com/public-datasets-lila/sea-star-re-id/sea-star-re-id.zip'
+    archive = 'sea-star-re-id.zip'
+    
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+
+    def create_catalogue(self) -> pd.DataFrame:
+        data = utils.find_images(self.root)
+        folders = data['path'].str.split(os.path.sep, expand=True)
+        species = folders[1].apply(lambda x: x[:4])
+        species.replace('Anau', 'Anthenea australiae', inplace=True)
+        species.replace('Asru', 'Asteria rubens', inplace=True)
+
+        # Finalize the dataframe
+        df = pd.DataFrame({
+            'id': utils.create_id(data['file']),
+            'path': data['path'] + os.path.sep + data['file'],
+            'identity': folders[1],
+            'species': species
+        })
+        df.rename({'id': 'image_id'}, axis=1, inplace=True)
+        return self.finalize_catalogue(df)
+
 
 class SeaTurtleID(DatasetFactory):
     metadata = metadata['SeaTurtleID']

@@ -28,6 +28,7 @@ from .datasets import OpenCows2020
 from .datasets import PolarBearVidID
 from .datasets import SealID
 from .datasets import SealIDSegmented
+from .datasets import SeaStarReID2023
 from .datasets import SeaTurtleID
 from .datasets import SeaTurtleIDHeads
 from .datasets import SMALST
@@ -66,6 +67,7 @@ names_all = [
     PolarBearVidID,
     SealID,
     SealIDSegmented,
+    SeaStarReID2023,
     SeaTurtleID,
     SeaTurtleIDHeads,
     SMALST,
