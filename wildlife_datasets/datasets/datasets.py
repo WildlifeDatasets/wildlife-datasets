@@ -1131,15 +1131,19 @@ class HyenaID2022(DatasetFactoryWildMe):
 class IPanda50(DatasetFactory):
     metadata = metadata['IPanda50']
     downloads = [
-        ('https://drive.google.com/uc?id=1nkh-g6a8JvWy-XsMaZqrN2AXoPlaXuFg', 'iPanda50-images.zip'),
-        ('https://drive.google.com/uc?id=1gVREtFWkNec4xwqOyKkpuIQIyWU_Y_Ob', 'iPanda50-split.zip'),
-        ('https://drive.google.com/uc?id=1jdACN98uOxedZDT-6X3rpbooLAAUEbNY', 'iPanda50-eyes-labels.zip'),
+        #('https://drive.google.com/uc?id=1nkh-g6a8JvWy-XsMaZqrN2AXoPlaXuFg', 'iPanda50-images.zip'),
+        #('https://drive.google.com/uc?id=1gVREtFWkNec4xwqOyKkpuIQIyWU_Y_Ob', 'iPanda50-split.zip'),
+        #('https://drive.google.com/uc?id=1jdACN98uOxedZDT-6X3rpbooLAAUEbNY', 'iPanda50-eyes-labels.zip'),
+        ('https://public.sn.files.1drv.com/y4mWsyrSmGU92QxS4cBfaXpODkAHPpWMa4QSgTnoZo-cfqKJiHdc3kfoWXS34KeWTeeJNsmsq6qm4ORIua8fqqEfljKDZuTDcYeDeiy1jqjE_PrJewEXxueVpUYUc3_MMth7AX96cQvlF_HL2JRYm5Y4F-wskoKjlVe28S_4PXRExELF9mmoeGm3pqF4w9CvnixNF02ixGQWrJscI236WW3YcvLSFy_UI-ap_-vKQmIL0o', 'iPanda50-images.zip'),
+        ('https://public.sn.files.1drv.com/y4m7zNYfR2vnJr0YKnZcViKR0ISxF6qQ3zHbz3IjPbmvojq-MKWrm9c5u3dKFi7MzvOUrKw2laHfFB3TR3eZK3jziLnnYyXCTbvteSdfif06Ive1OYcUM7o983axAaCPuwjCgdQ26KEWuuMI9upzGKsZTotgVfmPNYRjw2ooZgA0os-lobFS7HVVyBzKrhKD3TsE18ljEXMMOwxv5Ovuu6YuqgF6qkvRxXzDBMHMCp0QiE', 'iPanda50-split.zip'),
+        ('https://public.sn.files.1drv.com/y4mw_R1y0Nq9cnOZmj7JySpqE54Sp9-GEnFM4mT4MROygti4wfDrcZxwmi80Y_gQIWsNhNDYghGMtCLBOVF6lZ8kH-IvjZUKtg_VNBfdkiK0XfeUD7BSYN3l96B4wyRQATo2IZQWDFsx14bnHraXIGlfLVDa3wkXOFTLxuhsJTIhcUYvILQWlXI3LI2CDwmIU_EX10qNcmu3UgY954XzxIl544h80bjup7siL0MSTc1wHw', 'iPanda50-eyes-labels.zip')
     ]
 
     @classmethod
     def _download(cls):
         for url, archive in cls.downloads:
-            utils.gdown_download(url, archive)
+            #utils.gdown_download(url, archive)
+            utils.download_url(url, archive)
 
     @classmethod
     def _extract(cls):
