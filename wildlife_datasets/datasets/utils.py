@@ -141,4 +141,5 @@ def gdown_download(url, archive, exception_text=''):
     import gdown
     gdown.download(url, archive, quiet=False)
     if not os.path.exists(archive):
+        print(exception_text)
         raise Exception(exception_text)
