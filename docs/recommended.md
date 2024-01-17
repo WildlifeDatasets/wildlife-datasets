@@ -36,6 +36,7 @@ print_list_red(datasets.names_small) # markdown-exec: hide
 ![](images/grid_FriesianCattle2017.png)
 ![](images/grid_IPanda50.png)
 ![](images/grid_MacaqueFaces.png)
+![](images/grid_MPDD.png)
 ![](images/grid_NyalaData.png)
 ![](images/grid_PolarBearVidID.png)
 ![](images/grid_SeaTurtleIDHeads.png)

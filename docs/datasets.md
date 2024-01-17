@@ -117,6 +117,12 @@ MacaqueFaces shows the faces of group-housed rhesus macaques at a breeding facil
 
 ![](images/grid_MacaqueFaces.png)
 
+## MPDD
+
+MPDD is a dataset of various dog breeds with 1657 images of 192 dogs. The dataset should be theoretically simple than most because the dogs differ significantly in size and color. 
+
+![](images/grid_MPDD.png)
+
 ## NDD20
 
 The Northumberland Dolphin Dataset 2020 (NDD20), is a challenging image dataset as in contains both above and under water photos of two dolphin species taken between 2011 and 2018. The datasets contains both images taken both above and below water. Below water collection efforts consisted of 36 opportunistic surveys of the Farne Deeps. Above water efforts consisted of 27 surveys along a stretch of the Northumberland coast. Above water photographs were taken using a camera from the deck of a small rigid inflatable boat on days of fair weather and good sea conditions. Below water images are screen grabs from high-definition video footage taken with cameras again under good sea conditions. Individuals in the above water images are identified using the structure of the dolphin's dorsal fin. Below water images are less common, but provide additional features for identification such as general colouring, unique body markings, scarring and patterns formed by injury or skin disease. The images contains multiple annotations including dolphin species and approximately 14\% of above water images contain segmentation mask for the dolphin fin.
@@ -153,6 +159,12 @@ SealID is a Saimaa ringed seals database from the Lake Saimaa in Finland. The da
 
 ![](images/grid_SealID.png)
 ![](images/grid_SealIDSegmented.png)
+
+## SeaStarReID2023
+
+This dataset contains 1204 images of 39 individual Asterias rubens sea stars and 983 images of 56 individual Anthenea australiae sea stars. For the ASRU data set, images were taken on five distinct days. For the ANAU data set, images were taken in three locations (sunlight, shaded, naturalistic exhibit) on the same day. The photos were taken in a water tank.
+
+![](images/grid_SeaStarReID2023.png)
 
 ## SeaTurtleID
 

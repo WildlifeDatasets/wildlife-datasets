@@ -24,12 +24,14 @@ Some of the datasets require special treatment or the download of extraction wor
 | [LeopardID2022](https://lila.science/datasets/leopard-id-2022/)             | AUTO    |                                |
 | [LionData](https://github.com/tvanzyl/wildlife_reidentification)              | AUTO    |                                |
 | [MacaqueFaces](https://github.com/clwitham/MacaqueFaces)          | AUTO    |                                |
+| [MPDD](https://data.mendeley.com/datasets/v5j6m8dzhv/1)          | AUTO    |                                |
 | [NDD20](https://doi.org/10.25405/data.ncl.c.4982342)                  | AUTO    |                                |
 | [NOAARightWhale](https://www.kaggle.com/c/noaa-right-whale-recognition)        | MANUAL  | Kaggle required + terms   |
 | [NyalaData](https://github.com/tvanzyl/wildlife_reidentification)             | AUTO    |                                |
 | [OpenCows2020](https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17)           | AUTO    |                                |
 | [PolarBearVidID](https://zenodo.org/records/7564529)          | AUTO    |                                |
 | [SealID](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53)                 | MANUAL  | Download with single use token |
+| [SeaStarReID2023](https://lila.science/sea-star-re-id-2023/)          | AUTO    |                                |
 | [SeaTurtleID](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid)                 | AUTO    | Kaggle required                   |
 | [SMALST](https://github.com/silviazuffi/smalst)                 | AUTO    | Only linux: extracting            |
 | [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads)          | AUTO    | Only linux: extracting            |
@@ -65,6 +67,14 @@ Downloading works only on Linux. Download it manually from the [FTP server](ftp:
 ## HumpbackWhale
 
 [Kaggle requirements](#kaggle) need to be satisfied. Also you need to go to the [competition website](https://www.kaggle.com/competitions/humpback-whale-identification), the Data tab and agree with terms.
+
+## IPanda50
+
+IPanda50 may fail to download files because of Google Drive quotas. If this happens, download three zip files manually as described in this [Github repository](https://github.com/iPandaDateset/iPanda-50). Then either extract them manually or run
+
+```python
+datasets.IPanda50.extract('data/IPanda50')
+```
 
 ## NOAARightWhale
 
