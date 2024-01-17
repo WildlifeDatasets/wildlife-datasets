@@ -868,8 +868,8 @@ class Drosophila(DatasetFactory):
             idx1 = folders[0].str.startswith('week' + str(i_week))
             idx2 = folders[1] == 'val'
             idx3 = folders[2].isnull()
-            data.loc[idx1 & ~idx2, 'identity'] = (i_week-1)*20 + folders.loc[idx1 & ~idx2, 1].astype(int)
-            data.loc[idx1 & idx2 & ~idx3, 'identity'] = (i_week-1)*20 + folders.loc[idx1 & idx2 & ~idx3, 2].astype(int)
+            data.loc[idx1 & ~idx2, 'identity'] = ((i_week-1)*20 + folders.loc[idx1 & ~idx2, 1].astype(int)).astype(str)
+            data.loc[idx1 & idx2 & ~idx3, 'identity'] = ((i_week-1)*20 + folders.loc[idx1 & idx2 & ~idx3, 2].astype(int)).astype(str)
             data.loc[idx1 & ~idx2, 'split'] = 'train'
             data.loc[idx1 & idx2, 'split'] = 'val'
         
