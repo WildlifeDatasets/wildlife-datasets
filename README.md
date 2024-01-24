@@ -9,17 +9,6 @@
 </p>
 
 <div align="center">
-  <p align="center">Pipeline for wildlife re-identification including dataset zoo, training tools and trained models. Usage includes classifying new images in labelled databases and clustering individuals in unlabelled databases.</p>
-  <a href="https://wildlifedatasets.github.io/wildlife-datasets/">Documentation</a>
-  ·
-  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues/new?assignees=aerodynamic-sauce-pan&labels=bug&projects=&template=bug_report.md&title=%5BBUG%5D">Report Bug</a>
-  ·
-  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues/new?assignees=aerodynamic-sauce-pan&labels=enhancement&projects=&template=enhancement.md&title=%5BEnhancement%5D">Request Feature</a>
-</div>
-
-</br >
-
-<div align="center">
 <div style="display: flex; justify-content: center">
   <div style="margin-left: 10px; margin-right: 10px;">   
     <a href="https://github.com/WildlifeDatasets/wildlife-datasets"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="200"></a>
@@ -38,6 +27,16 @@
 </div>
 </div>
 
+<div align="center">
+  <p align="center">Pipeline for wildlife re-identification including dataset zoo, training tools and trained models. Usage includes classifying new images in labelled databases and clustering individuals in unlabelled databases.</p>
+  <a href="https://wildlifedatasets.github.io/wildlife-datasets/">Documentation</a>
+  ·
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues/new?assignees=aerodynamic-sauce-pan&labels=bug&projects=&template=bug_report.md&title=%5BBUG%5D">Report Bug</a>
+  ·
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues/new?assignees=aerodynamic-sauce-pan&labels=enhancement&projects=&template=enhancement.md&title=%5BEnhancement%5D">Request Feature</a>
+</div>
+
+</br >
 
 ## Wildlife Re-Identification (Re-ID) Datasets
 
