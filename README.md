@@ -9,8 +9,7 @@
 </p>
 
 <div align="center">
-  <img src="docs/resources/datasets-logo.png" alt="Project logo" width="300">
-  <p align="center">A tool-kit for Wildlife Individual Identification that provides a wide variety of pre-trained models for inference and fine-tuning.</p>
+  <p align="center">Pipeline for wildlife re-identification including dataset zoo, training tools and trained models. Usage includes classifying new images in labelled databases and clustering individuals in unlabelled databases.</p>
   <a href="https://wildlifedatasets.github.io/wildlife-datasets/">Documentation</a>
   ·
   <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues/new?assignees=aerodynamic-sauce-pan&labels=bug&projects=&template=bug_report.md&title=%5BBUG%5D">Report Bug</a>
@@ -20,33 +19,31 @@
 
 </br >
 
-## Our other projects
-
-
 <div align="center">
 <div style="display: flex; justify-content: center">
-  <div style="margin-right: 50px;">
-    <img src="docs/resources/megadescriptor-logo.png" alt="Image 1" width="200" style="margin-bottom: 5px;">
-    <p><a href="https://huggingface.co/BVRA/MegaDescriptor-L-384">MegaDescriptor</a></p>
+  <div style="margin-left: 10px; margin-right: 10px;">   
+    <a href="https://github.com/WildlifeDatasets/wildlife-datasets"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="300" style="margin-bottom: 5px;"></a>
+    <p>Datasets for identification of individual animals</p>
+  </div>
+  
+  <div style="margin-left: 10px; margin-right: 10px;">
+    <a href="https://huggingface.co/BVRA/MegaDescriptor-L-384"><img src="docs/resources/megadescriptor-logo.png" alt="MegaDescriptor" width="300" style="margin-bottom: 5px;"></a>
+    <p>Trained model for individual re-identification</p>
   </div>
 
-  <div>
-    <img src="docs/resources/datasets-logo.png" alt="Image 2" width="200" style="margin-bottom: 5px;"> <!-- Adjust margin as needed -->
-    <p><a href="https://huggingface.co/BVRA/MegaDescriptor-L-384">Wildlife Datasets</a></p>
+  <div margin-left: 10px; margin-right: 10px;>   
+    <a href="https://github.com/WildlifeDatasets/wildlife-tools"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="300" style="margin-bottom: 5px;"></a>
+    <p>Tools for training re-identification models</p>
   </div>
 </div>
 </div>
-
-
-<h1></h1>
-
 
 
 ## Wildlife Re-Identification (Re-ID) Datasets
 
 The aim of the project is to provide comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
 
-- overview of 31 publicly available wildlife re-identification datasets.
+- overview of 33 publicly available wildlife re-identification datasets.
 - utilities to mass download and convert them into a unified format.
 - default splits for several machine learning tasks including the ability create additional splits.
 - evaluation metrics for closed-set and open-set classification.
