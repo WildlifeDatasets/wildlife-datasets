@@ -8,24 +8,9 @@
   <a href="https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/LICENSE"><img src="https://img.shields.io/github/license/WildlifeDatasets/wildlife-datasets" alt="License"></a>
 </p>
 
-<div align="center">
-<div style="display: flex; justify-content: center">
-  <div style="margin-left: 10px; margin-right: 10px;">   
-    <a href="https://github.com/WildlifeDatasets/wildlife-datasets"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="200"></a>
-    <p>Datasets for identification<br>of individual animals</p>
-  </div>
-  
-  <div style="margin-left: 10px; margin-right: 10px;">
-    <a href="https://huggingface.co/BVRA/MegaDescriptor-L-384"><img src="docs/resources/megadescriptor-logo.png" alt="MegaDescriptor" width="200"></a>
-    <p>Trained model for<br>individual re-identification</p>
-  </div>
-
-  <div margin-left: 10px; margin-right: 10px;>   
-    <a href="https://github.com/WildlifeDatasets/wildlife-tools"><img src="docs/resources/tools-logo.png" alt="Wildlife tools" width="200"></a>
-    <p>Tools for training<br>re-identification models</p>
-  </div>
-</div>
-</div>
+| <a href="https://github.com/WildlifeDatasets/wildlife-datasets"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="200"></a>  | <a href="https://huggingface.co/BVRA/MegaDescriptor-L-384"><img src="docs/resources/megadescriptor-logo.png" alt="MegaDescriptor" width="200"></a> | <a href="https://github.com/WildlifeDatasets/wildlife-tools"><img src="docs/resources/tools-logo.png" alt="Wildlife tools" width="200"></a> |
+|:--------------:|:-----------:|:------------:|
+| Datasets for identification of individual animals | Trained model for individual re-identification  | Tools for training re-identification models |
 
 <div align="center">
   <p align="center">Pipeline for wildlife re-identification including dataset zoo, training tools and trained models. Usage includes classifying new images in labelled databases and clustering individuals in unlabelled databases.</p>
