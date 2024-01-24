@@ -21,7 +21,7 @@
   </div>
 
   <div margin-left: 10px; margin-right: 10px;>   
-    <a href="https://github.com/WildlifeDatasets/wildlife-tools"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="200"></a>
+    <a href="https://github.com/WildlifeDatasets/wildlife-tools"><img src="docs/resources/tools-logo.png" alt="Wildlife tools" width="200"></a>
     <p>Tools for training<br>re-identification models</p>
   </div>
 </div>
