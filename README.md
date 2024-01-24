@@ -9,7 +9,7 @@
 </p>
 
 <div align="center">
-  <img src="docs/resources/tools-logo.png" alt="Project logo" width="300">
+  <img src="docs/resources/datasets-logo.png" alt="Project logo" width="300">
   <p align="center">A tool-kit for Wildlife Individual Identification that provides a wide variety of pre-trained models for inference and fine-tuning.</p>
   <a href="https://wildlifedatasets.github.io/wildlife-datasets/">Documentation</a>
   ·
