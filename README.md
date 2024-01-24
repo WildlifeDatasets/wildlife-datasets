@@ -22,17 +22,17 @@
 <div align="center">
 <div style="display: flex; justify-content: center">
   <div style="margin-left: 10px; margin-right: 10px;">   
-    <a href="https://github.com/WildlifeDatasets/wildlife-datasets"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="300"></a>
+    <a href="https://github.com/WildlifeDatasets/wildlife-datasets"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="200"></a>
     <p>Datasets for identification of individual animals</p>
   </div>
   
   <div style="margin-left: 10px; margin-right: 10px;">
-    <a href="https://huggingface.co/BVRA/MegaDescriptor-L-384"><img src="docs/resources/megadescriptor-logo.png" alt="MegaDescriptor" width="300"></a>
+    <a href="https://huggingface.co/BVRA/MegaDescriptor-L-384"><img src="docs/resources/megadescriptor-logo.png" alt="MegaDescriptor" width="200"></a>
     <p>Trained model for individual re-identification</p>
   </div>
 
   <div margin-left: 10px; margin-right: 10px;>   
-    <a href="https://github.com/WildlifeDatasets/wildlife-tools"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="300"></a>
+    <a href="https://github.com/WildlifeDatasets/wildlife-tools"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="200"></a>
     <p>Tools for training re-identification models</p>
   </div>
 </div>
