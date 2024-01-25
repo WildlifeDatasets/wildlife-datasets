@@ -123,9 +123,11 @@ def plot_grid(
 
     # Load images and compute their ratio
     ratios = []
+    ims = []
     for k in idx:
         file_path = os.path.join(root, df.iloc[k]['path'])
         im = get_image(file_path)
+        ims.append(im)
         ratios.append(im.size[0] / im.size[1])
 
     # Get the size of the images after being resized
@@ -143,11 +145,8 @@ def plot_grid(
         i = k // n_cols
         j = k % n_cols
 
-        # Load the image
-        file_path = os.path.join(root, df.iloc[idx[k]]['path'])
-        im = get_image(file_path)
-
         # Possibly rotate the image
+        im = ims[k]
         if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
             im = im.transpose(Image.ROTATE_90)
 
