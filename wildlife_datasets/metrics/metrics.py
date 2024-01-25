@@ -1,5 +1,6 @@
 import numpy as np
 import sklearn.metrics as skm
+import pandas as pd
 from typing import List, Tuple, Union
 
 # TODO: add documentation
@@ -24,17 +25,18 @@ def unify_types(
         Unified label types.
     """
 
-    y_all = list(set(y_true).union(set(y_pred)) - set([new_class]))        
-    y_types = set([type(y) for y in y_all])
-    if len(y_types) > 1:
+    y_all = list(set(y_true).union(set(y_pred)) - set([new_class]))            
+    is_integer = pd.api.types.is_integer_dtype(pd.Series(y_all))
+    is_string = pd.api.types.is_string_dtype(pd.Series(y_all))
+    if not is_integer and not is_string:
         raise(Exception('Labels have mixed types. Convert all to int or str.'))
-    if str in y_types and isinstance(new_class, int):
+    if is_string and isinstance(new_class, int):
         encoder = {new_class: new_class}
         for i, y in enumerate(y_all):
             encoder[y] = new_class + 1 + i
         y_true = [encoder[y] for y in y_true]
         y_pred = [encoder[y] for y in y_pred]
-    if int in y_types and isinstance(new_class, str):
+    if is_integer and isinstance(new_class, str):
         encoder = {new_class: np.min(y_all) - 1}
         for i, y in enumerate(y_all):
             encoder[y] = y
