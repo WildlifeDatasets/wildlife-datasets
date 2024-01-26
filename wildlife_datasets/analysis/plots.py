@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 import pandas as pd
-from typing import List
+from typing import Optional, List, Callable
 from matplotlib import pyplot as plt
 from PIL import Image
 from ..datasets import utils
@@ -97,7 +97,9 @@ def plot_grid(
         n_cols: int = 8,
         offset: float = 10,
         img_min: float = 100,
-        rotate: bool = True
+        rotate: bool = True,
+        idx: Optional[List[int]] = None,
+        loader: Optional[Callable] = None,
         ) -> Image:
     """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
 
@@ -109,6 +111,8 @@ def plot_grid(
         offset (float, optional): The offset between images.
         img_min (float, optional): The minimal size of the plotted images.
         rotate (bool, optional): Rotates the images to have the same orientation.
+        idx (Optional[List[int]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
+        loader (Optional[Callable], optional): Loader of images. Useful for including transforms.
 
     Returns:
         The plotted grid.
@@ -118,18 +122,34 @@ def plot_grid(
         return None
     
     # Select indices of images to be plotted
-    n = min(len(df), n_rows*n_cols)
-    idx = np.random.permutation(len(df))[:n]
+    if idx is None:
+        n = min(len(df), n_rows*n_cols)
+        idx = np.random.permutation(len(df))[:n]
+    else:
+        n = min(np.array(idx).size, n_rows*n_cols)
+        idx = np.matrix.flatten(np.array(idx))[:n]
 
     # Load images and compute their ratio
     ratios = []
     ims = []
     for k in idx:
-        file_path = os.path.join(root, df.iloc[k]['path'])
-        im = get_image(file_path)
-        ims.append(im)
-        ratios.append(im.size[0] / im.size[1])
+        if k >= 0:
+            # Load the image with index k
+            if loader is None:
+                file_path = os.path.join(root, df.iloc[k]['path'])
+                im = get_image(file_path)
+            else:
+                im = loader(k)
+            ims.append(im)
+            ratios.append(im.size[0] / im.size[1])
+        else:
+            # Load a black image
+            ims.append(Image.fromarray(np.zeros((2, 2), dtype = "uint8")))
 
+    # Safeguard when all indices are -1
+    if len(ratios) == 0:
+        return None
+    
     # Get the size of the images after being resized
     ratio = np.median(ratios)
     if ratio > 1:    
