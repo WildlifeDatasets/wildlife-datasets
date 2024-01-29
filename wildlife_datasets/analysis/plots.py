@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 import pandas as pd
-from typing import Optional, List, Callable
+from typing import Optional, List, Callable, Union
 from matplotlib import pyplot as plt
 from PIL import Image
 from ..datasets import utils
@@ -98,7 +98,7 @@ def plot_grid(
         offset: float = 10,
         img_min: float = 100,
         rotate: bool = True,
-        idx: Optional[List[int]] = None,
+        idx: Optional[Union[List[bool],List[int]]] = None,
         loader: Optional[Callable] = None,
         ) -> Image:
     """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
@@ -111,7 +111,7 @@ def plot_grid(
         offset (float, optional): The offset between images.
         img_min (float, optional): The minimal size of the plotted images.
         rotate (bool, optional): Rotates the images to have the same orientation.
-        idx (Optional[List[int]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
+        idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
         loader (Optional[Callable], optional): Loader of images. Useful for including transforms.
 
     Returns:
@@ -126,6 +126,10 @@ def plot_grid(
         n = min(len(df), n_rows*n_cols)
         idx = np.random.permutation(len(df))[:n]
     else:
+        if isinstance(idx, pd.Series):
+            idx = idx.values
+        if isinstance(idx[0], (bool, np.bool_)):
+            idx = np.where(idx)[0]
         n = min(np.array(idx).size, n_rows*n_cols)
         idx = np.matrix.flatten(np.array(idx))[:n]
 
@@ -168,7 +172,7 @@ def plot_grid(
         # Possibly rotate the image
         im = ims[k]
         if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
-            im = im.transpose(Image.ROTATE_90)
+            im = im.rotate(90)
 
         # Rescale the image
         im.thumbnail((img_w,img_h))
