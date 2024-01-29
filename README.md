@@ -1,11 +1,49 @@
-# Wildlife Re-Identification (Re-ID) Datasets
+<p align="center">
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues"><img src="https://img.shields.io/github/issues/WildlifeDatasets/wildlife-datasets" alt="GitHub issues"></a>
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/pulls"><img src="https://img.shields.io/github/issues-pr/WildlifeDatasets/wildlife-datasets" alt="GitHub pull requests"></a>
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/graphs/contributors"><img src="https://img.shields.io/github/contributors/WildlifeDatasets/wildlife-datasets" alt="GitHub contributors"></a>
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/network/members"><img src="https://img.shields.io/github/forks/WildlifeDatasets/wildlife-datasets" alt="GitHub forks"></a>
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/stargazers"><img src="https://img.shields.io/github/stars/WildlifeDatasets/wildlife-datasets" alt="GitHub stars"></a>
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/watchers"><img src="https://img.shields.io/github/watchers/WildlifeDatasets/wildlife-datasets" alt="GitHub watchers"></a>
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/LICENSE"><img src="https://img.shields.io/github/license/WildlifeDatasets/wildlife-datasets" alt="License"></a>
+</p>
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/LICENSE)
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://wildlifedatasets.github.io/wildlife-datasets/)
+<div align="center">
+  <p align="center">Pipeline for wildlife re-identification including dataset zoo, training tools and trained models. Usage includes classifying new images in labelled databases and clustering individuals in unlabelled databases.</p>
+  <a href="https://wildlifedatasets.github.io/wildlife-datasets/">Documentation</a>
+  ·
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues/new?assignees=aerodynamic-sauce-pan&labels=bug&projects=&template=bug_report.md&title=%5BBUG%5D">Report Bug</a>
+  ·
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues/new?assignees=aerodynamic-sauce-pan&labels=enhancement&projects=&template=enhancement.md&title=%5BEnhancement%5D">Request Feature</a>
+</div>
+
+</br >
+
+<div align="center">
+<div style="display: flex; justify-content: center">
+  <div style="margin-left: 10px; margin-right: 10px;">   
+    <a href="https://github.com/WildlifeDatasets/wildlife-datasets"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="300"></a>
+    <p>Datasets for identification of individual animals</p>
+  </div>
+  
+  <div style="margin-left: 10px; margin-right: 10px;">
+    <a href="https://huggingface.co/BVRA/MegaDescriptor-L-384"><img src="docs/resources/megadescriptor-logo.png" alt="MegaDescriptor" width="300"></a>
+    <p>Trained model for individual re-identification</p>
+  </div>
+
+  <div margin-left: 10px; margin-right: 10px;>   
+    <a href="https://github.com/WildlifeDatasets/wildlife-tools"><img src="docs/resources/datasets-logo.png" alt="Wildlife tools" width="300"></a>
+    <p>Tools for training re-identification models</p>
+  </div>
+</div>
+</div>
+
+
+## Wildlife Re-Identification (Re-ID) Datasets
 
 The aim of the project is to provide comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
 
-- overview of 31 publicly available wildlife re-identification datasets.
+- overview of 33 publicly available wildlife re-identification datasets.
 - utilities to mass download and convert them into a unified format.
 - default splits for several machine learning tasks including the ability create additional splits.
 - evaluation metrics for closed-set and open-set classification.
@@ -18,7 +56,7 @@ An overview of the provided datasets is available in the [documentation](https:/
 
 We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and additional information such as source, number of poses, inclusion of timestamps, whether the animals were captured in the wild and whether the dataset contain multiple species.
 
-![](images/Datasets_Summary.png)
+![](docs/resources/Datasets_Summary.png)
 
 
 ## Installation
@@ -46,7 +84,7 @@ The class `dataset` contains the summary of the dataset. The content depends on 
 dataset.df
 ```
 
-![](images/MacaqueFaces_DataFrame.png)
+![](docs/resources/MacaqueFaces_DataFrame.png)
 
 The dataset also contains basic metadata including information about the number of individuals, time span, licences or published year.
 
@@ -54,15 +92,15 @@ The dataset also contains basic metadata including information about the number 
 dataset.metadata
 ```
 
-![](images/MacaqueFaces_Metadata.png)
+![](docs/resources/MacaqueFaces_Metadata.png)
 
 This particular dataset already contains cropped images of faces. Other datasets may contain uncropped images with bounding boxes or even segmentation masks.
 
 ```
-analysis.plot_grid(dataset.df, 'data/MacaqueFaces')
+d.plot_grid()
 ```
 
-![](images/MacaqueFaces_Grid.png)
+![](docs/resources/MacaqueFaces_Grid.png)
 
 ## Additional functionality
 
