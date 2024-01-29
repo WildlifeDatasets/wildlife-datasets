@@ -2,9 +2,10 @@ import os
 import shutil
 import pandas as pd
 import numpy as np
-from typing import Optional, List
+from typing import Optional, List, Union, Callable
 import json
 import datetime
+from PIL import Image
 
 from .. import splits
 from .metadata import metadata
@@ -136,7 +137,99 @@ class DatasetFactory():
             add[i] = 'test'
         n_col = min(position, len(self.df.columns))
         self.df.insert(n_col, col_name, pd.Series(add))
+
+    def plot_grid(
+            self,
+            n_rows: int = 5,
+            n_cols: int = 8,
+            offset: float = 10,
+            img_min: float = 100,
+            rotate: bool = True,
+            idx: Optional[Union[List[bool],List[int]]] = None,
+            loader: Optional[Callable] = None,
+            ) -> Image:
+        """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
+
+        Args:
+            df (pd.DataFrame): Dataframe with column `path` (relative path).
+            root (str): Root folder where the images are stored. 
+            n_rows (int, optional): The number of rows in the grid.
+            n_cols (int, optional): The number of columns in the grid.
+            offset (float, optional): The offset between images.
+            img_min (float, optional): The minimal size of the plotted images.
+            rotate (bool, optional): Rotates the images to have the same orientation.
+            idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
+            loader (Optional[Callable], optional): Loader of images. Useful for including transforms.
+
+        Returns:
+            The plotted grid.
+        """
+
+        if len(self.df) == 0:
+            return None
         
+        # Select indices of images to be plotted
+        if idx is None:
+            n = min(len(self.df), n_rows*n_cols)
+            idx = np.random.permutation(len(self.df))[:n]
+        else:
+            if isinstance(idx, pd.Series):
+                idx = idx.values
+            if isinstance(idx[0], (bool, np.bool_)):
+                idx = np.where(idx)[0]
+            n = min(np.array(idx).size, n_rows*n_cols)
+            idx = np.matrix.flatten(np.array(idx))[:n]
+
+        # Load images and compute their ratio
+        ratios = []
+        ims = []
+        for k in idx:
+            if k >= 0:
+                # Load the image with index k
+                if loader is None:
+                    file_path = os.path.join(self.root, self.df.iloc[k]['path'])
+                    im = utils.get_image(file_path)
+                else:
+                    im = loader(k)
+                ims.append(im)
+                ratios.append(im.size[0] / im.size[1])
+            else:
+                # Load a black image
+                ims.append(Image.fromarray(np.zeros((2, 2), dtype = "uint8")))
+
+        # Safeguard when all indices are -1
+        if len(ratios) == 0:
+            return None
+        
+        # Get the size of the images after being resized
+        ratio = np.median(ratios)
+        if ratio > 1:    
+            img_w, img_h = int(img_min*ratio), int(img_min)
+        else:
+            img_w, img_h = int(img_min), int(img_min/ratio)
+
+        # Create an empty image grid
+        im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, n_rows*img_h + (n_rows-1)*offset))
+
+        # Fill the grid image by image
+        for k in range(n):
+            i = k // n_cols
+            j = k % n_cols
+
+            # Possibly rotate the image
+            im = ims[k]
+            if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
+                im = im.rotate(90)
+
+            # Rescale the image
+            im.thumbnail((img_w,img_h))
+
+            # Place the image on the grid
+            pos_x = j*img_w + j*offset
+            pos_y = i*img_h + i*offset        
+            im_grid.paste(im, (pos_x,pos_y))
+        return im_grid
+
     def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
 

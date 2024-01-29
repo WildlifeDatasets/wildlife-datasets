@@ -36,6 +36,7 @@ from .datasets import StripeSpotter
 from .datasets import WhaleSharkID
 from .datasets import ZindiTurtleRecall
 from .metadata import Metadata
+from .utils import get_image
 
 names_all = [
     AAUZebraFish,
