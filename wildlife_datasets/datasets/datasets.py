@@ -219,7 +219,7 @@ class DatasetFactory():
             # Possibly rotate the image
             im = ims[k]
             if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
-                im = im.rotate(90)
+                im = im.transpose(Image.Transpose.ROTATE_90)
 
             # Rescale the image
             im.thumbnail((img_w,img_h))
