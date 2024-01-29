@@ -97,7 +97,7 @@ dataset.metadata
 This particular dataset already contains cropped images of faces. Other datasets may contain uncropped images with bounding boxes or even segmentation masks.
 
 ```
-analysis.plot_grid(dataset.df, 'data/MacaqueFaces')
+d.plot_grid()
 ```
 
 ![](docs/resources/MacaqueFaces_Grid.png)
