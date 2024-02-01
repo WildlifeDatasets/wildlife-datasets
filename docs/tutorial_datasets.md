@@ -71,7 +71,7 @@ print(d.df) # markdown-exec: hide
 The dataset can be graphically visualized by the grid plot
 
 ```python
-analysis.plot_grid(d.df, 'data/MacaqueFaces')
+d.plot_grid()
 ```
 
 ![](images/grid_MacaqueFaces.png)

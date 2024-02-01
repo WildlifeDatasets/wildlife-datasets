@@ -8,6 +8,30 @@ import urllib.request
 from tqdm import tqdm
 import shutil
 from contextlib import contextmanager
+from PIL import Image
+import cv2
+
+def get_image(path: str, max_size: int = None) -> Image:
+    """Loads an image.
+
+    Args:
+        path (str): Path of the image.
+        max_size (int, optional): Maximal size of the image or None (no restriction).
+
+    Returns:
+        Loaded image.
+    """
+
+    # We load it with OpenCV because PIL does not apply metadata.
+    img = cv2.imread(path)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = Image.fromarray(img)
+    if max_size is not None:
+        w, h = img.size
+        if max(w, h) > max_size:
+            c = max_size / max(w, h)
+            img = img.resize((int(c*w), int(c*h)))
+    return img
 
 def find_images(
         root: str,

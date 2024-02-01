@@ -2,9 +2,10 @@ import os
 import shutil
 import pandas as pd
 import numpy as np
-from typing import Optional, List
+from typing import Optional, List, Union, Callable
 import json
 import datetime
+from PIL import Image
 
 from .. import splits
 from .metadata import metadata
@@ -136,7 +137,99 @@ class DatasetFactory():
             add[i] = 'test'
         n_col = min(position, len(self.df.columns))
         self.df.insert(n_col, col_name, pd.Series(add))
+
+    def plot_grid(
+            self,
+            n_rows: int = 5,
+            n_cols: int = 8,
+            offset: float = 10,
+            img_min: float = 100,
+            rotate: bool = True,
+            idx: Optional[Union[List[bool],List[int]]] = None,
+            loader: Optional[Callable] = None,
+            ) -> Image:
+        """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
+
+        Args:
+            df (pd.DataFrame): Dataframe with column `path` (relative path).
+            root (str): Root folder where the images are stored. 
+            n_rows (int, optional): The number of rows in the grid.
+            n_cols (int, optional): The number of columns in the grid.
+            offset (float, optional): The offset between images.
+            img_min (float, optional): The minimal size of the plotted images.
+            rotate (bool, optional): Rotates the images to have the same orientation.
+            idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
+            loader (Optional[Callable], optional): Loader of images. Useful for including transforms.
+
+        Returns:
+            The plotted grid.
+        """
+
+        if len(self.df) == 0:
+            return None
         
+        # Select indices of images to be plotted
+        if idx is None:
+            n = min(len(self.df), n_rows*n_cols)
+            idx = np.random.permutation(len(self.df))[:n]
+        else:
+            if isinstance(idx, pd.Series):
+                idx = idx.values
+            if isinstance(idx[0], (bool, np.bool_)):
+                idx = np.where(idx)[0]
+            n = min(np.array(idx).size, n_rows*n_cols)
+            idx = np.matrix.flatten(np.array(idx))[:n]
+
+        # Load images and compute their ratio
+        ratios = []
+        ims = []
+        for k in idx:
+            if k >= 0:
+                # Load the image with index k
+                if loader is None:
+                    file_path = os.path.join(self.root, self.df.iloc[k]['path'])
+                    im = utils.get_image(file_path)
+                else:
+                    im = loader(k)
+                ims.append(im)
+                ratios.append(im.size[0] / im.size[1])
+            else:
+                # Load a black image
+                ims.append(Image.fromarray(np.zeros((2, 2), dtype = "uint8")))
+
+        # Safeguard when all indices are -1
+        if len(ratios) == 0:
+            return None
+        
+        # Get the size of the images after being resized
+        ratio = np.median(ratios)
+        if ratio > 1:    
+            img_w, img_h = int(img_min*ratio), int(img_min)
+        else:
+            img_w, img_h = int(img_min), int(img_min/ratio)
+
+        # Create an empty image grid
+        im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, n_rows*img_h + (n_rows-1)*offset))
+
+        # Fill the grid image by image
+        for k in range(n):
+            i = k // n_cols
+            j = k % n_cols
+
+            # Possibly rotate the image
+            im = ims[k]
+            if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
+                im = im.transpose(Image.Transpose.ROTATE_90)
+
+            # Rescale the image
+            im.thumbnail((img_w,img_h))
+
+            # Place the image on the grid
+            pos_x = j*img_w + j*offset
+            pos_y = i*img_h + i*offset        
+            im_grid.paste(im, (pos_x,pos_y))
+        return im_grid
+
     def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
 
@@ -157,6 +250,7 @@ class DatasetFactory():
         df = self.remove_constant_columns(df)
         self.check_unique_id(df)
         self.check_files_exist(df['path'])
+        self.check_files_names(df['path'])
         if 'segmentation' in df.columns:
             self.check_files_exist(df['segmentation'])
         return df
@@ -307,6 +401,18 @@ class DatasetFactory():
             if type(path) == str and not os.path.exists(os.path.join(self.root, path)):
                 raise(Exception('Path does not exist:' + os.path.join(self.root, path)))
 
+    def check_files_names(self, col: pd.Series) -> None:
+        """Checks if paths contain .
+
+        Args:
+            col (pd.Series): A column of a dataframe.
+        """
+
+        for path in col:
+            try:
+                path.encode("iso-8859-1")
+            except UnicodeEncodeError:
+                raise(Exception('Characters in path may cause problems. Please use only ISO-8859-1 characters: ' + os.path.join(path)))
 
 class DatasetFactoryWildMe(DatasetFactory):
     def create_catalogue_wildme(self, prefix: str, year: int) -> pd.DataFrame:
@@ -1180,6 +1286,138 @@ class IPanda50(DatasetFactory):
             'keypoints': keypoints
             })
         df.rename({'id': 'image_id'}, axis=1, inplace=True)
+
+        # Remove non-ASCII characters from image names
+        import string
+        for _, df_row in df.iterrows():
+            path_new = ''.join(c for c in df_row['path'] if c in string.printable)
+            if path_new != df_row['path']:
+                os.rename(os.path.join(self.root, df_row['path']), os.path.join(self.root, path_new))
+                df_row['path'] = path_new
+        if len(df) != df['path'].nunique():
+            raise(Exception("Non-unique names. Something went wrong when renaming."))
+
+        # Backward compability because of renaming non-ASCII names
+        ids_change = [
+            ['148e54a1a3a68bde', '00a704e4c2dabee0'],
+            ['2d40cf5a2a539fff', '0167f91b4b783389'],
+            ['50f109220cba6f14', '02e92626705e1e84'],
+            ['2da790802f7c3309', '094a0eef60098f21'],
+            ['eba318016427bb9d', '0a030ca1f22cba47'],
+            ['b8c9cc36cee72b34', '0d722b90bcdc4855'],
+            ['ab29e7e4409cfd97', '0f61b472c54588cc'],
+            ['0bebe8c94c83647b', '1028d0c2b4505376'],
+            ['37d82e4eaa7a765d', '124b2e39a92766a6'],
+            ['3e6a03686b5f2d55', '18b7bcae62315342'],
+            ['becf9cb6c9a736ae', '1ed25d59b2b6c354'],
+            ['082c11aa0f98a81d', '1feb586750483756'],
+            ['212faff57f94936b', '205f4c327235cc4e'],
+            ['a40502fa413834d4', '20d8cfcf161d32c8'],
+            ['179b1a59c5f9acde', '25086b8930698c3c'],
+            ['d8cc24a399b14782', '260bccca8ba09579'],
+            ['82f8ea0e97129f5c', '26f68f6e85ee1701'],
+            ['ee95cbd6ef25030a', '2881b22a405b0f20'],
+            ['fb4e61b9b0daf745', '2cc2825459b60562'],
+            ['996d7a70f669ed18', '2f28176d833c2687'],
+            ['0e5755065a6623a2', '3051c933b4daa402'],
+            ['989886c3ef126ba6', '325ae1820e3f6feb'],
+            ['717b9a1bad86b050', '342b22967ee0caea'],
+            ['ffe03f63865c867d', '36f5eaf55ce1cc75'],
+            ['ae8dcba9506e3838', '38fc50994879f8e2'],
+            ['df5f0e3e2644e4b7', '3a6aa0a6cc2106fa'],
+            ['747fcac6b444d398', '3a77dcd32cf19784'],
+            ['53467ce0e076e9f6', '3abd84677560c571'],
+            ['7bc65b71dfa78e4e', '3cd7c19e6228aea1'],
+            ['f4a1b7e9a4858f10', '3da27cbdd5c56db8'],
+            ['d15f6df4bb7fb3be', '3e3ec0f0d6c70a3f'],
+            ['764410ab39686bfd', '3f3e348ca233e6fc'],
+            ['68ef26164bae09fe', '40626fcc58f90167'],
+            ['136baebcedb2b9e6', '4108b24fbd1ed31f'],
+            ['30bb36ca821d89bf', '454504780151a996'],
+            ['0b0ccb1a84562c35', '46f1e41e04325436'],
+            ['5faf81af57dc10e8', '474732211741dccd'],
+            ['38c76d699661761a', '496d1ef5402fdcc2'],
+            ['d6625029088acab9', '4bd2f1995732f4e0'],
+            ['19f9f39c9288197e', '4c468f1d486bfc23'],
+            ['40198a3c13eee3e4', '4eabfb3613025c56'],
+            ['9967553ee2ea2a04', '4f6efc6fb7cd4bc3'],
+            ['8a6649a278801a4d', '51116e6a4db15546'],
+            ['6b7e7f9baab76235', '51843a031a76c43b'],
+            ['5f55f610a621ed4e', '5459e35de38ebe61'],
+            ['87682645f6ccb6a3', '5c05d69772002b05'],
+            ['cc1f7ca695a00399', '5cb2753d3c6c0a37'],
+            ['b513ff4959418419', '5d7ba5e54dfee635'],
+            ['5530adbc06b39421', '5f50c695235c6579'],
+            ['932324d7672541d1', '606903d2ae5d03bc'],
+            ['e07c21eed84e32ce', '612d37c49786e485'],
+            ['8800920dd42b600c', '615f7a1b6dfc6aa1'],
+            ['e7a924e50cb7a091', '6250533422d486ee'],
+            ['b2a996e8ac0e604d', '641fa169006b4cdd'],
+            ['00589c7b8d6e868e', '6422272c99ff4ada'],
+            ['e3326190fd5150bd', '6501aa400e7e1812'],
+            ['b7022678458a1cc0', '684c0341172cde02'],
+            ['5b3f61ab78af2fb3', '6a844a7a99a85825'],
+            ['02174bb0fdd36c92', '6bf3c3f2aa170783'],
+            ['b5dd675a22518d56', '6bf5c3b11f2e9f32'],
+            ['1f37cdd9dc733c75', '6c5b3803908f96dc'],
+            ['a04137b44cbc89be', '6cb61717a4843999'],
+            ['9afe1a623392e011', '6ebd36c98a6715c1'],
+            ['88487bb6afa52dc1', '75bf38bec0460410'],
+            ['9479bab1adbb919d', '79a61a935cf0d45c'],
+            ['22a3bf9b7128f969', '7b8d4004da046f46'],
+            ['29712c4333085ee6', '7e3b78fb5a5a55d1'],
+            ['5b335dadc7a059f0', '828c7a89cdd0bc5c'],
+            ['50b0ac629f8c8592', '84f8c9ccada9c7e9'],
+            ['f97a5d0285e12b84', '88e6cd70364e54d5'],
+            ['f9abb2ee0e40bf9a', '8962c96a27ee5f78'],
+            ['34ce980cebf36396', '8c07611797dca302'],
+            ['39f2a66dafd37e51', '8ec8ff2987783c4c'],
+            ['e4e43360a43f7e98', '91b3ec8c188d115f'],
+            ['a1a324eb229ec42f', '9523cb545fcf7f35'],
+            ['1b08b95330258f5a', '9963817415c81fc0'],
+            ['06c10ac43e46d58e', '9a036d5670fded48'],
+            ['39052401c0b2f410', '9c0d1bfb5da26f55'],
+            ['a5e83fcca15fe1d0', '9cc2a758c2924c9f'],
+            ['034a05a9c31f59ab', '9e36dd73c1c9b3df'],
+            ['3f675a3c13583851', '9fa45b2eba285f32'],
+            ['d88e763820b371c9', 'a09351d4b3e634c4'],
+            ['9161792b0bb4ca75', 'a18c7f86857aea52'],
+            ['fbb296586684a614', 'a55025626ff3602a'],
+            ['1fb33db508b25f63', 'a6613d2487eeea59'],
+            ['435df428a53a8148', 'a981596bd3a169c3'],
+            ['d6de1acfc5d8f5d4', 'ac50dbf29524803c'],
+            ['e4c46da4c0a5f1b3', 'b296743eecac582a'],
+            ['41b213a3ca0cc603', 'bd3a9fda89e35f8d'],
+            ['c05c911fabe70667', 'c057a21569bc68de'],
+            ['e470316e8eb13680', 'c101fe8dccdfed67'],
+            ['ae0ad68cc0e43ade', 'c6b36648ba43e7a2'],
+            ['96f97e9c24c8d595', 'ce9c363e1a2a466e'],
+            ['85128bf24e8dbe6b', 'd4e29367ef95b8ca'],
+            ['ec918c84a3f5adc5', 'd7c8282e00f2efda'],
+            ['ae95277f6a4eecb8', 'd8bb58f4ffab3224'],
+            ['6e797da86e5e3347', 'dac3a7ba978cc4ce'],
+            ['d4a68676c25b5f39', 'daff3497bd006ff6'],
+            ['4f0bb78071702349', 'dd1d74a31269f0f6'],
+            ['ee186d70e1b2c7c5', 'dd4b98608d12962e'],
+            ['f30a2747fd8f75af', 'de22b730dc51c751'],
+            ['a5723db64c2583d4', 'e23965a5a4f94b5e'],
+            ['81bb9efda8b0a974', 'e585abd35ee270ce'],
+            ['fdc1233c2575ec0d', 'e69bc861988489f8'],
+            ['c0e44f33589adaad', 'ea0dc21c4d711ca4'],
+            ['88677c48ff2cd9b6', 'eb9c0d6ac933a0fb'],
+            ['2a4538293242bdb2', 'ed123e244f6cddb3'],
+            ['0bf97358e2493682', 'ed957d9afe2d441e'],
+            ['0d1639535e024d7e', 'ee5258be8af64408'],
+            ['da4d28e176efde20', 'ee86adf7c257ea93'],
+            ['d001965e4f1dc51c', 'f3caa9c0051c44ec'],
+            ['52979c94473059eb', 'f5cb2f3875e38f72'],
+            ['f0f1cb04c08d8442', 'fadd52fa6fbf48b1'],
+            ['63f661722a7d5c60', 'fde6956c6d3aa274'],
+            ['a5359e0ea14dfd2b', 'ffe2054e86631b8c'],
+        ]
+        for id_change in ids_change:
+            df['image_id'] = df['image_id'].replace(id_change[0], id_change[1])
+        
         return self.finalize_catalogue(df)
 
 
