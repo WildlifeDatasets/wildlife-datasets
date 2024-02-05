@@ -5,7 +5,7 @@ import numpy as np
 from typing import Optional, List, Union, Callable
 import json
 import datetime
-from PIL import Image
+from PIL import Image, ImageDraw
 
 from .. import splits
 from .metadata import metadata
@@ -145,8 +145,9 @@ class DatasetFactory():
             offset: float = 10,
             img_min: float = 100,
             rotate: bool = True,
+            header_cols: Optional[List[str]] = None,
             idx: Optional[Union[List[bool],List[int]]] = None,
-            loader: Optional[Callable] = None,
+            loader: Optional[Callable] = None,            
             ) -> Image:
         """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
 
@@ -158,6 +159,7 @@ class DatasetFactory():
             offset (float, optional): The offset between images.
             img_min (float, optional): The minimal size of the plotted images.
             rotate (bool, optional): Rotates the images to have the same orientation.
+            header_cols (Optional[List[str]], optional): List of headers for each column.
             idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
             loader (Optional[Callable], optional): Loader of images. Useful for including transforms.
 
@@ -208,8 +210,24 @@ class DatasetFactory():
         else:
             img_w, img_h = int(img_min), int(img_min/ratio)
 
+        # Compute height offset if headers are present
+        if header_cols is not None:
+            offset_h = 50
+            if len(header_cols) != n_cols:
+                raise(Exception("Length of header_cols must be the same as n_cols."))
+        else:
+            offset_h = 0
+
         # Create an empty image grid
-        im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, n_rows*img_h + (n_rows-1)*offset))
+        im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, offset_h + n_rows*img_h + (n_rows-1)*offset))
+
+        # Add column headers if headers are present        
+        if header_cols is not None:
+            draw = ImageDraw.Draw(im_grid)
+            for i, header in enumerate(header_cols):
+                pos_x = i*img_w + i*offset
+                pos_y = offset_h/2
+                draw.text((pos_x, pos_y), str(header))
 
         # Fill the grid image by image
         for k in range(n):
@@ -226,7 +244,7 @@ class DatasetFactory():
 
             # Place the image on the grid
             pos_x = j*img_w + j*offset
-            pos_y = i*img_h + i*offset        
+            pos_y = offset_h + i*img_h + i*offset        
             im_grid.paste(im, (pos_x,pos_y))
         return im_grid
 
