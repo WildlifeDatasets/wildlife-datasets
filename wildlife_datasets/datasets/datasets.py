@@ -5,7 +5,8 @@ import numpy as np
 from typing import Optional, List, Union, Callable
 import json
 import datetime
-from PIL import Image, ImageDraw
+from PIL import Image
+import matplotlib.pyplot as plt
 
 from .. import splits
 from .metadata import metadata
@@ -147,8 +148,9 @@ class DatasetFactory():
             rotate: bool = True,
             header_cols: Optional[List[str]] = None,
             idx: Optional[Union[List[bool],List[int]]] = None,
-            loader: Optional[Callable] = None,            
-            ) -> Image:
+            loader: Optional[Callable] = None,
+            **kwargs
+            ) -> None:
         """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
 
         Args:
@@ -162,9 +164,6 @@ class DatasetFactory():
             header_cols (Optional[List[str]], optional): List of headers for each column.
             idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
             loader (Optional[Callable], optional): Loader of images. Useful for including transforms.
-
-        Returns:
-            The plotted grid.
         """
 
         if len(self.df) == 0:
@@ -212,7 +211,7 @@ class DatasetFactory():
 
         # Compute height offset if headers are present
         if header_cols is not None:
-            offset_h = 50
+            offset_h = 30
             if len(header_cols) != n_cols:
                 raise(Exception("Length of header_cols must be the same as n_cols."))
         else:
@@ -220,14 +219,6 @@ class DatasetFactory():
 
         # Create an empty image grid
         im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, offset_h + n_rows*img_h + (n_rows-1)*offset))
-
-        # Add column headers if headers are present        
-        if header_cols is not None:
-            draw = ImageDraw.Draw(im_grid)
-            for i, header in enumerate(header_cols):
-                pos_x = i*img_w + i*offset
-                pos_y = offset_h/2
-                draw.text((pos_x, pos_y), str(header))
 
         # Fill the grid image by image
         for k in range(n):
@@ -246,7 +237,21 @@ class DatasetFactory():
             pos_x = j*img_w + j*offset
             pos_y = offset_h + i*img_h + i*offset        
             im_grid.paste(im, (pos_x,pos_y))
-        return im_grid
+
+        # Plot the image and add column headers if present
+        fig = plt.figure()
+        fig.patch.set_visible(False)
+        ax = fig.add_subplot(111)
+        plt.axis('off')
+        plt.imshow(im_grid)
+        if header_cols is not None:
+            color = kwargs.pop('color', 'white')
+            ha = kwargs.pop('ha', 'center')
+            va = kwargs.pop('va', 'center')
+            for i, header in enumerate(header_cols):
+                pos_x = (i+0.5)*img_w + i*offset
+                pos_y = offset_h/2
+                plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
 
     def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
