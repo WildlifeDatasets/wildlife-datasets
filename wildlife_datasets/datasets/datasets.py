@@ -37,6 +37,7 @@ class DatasetFactory():
             self, 
             root: str,
             df: Optional[pd.DataFrame] = None,
+            update_wrong_labels: bool = True,
             **kwargs) -> None:
         """Initializes the class.
 
@@ -50,6 +51,7 @@ class DatasetFactory():
         """
 
         self.root = root
+        self.update_wrong_labels = update_wrong_labels
         if df is None:
             self.df = self.create_catalogue(**kwargs)
         else:
@@ -104,6 +106,14 @@ class DatasetFactory():
 
         raise NotImplementedError('Needs to be implemented by subclasses.')
     
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Fixes labels in dataframe.
+        
+        Automatically called in `finalize_catalogue`.                
+        """
+
+        return df
+
     def add_splits(self) -> None:
         """Drops existing splits and adds automatically generated split.
 
@@ -268,6 +278,8 @@ class DatasetFactory():
             A full dataframe of the data, slightly modified.
         """
 
+        if self.update_wrong_labels:
+            df = self.fix_labels(df)
         self.check_required_columns(df)
         self.check_types_columns(df)
         df = self.reorder_df(df)
