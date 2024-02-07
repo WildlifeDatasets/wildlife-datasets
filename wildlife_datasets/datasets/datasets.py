@@ -927,6 +927,26 @@ class Cows2021(DatasetFactory):
         df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Replace the wrong identities
+        replace_names = [
+            (164, 148),
+            (105, 29)
+        ]
+        for replace_tuple in replace_names:
+            df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
+
+        # Replace the wrong identities
+        replace_names = [
+            ('image_0001226_2020-02-11_12-43-7_roi_001.jpg', 137, 107)
+        ]
+        for replace_tuple in replace_names:
+            for index, df_row in df.iterrows():
+                if replace_tuple[0] in df_row['path'] and replace_tuple[1] == df_row['identity']:
+                    df.loc[index, 'identity'] = replace_tuple[2]
+
+        return df
+        
     def extract_date(self, x):
         x = os.path.split(x)[1]
         if x.startswith('image_'):
