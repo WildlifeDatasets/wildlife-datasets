@@ -18,10 +18,9 @@ class DatasetFactory():
 
     Attributes:
       df (pd.DataFrame): A full dataframe of the data.
-      df_ml (pd.DataFrame): A dataframe of data for machine learning models.
-      download (module): Script for downloading the dataset.
       metadata (dict): Metadata of the dataset.
       root (str): Root directory for the data.
+      update_wrong_labels(bool): Whether `fix_labels` should be called.
       unknown_name (str): Name of the unknown class.
     """
 
@@ -43,11 +42,11 @@ class DatasetFactory():
 
         If `df` is specified, it copies it. Otherwise, it creates it
         by the `create_catalogue` method.
-        It creates `df_ml` by the `create_catalogue_ml` method.
 
         Args:
             root (str): Root directory for the data.
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
+            update_wrong_labels (bool, optional): Whether `fix_labels` should be called.
         """
 
         self.root = root
