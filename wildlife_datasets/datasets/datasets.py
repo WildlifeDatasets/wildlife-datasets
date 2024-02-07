@@ -816,18 +816,7 @@ class CTai(DatasetFactory):
         utils.extract_archive(cls.archive, delete=True)
         shutil.rmtree('chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CZoo')
 
-    def create_catalogue(self) -> pd.DataFrame:
-        # Define the wrong identity names
-        replace_names = [
-            ('Adult', self.unknown_name),
-            ('Akouba', 'Akrouba'),
-            ('Freddy', 'Fredy'),
-            ('Ibrahiim', 'Ibrahim'),
-            ('Liliou', 'Lilou'),
-            ('Wapii', 'Wapi'),
-            ('Woodstiock', 'Woodstock')
-        ]
-            
+    def create_catalogue(self) -> pd.DataFrame:            
         # Load information about the dataset
         path = os.path.join('chimpanzee_faces-master', 'datasets_cropped_chimpanzee_faces', 'data_CTai',)
         data = pd.read_csv(os.path.join(self.root, path, 'annotations_ctai.txt'), header=None, sep=' ')
@@ -848,11 +837,23 @@ class CTai(DatasetFactory):
             'gender': data[9],
         })
 
-        # Replace the wrong identities
-        for replace_tuple in replace_names:
-            df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
         df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
+
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Replace the wrong identities
+        replace_names = [
+            ('Adult', self.unknown_name),
+            ('Akouba', 'Akrouba'),
+            ('Freddy', 'Fredy'),
+            ('Ibrahiim', 'Ibrahim'),
+            ('Liliou', 'Lilou'),
+            ('Wapii', 'Wapi'),
+            ('Woodstiock', 'Woodstock')
+        ]
+        for replace_tuple in replace_names:
+            df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
+        return df
 
 
 class CZoo(DatasetFactory):
@@ -1162,12 +1163,6 @@ class HappyWhale(DatasetFactory):
             raise Exception(exception_text)
     
     def create_catalogue(self) -> pd.DataFrame:
-        # Define the wrong species names
-        replace_names = [
-            ('bottlenose_dolpin', 'bottlenose_dolphin'),
-            ('kiler_whale', 'killer_whale'),
-        ]
-
         # Load the training data
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
         df1 = pd.DataFrame({
@@ -1177,10 +1172,6 @@ class HappyWhale(DatasetFactory):
             'species': data['species'],
             'split': 'train'
             })
-
-        # Replace the wrong species names            
-        for replace_tuple in replace_names:
-            df1['species'] = df1['species'].replace({replace_tuple[0]: replace_tuple[1]})
 
         test_files = utils.find_images(os.path.join(self.root, 'test_images'))
         test_files = list(test_files['file'])
@@ -1199,6 +1190,16 @@ class HappyWhale(DatasetFactory):
         df = pd.concat([df1, df2])
         df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
+
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Replace the wrong species names            
+        replace_names = [
+            ('bottlenose_dolpin', 'bottlenose_dolphin'),
+            ('kiler_whale', 'killer_whale'),
+        ]
+        for replace_tuple in replace_names:
+            df['species'] = df['species'].replace({replace_tuple[0]: replace_tuple[1]})
+        return df
 
 
 class HumpbackWhaleID(DatasetFactory):
