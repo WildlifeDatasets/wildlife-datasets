@@ -29,7 +29,7 @@ from .datasets import PolarBearVidID
 from .datasets import SealID
 from .datasets import SealIDSegmented
 from .datasets import SeaStarReID2023
-from .datasets import SeaTurtleID
+from .datasets import SeaTurtleID2022
 from .datasets import SeaTurtleIDHeads
 from .datasets import SMALST
 from .datasets import StripeSpotter
@@ -69,7 +69,7 @@ names_all = [
     SealID,
     SealIDSegmented,
     SeaStarReID2023,
-    SeaTurtleID,
+    SeaTurtleID2022,
     SeaTurtleIDHeads,
     SMALST,
     StripeSpotter,
@@ -88,7 +88,7 @@ names_wild = [
     NOAARightWhale,
     NyalaData,
     SealID,
-    SeaTurtleID,
+    SeaTurtleID2022,
     StripeSpotter,
     WhaleSharkID,
 ]
