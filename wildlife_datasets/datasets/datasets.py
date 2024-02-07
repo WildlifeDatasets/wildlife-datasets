@@ -1057,6 +1057,18 @@ class FriesianCattle2015(DatasetFactory):
         df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Remove all identities in training as they are duplicates
+        idx_remove = ['Cows-training' in path for path in df.path]
+        df = df[~np.array(idx_remove)]
+
+        # Remove specified individuals as they are duplicates
+        # 19 (duplicate of 15), 20 (18), 21 (17), 22 (16), 23 (11), 24 (14), 25 (13), 26 (12), 27 (23), 33 (18), 37 (30)
+        identities_to_remove = [19, 20, 21, 22, 23, 24, 25, 26, 27, 33, 37]
+        idx_remove = [identity in identities_to_remove for identity in df['identity']]
+        df = df[~np.array(idx_remove)]
+
+        return df
 
 class FriesianCattle2017(DatasetFactory):
     metadata = metadata['FriesianCattle2017']
