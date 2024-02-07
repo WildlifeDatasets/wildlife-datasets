@@ -252,6 +252,7 @@ class DatasetFactory():
                 pos_x = (i+0.5)*img_w + i*offset
                 pos_y = offset_h/2
                 plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
+        return fig
 
     def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
