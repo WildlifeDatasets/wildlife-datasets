@@ -2,7 +2,7 @@ import os
 import shutil
 import pandas as pd
 import numpy as np
-from typing import Optional, List, Union, Callable
+from typing import Optional, List, Union, Callable, Tuple
 import json
 import datetime
 from PIL import Image
@@ -111,6 +111,77 @@ class DatasetFactory():
         Automatically called in `finalize_catalogue`.                
         """
 
+        return df
+
+    def fix_labels_replace_identity(
+            self,
+            df: pd.DataFrame,
+            replace_identity: List[Tuple],
+            col: str = 'identity'
+            ) -> pd.DataFrame:
+        """Replaces all instances of identities.
+
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
+            replace_identity (List[Tuple]): List of (old_identity, new_identity)
+            col (str, optional): Column to replace in.
+
+        Returns:
+            A full dataframe of the data.
+        """
+        for old_identity, new_identity in replace_identity:
+            df[col] = df[col].replace({old_identity: new_identity})
+        return df
+
+    def fix_labels_remove_identity(
+            self,
+            df: pd.DataFrame,
+            identities_to_remove: List,
+            col: str = 'identity'
+            ) -> pd.DataFrame:
+        """Removes all instances of identities.
+
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
+            identities_to_remove (List): List of identities to remove.
+            col (str, optional): Column to remove from.
+
+        Returns:
+            A full dataframe of the data.
+        """
+        idx_remove = [identity in identities_to_remove for identity in df[col]]
+        return df[~np.array(idx_remove)]
+
+    def fix_labels_replace_images(
+            self,
+            df: pd.DataFrame,
+            replace_identity: List[Tuple],
+            col: str = 'identity'
+            ) -> pd.DataFrame:
+        """Replaces specified images with specified identities.
+
+        It looks for a subset of image_name in df['path'].
+        It may cause problems with `os.path.sep`.
+
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
+            replace_identity (List[Tuple]): List of (image_name, old_identity, new_identity).
+            col (str, optional): Column to replace in.
+
+        Returns:
+            A full dataframe of the data.
+        """
+        for image_name, old_identity, new_identity in replace_identity:
+            n_replaced = 0
+            for index, df_row in df.iterrows():
+                # Check that there is a image with the required name and identity 
+                if image_name in df_row['path'] and old_identity == df_row[col]:
+                    df.loc[index, col] = new_identity
+                    n_replaced += 1
+            if n_replaced == 0:
+                print('File name %s with identity %s was not found.' % (image_name, str(old_identity)))
+            elif n_replaced > 1:
+                print('File name %s with identity %s was found multiple times.' % (image_name, str(old_identity)))
         return df
 
     def add_splits(self) -> None:
@@ -842,7 +913,7 @@ class CTai(DatasetFactory):
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
         # Replace the wrong identities
-        replace_names = [
+        replace_identity = [
             ('Adult', self.unknown_name),
             ('Akouba', 'Akrouba'),
             ('Freddy', 'Fredy'),
@@ -851,9 +922,7 @@ class CTai(DatasetFactory):
             ('Wapii', 'Wapi'),
             ('Woodstiock', 'Woodstock')
         ]
-        for replace_tuple in replace_names:
-            df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
-        return df
+        return self.fix_labels_replace_identity(df, replace_identity)
 
 
 class CZoo(DatasetFactory):
@@ -928,24 +997,16 @@ class Cows2021(DatasetFactory):
         return self.finalize_catalogue(df)
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
-        # Replace the wrong identities
-        replace_names = [
+        # Replace the wrong identities and images
+        replace_identity1 = [
             (164, 148),
             (105, 29)
         ]
-        for replace_tuple in replace_names:
-            df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
-
-        # Replace the wrong identities
-        replace_names = [
+        replace_identity2 = [
             ('image_0001226_2020-02-11_12-43-7_roi_001.jpg', 137, 107)
         ]
-        for replace_tuple in replace_names:
-            for index, df_row in df.iterrows():
-                if replace_tuple[0] in df_row['path'] and replace_tuple[1] == df_row['identity']:
-                    df.loc[index, 'identity'] = replace_tuple[2]
-
-        return df
+        df = self.fix_labels_replace_identity(df, replace_identity1)
+        return self.fix_labels_replace_images(df, replace_identity2)
         
     def extract_date(self, x):
         x = os.path.split(x)[1]
@@ -1085,10 +1146,8 @@ class FriesianCattle2015(DatasetFactory):
         # Remove specified individuals as they are duplicates
         # 19 (duplicate of 15), 20 (18), 21 (17), 22 (16), 23 (11), 24 (14), 25 (13), 26 (12), 27 (23), 33 (18), 37 (30)
         identities_to_remove = [19, 20, 21, 22, 23, 24, 25, 26, 27, 33, 37]
-        idx_remove = [identity in identities_to_remove for identity in df['identity']]
-        df = df[~np.array(idx_remove)]
+        return self.fix_labels_remove_identity(df, identities_to_remove)
 
-        return df
 
 class FriesianCattle2017(DatasetFactory):
     metadata = metadata['FriesianCattle2017']
@@ -1225,13 +1284,11 @@ class HappyWhale(DatasetFactory):
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
         # Replace the wrong species names            
-        replace_names = [
+        replace_identity = [
             ('bottlenose_dolpin', 'bottlenose_dolphin'),
             ('kiler_whale', 'killer_whale'),
         ]
-        for replace_tuple in replace_names:
-            df['species'] = df['species'].replace({replace_tuple[0]: replace_tuple[1]})
-        return df
+        return self.fix_labels_replace_identity(df, replace_identity, col='species')
 
 
 class HumpbackWhaleID(DatasetFactory):
