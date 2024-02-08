@@ -40,7 +40,11 @@ An overview of the provided datasets is available in the [documentation](https:/
 
 We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and additional information such as source, number of poses, inclusion of timestamps, whether the animals were captured in the wild and whether the dataset contain multiple species.
 
-![](docs/resources/Datasets_Summary.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/resources/Datasets_Summary_inverted.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/resources/Datasets_Summary.png">
+  <img alt="Dataset summary" src="docs/resources/Datasets_Summary.png">
+</picture>
 
 
 ## Installation
@@ -68,7 +72,11 @@ The class `dataset` contains the summary of the dataset. The content depends on 
 dataset.df
 ```
 
-![](docs/resources/MacaqueFaces_DataFrame.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/resources/MacaqueFaces_DataFrame_inverted.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/resources/MacaqueFaces_DataFrame.png">
+  <img alt="Overview of the MacaqueFaces dataset" src="docs/resources/MacaqueFaces_DataFrame.png">
+</picture>
 
 The dataset also contains basic metadata including information about the number of individuals, time span, licences or published year.
 
@@ -76,7 +84,11 @@ The dataset also contains basic metadata including information about the number 
 dataset.metadata
 ```
 
-![](docs/resources/MacaqueFaces_Metadata.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/resources/MacaqueFaces_Metadata_inverted.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/resources/MacaqueFaces_Metadata.png">
+  <img alt="Metadata of the MacaqueFaces dataset" src="docs/resources/MacaqueFaces_Metadata.png">
+</picture>
 
 This particular dataset already contains cropped images of faces. Other datasets may contain uncropped images with bounding boxes or even segmentation masks.
 
