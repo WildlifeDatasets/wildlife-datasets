@@ -32,7 +32,7 @@ The aim of the project is to provide comprehensive overview of datasets for wild
 - default splits for several machine learning tasks including the ability create additional splits.
 - evaluation metrics for closed-set and open-set classification.
 
-An introductory example is provided in a [Jupyter notebook](notebooks/introduction.ipynb). The package provides a natural synergy with [Wildlife tools](https://github.com/WildlifeDatasets/wildlife-tools), which provides out MegaDescriptor model and tools for training neural networks.
+An introductory example is provided in a [Jupyter notebook](notebooks/introduction.ipynb). The package provides a natural synergy with [Wildlife tools](https://github.com/WildlifeDatasets/wildlife-tools), which provides our [MegaDescriptor](https://huggingface.co/BVRA/MegaDescriptor-L-384) model and tools for training neural networks. 
 
 ## Summary of datasets
 
@@ -92,7 +92,7 @@ For additional functionality including mass loading, datasets splitting or evalu
 
 ## Citation
 
-If you like our package, please cite us.
+If you like our package, please cite our [paper](https://openaccess.thecvf.com/content/WACV2024/html/Cermak_WildlifeDatasets_An_Open-Source_Toolkit_for_Animal_Re-Identification_WACV_2024_paper.html). You may be also interested in our [SeaTurtleID](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleidheads) dataset published in another [paper](https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html).
 
 ```
 @InProceedings{Cermak_2024_WACV,
