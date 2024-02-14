@@ -513,7 +513,7 @@ class DatasetFactoryWildMe(DatasetFactory):
 
         # Modify some columns
         df['path'] = path_images + os.path.sep + df['file_name']
-        df['id'] = range(len(df))    
+        df['id'] = range(len(df))
         df.loc[df['identity'] == '____', 'identity'] = self.unknown_name
 
         # Remove segmentations which are the same as bounding boxes
@@ -527,8 +527,6 @@ class DatasetFactoryWildMe(DatasetFactory):
 
         # Remove superficial columns
         df = df.drop(['image_id', 'file_name', 'supercategory', 'category_id'], axis=1)
-        if len(df['species'].unique()) == 1:
-            df = df.drop(['species'], axis=1)
         df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
@@ -658,7 +656,7 @@ class ATRW(DatasetFactory):
                         header=None
                         )
         ids['id'] = ids['path'].str.split('.', expand=True)[0].astype(int)
-        ids['split'] = 'train'
+        ids['original_split'] = 'train'
 
         # Load keypoints for the reid_train part of the dataset
         with open(os.path.join(self.root, 'atrw_anno_reid_train', 'reid_keypoints_train.json')) as file:
@@ -670,7 +668,7 @@ class ATRW(DatasetFactory):
         data = pd.DataFrame(df_keypoints)
 
         # Merge information for the reid_train part of the dataset
-        df_train = pd.merge(ids, data, on='path')
+        df_train = pd.merge(ids, data, on='path', how='left')
         df_train['path'] = 'atrw_reid_train' + os.path.sep + 'train' + os.path.sep + df_train['path']
 
         # Load information for the test_plain part of the dataset
@@ -682,8 +680,8 @@ class ATRW(DatasetFactory):
                         header=None
                         )
         ids['id'] = ids['path'].str.split('.', expand=True)[0].astype(int)
-        ids['split'] = 'test'
-        ids = pd.merge(ids, identity, left_on='id', right_on='imgid')
+        ids['original_split'] = 'test'
+        ids = pd.merge(ids, identity, left_on='id', right_on='imgid', how='left')
         ids = ids.drop(['query', 'frame', 'imgid'], axis=1)
         ids.rename(columns = {'entityid': 'identity'}, inplace = True)
 
@@ -697,7 +695,7 @@ class ATRW(DatasetFactory):
         data = pd.DataFrame(df_keypoints)
 
         # Merge information for the test_plain part of the dataset
-        df_test1 = pd.merge(ids, data, on='path')
+        df_test1 = pd.merge(ids, data, on='path', how='left')
         df_test1['path'] = 'atrw_reid_test' + os.path.sep + 'test' + os.path.sep + df_test1['path']
 
         # Load information for the test_wild part of the dataset
@@ -713,10 +711,10 @@ class ATRW(DatasetFactory):
         entries = pd.DataFrame(entries)
 
         # Merge information for the test_wild part of the dataset
-        df_test2 = pd.merge(ids, entries, on='imgid')
+        df_test2 = pd.merge(ids, entries, on='imgid', how='left')
         df_test2['path'] = 'atrw_detection_test' + os.path.sep + 'test' + os.path.sep + df_test2['file']
         df_test2['id'] = df_test2['imgid'].astype(str) + '_' + df_test2['identity'].astype(str)
-        df_test2['split'] = 'test'
+        df_test2['original_split'] = 'test'
         df_test2 = df_test2.drop(['file', 'imgid'], axis=1)
 
         # Finalize the dataframe
@@ -787,17 +785,17 @@ class BirdIndividualID(DatasetFactory):
             folders.loc[~idx, 2] = folders.loc[~idx, 3]
 
         # Extract information from the folder structure
-        split = folders[1].replace({'Test_datasets': 'test', 'Test': 'test', 'Train': 'train', 'Val':'val'})
+        split = folders[1].replace({'Test_datasets': 'test', 'Test': 'test', 'Train': 'train', 'Val': 'val'})
         identity = folders[2]
         species = folders[0]
 
         # Finalize the dataframe
         df1 = pd.DataFrame({    
-            'id': utils.create_id(split + data['file']),
+            'image_id': utils.create_id(split + data['file']),
             'path': self.prefix1 + os.path.sep + self.prefix2 + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'species': species,
-            'split': split,
+            'original_split': split,
         })
 
         # Add images without labels
@@ -807,14 +805,13 @@ class BirdIndividualID(DatasetFactory):
 
         # Finalize the dataframe
         df2 = pd.DataFrame({    
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': self.prefix1 + os.path.sep + 'New_birds' + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': self.unknown_name,
             'species': species,
-            'split': 'unassigned',
+            'original_split': np.nan,
         })
         df = pd.concat([df1, df2])
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -863,7 +860,7 @@ class CTai(DatasetFactory):
         
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': pd.Series(range(len(data))),
+            'image_id': pd.Series(range(len(data))),
             'path': path + os.path.sep + data[1],
             'identity': data[3],
             'keypoints': keypoints,
@@ -871,8 +868,6 @@ class CTai(DatasetFactory):
             'age_group': data[7],
             'gender': data[9],
         })
-
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -915,7 +910,7 @@ class CZoo(DatasetFactory):
         
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': pd.Series(range(len(data))),
+            'image_id': pd.Series(range(len(data))),
             'path': path + os.path.sep + data[1],
             'identity': data[3],
             'keypoints': keypoints,
@@ -923,7 +918,6 @@ class CZoo(DatasetFactory):
             'age_group': data[7],
             'gender': data[9],
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -952,12 +946,11 @@ class Cows2021(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[4].astype(int),
         })
         df['date'] = df['path'].apply(lambda x: self.extract_date(x))
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -1094,12 +1087,11 @@ class FriesianCattle2015(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(identity.astype(str) + split + data['file']),
+            'image_id': utils.create_id(identity.astype(str) + split + data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'split': split
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -1132,11 +1124,10 @@ class FriesianCattle2017(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1].astype(int),
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1187,11 +1178,10 @@ class Giraffes(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({    
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[n_folders],
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1220,11 +1210,11 @@ class HappyWhale(DatasetFactory):
         # Load the training data
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
         df1 = pd.DataFrame({
-            'id': data['image'].str.split('.', expand=True)[0],
+            'image_id': data['image'].str.split('.', expand=True)[0],
             'path': 'train_images' + os.path.sep + data['image'],
             'identity': data['individual_id'],
             'species': data['species'],
-            'split': 'train'
+            'original_split': 'train'
             })
 
         test_files = utils.find_images(os.path.join(self.root, 'test_images'))
@@ -1233,16 +1223,15 @@ class HappyWhale(DatasetFactory):
 
         # Load the testing data
         df2 = pd.DataFrame({
-            'id': test_files.str.split('.', expand=True)[0],
+            'image_id': test_files.str.split('.', expand=True)[0],
             'path': 'test_images' + os.path.sep + test_files,
             'identity': self.unknown_name,
             'species': np.nan,
-            'split': 'test'
+            'original_split': 'test'
             })
         
         # Finalize the dataframe        
         df = pd.concat([df1, df2])
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -1280,10 +1269,10 @@ class HumpbackWhaleID(DatasetFactory):
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
         data.loc[data['Id'] == 'new_whale', 'Id'] = self.unknown_name
         df1 = pd.DataFrame({
-            'id': data['Image'].str.split('.', expand=True)[0],
+            'image_id': data['Image'].str.split('.', expand=True)[0],
             'path': 'train' + os.path.sep + data['Image'],
             'identity': data['Id'],
-            'split': 'train'
+            'original_split': 'train'
             })
         
         # Find all testing images
@@ -1293,15 +1282,14 @@ class HumpbackWhaleID(DatasetFactory):
 
         # Create the testing dataframe
         df2 = pd.DataFrame({
-            'id': test_files.str.split('.', expand=True)[0],
+            'image_id': test_files.str.split('.', expand=True)[0],
             'path': 'test' + os.path.sep + test_files,
             'identity': self.unknown_name,
-            'split': 'test'
+            'original_split': 'test'
             })
         
         # Finalize the dataframe
         df = pd.concat([df1, df2])
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1368,12 +1356,11 @@ class IPanda50(DatasetFactory):
         
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1],
             'keypoints': keypoints
             })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
 
         # Remove non-ASCII characters from image names
         import string
@@ -1426,11 +1413,10 @@ class LionData(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[3],
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1457,16 +1443,13 @@ class MacaqueFaces(DatasetFactory):
         
         # Finalize the dataframe
         data['Path'] = data['Path'].str.replace('/', os.path.sep)
-        #display(data['Path'].str.strip(os.path.sep))
-        #display(os.path.sep)
         df = pd.DataFrame({
-            'id': pd.Series(range(len(data))),            
+            'image_id': pd.Series(range(len(data))),            
             'path': 'MacaqueFaces' + os.path.sep + data['Path'].str.strip(os.path.sep) + os.path.sep + data['FileName'],
             'identity': data['ID'],
             'date': pd.Series(date_taken),
             'category': data['Category']
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1486,15 +1469,16 @@ class MPDD(DatasetFactory):
 
     def create_catalogue(self) -> pd.DataFrame:
         data = utils.find_images(self.root)
+        folders = data['path'].str.split(os.path.sep, expand=True)
         identity = data['file'].apply(lambda x: int(x.split('_')[0]))
-
+        
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': data['file'],
+            'image_id': data['file'],
             'path': data['path'] + os.path.sep + data['file'],
-            'identity': identity
+            'identity': identity,
+            'original_split': folders[2]
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1569,10 +1553,9 @@ class NDD20(DatasetFactory):
             raise(Exception('Multiple segmentation types'))
 
         # Finalize the dataframe
-        df['id'] = range(len(df))
+        df['image_id'] = range(len(df))
         df['path'] = df['orientation'].str.upper() + os.path.sep + df['file_name']
         df = df.drop(['reg_type', 'file_name'], axis=1)
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1605,23 +1588,23 @@ class NOAARightWhale(DatasetFactory):
         # Load information about the training dataset
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
         df1 = pd.DataFrame({
-            #.str.strip('Cow').astype(int)
-            'id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),
+            'image_id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),
             'path': 'imgs' + os.path.sep + data['Image'],
             'identity': data['whaleID'],
+            'original_split': 'train'
             })
 
         # Load information about the testing dataset
         data = pd.read_csv(os.path.join(self.root, 'sample_submission.csv'))
         df2 = pd.DataFrame({
-            'id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),
+            'image_id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),
             'path': 'imgs' + os.path.sep + data['Image'],
             'identity': self.unknown_name,
+            'original_split': 'test'
             })
         
         # Finalize the dataframe
         df = pd.concat([df1, df2])
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1647,17 +1630,17 @@ class NyalaData(DatasetFactory):
         # Extract information from the folder structure and about orientation
         identity = folders[3].astype(int)
         orientation = np.full(len(data), np.nan, dtype=object)
-        orientation[['left' in filename for filename in data['file']]] = 'left'
-        orientation[['right' in filename for filename in data['file']]] = 'right'
+        orientation[data['file'].str.contains('left')] = 'left'
+        orientation[data['file'].str.contains('right')] = 'right'
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'orientation': orientation,
+            'original_split': folders[2]
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)   
 
 
@@ -1689,12 +1672,11 @@ class OpenCows2020(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(identity.astype(str) + split + data['file']),
+            'image_id': utils.create_id(identity.astype(str) + split + data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
-            'split': split
+            'original_split': split
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)    
 
 
@@ -1715,18 +1697,16 @@ class PolarBearVidID(DatasetFactory):
         metadata = pd.read_csv(os.path.join(self.root, 'animal_db.csv'))
         data = utils.find_images(self.root)
 
-        # Convert numbers into animal names
-        path_to_names = {}
-        for _, metadata_row in metadata.iterrows():
-            path_to_names[metadata_row['id']] = metadata_row['name']
-        
         # Finalize the dataframe
         df = pd.DataFrame({
             'image_id': data['file'].apply(lambda x: os.path.splitext(x)[0]),
             'path': data['path'] + os.path.sep + data['file'],
-            'identity': data['path'].apply(lambda x: path_to_names[int(x)]),
-            'video': data['file'].apply(lambda x: int(x[7:10]))
+            'video': data['file'].str[7:10].astype(int),
+            'id': data['path'].astype(int)
         })
+        df = pd.merge(df, metadata, on='id', how='left')
+        df.rename({'name': 'identity', 'sex': 'gender'}, axis=1, inplace=True)
+        df = df.drop(['id', 'zoo', 'tracklets'], axis=1)
         return self.finalize_catalogue(df)
 
 
@@ -1770,13 +1750,12 @@ class SealID(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({    
-            'id': data['file'].str.split('.', expand=True)[0],
+            'image_id': data['file'].str.split('.', expand=True)[0],
             'path': 'full images' + os.path.sep + self.prefix + data['reid_split'] + os.path.sep + data['file'],
             'identity': data['class_id'].astype(int),
-            'reid_split': data['reid_split'],
-            'segmentation_split': data['segmentation_split'],
+            'original_split': data['segmentation_split'].replace({'training': 'train', 'testing': 'test', 'validation': 'val'}),
+            'original_split_reid': data['reid_split'],
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1815,18 +1794,15 @@ class SeaStarReID2023(DatasetFactory):
     def create_catalogue(self) -> pd.DataFrame:
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
-        species = folders[1].apply(lambda x: x[:4])
-        species.replace('Anau', 'Anthenea australiae', inplace=True)
-        species.replace('Asru', 'Asteria rubens', inplace=True)
+        species = folders[1].str[:4].replace({'Anau': 'Anthenea australiae', 'Asru': 'Asteria rubens'})
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1],
             'species': species
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1850,7 +1826,7 @@ class SeaTurtleID2022(DatasetFactory):
         path_json = os.path.join('turtles-data', 'data', 'annotations.json')
         with open(os.path.join(self.root, path_json)) as file:
             data = json.load(file)
-        path_csv = os.path.join('turtles-data', 'data', 'metadata.csv')
+        path_csv = os.path.join('turtles-data', 'data', 'metadata_splits.csv')
         with open(os.path.join(self.root, path_csv)) as file:
             df_images = pd.read_csv(file)
 
@@ -1864,7 +1840,8 @@ class SeaTurtleID2022(DatasetFactory):
         # Merge the information from the JSON file
         df = pd.merge(df_images, df_annotation, on='image_id', how='outer')
         df['path'] = 'turtles-data' + os.path.sep + 'data' + os.path.sep + df['file_name'].str.replace('/', os.path.sep)
-        df = df.drop(['id', 'file_name', 'timestamp', 'width', 'height'], axis=1)
+        df = df.drop(['id', 'file_name', 'timestamp', 'width', 'height', 'year', 'split_closed_random', 'split_open'], axis=1)
+        df.rename({'split_closed': 'original_split'}, axis=1, inplace=True)
         df['date'] = df['date'].apply(lambda x: x[:4] + '-' + x[5:7] + '-' + x[8:10])
 
         return self.finalize_catalogue(df)
@@ -1940,7 +1917,7 @@ class SMALST(DatasetFactory):
         # Extract information about the images
         path = data['file'].str.strip('zebra_')
         data['identity'] = path.str[0]
-        data['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
+        data['image_id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
         data['path'] = 'zebra_training_set' + os.path.sep + 'images' + os.path.sep + data['file']
         data = data.drop(['file'], axis=1)
 
@@ -1949,13 +1926,12 @@ class SMALST(DatasetFactory):
         
         # Extract information about the images
         path = masks['file'].str.strip('zebra_')
-        masks['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
+        masks['image_id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
         masks['segmentation'] = 'zebra_training_set' + os.path.sep + 'bgsub' + os.path.sep + masks['file']
         masks = masks.drop(['path', 'file'], axis=1)
 
         # Finalize the dataframe
-        df = pd.merge(data, masks, on='id')
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
+        df = pd.merge(data, masks, on='image_id', how='left')
         return self.finalize_catalogue(df)
 
 
@@ -1992,8 +1968,7 @@ class StripeSpotter(DatasetFactory):
 
         # Extract information about the images
         data['index'] = data['file'].str[-7:-4].astype(int)
-        category = data['file'].str.split('-', expand=True)[0]
-        data = data[category == 'img'] # Only full images
+        data = data[data['file'].str.startswith('img')]
         
         # Load additional information
         data_aux = pd.read_csv(os.path.join(self.root, 'data', 'SightingData.csv'))
@@ -2002,14 +1977,14 @@ class StripeSpotter(DatasetFactory):
         
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path':  data['path'] + os.path.sep + data['file'],
             'identity': data['animal_name'],
             'bbox': pd.Series([[int(a) for a in b.split(' ')] for b in data['roi']]),
             'orientation': data['flank'],
             'photo_quality': data['photo_quality'],
+            'date': data['sighting_date']
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)  
 
 
@@ -2028,61 +2003,6 @@ class WhaleSharkID(DatasetFactoryWildMe):
 
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('whaleshark', 2020)
-
-
-class WNIGiraffes(DatasetFactory):
-    metadata = metadata['WNIGiraffes']
-    url = "https://lilablobssc.blob.core.windows.net/wni-giraffes/wni_giraffes_train_images.zip"
-    archive = 'wni_giraffes_train_images.zip'
-    url2 = 'https://lilablobssc.blob.core.windows.net/wni-giraffes/wni_giraffes_train.zip'
-    archive2 = 'wni_giraffes_train.zip'
-
-    @classmethod
-    def _download(cls):
-        exception_text = '''Dataset must be downloaded manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#wnigiraffes'''
-        raise Exception(exception_text)
-        #os.system(f'azcopy cp {cls.url} {cls.archive}')
-        #utils.download_url(cls.url2, cls.archive2)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
-        utils.extract_archive(cls.archive2, delete=True)
-
-    def create_catalogue(self) -> pd.DataFrame:
-        # Find all images in root
-        data = utils.find_images(self.root)
-        folders = data['path'].str.split(os.path.sep, expand=True)
-        
-        # Load information about keypoints
-        with open(os.path.join(self.root, 'wni_giraffes_train.json')) as file:
-            keypoints = json.load(file)
-        
-        # Extract information about keypoints
-        create_dict = lambda i: {'file': os.path.split(i['filename'])[1], 'keypoints': self.extract_keypoints(i)}
-        df_keypoints = pd.DataFrame([create_dict(i) for i in keypoints['annotations']])
-
-        # Merge information about images and keypoints
-        data = pd.merge(data, df_keypoints, how='left', on='file')
-        data['id'] = utils.create_id(data['file'])
-        data['identity'] = folders[1].astype(int)
-        data['path'] = data['path'] + os.path.sep + data['file']
-        data = data.drop(['file'], axis=1)
-
-        # Finalize the dataframe
-        data.rename({'id': 'image_id'}, axis=1, inplace=True)
-        return self.finalize_catalogue(data)
-
-    def extract_keypoints(self, row: pd.DataFrame) -> List[float]:
-        keypoints = [row['keypoints']['too']['median_x'], row['keypoints']['too']['median_y'],
-                row['keypoints']['toh']['median_x'], row['keypoints']['toh']['median_y'],
-                row['keypoints']['ni']['median_x'], row['keypoints']['ni']['median_y'],
-                row['keypoints']['fbh']['median_x'], row['keypoints']['fbh']['median_y'],
-            ]
-        keypoints = np.array(keypoints)
-        keypoints[keypoints == None] = np.nan
-        return list(keypoints)
 
 
 class ZindiTurtleRecall(DatasetFactory):
@@ -2114,18 +2034,17 @@ class ZindiTurtleRecall(DatasetFactory):
 
         # Load information about the additional images
         data_extra = pd.read_csv(os.path.join(self.root, 'extra_images.csv'))
-        data_extra['split'] = 'unassigned'        
+        data_extra['split'] = np.nan        
 
         # Finalize the dataframe
         data = pd.concat([data_train, data_test, data_extra])
         data = data.reset_index(drop=True)        
         data.loc[data['turtle_id'].isnull(), 'turtle_id'] = self.unknown_name
         df = pd.DataFrame({
-            'id': data['image_id'],
+            'image_id': data['image_id'],
             'path': 'images' + os.path.sep + data['image_id'] + '.JPG',
             'identity': data['turtle_id'],
             'orientation': data['image_location'].str.lower(),
-            'split': data['split'],
+            'original_split': data['split'],
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
