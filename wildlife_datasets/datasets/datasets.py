@@ -1100,7 +1100,7 @@ class FriesianCattle2015(DatasetFactory):
         df = df[~np.array(idx_remove)]
 
         # Remove specified individuals as they are duplicates
-        identities_to_remove = [19, 20, 21, 22, 23, 24, 25, 26, 27, 33, 37]
+        identities_to_remove = [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 37]
         return self.fix_labels_remove_identity(df, identities_to_remove)
 
 
