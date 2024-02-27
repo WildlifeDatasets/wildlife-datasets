@@ -52,6 +52,8 @@ class DatasetFactory():
             update_wrong_labels (bool, optional): Whether `fix_labels` should be called.
         """
 
+        if not os.path.exists(root):
+            raise Exception('root does not exist. You may have have mispelled it.')
         if self.outdated_dataset:
             print('This dataset is outdated. You may want to call a newer version such as %sv2.' % self.__class__.__name__)
         self.root = root
