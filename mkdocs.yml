@@ -31,7 +31,7 @@ nav:
     - Dataset representation: dataframe.md
     - Adding new datasets: adding.md
   - Dataset preprocessing:
-    - Preprocessing: downloads.md
+    - Preprocessing: preprocessing.md
   - Reference:
     - Datasets: reference_datasets.md
     - Analysis: reference_analysis.md
