@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-<img src="docs/resources/datasets-logo.png" alt="Wildlife datasets" width="200">
+<img src="docs/resources/datasets-logo.png" alt="Wildlife datasets" width="300">
 </p>
 
 <div align="center">
