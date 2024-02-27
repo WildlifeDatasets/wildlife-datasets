@@ -28,9 +28,8 @@
 The aim of the project is to provide comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
 
 - overview of 33 publicly available wildlife re-identification datasets.
-- utilities to mass download and convert them into a unified format.
+- utilities to mass download and convert them into a unified format and fix some wrong labels.
 - default splits for several machine learning tasks including the ability create additional splits.
-- evaluation metrics for closed-set and open-set classification.
 
 An introductory example is provided in a [Jupyter notebook](notebooks/introduction.ipynb). The package provides a natural synergy with [Wildlife tools](https://github.com/WildlifeDatasets/wildlife-tools), which provides out MegaDescriptor model and tools for training neural networks.
 

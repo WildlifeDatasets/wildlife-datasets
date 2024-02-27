@@ -2,41 +2,41 @@
 
 Some of the datasets require special treatment or the download of extraction works only on Linux. These are described below in the `Processsing requirements` column. We also fixed labels in some datasets as described in the `Dataset modifications` column.
 
-| Dataset                | Method  |             Processing requirements           | Dataset modifications |
-|------------------------|:-------|:----------------------|:---------|
-| [AAUZebrafish](https://www.kaggle.com/datasets/aalborguniversity/aau-zebrafish-reid)          | AUTO    | Kaggle required                   |                  |
-| [AerialCattle2017](https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh)          | AUTO    |                                |                  |
-| [ATRW](https://lila.science/datasets/atrw)                   | AUTO    |                                |                  |
-| [BelugaID](https://lila.science/datasets/beluga-id-2022/)              | AUTO    |                                |                  |
-| [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID)     | MANUAL  | Manual download    | Few images removed |
-| [CTai](https://github.com/cvjena/chimpanzee_faces)       | AUTO    |                                | Labels fixed |
-| [CZoo](https://github.com/cvjena/chimpanzee_faces)       | AUTO    |                                |                  |
-| [Cows2021](https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7)              | AUTO    |                                | Labels fixed  |
-| [Drosophila](https://github.com/j-schneider/fly_eye)             | AUTO    |                                | Few images removed |
-| [FriesianCattle2015](https://data.bris.ac.uk/data/dataset/wurzq71kfm561ljahbwjhx9n3)   | AUTO    |                                | Labels fixed |
-| [FriesianCattle2017](https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r)   | AUTO    |                                |                  |
-| [Giraffes](ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021)       | AUTO    | Only linux: downloading                               |                  |
-| [GiraffeZebraID](https://lila.science/datasets/great-zebra-giraffe-id)       | AUTO    |                                |                  |
-| [HappyWhale](https://www.kaggle.com/competitions/happy-whale-and-dolphin)             | MANUAL  | Kaggle required + terms   | Species fixed |
-| [HumpbackWhaleID](https://www.kaggle.com/competitions/humpback-whale-identification)          | MANUAL  | Kaggle required + terms   | Unknown animals renamed |
-| [HyenaID2022](https://lila.science/datasets/hyena-id-2022/)               | AUTO    |                                |                  |
-| [IPanda50](https://github.com/iPandaDateset/iPanda-50)              | AUTO    |                                | Few image renamed |
-| [LeopardID2022](https://lila.science/datasets/leopard-id-2022/)             | AUTO    |                                | Unknown animals renamed |
-| [LionData](https://github.com/tvanzyl/wildlife_reidentification)              | AUTO    |                                |                  |
-| [MacaqueFaces](https://github.com/clwitham/MacaqueFaces)          | AUTO    |                                |                  |
-| [MPDD](https://data.mendeley.com/datasets/v5j6m8dzhv/1)          | AUTO    |                                |                  |
-| [NDD20](https://doi.org/10.25405/data.ncl.c.4982342)                  | AUTO    |                                |                  |
-| [NOAARightWhale](https://www.kaggle.com/c/noaa-right-whale-recognition)        | MANUAL  | Kaggle required + terms   |                  |
-| [NyalaData](https://github.com/tvanzyl/wildlife_reidentification)             | AUTO    |                                |                  |
-| [OpenCows2020](https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17)           | AUTO    |                                |                  |
-| [PolarBearVidID](https://zenodo.org/records/7564529)          | AUTO    |                                |                  |
-| [SealID](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53)                 | MANUAL  | Download with single use token |                  |
-| [SeaStarReID2023](https://lila.science/sea-star-re-id-2023/)          | AUTO    |                                |                  |
-| [SeaTurtleID](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid)                 | AUTO    | Kaggle required                   |                  |
-| [SMALST](https://github.com/silviazuffi/smalst)                 | AUTO    | Only linux: extracting            |                  |
-| [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads)          | AUTO    | Only linux: extracting            |                  |
-| [WhaleSharkID](https://lila.science/datasets/whale-shark-id)         | AUTO    |                                |                  |
-| [ZindiTurtleRecall](https://zindi.africa/competitions/turtle-recall-conservation-challenge)    | AUTO    |                                |                  |
+| Dataset                |              Processing requirements           | Dataset modifications |
+|------------------------|:----------------------|:---------|
+| [AAUZebrafish](https://www.kaggle.com/datasets/aalborguniversity/aau-zebrafish-reid)          | Kaggle required                   |                  |
+| [AerialCattle2017](https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh)          |                                |                  |
+| [ATRW](https://lila.science/datasets/atrw)                   |                                |                  |
+| [BelugaID](https://lila.science/datasets/beluga-id-2022/)              |                                |                  |
+| [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID)     | Manual download    | Few images removed |
+| [CTai](https://github.com/cvjena/chimpanzee_faces)       |                                | Labels fixed |
+| [CZoo](https://github.com/cvjena/chimpanzee_faces)       |                                |                  |
+| [Cows2021](https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7)              |                                | Labels fixed  |
+| [Drosophila](https://github.com/j-schneider/fly_eye)             |                                | Few images removed |
+| [FriesianCattle2015](https://data.bris.ac.uk/data/dataset/wurzq71kfm561ljahbwjhx9n3)   |                                | Labels fixed |
+| [FriesianCattle2017](https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r)   |                                |                  |
+| [Giraffes](ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021)       | Only linux: downloading                               |                  |
+| [GiraffeZebraID](https://lila.science/datasets/great-zebra-giraffe-id)       |                                |                  |
+| [HappyWhale](https://www.kaggle.com/competitions/happy-whale-and-dolphin)             | Kaggle required + terms   | Species fixed |
+| [HumpbackWhaleID](https://www.kaggle.com/competitions/humpback-whale-identification)          | Kaggle required + terms   | Unknown animals renamed |
+| [HyenaID2022](https://lila.science/datasets/hyena-id-2022/)               |                                |                  |
+| [IPanda50](https://github.com/iPandaDateset/iPanda-50)              |                                | Few image renamed |
+| [LeopardID2022](https://lila.science/datasets/leopard-id-2022/)             |                                | Unknown animals renamed |
+| [LionData](https://github.com/tvanzyl/wildlife_reidentification)              |                                |                  |
+| [MacaqueFaces](https://github.com/clwitham/MacaqueFaces)          |                                |                  |
+| [MPDD](https://data.mendeley.com/datasets/v5j6m8dzhv/1)          |                                |                  |
+| [NDD20](https://doi.org/10.25405/data.ncl.c.4982342)                  |                                |                  |
+| [NOAARightWhale](https://www.kaggle.com/c/noaa-right-whale-recognition)        | Kaggle required + terms   |                  |
+| [NyalaData](https://github.com/tvanzyl/wildlife_reidentification)             |                                |                  |
+| [OpenCows2020](https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17)           |                                |                  |
+| [PolarBearVidID](https://zenodo.org/records/7564529)          |                                |                  |
+| [SealID](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53)                 | Download with single use token |                  |
+| [SeaStarReID2023](https://lila.science/sea-star-re-id-2023/)          |                                |                  |
+| [SeaTurtleID](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid)                 | Kaggle required                   |                  |
+| [SMALST](https://github.com/silviazuffi/smalst)                 | Only linux: extracting            |                  |
+| [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads)          | Only linux: extracting            |                  |
+| [WhaleSharkID](https://lila.science/datasets/whale-shark-id)         |                                |                  |
+| [ZindiTurtleRecall](https://zindi.africa/competitions/turtle-recall-conservation-challenge)    |                                |                  |
 
 ## Manual download and extracting
 
@@ -115,7 +115,7 @@ datasets.StripeSpotter.download('data/StripeSpotter')
 
 to download the dataset and then extract it manually.
 
-## Label corrections
+## Dataset modifications
 
 ### BirdIndividualID
 
