@@ -971,7 +971,7 @@ class Cows2021(DatasetFactory):
         return datetime.datetime.strptime(x, '%Y-%m-%d_%H-%M-%S').strftime('%Y-%m-%d %H:%M:%S')
 
 
-class Cows2021v2(DatasetFactory):
+class Cows2021v2(Cows2021):
     outdated_dataset = False
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
