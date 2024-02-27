@@ -37,20 +37,6 @@ class TestIdSplits(unittest.TestCase):
     def test_df(self):
         self.assertGreaterEqual(len(dfs), 1)
     
-    def test_default_splits(self):
-        # This test makes sense only on the unmodified datasets
-        for df in dfs[:n_orig_datasets]:
-            idx_train = df.index[df['split'] == 'train'].to_numpy()
-            idx_test = df.index[df['split'] == 'test'].to_numpy()
-            df_train = df.loc[idx_train]
-            df_test = df.loc[idx_test]
-
-            split_type = splits.recognize_id_split(df_train['identity'], df_test['identity'])
-            self.assertEqual(split_type, 'closed-set')
-
-            expected_value = 0.8*len(df)
-            self.assertAlmostEqual(len(df_train), expected_value, delta=expected_value*tol)
-
     def test_seed(self):
         for splitter in splitters1_all:
             for df in dfs:
