@@ -7,6 +7,7 @@ import json
 import datetime
 from PIL import Image
 import matplotlib.pyplot as plt
+import string
 
 from .. import splits
 from .metadata import metadata
@@ -953,6 +954,19 @@ class Cows2021(DatasetFactory):
         df['date'] = df['path'].apply(lambda x: self.extract_date(x))
         return self.finalize_catalogue(df)
 
+    def extract_date(self, x):
+        x = os.path.split(x)[1]
+        if x.startswith('image_'):
+            x = x[6:]
+        if x[7] == '_':
+            x = x[8:]
+        i1 = x.find('_')
+        i2 = x[i1+1:].find('_')
+        x = x[:i1+i2+1]
+        return datetime.datetime.strptime(x, '%Y-%m-%d_%H-%M-%S').strftime('%Y-%m-%d %H:%M:%S')
+
+
+class Cows2021v2(DatasetFactory):
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
         # Replace the wrong identities and images
         replace_identity1 = [
@@ -965,17 +979,6 @@ class Cows2021(DatasetFactory):
         df = self.fix_labels_replace_identity(df, replace_identity1)
         return self.fix_labels_replace_images(df, replace_identity2)
         
-    def extract_date(self, x):
-        x = os.path.split(x)[1]
-        if x.startswith('image_'):
-            x = x[6:]
-        if x[7] == '_':
-            x = x[8:]
-        i1 = x.find('_')
-        i2 = x[i1+1:].find('_')
-        x = x[:i1+i2+1]
-        return datetime.datetime.strptime(x, '%Y-%m-%d_%H-%M-%S').strftime('%Y-%m-%d %H:%M:%S')
-
 
 class Drosophila(DatasetFactory):
     metadata = metadata['Drosophila']
@@ -1094,6 +1097,8 @@ class FriesianCattle2015(DatasetFactory):
         })
         return self.finalize_catalogue(df)
 
+
+class FriesianCattle2015v2(FriesianCattle2015):
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
         # Remove all identities in training as they are duplicates
         idx_remove = ['Cows-training' in path for path in df.path]
@@ -1362,16 +1367,34 @@ class IPanda50(DatasetFactory):
             'keypoints': keypoints
             })
 
-        # Remove non-ASCII characters from image names
-        import string
-        for _, df_row in df.iterrows():
-            path_new = ''.join(c for c in df_row['path'] if c in string.printable)
-            if path_new != df_row['path']:
-                os.rename(os.path.join(self.root, df_row['path']), os.path.join(self.root, path_new))
-                df_row['path'] = path_new
-        if len(df) != df['path'].nunique():
-            raise(Exception("Non-unique names. Something went wrong when renaming."))
-        
+        # Remove non-ASCII characters while keeping backwards compatibility
+        file_name = os.path.join(self.root, 'changes.csv')
+        if os.path.exists(file_name):
+            # Files were already renamed, change image_id to keep backward compability
+            df_changes = pd.read_csv(file_name)
+            id_changes = {}
+            for _, df_row in df_changes.iterrows():
+                id_changes[df_row['id_new']] = df_row['id_old']
+            df.replace(id_changes, inplace=True)
+        else:
+            # Rename files, keep original image_id, create list of changes
+            ids_old = []
+            ids_new = []
+            for _, df_row in df.iterrows():
+                path_new = ''.join(c for c in df_row['path'] if c in string.printable)
+                # Check if there are non-ASCII characters
+                if path_new != df_row['path']:
+                    # Rename files and df
+                    os.rename(os.path.join(self.root, df_row['path']), os.path.join(self.root, path_new))
+                    df_row['path'] = path_new
+                    # Save changes in image_id
+                    ids_old.append(df_row['image_id'])
+                    ids_new.append(utils.create_id(pd.Series(os.path.split(df_row['path'])[-1])).iloc[0])
+            if len(df) != df['path'].nunique():
+                raise(Exception("Non-unique names. Something went wrong when renaming."))
+            pd.DataFrame({'id_old': ids_old, 'id_new': ids_new}).to_csv(file_name)
+
+        # Finalize the dataframe        
         return self.finalize_catalogue(df)
 
 

@@ -7,9 +7,9 @@ from .datasets import BirdIndividualID
 from .datasets import BirdIndividualIDSegmented
 from .datasets import CTai
 from .datasets import CZoo
-from .datasets import Cows2021
+from .datasets import Cows2021, Cows2021v2
 from .datasets import Drosophila
-from .datasets import FriesianCattle2015
+from .datasets import FriesianCattle2015, FriesianCattle2015v2
 from .datasets import FriesianCattle2017
 from .datasets import GiraffeZebraID
 from .datasets import Giraffes
@@ -47,9 +47,9 @@ names_all = [
     BirdIndividualIDSegmented,
     CTai,
     CZoo,
-    Cows2021,
+    Cows2021v2,
     Drosophila,
-    FriesianCattle2015,
+    FriesianCattle2015v2,
     FriesianCattle2017,
     GiraffeZebraID,
     Giraffes,
@@ -98,7 +98,7 @@ names_small = [
     BelugaID,
     CTai,
     CZoo,
-    FriesianCattle2015,
+    FriesianCattle2015v2,
     FriesianCattle2017,
     IPanda50,
     MacaqueFaces,
@@ -111,8 +111,8 @@ names_small = [
 
 names_cows = [
     AerialCattle2017,
-    Cows2021,
-    FriesianCattle2015,
+    Cows2021v2,
+    FriesianCattle2015v2,
     FriesianCattle2017,
     OpenCows2020,
 ]
