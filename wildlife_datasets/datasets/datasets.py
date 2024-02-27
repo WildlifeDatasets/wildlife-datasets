@@ -17,15 +17,17 @@ from . import utils
 class DatasetFactory():
     """Base class for creating datasets.
 
-    Attributes:
+    Attributes:    
       df (pd.DataFrame): A full dataframe of the data.
       metadata (dict): Metadata of the dataset.
       root (str): Root directory for the data.
       update_wrong_labels(bool): Whether `fix_labels` should be called.
       unknown_name (str): Name of the unknown class.
+      outdated_dataset (bool): Tracks whether dataset was replaced by a new version.
     """
 
     unknown_name = 'unknown'
+    outdated_dataset = False
     download_warning = '''You are trying to download an already downloaded dataset.
         This message may have happened to due interrupted download or extract.
         To force the download use the `force=True` keyword such as
@@ -50,6 +52,8 @@ class DatasetFactory():
             update_wrong_labels (bool, optional): Whether `fix_labels` should be called.
         """
 
+        if self.outdated_dataset:
+            print('This dataset is outdated. You may want to call a newer version such as %sv2.' % self.__class__.__name__)
         self.root = root
         self.update_wrong_labels = update_wrong_labels
         if df is None:
@@ -923,6 +927,7 @@ class CZoo(DatasetFactory):
 
 
 class Cows2021(DatasetFactory):
+    outdated_dataset = True
     metadata = metadata['Cows2021']
     url = 'https://data.bris.ac.uk/datasets/tar/4vnrca7qw1642qlwxjadp87h7.zip'
     archive = '4vnrca7qw1642qlwxjadp87h7.zip'
@@ -967,6 +972,8 @@ class Cows2021(DatasetFactory):
 
 
 class Cows2021v2(DatasetFactory):
+    outdated_dataset = False
+
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
         # Replace the wrong identities and images
         replace_identity1 = [
@@ -1067,6 +1074,7 @@ class Drosophila(DatasetFactory):
 
 
 class FriesianCattle2015(DatasetFactory):
+    outdated_dataset = True
     metadata = metadata['FriesianCattle2015']
     url = 'https://data.bris.ac.uk/datasets/wurzq71kfm561ljahbwjhx9n3/wurzq71kfm561ljahbwjhx9n3.zip'
     archive = 'wurzq71kfm561ljahbwjhx9n3.zip'
@@ -1099,6 +1107,8 @@ class FriesianCattle2015(DatasetFactory):
 
 
 class FriesianCattle2015v2(FriesianCattle2015):
+    outdated_dataset = False
+
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
         # Remove all identities in training as they are duplicates
         idx_remove = ['Cows-training' in path for path in df.path]
