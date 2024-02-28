@@ -2,11 +2,12 @@ import os
 import shutil
 import pandas as pd
 import numpy as np
-from typing import Optional, List, Union, Callable
+from typing import Optional, List, Union, Callable, Tuple
 import json
 import datetime
 from PIL import Image
 import matplotlib.pyplot as plt
+import string
 
 from .. import splits
 from .metadata import metadata
@@ -16,16 +17,17 @@ from . import utils
 class DatasetFactory():
     """Base class for creating datasets.
 
-    Attributes:
+    Attributes:    
       df (pd.DataFrame): A full dataframe of the data.
-      df_ml (pd.DataFrame): A dataframe of data for machine learning models.
-      download (module): Script for downloading the dataset.
       metadata (dict): Metadata of the dataset.
       root (str): Root directory for the data.
+      update_wrong_labels(bool): Whether `fix_labels` should be called.
       unknown_name (str): Name of the unknown class.
+      outdated_dataset (bool): Tracks whether dataset was replaced by a new version.
     """
 
     unknown_name = 'unknown'
+    outdated_dataset = False
     download_warning = '''You are trying to download an already downloaded dataset.
         This message may have happened to due interrupted download or extract.
         To force the download use the `force=True` keyword such as
@@ -37,24 +39,29 @@ class DatasetFactory():
             self, 
             root: str,
             df: Optional[pd.DataFrame] = None,
+            update_wrong_labels: bool = True,
             **kwargs) -> None:
         """Initializes the class.
 
         If `df` is specified, it copies it. Otherwise, it creates it
         by the `create_catalogue` method.
-        It creates `df_ml` by the `create_catalogue_ml` method.
 
         Args:
             root (str): Root directory for the data.
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
+            update_wrong_labels (bool, optional): Whether `fix_labels` should be called.
         """
 
+        if not os.path.exists(root):
+            raise Exception('root does not exist. You may have have mispelled it.')
+        if self.outdated_dataset:
+            print('This dataset is outdated. You may want to call a newer version such as %sv2.' % self.__class__.__name__)
         self.root = root
+        self.update_wrong_labels = update_wrong_labels
         if df is None:
             self.df = self.create_catalogue(**kwargs)
         else:
             self.df = df.copy()
-        self.add_splits()
 
     @classmethod
     def get_data(cls, root, force=False, **kwargs):
@@ -104,40 +111,84 @@ class DatasetFactory():
 
         raise NotImplementedError('Needs to be implemented by subclasses.')
     
-    def add_splits(self) -> None:
-        """Drops existing splits and adds automatically generated split.
-
-        The split ignores individuals named `self.unknown_name`.
-        These rows will not belong to a split.
-        The added split is machine-independent.
-        It is the closed-set (random) split with 80% in the training set.
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Fixes labels in dataframe.
+        
+        Automatically called in `finalize_catalogue`.                
         """
 
-        # Drop already existing splits
-        cols_to_drop = ['split', 'reid_split', 'segmentation_split']
-        self.df = self.df.drop(cols_to_drop, axis=1, errors='ignore')
-        
-        # Add the default split
-        splitter = splits.ClosedSetSplit(0.8, identity_skip=self.unknown_name)
-        self.add_split(3, 'split', splitter)
+        return df
 
-    def add_split(self, position: int, col_name: str, splitter: splits.BalancedSplit) -> None:       
-        """Adds a split to the column named col_name.
+    def fix_labels_replace_identity(
+            self,
+            df: pd.DataFrame,
+            replace_identity: List[Tuple],
+            col: str = 'identity'
+            ) -> pd.DataFrame:
+        """Replaces all instances of identities.
 
         Args:
-            position (int): Where the split should be placed.
-            col_name (str): Name of the column.
-            splitter (splits.BalancedSplit): Any class with `split` method
-                returning training and testing set indices.                
+            df (pd.DataFrame): A full dataframe of the data.
+            replace_identity (List[Tuple]): List of (old_identity, new_identity)
+            col (str, optional): Column to replace in.
+
+        Returns:
+            A full dataframe of the data.
         """
-        idx_train, idx_test = splitter.split(self.df)[0]
-        add = {}
-        for i in idx_train:
-            add[i] = 'train'
-        for i in idx_test:
-            add[i] = 'test'
-        n_col = min(position, len(self.df.columns))
-        self.df.insert(n_col, col_name, pd.Series(add))
+        for old_identity, new_identity in replace_identity:
+            df[col] = df[col].replace({old_identity: new_identity})
+        return df
+
+    def fix_labels_remove_identity(
+            self,
+            df: pd.DataFrame,
+            identities_to_remove: List,
+            col: str = 'identity'
+            ) -> pd.DataFrame:
+        """Removes all instances of identities.
+
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
+            identities_to_remove (List): List of identities to remove.
+            col (str, optional): Column to remove from.
+
+        Returns:
+            A full dataframe of the data.
+        """
+        idx_remove = [identity in identities_to_remove for identity in df[col]]
+        return df[~np.array(idx_remove)]
+
+    def fix_labels_replace_images(
+            self,
+            df: pd.DataFrame,
+            replace_identity: List[Tuple],
+            col: str = 'identity'
+            ) -> pd.DataFrame:
+        """Replaces specified images with specified identities.
+
+        It looks for a subset of image_name in df['path'].
+        It may cause problems with `os.path.sep`.
+
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
+            replace_identity (List[Tuple]): List of (image_name, old_identity, new_identity).
+            col (str, optional): Column to replace in.
+
+        Returns:
+            A full dataframe of the data.
+        """
+        for image_name, old_identity, new_identity in replace_identity:
+            n_replaced = 0
+            for index, df_row in df.iterrows():
+                # Check that there is a image with the required name and identity 
+                if image_name in df_row['path'] and old_identity == df_row[col]:
+                    df.loc[index, col] = new_identity
+                    n_replaced += 1
+            if n_replaced == 0:
+                print('File name %s with identity %s was not found.' % (image_name, str(old_identity)))
+            elif n_replaced > 1:
+                print('File name %s with identity %s was found multiple times.' % (image_name, str(old_identity)))
+        return df
 
     def plot_grid(
             self,
@@ -268,6 +319,8 @@ class DatasetFactory():
             A full dataframe of the data, slightly modified.
         """
 
+        if self.update_wrong_labels:
+            df = self.fix_labels(df)
         self.check_required_columns(df)
         self.check_types_columns(df)
         df = self.reorder_df(df)
@@ -467,7 +520,7 @@ class DatasetFactoryWildMe(DatasetFactory):
 
         # Modify some columns
         df['path'] = path_images + os.path.sep + df['file_name']
-        df['id'] = range(len(df))    
+        df['id'] = range(len(df))
         df.loc[df['identity'] == '____', 'identity'] = self.unknown_name
 
         # Remove segmentations which are the same as bounding boxes
@@ -481,8 +534,6 @@ class DatasetFactoryWildMe(DatasetFactory):
 
         # Remove superficial columns
         df = df.drop(['image_id', 'file_name', 'supercategory', 'category_id'], axis=1)
-        if len(df['species'].unique()) == 1:
-            df = df.drop(['species'], axis=1)
         df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
@@ -612,7 +663,7 @@ class ATRW(DatasetFactory):
                         header=None
                         )
         ids['id'] = ids['path'].str.split('.', expand=True)[0].astype(int)
-        ids['split'] = 'train'
+        ids['original_split'] = 'train'
 
         # Load keypoints for the reid_train part of the dataset
         with open(os.path.join(self.root, 'atrw_anno_reid_train', 'reid_keypoints_train.json')) as file:
@@ -624,7 +675,7 @@ class ATRW(DatasetFactory):
         data = pd.DataFrame(df_keypoints)
 
         # Merge information for the reid_train part of the dataset
-        df_train = pd.merge(ids, data, on='path')
+        df_train = pd.merge(ids, data, on='path', how='left')
         df_train['path'] = 'atrw_reid_train' + os.path.sep + 'train' + os.path.sep + df_train['path']
 
         # Load information for the test_plain part of the dataset
@@ -636,8 +687,8 @@ class ATRW(DatasetFactory):
                         header=None
                         )
         ids['id'] = ids['path'].str.split('.', expand=True)[0].astype(int)
-        ids['split'] = 'test'
-        ids = pd.merge(ids, identity, left_on='id', right_on='imgid')
+        ids['original_split'] = 'test'
+        ids = pd.merge(ids, identity, left_on='id', right_on='imgid', how='left')
         ids = ids.drop(['query', 'frame', 'imgid'], axis=1)
         ids.rename(columns = {'entityid': 'identity'}, inplace = True)
 
@@ -651,7 +702,7 @@ class ATRW(DatasetFactory):
         data = pd.DataFrame(df_keypoints)
 
         # Merge information for the test_plain part of the dataset
-        df_test1 = pd.merge(ids, data, on='path')
+        df_test1 = pd.merge(ids, data, on='path', how='left')
         df_test1['path'] = 'atrw_reid_test' + os.path.sep + 'test' + os.path.sep + df_test1['path']
 
         # Load information for the test_wild part of the dataset
@@ -667,10 +718,10 @@ class ATRW(DatasetFactory):
         entries = pd.DataFrame(entries)
 
         # Merge information for the test_wild part of the dataset
-        df_test2 = pd.merge(ids, entries, on='imgid')
+        df_test2 = pd.merge(ids, entries, on='imgid', how='left')
         df_test2['path'] = 'atrw_detection_test' + os.path.sep + 'test' + os.path.sep + df_test2['file']
         df_test2['id'] = df_test2['imgid'].astype(str) + '_' + df_test2['identity'].astype(str)
-        df_test2['split'] = 'test'
+        df_test2['original_split'] = 'test'
         df_test2 = df_test2.drop(['file', 'imgid'], axis=1)
 
         # Finalize the dataframe
@@ -741,17 +792,17 @@ class BirdIndividualID(DatasetFactory):
             folders.loc[~idx, 2] = folders.loc[~idx, 3]
 
         # Extract information from the folder structure
-        split = folders[1].replace({'Test_datasets': 'test', 'Test': 'test', 'Train': 'train', 'Val':'val'})
+        split = folders[1].replace({'Test_datasets': 'test', 'Test': 'test', 'Train': 'train', 'Val': 'val'})
         identity = folders[2]
         species = folders[0]
 
         # Finalize the dataframe
         df1 = pd.DataFrame({    
-            'id': utils.create_id(split + data['file']),
+            'image_id': utils.create_id(split + data['file']),
             'path': self.prefix1 + os.path.sep + self.prefix2 + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'species': species,
-            'split': split,
+            'original_split': split,
         })
 
         # Add images without labels
@@ -761,14 +812,13 @@ class BirdIndividualID(DatasetFactory):
 
         # Finalize the dataframe
         df2 = pd.DataFrame({    
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': self.prefix1 + os.path.sep + 'New_birds' + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': self.unknown_name,
             'species': species,
-            'split': 'unassigned',
+            'original_split': np.nan,
         })
         df = pd.concat([df1, df2])
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -805,18 +855,7 @@ class CTai(DatasetFactory):
         utils.extract_archive(cls.archive, delete=True)
         shutil.rmtree('chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CZoo')
 
-    def create_catalogue(self) -> pd.DataFrame:
-        # Define the wrong identity names
-        replace_names = [
-            ('Adult', self.unknown_name),
-            ('Akouba', 'Akrouba'),
-            ('Freddy', 'Fredy'),
-            ('Ibrahiim', 'Ibrahim'),
-            ('Liliou', 'Lilou'),
-            ('Wapii', 'Wapi'),
-            ('Woodstiock', 'Woodstock')
-        ]
-            
+    def create_catalogue(self) -> pd.DataFrame:            
         # Load information about the dataset
         path = os.path.join('chimpanzee_faces-master', 'datasets_cropped_chimpanzee_faces', 'data_CTai',)
         data = pd.read_csv(os.path.join(self.root, path, 'annotations_ctai.txt'), header=None, sep=' ')
@@ -828,7 +867,7 @@ class CTai(DatasetFactory):
         
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': pd.Series(range(len(data))),
+            'image_id': pd.Series(range(len(data))),
             'path': path + os.path.sep + data[1],
             'identity': data[3],
             'keypoints': keypoints,
@@ -836,12 +875,20 @@ class CTai(DatasetFactory):
             'age_group': data[7],
             'gender': data[9],
         })
-
-        # Replace the wrong identities
-        for replace_tuple in replace_names:
-            df['identity'] = df['identity'].replace({replace_tuple[0]: replace_tuple[1]})
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
+
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Replace the wrong identities
+        replace_identity = [
+            ('Adult', self.unknown_name),
+            ('Akouba', 'Akrouba'),
+            ('Freddy', 'Fredy'),
+            ('Ibrahiim', 'Ibrahim'),
+            ('Liliou', 'Lilou'),
+            ('Wapii', 'Wapi'),
+            ('Woodstiock', 'Woodstock')
+        ]
+        return self.fix_labels_replace_identity(df, replace_identity)
 
 
 class CZoo(DatasetFactory):
@@ -870,7 +917,7 @@ class CZoo(DatasetFactory):
         
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': pd.Series(range(len(data))),
+            'image_id': pd.Series(range(len(data))),
             'path': path + os.path.sep + data[1],
             'identity': data[3],
             'keypoints': keypoints,
@@ -878,11 +925,11 @@ class CZoo(DatasetFactory):
             'age_group': data[7],
             'gender': data[9],
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
 class Cows2021(DatasetFactory):
+    outdated_dataset = True
     metadata = metadata['Cows2021']
     url = 'https://data.bris.ac.uk/datasets/tar/4vnrca7qw1642qlwxjadp87h7.zip'
     archive = '4vnrca7qw1642qlwxjadp87h7.zip'
@@ -907,12 +954,11 @@ class Cows2021(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[4].astype(int),
         })
         df['date'] = df['path'].apply(lambda x: self.extract_date(x))
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
     def extract_date(self, x):
@@ -926,6 +972,22 @@ class Cows2021(DatasetFactory):
         x = x[:i1+i2+1]
         return datetime.datetime.strptime(x, '%Y-%m-%d_%H-%M-%S').strftime('%Y-%m-%d %H:%M:%S')
 
+
+class Cows2021v2(Cows2021):
+    outdated_dataset = False
+
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Replace the wrong identities and images
+        replace_identity1 = [
+            (164, 148),
+            (105, 29)
+        ]
+        replace_identity2 = [
+            ('image_0001226_2020-02-11_12-43-7_roi_001.jpg', 137, 107)
+        ]
+        df = self.fix_labels_replace_identity(df, replace_identity1)
+        return self.fix_labels_replace_images(df, replace_identity2)
+        
 
 class Drosophila(DatasetFactory):
     metadata = metadata['Drosophila']
@@ -1014,6 +1076,7 @@ class Drosophila(DatasetFactory):
 
 
 class FriesianCattle2015(DatasetFactory):
+    outdated_dataset = True
     metadata = metadata['FriesianCattle2015']
     url = 'https://data.bris.ac.uk/datasets/wurzq71kfm561ljahbwjhx9n3/wurzq71kfm561ljahbwjhx9n3.zip'
     archive = 'wurzq71kfm561ljahbwjhx9n3.zip'
@@ -1037,13 +1100,25 @@ class FriesianCattle2015(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(identity.astype(str) + split + data['file']),
+            'image_id': utils.create_id(identity.astype(str) + split + data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'split': split
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
+
+
+class FriesianCattle2015v2(FriesianCattle2015):
+    outdated_dataset = False
+
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Remove all identities in training as they are duplicates
+        idx_remove = ['Cows-training' in path for path in df.path]
+        df = df[~np.array(idx_remove)]
+
+        # Remove specified individuals as they are duplicates
+        identities_to_remove = [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 37]
+        return self.fix_labels_remove_identity(df, identities_to_remove)
 
 
 class FriesianCattle2017(DatasetFactory):
@@ -1066,11 +1141,10 @@ class FriesianCattle2017(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1].astype(int),
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1121,11 +1195,10 @@ class Giraffes(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({    
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[n_folders],
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1151,25 +1224,15 @@ class HappyWhale(DatasetFactory):
             raise Exception(exception_text)
     
     def create_catalogue(self) -> pd.DataFrame:
-        # Define the wrong species names
-        replace_names = [
-            ('bottlenose_dolpin', 'bottlenose_dolphin'),
-            ('kiler_whale', 'killer_whale'),
-        ]
-
         # Load the training data
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
         df1 = pd.DataFrame({
-            'id': data['image'].str.split('.', expand=True)[0],
+            'image_id': data['image'].str.split('.', expand=True)[0],
             'path': 'train_images' + os.path.sep + data['image'],
             'identity': data['individual_id'],
             'species': data['species'],
-            'split': 'train'
+            'original_split': 'train'
             })
-
-        # Replace the wrong species names            
-        for replace_tuple in replace_names:
-            df1['species'] = df1['species'].replace({replace_tuple[0]: replace_tuple[1]})
 
         test_files = utils.find_images(os.path.join(self.root, 'test_images'))
         test_files = list(test_files['file'])
@@ -1177,17 +1240,24 @@ class HappyWhale(DatasetFactory):
 
         # Load the testing data
         df2 = pd.DataFrame({
-            'id': test_files.str.split('.', expand=True)[0],
+            'image_id': test_files.str.split('.', expand=True)[0],
             'path': 'test_images' + os.path.sep + test_files,
             'identity': self.unknown_name,
             'species': np.nan,
-            'split': 'test'
+            'original_split': 'test'
             })
         
         # Finalize the dataframe        
         df = pd.concat([df1, df2])
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
+
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Replace the wrong species names            
+        replace_identity = [
+            ('bottlenose_dolpin', 'bottlenose_dolphin'),
+            ('kiler_whale', 'killer_whale'),
+        ]
+        return self.fix_labels_replace_identity(df, replace_identity, col='species')
 
 
 class HumpbackWhaleID(DatasetFactory):
@@ -1216,10 +1286,10 @@ class HumpbackWhaleID(DatasetFactory):
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
         data.loc[data['Id'] == 'new_whale', 'Id'] = self.unknown_name
         df1 = pd.DataFrame({
-            'id': data['Image'].str.split('.', expand=True)[0],
+            'image_id': data['Image'].str.split('.', expand=True)[0],
             'path': 'train' + os.path.sep + data['Image'],
             'identity': data['Id'],
-            'split': 'train'
+            'original_split': 'train'
             })
         
         # Find all testing images
@@ -1229,15 +1299,14 @@ class HumpbackWhaleID(DatasetFactory):
 
         # Create the testing dataframe
         df2 = pd.DataFrame({
-            'id': test_files.str.split('.', expand=True)[0],
+            'image_id': test_files.str.split('.', expand=True)[0],
             'path': 'test' + os.path.sep + test_files,
             'identity': self.unknown_name,
-            'split': 'test'
+            'original_split': 'test'
             })
         
         # Finalize the dataframe
         df = pd.concat([df1, df2])
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1304,144 +1373,40 @@ class IPanda50(DatasetFactory):
         
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1],
             'keypoints': keypoints
             })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
 
-        # Remove non-ASCII characters from image names
-        import string
-        for _, df_row in df.iterrows():
-            path_new = ''.join(c for c in df_row['path'] if c in string.printable)
-            if path_new != df_row['path']:
-                os.rename(os.path.join(self.root, df_row['path']), os.path.join(self.root, path_new))
-                df_row['path'] = path_new
-        if len(df) != df['path'].nunique():
-            raise(Exception("Non-unique names. Something went wrong when renaming."))
+        # Remove non-ASCII characters while keeping backwards compatibility
+        file_name = os.path.join(self.root, 'changes.csv')
+        if os.path.exists(file_name):
+            # Files were already renamed, change image_id to keep backward compability
+            df_changes = pd.read_csv(file_name)
+            id_changes = {}
+            for _, df_row in df_changes.iterrows():
+                id_changes[df_row['id_new']] = df_row['id_old']
+            df.replace(id_changes, inplace=True)
+        else:
+            # Rename files, keep original image_id, create list of changes
+            ids_old = []
+            ids_new = []
+            for _, df_row in df.iterrows():
+                path_new = ''.join(c for c in df_row['path'] if c in string.printable)
+                # Check if there are non-ASCII characters
+                if path_new != df_row['path']:
+                    # Rename files and df
+                    os.rename(os.path.join(self.root, df_row['path']), os.path.join(self.root, path_new))
+                    df_row['path'] = path_new
+                    # Save changes in image_id
+                    ids_old.append(df_row['image_id'])
+                    ids_new.append(utils.create_id(pd.Series(os.path.split(df_row['path'])[-1])).iloc[0])
+            if len(df) != df['path'].nunique():
+                raise(Exception("Non-unique names. Something went wrong when renaming."))
+            pd.DataFrame({'id_old': ids_old, 'id_new': ids_new}).to_csv(file_name)
 
-        # Backward compability because of renaming non-ASCII names
-        ids_change = [
-            ['148e54a1a3a68bde', '00a704e4c2dabee0'],
-            ['2d40cf5a2a539fff', '0167f91b4b783389'],
-            ['50f109220cba6f14', '02e92626705e1e84'],
-            ['2da790802f7c3309', '094a0eef60098f21'],
-            ['eba318016427bb9d', '0a030ca1f22cba47'],
-            ['b8c9cc36cee72b34', '0d722b90bcdc4855'],
-            ['ab29e7e4409cfd97', '0f61b472c54588cc'],
-            ['0bebe8c94c83647b', '1028d0c2b4505376'],
-            ['37d82e4eaa7a765d', '124b2e39a92766a6'],
-            ['3e6a03686b5f2d55', '18b7bcae62315342'],
-            ['becf9cb6c9a736ae', '1ed25d59b2b6c354'],
-            ['082c11aa0f98a81d', '1feb586750483756'],
-            ['212faff57f94936b', '205f4c327235cc4e'],
-            ['a40502fa413834d4', '20d8cfcf161d32c8'],
-            ['179b1a59c5f9acde', '25086b8930698c3c'],
-            ['d8cc24a399b14782', '260bccca8ba09579'],
-            ['82f8ea0e97129f5c', '26f68f6e85ee1701'],
-            ['ee95cbd6ef25030a', '2881b22a405b0f20'],
-            ['fb4e61b9b0daf745', '2cc2825459b60562'],
-            ['996d7a70f669ed18', '2f28176d833c2687'],
-            ['0e5755065a6623a2', '3051c933b4daa402'],
-            ['989886c3ef126ba6', '325ae1820e3f6feb'],
-            ['717b9a1bad86b050', '342b22967ee0caea'],
-            ['ffe03f63865c867d', '36f5eaf55ce1cc75'],
-            ['ae8dcba9506e3838', '38fc50994879f8e2'],
-            ['df5f0e3e2644e4b7', '3a6aa0a6cc2106fa'],
-            ['747fcac6b444d398', '3a77dcd32cf19784'],
-            ['53467ce0e076e9f6', '3abd84677560c571'],
-            ['7bc65b71dfa78e4e', '3cd7c19e6228aea1'],
-            ['f4a1b7e9a4858f10', '3da27cbdd5c56db8'],
-            ['d15f6df4bb7fb3be', '3e3ec0f0d6c70a3f'],
-            ['764410ab39686bfd', '3f3e348ca233e6fc'],
-            ['68ef26164bae09fe', '40626fcc58f90167'],
-            ['136baebcedb2b9e6', '4108b24fbd1ed31f'],
-            ['30bb36ca821d89bf', '454504780151a996'],
-            ['0b0ccb1a84562c35', '46f1e41e04325436'],
-            ['5faf81af57dc10e8', '474732211741dccd'],
-            ['38c76d699661761a', '496d1ef5402fdcc2'],
-            ['d6625029088acab9', '4bd2f1995732f4e0'],
-            ['19f9f39c9288197e', '4c468f1d486bfc23'],
-            ['40198a3c13eee3e4', '4eabfb3613025c56'],
-            ['9967553ee2ea2a04', '4f6efc6fb7cd4bc3'],
-            ['8a6649a278801a4d', '51116e6a4db15546'],
-            ['6b7e7f9baab76235', '51843a031a76c43b'],
-            ['5f55f610a621ed4e', '5459e35de38ebe61'],
-            ['87682645f6ccb6a3', '5c05d69772002b05'],
-            ['cc1f7ca695a00399', '5cb2753d3c6c0a37'],
-            ['b513ff4959418419', '5d7ba5e54dfee635'],
-            ['5530adbc06b39421', '5f50c695235c6579'],
-            ['932324d7672541d1', '606903d2ae5d03bc'],
-            ['e07c21eed84e32ce', '612d37c49786e485'],
-            ['8800920dd42b600c', '615f7a1b6dfc6aa1'],
-            ['e7a924e50cb7a091', '6250533422d486ee'],
-            ['b2a996e8ac0e604d', '641fa169006b4cdd'],
-            ['00589c7b8d6e868e', '6422272c99ff4ada'],
-            ['e3326190fd5150bd', '6501aa400e7e1812'],
-            ['b7022678458a1cc0', '684c0341172cde02'],
-            ['5b3f61ab78af2fb3', '6a844a7a99a85825'],
-            ['02174bb0fdd36c92', '6bf3c3f2aa170783'],
-            ['b5dd675a22518d56', '6bf5c3b11f2e9f32'],
-            ['1f37cdd9dc733c75', '6c5b3803908f96dc'],
-            ['a04137b44cbc89be', '6cb61717a4843999'],
-            ['9afe1a623392e011', '6ebd36c98a6715c1'],
-            ['88487bb6afa52dc1', '75bf38bec0460410'],
-            ['9479bab1adbb919d', '79a61a935cf0d45c'],
-            ['22a3bf9b7128f969', '7b8d4004da046f46'],
-            ['29712c4333085ee6', '7e3b78fb5a5a55d1'],
-            ['5b335dadc7a059f0', '828c7a89cdd0bc5c'],
-            ['50b0ac629f8c8592', '84f8c9ccada9c7e9'],
-            ['f97a5d0285e12b84', '88e6cd70364e54d5'],
-            ['f9abb2ee0e40bf9a', '8962c96a27ee5f78'],
-            ['34ce980cebf36396', '8c07611797dca302'],
-            ['39f2a66dafd37e51', '8ec8ff2987783c4c'],
-            ['e4e43360a43f7e98', '91b3ec8c188d115f'],
-            ['a1a324eb229ec42f', '9523cb545fcf7f35'],
-            ['1b08b95330258f5a', '9963817415c81fc0'],
-            ['06c10ac43e46d58e', '9a036d5670fded48'],
-            ['39052401c0b2f410', '9c0d1bfb5da26f55'],
-            ['a5e83fcca15fe1d0', '9cc2a758c2924c9f'],
-            ['034a05a9c31f59ab', '9e36dd73c1c9b3df'],
-            ['3f675a3c13583851', '9fa45b2eba285f32'],
-            ['d88e763820b371c9', 'a09351d4b3e634c4'],
-            ['9161792b0bb4ca75', 'a18c7f86857aea52'],
-            ['fbb296586684a614', 'a55025626ff3602a'],
-            ['1fb33db508b25f63', 'a6613d2487eeea59'],
-            ['435df428a53a8148', 'a981596bd3a169c3'],
-            ['d6de1acfc5d8f5d4', 'ac50dbf29524803c'],
-            ['e4c46da4c0a5f1b3', 'b296743eecac582a'],
-            ['41b213a3ca0cc603', 'bd3a9fda89e35f8d'],
-            ['c05c911fabe70667', 'c057a21569bc68de'],
-            ['e470316e8eb13680', 'c101fe8dccdfed67'],
-            ['ae0ad68cc0e43ade', 'c6b36648ba43e7a2'],
-            ['96f97e9c24c8d595', 'ce9c363e1a2a466e'],
-            ['85128bf24e8dbe6b', 'd4e29367ef95b8ca'],
-            ['ec918c84a3f5adc5', 'd7c8282e00f2efda'],
-            ['ae95277f6a4eecb8', 'd8bb58f4ffab3224'],
-            ['6e797da86e5e3347', 'dac3a7ba978cc4ce'],
-            ['d4a68676c25b5f39', 'daff3497bd006ff6'],
-            ['4f0bb78071702349', 'dd1d74a31269f0f6'],
-            ['ee186d70e1b2c7c5', 'dd4b98608d12962e'],
-            ['f30a2747fd8f75af', 'de22b730dc51c751'],
-            ['a5723db64c2583d4', 'e23965a5a4f94b5e'],
-            ['81bb9efda8b0a974', 'e585abd35ee270ce'],
-            ['fdc1233c2575ec0d', 'e69bc861988489f8'],
-            ['c0e44f33589adaad', 'ea0dc21c4d711ca4'],
-            ['88677c48ff2cd9b6', 'eb9c0d6ac933a0fb'],
-            ['2a4538293242bdb2', 'ed123e244f6cddb3'],
-            ['0bf97358e2493682', 'ed957d9afe2d441e'],
-            ['0d1639535e024d7e', 'ee5258be8af64408'],
-            ['da4d28e176efde20', 'ee86adf7c257ea93'],
-            ['d001965e4f1dc51c', 'f3caa9c0051c44ec'],
-            ['52979c94473059eb', 'f5cb2f3875e38f72'],
-            ['f0f1cb04c08d8442', 'fadd52fa6fbf48b1'],
-            ['63f661722a7d5c60', 'fde6956c6d3aa274'],
-            ['a5359e0ea14dfd2b', 'ffe2054e86631b8c'],
-        ]
-        for id_change in ids_change:
-            df['image_id'] = df['image_id'].replace(id_change[0], id_change[1])
-        
+        # Finalize the dataframe        
         return self.finalize_catalogue(df)
 
 
@@ -1483,11 +1448,10 @@ class LionData(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[3],
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1514,16 +1478,13 @@ class MacaqueFaces(DatasetFactory):
         
         # Finalize the dataframe
         data['Path'] = data['Path'].str.replace('/', os.path.sep)
-        #display(data['Path'].str.strip(os.path.sep))
-        #display(os.path.sep)
         df = pd.DataFrame({
-            'id': pd.Series(range(len(data))),            
+            'image_id': pd.Series(range(len(data))),            
             'path': 'MacaqueFaces' + os.path.sep + data['Path'].str.strip(os.path.sep) + os.path.sep + data['FileName'],
             'identity': data['ID'],
             'date': pd.Series(date_taken),
             'category': data['Category']
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1543,15 +1504,16 @@ class MPDD(DatasetFactory):
 
     def create_catalogue(self) -> pd.DataFrame:
         data = utils.find_images(self.root)
+        folders = data['path'].str.split(os.path.sep, expand=True)
         identity = data['file'].apply(lambda x: int(x.split('_')[0]))
-
+        
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': data['file'],
+            'image_id': data['file'],
             'path': data['path'] + os.path.sep + data['file'],
-            'identity': identity
+            'identity': identity,
+            'original_split': folders[2]
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1626,10 +1588,9 @@ class NDD20(DatasetFactory):
             raise(Exception('Multiple segmentation types'))
 
         # Finalize the dataframe
-        df['id'] = range(len(df))
+        df['image_id'] = range(len(df))
         df['path'] = df['orientation'].str.upper() + os.path.sep + df['file_name']
         df = df.drop(['reg_type', 'file_name'], axis=1)
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1662,23 +1623,23 @@ class NOAARightWhale(DatasetFactory):
         # Load information about the training dataset
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
         df1 = pd.DataFrame({
-            #.str.strip('Cow').astype(int)
-            'id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),
+            'image_id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),
             'path': 'imgs' + os.path.sep + data['Image'],
             'identity': data['whaleID'],
+            'original_split': 'train'
             })
 
         # Load information about the testing dataset
         data = pd.read_csv(os.path.join(self.root, 'sample_submission.csv'))
         df2 = pd.DataFrame({
-            'id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),
+            'image_id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),
             'path': 'imgs' + os.path.sep + data['Image'],
             'identity': self.unknown_name,
+            'original_split': 'test'
             })
         
         # Finalize the dataframe
         df = pd.concat([df1, df2])
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1704,17 +1665,17 @@ class NyalaData(DatasetFactory):
         # Extract information from the folder structure and about orientation
         identity = folders[3].astype(int)
         orientation = np.full(len(data), np.nan, dtype=object)
-        orientation[['left' in filename for filename in data['file']]] = 'left'
-        orientation[['right' in filename for filename in data['file']]] = 'right'
+        orientation[data['file'].str.contains('left')] = 'left'
+        orientation[data['file'].str.contains('right')] = 'right'
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
             'orientation': orientation,
+            'original_split': folders[2]
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)   
 
 
@@ -1746,12 +1707,11 @@ class OpenCows2020(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(identity.astype(str) + split + data['file']),
+            'image_id': utils.create_id(identity.astype(str) + split + data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': identity,
-            'split': split
+            'original_split': split
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)    
 
 
@@ -1772,18 +1732,16 @@ class PolarBearVidID(DatasetFactory):
         metadata = pd.read_csv(os.path.join(self.root, 'animal_db.csv'))
         data = utils.find_images(self.root)
 
-        # Convert numbers into animal names
-        path_to_names = {}
-        for _, metadata_row in metadata.iterrows():
-            path_to_names[metadata_row['id']] = metadata_row['name']
-        
         # Finalize the dataframe
         df = pd.DataFrame({
             'image_id': data['file'].apply(lambda x: os.path.splitext(x)[0]),
             'path': data['path'] + os.path.sep + data['file'],
-            'identity': data['path'].apply(lambda x: path_to_names[int(x)]),
-            'video': data['file'].apply(lambda x: int(x[7:10]))
+            'video': data['file'].str[7:10].astype(int),
+            'id': data['path'].astype(int)
         })
+        df = pd.merge(df, metadata, on='id', how='left')
+        df.rename({'name': 'identity', 'sex': 'gender'}, axis=1, inplace=True)
+        df = df.drop(['id', 'zoo', 'tracklets'], axis=1)
         return self.finalize_catalogue(df)
 
 
@@ -1827,13 +1785,12 @@ class SealID(DatasetFactory):
 
         # Finalize the dataframe
         df = pd.DataFrame({    
-            'id': data['file'].str.split('.', expand=True)[0],
+            'image_id': data['file'].str.split('.', expand=True)[0],
             'path': 'full images' + os.path.sep + self.prefix + data['reid_split'] + os.path.sep + data['file'],
             'identity': data['class_id'].astype(int),
-            'reid_split': data['reid_split'],
-            'segmentation_split': data['segmentation_split'],
+            'original_split': data['segmentation_split'].replace({'training': 'train', 'testing': 'test', 'validation': 'val'}),
+            'original_split_reid': data['reid_split'],
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1872,28 +1829,25 @@ class SeaStarReID2023(DatasetFactory):
     def create_catalogue(self) -> pd.DataFrame:
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
-        species = folders[1].apply(lambda x: x[:4])
-        species.replace('Anau', 'Anthenea australiae', inplace=True)
-        species.replace('Asru', 'Asteria rubens', inplace=True)
+        species = folders[1].str[:4].replace({'Anau': 'Anthenea australiae', 'Asru': 'Asteria rubens'})
 
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1],
             'species': species
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
-class SeaTurtleID(DatasetFactory):
-    metadata = metadata['SeaTurtleID']
-    archive = 'seaturtleid.zip'
+class SeaTurtleID2022(DatasetFactory):
+    metadata = metadata['SeaTurtleID2022']
+    archive = 'seaturtleid2022.zip'
 
     @classmethod
     def _download(cls):
-        command = f"datasets download -d wildlifedatasets/seaturtleid --force"
+        command = f"datasets download -d wildlifedatasets/seaturtleid2022 --force"
         exception_text = '''Kaggle must be setup.
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
@@ -1904,26 +1858,27 @@ class SeaTurtleID(DatasetFactory):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load annotations JSON file
-        path_json = 'annotations.json'
+        path_json = os.path.join('turtles-data', 'data', 'annotations.json')
         with open(os.path.join(self.root, path_json)) as file:
             data = json.load(file)
+        path_csv = os.path.join('turtles-data', 'data', 'metadata_splits.csv')
+        with open(os.path.join(self.root, path_csv)) as file:
+            df_images = pd.read_csv(file)
 
-        # Extract dtaa from the JSON file
-        create_dict = lambda i: {'id': i['id'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'identity': i['identity'], 'segmentation': i['segmentation'], 'orientation': i['position']}
-        df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations']])
+        # Extract data from the JSON file
+        create_dict = lambda i: {'id': i['id'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'segmentation': i['segmentation']}
+        df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations'] if i['category_id'] == 3])
         idx_bbox = ~df_annotation['bbox'].isnull()
         df_annotation.loc[idx_bbox,'bbox'] = df_annotation.loc[idx_bbox,'bbox'].apply(lambda x: eval(x) if isinstance(x, str) else x)
-        create_dict = lambda i: {'file_name': i['path'].split('/')[-1], 'image_id': i['id'], 'date': i['date']}
-        df_images = pd.DataFrame([create_dict(i) for i in data['images']])
+        df_images.rename({'id': 'image_id'}, axis=1, inplace=True)
 
         # Merge the information from the JSON file
-        df = pd.merge(df_annotation, df_images, on='image_id')
-        df['path'] = 'images' + os.path.sep + df['identity'] + os.path.sep + df['file_name']        
-        df = df.drop(['image_id', 'file_name'], axis=1)
+        df = pd.merge(df_images, df_annotation, on='image_id', how='outer')
+        df['path'] = 'turtles-data' + os.path.sep + 'data' + os.path.sep + df['file_name'].str.replace('/', os.path.sep)
+        df = df.drop(['id', 'file_name', 'timestamp', 'width', 'height', 'year', 'split_closed_random', 'split_open'], axis=1)
+        df.rename({'split_closed': 'original_split'}, axis=1, inplace=True)
         df['date'] = df['date'].apply(lambda x: x[:4] + '-' + x[5:7] + '-' + x[8:10])
 
-        # Finalize the dataframe
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
 
 
@@ -1997,7 +1952,7 @@ class SMALST(DatasetFactory):
         # Extract information about the images
         path = data['file'].str.strip('zebra_')
         data['identity'] = path.str[0]
-        data['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
+        data['image_id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
         data['path'] = 'zebra_training_set' + os.path.sep + 'images' + os.path.sep + data['file']
         data = data.drop(['file'], axis=1)
 
@@ -2006,13 +1961,12 @@ class SMALST(DatasetFactory):
         
         # Extract information about the images
         path = masks['file'].str.strip('zebra_')
-        masks['id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
+        masks['image_id'] = [int(p[1:].strip('_frame_').split('.')[0]) for p in path]
         masks['segmentation'] = 'zebra_training_set' + os.path.sep + 'bgsub' + os.path.sep + masks['file']
         masks = masks.drop(['path', 'file'], axis=1)
 
         # Finalize the dataframe
-        df = pd.merge(data, masks, on='id')
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
+        df = pd.merge(data, masks, on='image_id', how='left')
         return self.finalize_catalogue(df)
 
 
@@ -2049,8 +2003,7 @@ class StripeSpotter(DatasetFactory):
 
         # Extract information about the images
         data['index'] = data['file'].str[-7:-4].astype(int)
-        category = data['file'].str.split('-', expand=True)[0]
-        data = data[category == 'img'] # Only full images
+        data = data[data['file'].str.startswith('img')]
         
         # Load additional information
         data_aux = pd.read_csv(os.path.join(self.root, 'data', 'SightingData.csv'))
@@ -2059,14 +2012,14 @@ class StripeSpotter(DatasetFactory):
         
         # Finalize the dataframe
         df = pd.DataFrame({
-            'id': utils.create_id(data['file']),
+            'image_id': utils.create_id(data['file']),
             'path':  data['path'] + os.path.sep + data['file'],
             'identity': data['animal_name'],
             'bbox': pd.Series([[int(a) for a in b.split(' ')] for b in data['roi']]),
             'orientation': data['flank'],
             'photo_quality': data['photo_quality'],
+            'date': data['sighting_date']
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)  
 
 
@@ -2085,61 +2038,6 @@ class WhaleSharkID(DatasetFactoryWildMe):
 
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme('whaleshark', 2020)
-
-
-class WNIGiraffes(DatasetFactory):
-    metadata = metadata['WNIGiraffes']
-    url = "https://lilablobssc.blob.core.windows.net/wni-giraffes/wni_giraffes_train_images.zip"
-    archive = 'wni_giraffes_train_images.zip'
-    url2 = 'https://lilablobssc.blob.core.windows.net/wni-giraffes/wni_giraffes_train.zip'
-    archive2 = 'wni_giraffes_train.zip'
-
-    @classmethod
-    def _download(cls):
-        exception_text = '''Dataset must be downloaded manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#wnigiraffes'''
-        raise Exception(exception_text)
-        #os.system(f'azcopy cp {cls.url} {cls.archive}')
-        #utils.download_url(cls.url2, cls.archive2)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
-        utils.extract_archive(cls.archive2, delete=True)
-
-    def create_catalogue(self) -> pd.DataFrame:
-        # Find all images in root
-        data = utils.find_images(self.root)
-        folders = data['path'].str.split(os.path.sep, expand=True)
-        
-        # Load information about keypoints
-        with open(os.path.join(self.root, 'wni_giraffes_train.json')) as file:
-            keypoints = json.load(file)
-        
-        # Extract information about keypoints
-        create_dict = lambda i: {'file': os.path.split(i['filename'])[1], 'keypoints': self.extract_keypoints(i)}
-        df_keypoints = pd.DataFrame([create_dict(i) for i in keypoints['annotations']])
-
-        # Merge information about images and keypoints
-        data = pd.merge(data, df_keypoints, how='left', on='file')
-        data['id'] = utils.create_id(data['file'])
-        data['identity'] = folders[1].astype(int)
-        data['path'] = data['path'] + os.path.sep + data['file']
-        data = data.drop(['file'], axis=1)
-
-        # Finalize the dataframe
-        data.rename({'id': 'image_id'}, axis=1, inplace=True)
-        return self.finalize_catalogue(data)
-
-    def extract_keypoints(self, row: pd.DataFrame) -> List[float]:
-        keypoints = [row['keypoints']['too']['median_x'], row['keypoints']['too']['median_y'],
-                row['keypoints']['toh']['median_x'], row['keypoints']['toh']['median_y'],
-                row['keypoints']['ni']['median_x'], row['keypoints']['ni']['median_y'],
-                row['keypoints']['fbh']['median_x'], row['keypoints']['fbh']['median_y'],
-            ]
-        keypoints = np.array(keypoints)
-        keypoints[keypoints == None] = np.nan
-        return list(keypoints)
 
 
 class ZindiTurtleRecall(DatasetFactory):
@@ -2171,18 +2069,17 @@ class ZindiTurtleRecall(DatasetFactory):
 
         # Load information about the additional images
         data_extra = pd.read_csv(os.path.join(self.root, 'extra_images.csv'))
-        data_extra['split'] = 'unassigned'        
+        data_extra['split'] = np.nan        
 
         # Finalize the dataframe
         data = pd.concat([data_train, data_test, data_extra])
         data = data.reset_index(drop=True)        
         data.loc[data['turtle_id'].isnull(), 'turtle_id'] = self.unknown_name
         df = pd.DataFrame({
-            'id': data['image_id'],
+            'image_id': data['image_id'],
             'path': 'images' + os.path.sep + data['image_id'] + '.JPG',
             'identity': data['turtle_id'],
             'orientation': data['image_location'].str.lower(),
-            'split': data['split'],
+            'original_split': data['split'],
         })
-        df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)

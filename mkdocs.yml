@@ -28,13 +28,11 @@ nav:
     - Default splits: default_splits.md
   - Advanced:
     - Advanced splits: tutorial_splits.md
-    - Evaluation: tutorial_evaluation.md
     - Dataset representation: dataframe.md
     - Adding new datasets: adding.md
-  - Troubleshooting:
-    - Downloads: downloads.md
+  - Dataset preprocessing:
+    - Preprocessing: preprocessing.md
   - Reference:
     - Datasets: reference_datasets.md
     - Analysis: reference_analysis.md
     - Splits: reference_splits.md
-    #- Evaluation: reference_evaluation.md

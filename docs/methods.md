@@ -42,21 +42,25 @@ The datasets need to be [downloaded first](../tutorial_datasets#downloading-data
 d = loader.load_dataset(datasets.MacaqueFaces, 'data', 'dataframes')
 ```
 
-The dataframe already contains a default split. The training dataset may be extracted by
+The package contains tools for creating splits. The following code creates a closed-set split (identities in the training and testing set are the same) with 80% samples in the training set:
 
 ```python exec="true" source="above" result="console" session="run"
-df_train = d.df[d.df['split'] == 'train']
+from wildlife_datasets import splits
+
+splitter = splits.ClosedSetSplit(0.8)
+idx_train, idx_test = splitter.split(d.df)[0]
+df_train = d.df.loc[idx_train]
 print(df_train) # markdown-exec: hide
 ```
 
 and similarly the testing set
 
 ```python exec="true" source="above" result="console" session="run"
-df_test = d.df[d.df['split'] == 'test']
+df_test = d.df.loc[idx_test]
 print(df_test) # markdown-exec: hide
 ```
 
-The training set contains 80% of the dataset. Any photo, where the animal was not recognized, are ignored for the split. Therefore, the union of the training and testing sets may be smaller than the whole dataset. It is also possible to create [custom splits](../tutorial_splits).
+Any photo, where the animal was not recognized, are ignored for the split. Therefore, the union of the training and testing sets may be smaller than the whole dataset. It is also possible to create [custom splits](../tutorial_splits).
 
 ## Write your ML method
 
@@ -94,8 +98,8 @@ and then run the same code in a loop
 
 ```python exec="true" source="above" result="console" session="run"
 for d in ds:
-    df_train = d.df[d.df['split'] == 'train']
-    df_test = d.df[d.df['split'] == 'test']
+    idx_train, idx_test = splitter.split(d.df)[0]
+    df_train, df_test = d.df.iloc[idx_train], d.df.iloc[idx_test]
     
     y_pred = [df_train.iloc[0]['identity']]*len(df_test)
     y_true = df_test['identity']
