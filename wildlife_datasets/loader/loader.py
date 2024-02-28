@@ -15,7 +15,7 @@ def get_dataset_folder(root_dataset: str, class_dataset: type) -> str:
         Path to the stored data.
     """
 
-    return os.path.join(root_dataset, class_dataset.__name__)
+    return os.path.join(root_dataset, class_dataset.display_name())
 
 def get_dataframe_path(root_dataframe: str, class_dataset: type) -> str:
     """Creates path to the pickled dataframe.

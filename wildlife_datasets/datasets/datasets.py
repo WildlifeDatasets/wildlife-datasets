@@ -101,7 +101,15 @@ class DatasetFactory():
             cls._extract(**kwargs)
         mark_file_name = os.path.join(root, cls.download_mark_name)
         open(mark_file_name, 'a').close()
-        
+    
+    @classmethod
+    def display_name(cls) -> str:
+        cls_parent = cls.__bases__[0]
+        while cls_parent != object and cls_parent.outdated_dataset:
+            cls = cls_parent
+            cls_parent = cls.__bases__[0]            
+        return cls.__name__
+
     def create_catalogue(self):
         """Creates the dataframe.
 
