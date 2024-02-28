@@ -30,7 +30,7 @@ import pandas as pd
 
 df = pd.read_csv('docs/csv/MacaqueFaces.csv')
 df = df.drop('Unnamed: 0', axis=1)
-d = datasets.MacaqueFaces('', df)
+d = datasets.MacaqueFaces('.', df)
 d.df.drop(['category'], axis=1, inplace=True)
 ```
 

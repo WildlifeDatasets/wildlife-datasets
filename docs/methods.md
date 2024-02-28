@@ -15,12 +15,12 @@ import pandas as pd
 
 df = pd.read_csv('docs/csv/MacaqueFaces.csv')
 df = df.drop('Unnamed: 0', axis=1)
-ds1 = datasets.MacaqueFaces('', df)
+ds1 = datasets.MacaqueFaces('.', df)
 ds1.df.drop(['category'], axis=1, inplace=True)
 
 df = pd.read_csv('docs/csv/IPanda50.csv')
 df = df.drop('Unnamed: 0', axis=1)
-ds2 = datasets.IPanda50('', df)
+ds2 = datasets.IPanda50('.', df)
 
 d = ds1
 ds = [ds1, ds2]

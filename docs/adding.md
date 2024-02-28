@@ -16,11 +16,11 @@ class Test(datasets.DatasetFactory):
         return df
 ```
 
-The class is then created by `Test('')`. The empty argument should point to the location where the images are stored. The dataframe can then be accessed by
+The class is then created by `Test('.')`. The empty argument should point to the location where the images are stored. The dataframe can then be accessed by
 
 ```python exec="true" source="above" result="console" session="run1"
-Test('').df
-print(Test('').df) # markdown-exec: hide
+Test('.').df
+print(Test('.').df) # markdown-exec: hide
 ```
 
 The dataframe `df` must satisfy [some requirements](../dataframe).
@@ -55,8 +55,8 @@ class Test(datasets.DatasetFactory):
 The metadata can be accessed by
 
 ```python exec="true" source="above" result="console" session="run2"
-Test('').metadata
-print(Test('').metadata) # markdown-exec: hide
+Test('.').metadata
+print(Test('.').metadata) # markdown-exec: hide
 ```
 
 ## Optional: including download
