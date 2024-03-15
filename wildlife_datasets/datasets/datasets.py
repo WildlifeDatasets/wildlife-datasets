@@ -1770,6 +1770,7 @@ class PolarBearVidID(DatasetFactory):
 
 class SarahZelvy(DatasetFactory):
     # TODO: add metadata
+    # TODO: add day-night/center-beach/whatever
     archive = 'sarahzelvy.zip'
 
     @classmethod
@@ -1791,7 +1792,7 @@ class SarahZelvy(DatasetFactory):
         df = pd.DataFrame({
             'image_id': range(len(data)),
             'path': 'data' + os.path.sep + data['image_name'],
-            'identity': data['image_name'].str.split('-').apply(lambda x: x[0] + '-' + x[1]),
+            'identity': data['image_name'].str.split('-').apply(lambda x: x[0] + '-' + x[1] + '-' + x[2]),
             'bbox': data[['bbox_x', 'bbox_y', 'bbox_width', 'bbox_height']].values.tolist(),
         })
         return self.finalize_catalogue(df)
