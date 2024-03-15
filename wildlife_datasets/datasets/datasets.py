@@ -1526,6 +1526,7 @@ class MPDD(DatasetFactory):
 
 
 class NDD20(DatasetFactory):
+    outdated_dataset = True
     metadata = metadata['NDD20']
     url = 'https://data.ncl.ac.uk/ndownloader/files/22774175'
     archive = 'NDD20.zip'
@@ -1600,6 +1601,20 @@ class NDD20(DatasetFactory):
         df['path'] = df['orientation'].str.upper() + os.path.sep + df['file_name']
         df = df.drop(['reg_type', 'file_name'], axis=1)
         return self.finalize_catalogue(df)
+
+
+class NDD20v2(NDD20):
+    outdated_dataset = False
+
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        for i, df_row in df.iterrows():
+            # Rewrite wrong segmentations. There is no dolphin -> should be deleted.
+            # But that would break compability and the identity is unknown anyway.
+            if len(df_row['segmentation']) == 4:
+                img = utils.get_image(os.path.join(self.root, df_row['path']))
+                w, h = img.size
+                df.at[i, 'segmentation'] = np.array(utils.bbox_segmentation([0, 0, w, h]))
+        return df
 
 
 class NOAARightWhale(DatasetFactory):

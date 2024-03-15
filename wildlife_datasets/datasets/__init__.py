@@ -21,7 +21,7 @@ from .datasets import LeopardID2022
 from .datasets import LionData
 from .datasets import MacaqueFaces
 from .datasets import MPDD
-from .datasets import NDD20
+from .datasets import NDD20, NDD20v2
 from .datasets import NOAARightWhale
 from .datasets import NyalaData
 from .datasets import OpenCows2020
@@ -61,7 +61,7 @@ names_all = [
     LionData,
     MacaqueFaces,
     MPDD,
-    NDD20,
+    NDD20v2,
     NOAARightWhale,
     NyalaData,
     OpenCows2020,
@@ -84,7 +84,7 @@ names_wild = [
     HumpbackWhaleID,
     HyenaID2022,
     LeopardID2022,
-    NDD20,
+    NDD20v2,
     NOAARightWhale,
     NyalaData,
     SealID,
@@ -139,7 +139,7 @@ names_whales = [
     BelugaID,
     HappyWhale,
     HumpbackWhaleID,
-    NDD20,
+    NDD20v2,
     NOAARightWhale,
     WhaleSharkID,
 ]
