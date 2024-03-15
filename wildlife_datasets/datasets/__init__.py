@@ -26,6 +26,7 @@ from .datasets import NOAARightWhale
 from .datasets import NyalaData
 from .datasets import OpenCows2020
 from .datasets import PolarBearVidID
+from .datasets import SarahZelvy
 from .datasets import SealID
 from .datasets import SealIDSegmented
 from .datasets import SeaStarReID2023
@@ -66,6 +67,7 @@ names_all = [
     NyalaData,
     OpenCows2020,
     PolarBearVidID,
+    SarahZelvy,
     SealID,
     SealIDSegmented,
     SeaStarReID2023,
@@ -87,6 +89,7 @@ names_wild = [
     NDD20v2,
     NOAARightWhale,
     NyalaData,
+    SarahZelvy,
     SealID,
     SeaTurtleID2022,
     StripeSpotter,
@@ -131,6 +134,7 @@ names_primates = [
 ]
 
 names_turtles = [
+    SarahZelvy,
     SeaTurtleIDHeads,
     ZindiTurtleRecall,
 ]

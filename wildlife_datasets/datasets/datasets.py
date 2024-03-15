@@ -1768,6 +1768,35 @@ class PolarBearVidID(DatasetFactory):
         return self.finalize_catalogue(df)
 
 
+class SarahZelvy(DatasetFactory):
+    # TODO: add metadata
+    archive = 'sarahzelvy.zip'
+
+    @classmethod
+    def _download(cls):
+        # TODO: change exception_text. also update the documentation
+        command = f"datasets download -d wildlifedatasets/sarahzelvy --force"
+        exception_text = '''Kaggle must be setup.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
+        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+
+    def create_catalogue(self) -> pd.DataFrame:
+        file_name = os.path.join(self.root, 'annotations.csv')
+        data = pd.read_csv(file_name)
+
+        df = pd.DataFrame({
+            'image_id': range(len(data)),
+            'path': 'data' + os.path.sep + data['image_name'],
+            'identity': data['image_name'].str.split('-').apply(lambda x: x[0] + '-' + x[1]),
+            'bbox': data[['bbox_x', 'bbox_y', 'bbox_width', 'bbox_height']].values.tolist(),
+        })
+        return self.finalize_catalogue(df)
+
+
 class SealID(DatasetFactory):
     metadata = metadata['SealID']
     prefix = 'source_'
