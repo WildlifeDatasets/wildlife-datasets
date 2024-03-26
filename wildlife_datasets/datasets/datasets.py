@@ -1789,11 +1789,16 @@ class SarahZelvy(DatasetFactory):
         file_name = os.path.join(self.root, 'annotations.csv')
         data = pd.read_csv(file_name)
 
+        identity = data['image_name'].str.split('-').apply(lambda x: x[0] + '-' + x[1] + '-' + x[2])
+        orientation_dict = {'L': 'left', 'P': 'right'}
+        orientation = data['image_name'].str.split('-').apply(lambda x: orientation_dict[x[3][0]])
         df = pd.DataFrame({
             'image_id': range(len(data)),
             'path': 'data' + os.path.sep + data['image_name'],
-            'identity': data['image_name'].str.split('-').apply(lambda x: x[0] + '-' + x[1] + '-' + x[2]),
+            'identity': identity,
             'bbox': data[['bbox_x', 'bbox_y', 'bbox_width', 'bbox_height']].values.tolist(),
+            'orientation': orientation,
+            'daytime': data['daytime']
         })
         return self.finalize_catalogue(df)
 
