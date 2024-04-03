@@ -125,6 +125,11 @@ names_cows = [
     OpenCows2020,
 ]
 
+names_dogs = [
+    DogFaceNet,
+    MPDD,
+]
+
 names_giraffes = [
     GiraffeZebraID,
     Giraffes,
