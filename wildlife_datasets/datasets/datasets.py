@@ -1068,6 +1068,33 @@ class Cows2021v2(Cows2021):
         return self.fix_labels_replace_images(df, replace_identity2)
         
 
+class DogFaceNet(DatasetFactory):
+    metadata = metadata['DogFaceNet']
+    url = 'https://github.com/GuillaumeMougeot/DogFaceNet/releases/download/dataset/DogFaceNet_Dataset_224_1.zip'
+    archive = 'DogFaceNet_Dataset_224_1.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+    
+    def create_catalogue(self) -> pd.DataFrame:
+        # Find all images in root
+        data = utils.find_images(self.root)
+        folders = data['path'].str.split(os.path.sep, expand=True)
+
+        # Finalize the dataframe
+        df = pd.DataFrame({
+            'image_id': utils.create_id(data['file']),
+            'path': data['path'] + os.path.sep + data['file'],
+            'identity': folders[1].astype(int),
+        })
+        return self.finalize_catalogue(df)
+
+
 class Drosophila(DatasetFactory):
     metadata = metadata['Drosophila']
     downloads = [

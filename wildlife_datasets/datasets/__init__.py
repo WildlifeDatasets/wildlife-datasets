@@ -10,6 +10,7 @@ from .datasets import CTai
 from .datasets import CZoo
 from .datasets import CowDataset
 from .datasets import Cows2021, Cows2021v2
+from .datasets import DogFaceNet
 from .datasets import Drosophila
 from .datasets import FriesianCattle2015, FriesianCattle2015v2
 from .datasets import FriesianCattle2017
@@ -52,6 +53,7 @@ names_all = [
     CZoo,
     CowDataset,
     Cows2021v2,
+    DogFaceNet,
     Drosophila,
     FriesianCattle2015v2,
     FriesianCattle2017,
@@ -102,6 +104,7 @@ names_small = [
     BelugaID,
     CTai,
     CZoo,
+    DogFaceNet,
     FriesianCattle2015v2,
     FriesianCattle2017,
     IPanda50,
