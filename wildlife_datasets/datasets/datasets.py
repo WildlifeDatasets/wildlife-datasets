@@ -34,6 +34,7 @@ class DatasetFactory():
         get_data(..., force=True) or download(..., force=True).
         '''
     download_mark_name = 'already_downloaded'
+    license_file_name = 'LICENSE_link'
 
     def __init__(
             self, 
@@ -94,6 +95,9 @@ class DatasetFactory():
             with utils.data_directory(root):
                 cls._download(**kwargs)
             open(mark_file_name, 'a').close()
+            if hasattr(cls, 'metadata') and 'licenses_url' in cls.metadata:
+                with open(os.path.join(root, cls.license_file_name), 'w') as file:
+                    file.write(cls.metadata['licenses_url'])
         
     @classmethod    
     def extract(cls, root, **kwargs):
