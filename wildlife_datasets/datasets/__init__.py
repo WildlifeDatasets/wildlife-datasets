@@ -8,6 +8,7 @@ from .datasets import BirdIndividualIDSegmented
 from .datasets import CatIndividualImages
 from .datasets import CTai
 from .datasets import CZoo
+from .datasets import CowDataset
 from .datasets import Cows2021, Cows2021v2
 from .datasets import Drosophila
 from .datasets import FriesianCattle2015, FriesianCattle2015v2
@@ -49,6 +50,7 @@ names_all = [
     CatIndividualImages,
     CTai,
     CZoo,
+    CowDataset,
     Cows2021v2,
     Drosophila,
     FriesianCattle2015v2,
@@ -113,6 +115,7 @@ names_small = [
 
 names_cows = [
     AerialCattle2017,
+    CowDataset,
     Cows2021v2,
     FriesianCattle2015v2,
     FriesianCattle2017,
