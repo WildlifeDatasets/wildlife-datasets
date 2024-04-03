@@ -32,6 +32,7 @@ print_list_red(datasets.names_small) # markdown-exec: hide
 ![](images/grid_BelugaID.png)
 ![](images/grid_CTai.png)
 ![](images/grid_CZoo.png)
+![](images/grid_DogFaceNet.png)
 ![](images/grid_FriesianCattle2015.png)
 ![](images/grid_FriesianCattle2017.png)
 ![](images/grid_IPanda50.png)
@@ -88,7 +89,7 @@ print_list_red(datasets.names_turtles) # markdown-exec: hide
 
 ### Cows
 
-Multiple dataset show the Friesian cows. While all these datasets were captured at one place, they show the cows in different settings.
+Multiple dataset show the Friesian cows. While all these datasets besides `CowDataset` were captured at one place, they show the cows in different settings.
 
 ```python exec="true" source="above" result="console" session="run"
 datasets.names_cows
@@ -97,10 +98,24 @@ print_list_red(datasets.names_cows) # markdown-exec: hide
 ```
 
 ![](images/grid_AerialCattle2017.png)
+![](images/grid_CowDataset.png)
 ![](images/grid_Cows2021.png)
 ![](images/grid_FriesianCattle2015.png)
 ![](images/grid_FriesianCattle2017.png)
 ![](images/grid_OpenCows2020.png)
+
+### Dogs
+
+Two datasets show images of various dog breeds.
+
+```python exec="true" source="above" result="console" session="run"
+datasets.names_cows
+
+print_list_red(datasets.names_dogs) # markdown-exec: hide
+```
+
+![](images/grid_DogFaceNet.png)
+![](images/grid_MPDD.png)
 
 ### Giraffes
 
