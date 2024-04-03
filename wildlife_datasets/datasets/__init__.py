@@ -5,6 +5,7 @@ from .datasets import ATRW
 from .datasets import BelugaID
 from .datasets import BirdIndividualID
 from .datasets import BirdIndividualIDSegmented
+from .datasets import CatIndividualImages
 from .datasets import CTai
 from .datasets import CZoo
 from .datasets import Cows2021, Cows2021v2
@@ -45,6 +46,7 @@ names_all = [
     BelugaID,
     BirdIndividualID,
     BirdIndividualIDSegmented,
+    CatIndividualImages,
     CTai,
     CZoo,
     Cows2021v2,
