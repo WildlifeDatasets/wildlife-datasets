@@ -19,6 +19,8 @@
   <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues/new?assignees=aerodynamic-sauce-pan&labels=bug&projects=&template=bug_report.md&title=%5BBUG%5D">Report Bug</a>
   ·
   <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues/new?assignees=aerodynamic-sauce-pan&labels=enhancement&projects=&template=enhancement.md&title=%5BEnhancement%5D">Request Feature</a>
+  ·
+  <a href="mailto:wilddatasets@gmail.com">:mailbox_with_mail:Email</a>
 </div>
 
 </br>
