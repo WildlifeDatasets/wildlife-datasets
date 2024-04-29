@@ -1972,7 +1972,13 @@ class SeaTurtleID2022(DatasetFactory):
             df_images = pd.read_csv(file)
 
         # Extract data from the JSON file
-        create_dict = lambda i: {'id': i['id'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'segmentation': i['segmentation']}
+        create_dict = lambda i: {
+            'id': i['id'],
+            'bbox': i['bbox'],
+            'image_id': i['image_id'],
+            'segmentation': i['segmentation'],
+            'orientation': i['attributes']['orientation'] if 'orientation' in i['attributes'] else np.nan
+        }
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations'] if i['category_id'] == 3])
         idx_bbox = ~df_annotation['bbox'].isnull()
         df_annotation.loc[idx_bbox,'bbox'] = df_annotation.loc[idx_bbox,'bbox'].apply(lambda x: eval(x) if isinstance(x, str) else x)
