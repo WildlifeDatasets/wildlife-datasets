@@ -5,9 +5,12 @@ from .datasets import ATRW
 from .datasets import BelugaID
 from .datasets import BirdIndividualID
 from .datasets import BirdIndividualIDSegmented
+from .datasets import CatIndividualImages
 from .datasets import CTai
 from .datasets import CZoo
+from .datasets import CowDataset
 from .datasets import Cows2021, Cows2021v2
+from .datasets import DogFaceNet
 from .datasets import Drosophila
 from .datasets import FriesianCattle2015, FriesianCattle2015v2
 from .datasets import FriesianCattle2017
@@ -46,9 +49,12 @@ names_all = [
     BelugaID,
     BirdIndividualID,
     BirdIndividualIDSegmented,
+    CatIndividualImages,
     CTai,
     CZoo,
+    CowDataset,
     Cows2021v2,
+    DogFaceNet,
     Drosophila,
     FriesianCattle2015v2,
     FriesianCattle2017,
@@ -101,6 +107,7 @@ names_small = [
     BelugaID,
     CTai,
     CZoo,
+    DogFaceNet,
     FriesianCattle2015v2,
     FriesianCattle2017,
     IPanda50,
@@ -114,10 +121,16 @@ names_small = [
 
 names_cows = [
     AerialCattle2017,
+    CowDataset,
     Cows2021v2,
     FriesianCattle2015v2,
     FriesianCattle2017,
     OpenCows2020,
+]
+
+names_dogs = [
+    DogFaceNet,
+    MPDD,
 ]
 
 names_giraffes = [

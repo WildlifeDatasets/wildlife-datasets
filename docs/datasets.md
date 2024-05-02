@@ -29,6 +29,12 @@ BirdIndividualID is a collection of three separate bird datasets: sociable weave
 ![](images/grid_BirdIndividualID.png)
 ![](images/grid_BirdIndividualIDSegmented.png)
 
+## CatIndividualImages
+
+The images were acquired using regular digital cameras or smartphones. The resolutions of the images ranged between 195 x 261 and 4608 x 3453 pixels. Most images of cats were acquired at public animal shelters (Taipei City Animal Protection Office, Taipei, Taiwan; and New Taipei City Government Animal Protection and Health Inspection Office, New Taipei, Taiwan) and private animal shelters in Taipei. The remaining images were collected from social media.
+
+![](images/grid_CatIndividualImages.png)
+
 ## CTai
 
 CTai and CZoo datasets contain cropped chimpanzee faces. CZoo originates from a collaboration of the authors with animal researchers in Leipzig. Provided images are of high quality, are well exposed, and are taken without strong blurring artifacts. The images are complemented by biologically meaningful keypoints (centers of eyes, mouth, and earlobes) together with information about age and gender. CTai consists of recordings of chimpanzees living in the Taï National Park in Côte d'Ivoire. The image quality differs heavily and the annotation quality of additional information is not as high as for CZoo. CTai contains typos in six individuals (such as Woodstiock instead of the correct Woodstock), which we corrected. The unknown individuals were labelled as *Adult*, which we fixed as well.
@@ -41,11 +47,23 @@ See the description in [CTai](#ctai).
 
 ![](images/grid_CZoo.png)
 
+## CowDataset
+
+The dataset does not contain any description.
+
+![](images/grid_CowDataset.png)
+
 ## Cows2021
 
 See the description in [AerialCattle2017](#aerialcattle2017).
 
 ![](images/grid_Cows2021.png)
+
+## DogFaceNet
+
+The dataset does not contain any description about its acquisition, only factual description of images.
+
+![](images/grid_DogFaceNet.png)
 
 ## Drosophila
 

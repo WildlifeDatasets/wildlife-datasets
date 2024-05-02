@@ -9,9 +9,12 @@ Some of the datasets require special treatment or the download of extraction wor
 | [ATRW](https://lila.science/datasets/atrw)                   |                                |                  |
 | [BelugaID](https://lila.science/datasets/beluga-id-2022/)              |                                |                  |
 | [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID)     | Manual download    | Few images removed |
+| [CatIndividualImages](https://www.kaggle.com/datasets/timost1234/cat-individuals)          | Kaggle required                   |                  |
 | [CTai](https://github.com/cvjena/chimpanzee_faces)       |                                | Labels fixed |
 | [CZoo](https://github.com/cvjena/chimpanzee_faces)       |                                |                  |
+| [CowDataset](https://figshare.com/articles/dataset/data_set_zip/16879780)                   |                                |                  |
 | [Cows2021](https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7)              |                                | Labels fixed  |
+| [DogFaceNet](https://github.com/GuillaumeMougeot/DogFaceNet)          |                    |                  |
 | [Drosophila](https://github.com/j-schneider/fly_eye)             |                                | Few images removed |
 | [FriesianCattle2015](https://data.bris.ac.uk/data/dataset/wurzq71kfm561ljahbwjhx9n3)   |                                | Labels fixed |
 | [FriesianCattle2017](https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r)   |                                |                  |
@@ -57,6 +60,10 @@ datasets.BirdIndividualID.extract('data/BirdIndividualID')
 ```
 
 to extract it. Do not extract it manually because there is some postprocessing involved.
+
+### CatIndividualImages
+
+[Kaggle requirements](#kaggle) need to be satisfied.
 
 ### Giraffes
 

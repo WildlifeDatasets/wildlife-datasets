@@ -34,6 +34,7 @@ class DatasetFactory():
         get_data(..., force=True) or download(..., force=True).
         '''
     download_mark_name = 'already_downloaded'
+    license_file_name = 'LICENSE_link'
 
     def __init__(
             self, 
@@ -94,6 +95,9 @@ class DatasetFactory():
             with utils.data_directory(root):
                 cls._download(**kwargs)
             open(mark_file_name, 'a').close()
+            if hasattr(cls, 'metadata') and 'licenses_url' in cls.metadata:
+                with open(os.path.join(root, cls.license_file_name), 'w') as file:
+                    file.write(cls.metadata['licenses_url'])
         
     @classmethod    
     def extract(cls, root, **kwargs):
@@ -849,6 +853,41 @@ class BirdIndividualIDSegmented(BirdIndividualID):
     def _extract(cls):
         print(cls.warning)
 
+
+class CatIndividualImages(DatasetFactory):
+    metadata = metadata['CatIndividualImages']
+    archive = 'cat-individuals.zip'
+    
+    @classmethod
+    def _download(cls):
+        command = f"datasets download -d timost1234/cat-individuals --force"
+        exception_text = '''Kaggle must be setup.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#catindividualimages'''
+        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+
+    def create_catalogue(self) -> pd.DataFrame:
+        # Find all images in root
+        data = utils.find_images(self.root)
+        folders = data['path'].str.split(os.path.sep, expand=True)
+        
+        # Remove 85 duplicate images
+        idx = folders[2].isnull()
+        data = data[idx]
+        folders = folders[idx]
+
+        # Finalize the dataframe
+        df = pd.DataFrame({
+            'image_id': data['file'].apply(lambda x: os.path.splitext(x)[0]),
+            'path': data['path'] + os.path.sep + data['file'],
+            'identity': folders[1].astype(int),
+        })
+        return self.finalize_catalogue(df)
+
+
 class CTai(DatasetFactory):
     metadata = metadata['CTai']
     url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
@@ -936,6 +975,38 @@ class CZoo(DatasetFactory):
         return self.finalize_catalogue(df)
 
 
+class CowDataset(DatasetFactory):
+    metadata = metadata['CowDataset']
+    url = 'https://figshare.com/ndownloader/files/31210192'
+    archive = 'cow-dataset.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+        # Rename the folder with non-ASCII characters
+        dirs = [x for x in os.listdir() if os.path.isdir(x)]
+        if len(dirs) != 1:
+            raise Exception('There should be only one directory after extracting the file.')
+        os.rename(dirs[0], 'images')
+    
+    def create_catalogue(self) -> pd.DataFrame:
+        # Find all images in root
+        data = utils.find_images(self.root)
+        folders = data['path'].str.split(os.path.sep, expand=True)
+
+        # Finalize the dataframe
+        df = pd.DataFrame({
+            'image_id': utils.create_id(data['file']),
+            'path': data['path'] + os.path.sep + data['file'],
+            'identity': folders[1].str.strip('cow_').astype(int),
+        })
+        return self.finalize_catalogue(df)
+
+
 class Cows2021(DatasetFactory):
     outdated_dataset = True
     metadata = metadata['Cows2021']
@@ -996,6 +1067,33 @@ class Cows2021v2(Cows2021):
         df = self.fix_labels_replace_identity(df, replace_identity1)
         return self.fix_labels_replace_images(df, replace_identity2)
         
+
+class DogFaceNet(DatasetFactory):
+    metadata = metadata['DogFaceNet']
+    url = 'https://github.com/GuillaumeMougeot/DogFaceNet/releases/download/dataset/DogFaceNet_Dataset_224_1.zip'
+    archive = 'DogFaceNet_Dataset_224_1.zip'
+
+    @classmethod
+    def _download(cls):
+        utils.download_url(cls.url, cls.archive)
+
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+    
+    def create_catalogue(self) -> pd.DataFrame:
+        # Find all images in root
+        data = utils.find_images(self.root)
+        folders = data['path'].str.split(os.path.sep, expand=True)
+
+        # Finalize the dataframe
+        df = pd.DataFrame({
+            'image_id': utils.create_id(data['file']),
+            'path': data['path'] + os.path.sep + data['file'],
+            'identity': folders[1].astype(int),
+        })
+        return self.finalize_catalogue(df)
+
 
 class Drosophila(DatasetFactory):
     metadata = metadata['Drosophila']
@@ -1921,7 +2019,13 @@ class SeaTurtleID2022(DatasetFactory):
             df_images = pd.read_csv(file)
 
         # Extract data from the JSON file
-        create_dict = lambda i: {'id': i['id'], 'bbox': i['bbox'], 'image_id': i['image_id'], 'segmentation': i['segmentation']}
+        create_dict = lambda i: {
+            'id': i['id'],
+            'bbox': i['bbox'],
+            'image_id': i['image_id'],
+            'segmentation': i['segmentation'],
+            'orientation': i['attributes']['orientation'] if 'orientation' in i['attributes'] else np.nan
+        }
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations'] if i['category_id'] == 3])
         idx_bbox = ~df_annotation['bbox'].isnull()
         df_annotation.loc[idx_bbox,'bbox'] = df_annotation.loc[idx_bbox,'bbox'].apply(lambda x: eval(x) if isinstance(x, str) else x)
