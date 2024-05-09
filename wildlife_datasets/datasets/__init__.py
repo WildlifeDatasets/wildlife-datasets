@@ -37,6 +37,7 @@ from .datasets import SeaTurtleID2022
 from .datasets import SeaTurtleIDHeads
 from .datasets import SMALST
 from .datasets import StripeSpotter
+from .wildlife_reid_10k import WildlifeReID10k
 from .datasets import WhaleSharkID
 from .datasets import ZindiTurtleRecall
 from .metadata import Metadata
