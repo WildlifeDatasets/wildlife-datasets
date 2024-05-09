@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-<img src="docs/resources/datasets-logo.png" alt="Wildlife datasets" width="300">
+<img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/datasets-logo.png" alt="Wildlife datasets" width="300">
 </p>
 
 <div align="center">
@@ -25,7 +25,7 @@
 
 </br>
 
-| <a href="https://github.com/WildlifeDatasets/wildlife-datasets"><img src="docs/resources/datasets-logo.png" alt="Wildlife datasets" width="200"></a>  | <a href="https://huggingface.co/BVRA/MegaDescriptor-L-384"><img src="docs/resources/megadescriptor-logo.png" alt="MegaDescriptor" width="200"></a> | <a href="https://github.com/WildlifeDatasets/wildlife-tools"><img src="docs/resources/tools-logo.png" alt="Wildlife tools" width="200"></a> |
+| <a href="https://github.com/WildlifeDatasets/wildlife-datasets"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/datasets-logo.png" alt="Wildlife datasets" width="200"></a>  | <a href="https://huggingface.co/BVRA/MegaDescriptor-L-384"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/megadescriptor-logo.png" alt="MegaDescriptor" width="200"></a> | <a href="https://github.com/WildlifeDatasets/wildlife-tools"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/tools-logo.png" alt="Wildlife tools" width="200"></a> |
 |:--------------:|:-----------:|:------------:|
 | Datasets for identification of individual animals | Trained model for individual re&#x2011;identification  | Tools for training re&#x2011;identification models |
 
@@ -48,9 +48,9 @@ An overview of the provided datasets is available in the [documentation](https:/
 We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and additional information such as source, number of poses, inclusion of timestamps, whether the animals were captured in the wild and whether the dataset contain multiple species.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/resources/Datasets_Summary_inverted.png">
-  <source media="(prefers-color-scheme: light)" srcset="docs/resources/Datasets_Summary.png">
-  <img alt="Dataset summary" src="docs/resources/Datasets_Summary.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/Datasets_Summary_inverted.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/Datasets_Summary.png">
+  <img alt="Dataset summary" src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/Datasets_Summary.png">
 </picture>
 
 
@@ -80,9 +80,9 @@ dataset.df
 ```
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/resources/MacaqueFaces_DataFrame_inverted.png">
-  <source media="(prefers-color-scheme: light)" srcset="docs/resources/MacaqueFaces_DataFrame.png">
-  <img alt="Overview of the MacaqueFaces dataset" src="docs/resources/MacaqueFaces_DataFrame.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/MacaqueFaces_DataFrame_inverted.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/MacaqueFaces_DataFrame.png">
+  <img alt="Overview of the MacaqueFaces dataset" src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/MacaqueFaces_DataFrame.png">
 </picture>
 
 The dataset also contains basic metadata including information about the number of individuals, time span, licences or published year.
@@ -92,9 +92,9 @@ dataset.metadata
 ```
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/resources/MacaqueFaces_Metadata_inverted.png">
-  <source media="(prefers-color-scheme: light)" srcset="docs/resources/MacaqueFaces_Metadata.png">
-  <img alt="Metadata of the MacaqueFaces dataset" src="docs/resources/MacaqueFaces_Metadata.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/MacaqueFaces_Metadata_inverted.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/MacaqueFaces_Metadata.png">
+  <img alt="Metadata of the MacaqueFaces dataset" src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/MacaqueFaces_Metadata.png">
 </picture>
 
 This particular dataset already contains cropped images of faces. Other datasets may contain uncropped images with bounding boxes or even segmentation masks.
@@ -103,7 +103,7 @@ This particular dataset already contains cropped images of faces. Other datasets
 d.plot_grid()
 ```
 
-![](docs/resources/MacaqueFaces_Grid.png)
+![](https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/MacaqueFaces_Grid.png)
 
 ## Additional functionality
 
