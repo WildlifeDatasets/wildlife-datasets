@@ -1866,16 +1866,17 @@ class PolarBearVidID(DatasetFactory):
         return self.finalize_catalogue(df)
 
 
-class SarahZelvy(DatasetFactory):
+class GreenSeaTurtles(DatasetFactory):
     # TODO: add metadata
+    # TODO: change the names everywhere
+    # TODO: fix documentation everywhere
     archive = 'sarahzelvy.zip'
 
     @classmethod
     def _download(cls):
-        # TODO: change exception_text. also update the documentation
         command = f"datasets download -d wildlifedatasets/sarahzelvy --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#greenseaturtles'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod

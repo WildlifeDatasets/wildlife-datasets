@@ -16,6 +16,7 @@ from .datasets import FriesianCattle2015, FriesianCattle2015v2
 from .datasets import FriesianCattle2017
 from .datasets import GiraffeZebraID
 from .datasets import Giraffes
+from .datasets import GreenSeaTurtles
 from .datasets import HappyWhale
 from .datasets import HumpbackWhaleID
 from .datasets import HyenaID2022
@@ -29,7 +30,6 @@ from .datasets import NOAARightWhale
 from .datasets import NyalaData
 from .datasets import OpenCows2020
 from .datasets import PolarBearVidID
-from .datasets import SarahZelvy
 from .datasets import SealID
 from .datasets import SealIDSegmented
 from .datasets import SeaStarReID2023
@@ -60,6 +60,7 @@ names_all = [
     FriesianCattle2017,
     GiraffeZebraID,
     Giraffes,
+    GreenSeaTurtles,
     HappyWhale,
     HumpbackWhaleID,
     HyenaID2022,
@@ -73,7 +74,6 @@ names_all = [
     NyalaData,
     OpenCows2020,
     PolarBearVidID,
-    SarahZelvy,
     SealID,
     SealIDSegmented,
     SeaStarReID2023,
@@ -88,6 +88,7 @@ names_all = [
 names_wild = [
     BelugaID,
     GiraffeZebraID,
+    GreenSeaTurtles,
     HappyWhale,
     HumpbackWhaleID,
     HyenaID2022,
@@ -95,7 +96,6 @@ names_wild = [
     NDD20v2,
     NOAARightWhale,
     NyalaData,
-    SarahZelvy,
     SealID,
     SeaTurtleID2022,
     StripeSpotter,
@@ -111,6 +111,7 @@ names_small = [
     FriesianCattle2015v2,
     FriesianCattle2017,
     IPanda50,
+    GreenSeaTurtles,
     MacaqueFaces,
     MPDD,
     NyalaData,
@@ -147,7 +148,7 @@ names_primates = [
 ]
 
 names_turtles = [
-    SarahZelvy,
+    GreenSeaTurtles,
     SeaTurtleIDHeads,
     ZindiTurtleRecall,
 ]
