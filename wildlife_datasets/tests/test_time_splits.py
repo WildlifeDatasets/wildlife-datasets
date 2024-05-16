@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 import pandas as pd
 from .utils import load_datasets, add_datasets
 from wildlife_datasets import datasets, splits
@@ -94,11 +95,14 @@ class TestTimeSplits(unittest.TestCase):
                 for idx_train1, idx_test1 in splitter.split(df):
                     idx_train2, idx_test2 = splitter.resplit_random(df, idx_train1, idx_test1)
                     
+                    idx1 = list(idx_train1) + list(idx_test1)
+                    idx2 = list(idx_train2) + list(idx_test2)
                     df_train1 = df.loc[idx_train1]
                     df_test1 = df.loc[idx_test1]
                     df_train2 = df.loc[idx_train2]
                     df_test2 = df.loc[idx_test2]
 
+                    self.assertEqual(np.sort(idx1).tolist(), np.sort(idx2).tolist())
                     self.assertEqual(set(df_train1['identity']), set(df_train2['identity']))
                     self.assertEqual(set(df_test1['identity']), set(df_test2['identity']))
                     for id in set(df_train1['identity']):
