@@ -37,6 +37,19 @@ class TestIdSplits(unittest.TestCase):
     def test_df(self):
         self.assertGreaterEqual(len(dfs), 1)
     
+    def test_unknown(self):
+        n_unknown = 0
+        for df in dfs:
+            n_unknown += sum(df['identity'] == 'unknown')
+        self.assertGreater(n_unknown, 0)
+
+    def test_date(self):
+        n_date = 0
+        for df in dfs:
+            if 'date' in df.columns:
+                n_date += 1
+        self.assertGreater(n_date, 0)
+
     def test_seed(self):
         for splitter in splitters1_all:
             for df in dfs:

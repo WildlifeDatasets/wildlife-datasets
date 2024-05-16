@@ -24,12 +24,12 @@ def add_datasets(dfs, skip_rows=100, ratio_unknown=0.2, ratio_years=0.2):
         df = dfs[i].copy()
         n_unknown = np.round(len(df)*ratio_unknown).astype(int)
         idx = np.random.permutation(range(len(df)))[:n_unknown]
-        df['identity'].iloc[idx] = 'unknown'
+        df.loc[df.index[idx], 'identity'] = 'unknown'
         dfs.append(df)
         # Add new years
         if 'date' in df.columns:
             df = dfs[i].copy()        
             n_years = np.round(len(df)*ratio_years).astype(int)
             df['date'] = pd.to_datetime(df['date']).apply(lambda x: x.date())
-            df['date'].iloc[:n_years] = df['date'].iloc[:n_years] + pd.offsets.DateOffset(years=10)
+            df.loc[df.index[:n_years], 'date'] = df['date'].iloc[:n_years] + pd.offsets.DateOffset(years=10)
     return dfs
