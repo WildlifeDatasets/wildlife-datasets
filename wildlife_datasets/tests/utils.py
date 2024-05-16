@@ -32,4 +32,6 @@ def add_datasets(dfs, skip_rows=100, ratio_unknown=0.2, ratio_years=0.2):
             n_years = np.round(len(df)*ratio_years).astype(int)
             df['date'] = pd.to_datetime(df['date']).apply(lambda x: x.date())
             df.loc[df.index[:n_years], 'date'] = df['date'].iloc[:n_years] + pd.offsets.DateOffset(years=10)
+            df['date'] = pd.to_datetime(df['date'])
+            dfs.append(df)
     return dfs

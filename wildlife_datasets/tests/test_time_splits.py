@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from .utils import load_datasets
+from .utils import load_datasets, add_datasets
 from wildlife_datasets import datasets, splits
 
 dataset_names = [
@@ -10,10 +10,25 @@ dataset_names = [
 
 tol = 0.1
 dfs = load_datasets(dataset_names)
+dfs = add_datasets(dfs)
 
 class TestTimeSplits(unittest.TestCase):
     def test_df(self):
-        self.assertGreaterEqual(len(dfs), 1)
+        self.assertEqual(len(dfs), 7)
+    
+    def test_unknown(self):
+        n_unknown = 0
+        for df in dfs:
+            if sum(df['identity'] == 'unknown'):
+                n_unknown += 1
+        self.assertEqual(n_unknown, 2)
+
+    def test_date(self):
+        n_date = 0
+        for df in dfs:
+            if 'date' in df.columns:
+                n_date += 1
+        self.assertEqual(n_date, 4)
     
     def test_seed(self):
         splitter = splits.TimeProportionSplit()
