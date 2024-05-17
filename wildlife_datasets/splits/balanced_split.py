@@ -62,8 +62,10 @@ class BalancedSplit():
             ) -> Tuple[np.ndarray, np.ndarray]:
 
         # TODO: add documementation
-        # TODO: handle unknown class
-        # TODO: write tests
+        # Modify the dataframe if the function is present
+        if hasattr(self, 'modify_df'):
+            df = self.modify_df(df)
+
         # Initialize the random number generator
         lcg = self.initialize_lcg()
 
