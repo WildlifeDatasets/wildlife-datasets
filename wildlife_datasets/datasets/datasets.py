@@ -744,21 +744,26 @@ class ATRW(DatasetFactory):
 
 
 class BelugaID(DatasetFactoryWildMe):
-    # TODO: train test splits were added
+    # TODO: new version released with test data
     metadata = metadata['BelugaID']
-    url = 'https://lilablobssc.blob.core.windows.net/liladata/wild-me/beluga.coco.tar.gz'
-    archive = 'beluga.coco.tar.gz'
-
-    def create_catalogue(self) -> pd.DataFrame:
-        return self.create_catalogue_wildme('beluga', 2022)
+    downloads = [
+        ('https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/beluga.coco.tar.gz', 'beluga.coco.tar.gz'),
+        ('https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/beluga-id-test.zip', 'beluga-id-test.zip'),
+    ]
 
     @classmethod
     def _download(cls):
-        utils.download_url(cls.url, cls.archive)
+        for url, archive in cls.downloads:
+            utils.download_url(url, archive)
 
     @classmethod
     def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
+        for url, archive in cls.downloads:
+            archive_name = archive.split('.')[0]
+            utils.extract_archive(archive, archive_name, delete=True)
+    
+    def create_catalogue(self) -> pd.DataFrame:
+        return self.create_catalogue_wildme(os.path.join('beluga', 'beluga'), 2022)
 
 
 class BirdIndividualID(DatasetFactory):
