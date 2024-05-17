@@ -249,7 +249,8 @@ class TimeCutoffSplitAll(TimeAwareSplit):
 
 
 class RandomProportion():
-    # TODO: add documentation
+    """Wrapper for resplits of TimeProportionSplit.
+    """
 
     def __init__(self, **kwargs):
         self.splitter = TimeProportionSplit(**kwargs)
