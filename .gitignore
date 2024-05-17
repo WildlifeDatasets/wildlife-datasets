@@ -1,4 +1,5 @@
 data/
+baselines/features
 venv/
 venv*
 venv_gpu/
