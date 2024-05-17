@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 from .utils import add_datasets, load_datasets
 from wildlife_datasets import datasets, splits
 
@@ -175,6 +176,28 @@ class TestIdSplits(unittest.TestCase):
                 
                 self.assertEqual(len(ids_test), n_class_test)
 
+    def test_resplit_features(self):
+        n_features = 5
+        for splitter in splitters1_all:
+            for df in dfs:
+                features = np.random.randn(len(df), n_features)
+                for idx_train1, idx_test1 in splitter.split(df):
+                    idx_train2, idx_test2 = splitter.resplit_by_features(df, features, idx_train1)
+                    
+                    idx1 = list(idx_train1) + list(idx_test1)
+                    idx2 = list(idx_train2) + list(idx_test2)
+                    df_train1 = df.loc[idx_train1]
+                    df_test1 = df.loc[idx_test1]
+                    df_train2 = df.loc[idx_train2]
+                    df_test2 = df.loc[idx_test2]
+
+                    self.assertEqual(np.sort(idx1).tolist(), np.sort(idx2).tolist())
+                    self.assertEqual(set(df_train1['identity']), set(df_train2['identity']))
+                    self.assertEqual(set(df_test1['identity']), set(df_test2['identity']))
+                    for id in set(df_train1['identity']):
+                        self.assertEqual(len(df_train1['identity']==id), len(df_train2['identity']==id))
+                    for id in set(df_test1['identity']):
+                        self.assertEqual(len(df_test1['identity']==id), len(df_test2['identity']==id))
 
 if __name__ == '__main__':
     unittest.main()
