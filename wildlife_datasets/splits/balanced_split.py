@@ -73,7 +73,7 @@ class BalancedSplit():
         # Loop over individuals and create a split for each
         idx_train_new = []
         for identity, df_identity in tqdm(df.groupby('identity')):
-            n_train = identity_train_counts[identity]        
+            n_train = identity_train_counts.get(identity, 0)
             if len(df_identity) - n_train <= 1:
                 # All or all but one samples into the training set
                 idx_remaining = np.array(df_identity.index)
