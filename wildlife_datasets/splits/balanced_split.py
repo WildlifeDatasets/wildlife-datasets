@@ -7,7 +7,6 @@ from .lcg import Lcg
 
 
 class BalancedSplit():
-    # TODO: change docs
     """Base class for splitting datasets into training and testing sets.
 
     Implements methods from [this paper](https://arxiv.org/abs/2211.10307).
@@ -16,16 +15,6 @@ class BalancedSplit():
     Its children are `IdentitySplit` and `TimeAwareSplit`.
     `IdentitySplit` has children `ClosedSetSplit`, `OpenSetSplit` and `DisjointSetSplit`.
     `TimeAwareSplit` has children `TimeProportionSplit` and `TimeCutoffSplit`.
-
-    Attributes:
-      df (pd.DataFrame): A dataframe of the data. It must contain columns
-        `identity` for all splits and `date` for time-aware splits.
-      seed (int): Initial seed for the random number generator LCG.
-      n (int): Number of samples.
-      n_class (int): Number of unique identities.
-      y (np.ndarray): List of identities.
-      y_counts (np.ndarray): List of sample counts for each unique identity.
-      y_unique (np.ndarray): List of unique sorted identities.
     """
 
     def initialize_lcg(self) -> Lcg:
@@ -60,8 +49,32 @@ class BalancedSplit():
             eps_step: float = 0.01,
             min_samples: int = 2,
             ) -> Tuple[np.ndarray, np.ndarray]:
+        
+        """Creates a random re-split of an already existing split.
 
-        # TODO: add documementation
+        The re-split is based on similarity of features.
+        It runs DBSCAN with increasing eps (cluster radius) until
+        the clusters are smaller than `n_max_cluster`.
+        Then it puts of similar images into the training set.
+        The rest is randomly split into training and testing sets.
+        The re-split mimics the split as the training set contains
+        the same number of samples for EACH individual.
+        The same goes for the testing set.
+        
+        Args:
+            df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
+            features (np.ndarray): An array of features with the same length as `df`.
+            idx_train (np.ndarray): Labels of the training set.
+            n_max_cluster (int, optional): Maximal size of cluster before `eps` stops increasing.
+            eps_min (float, optional): Lower bound for epsilon.
+            eps_max (float, optional): Upper bound for epsilon.
+            eps_step (float, optional): Step for epsilon.
+            min_samples (int, optional): Minimal cluster size.
+
+        Returns:
+            List of labels of the training and testing sets.
+        """
+        
         # Modify the dataframe if the function is present
         if hasattr(self, 'modify_df'):
             df = self.modify_df(df)
