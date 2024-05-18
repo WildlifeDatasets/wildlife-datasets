@@ -76,7 +76,7 @@ def prepare_atrw(root, new_root="data/ATRW", **kwargs):
     return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
 
 def prepare_beluga_id(root, new_root="data/BelugaID", **kwargs):
-    dataset_factory = datasets.BelugaID(root)
+    dataset_factory = datasets.BelugaIDv2(root)
     return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
 
 def prepare_bird_individual_id(root, new_root="data/BirdIndividualID", segmented=True, **kwargs):
@@ -172,9 +172,9 @@ def prepare_sea_star_reid_2023(root, new_root="data/SeaStarReID2023", **kwargs):
     dataset_factory = datasets.SeaStarReID2023(root)
     return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
 
-def prepare_sea_turtle_id_heads(root, new_root="data/SeaTurtleIDHeads", **kwargs):
-    dataset_factory = datasets.SeaTurtleIDHeads(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_sea_turtle_id_2022(root, new_root="data/SeaTurtleID2022", **kwargs):
+    dataset_factory = datasets.SeaTurtleID2022(root)
+    return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
 
 def prepare_smalst(root, new_root="data/SMALST", size=None, copy_files=True):
     dataset_factory = datasets.SMALST(root)
