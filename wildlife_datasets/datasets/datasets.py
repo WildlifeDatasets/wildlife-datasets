@@ -2155,6 +2155,8 @@ class StripeSpotter(DatasetFactory):
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#stripespotter'''
         if os.name == 'posix':
             os.system(f"zip -s- data-20110718.zip -O data-full.zip")
+            if not os.path.exists('data-full.zip'):
+                raise Exception('Download or extraction failed. Check if zip is installed.')
             os.system(f"unzip data-full.zip")
             os.remove('data-20110718.zip')
             os.remove('data-20110718.z01')
