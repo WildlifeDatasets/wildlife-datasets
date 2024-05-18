@@ -69,6 +69,11 @@ def prepare_aau_zebrafish(root, new_root="data/AAUZebraFish", **kwargs):
 
 def prepare_aerial_cattle_2017(root, new_root="data/AerialCattle2017", **kwargs):
     dataset_factory = datasets.AerialCattle2017(root)
+    # Take only every tenth frame in videos
+    idx = np.array([], dtype=int)
+    for _, df_red in dataset_factory.df.groupby(['identity', 'video']):
+        idx = np.hstack((idx, df_red.index[np.arange(0, len(df_red), 10)]))
+    dataset_factory.df = dataset_factory.df.loc[np.sort(idx)]
     return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
 
 def prepare_atrw(root, new_root="data/ATRW", **kwargs):
