@@ -2,7 +2,7 @@ from .datasets import DatasetFactory
 from .datasets import AAUZebraFish
 from .datasets import AerialCattle2017
 from .datasets import ATRW
-from .datasets import BelugaID
+from .datasets import BelugaID, BelugaIDv2
 from .datasets import BirdIndividualID
 from .datasets import BirdIndividualIDSegmented
 from .datasets import CatIndividualImages
@@ -46,7 +46,7 @@ names_all = [
     AAUZebraFish,
     AerialCattle2017,
     ATRW,
-    BelugaID,
+    BelugaIDv2,
     BirdIndividualID,
     BirdIndividualIDSegmented,
     CatIndividualImages,
@@ -86,7 +86,7 @@ names_all = [
 ]
 
 names_wild = [
-    BelugaID,
+    BelugaIDv2,
     GiraffeZebraID,
     GreenSeaTurtles,
     HappyWhale,
@@ -104,7 +104,7 @@ names_wild = [
 
 names_small = [
     AerialCattle2017,
-    BelugaID,
+    BelugaIDv2,
     CTai,
     CZoo,
     DogFaceNet,
@@ -154,7 +154,7 @@ names_turtles = [
 ]
 
 names_whales = [
-    BelugaID,
+    BelugaIDv2,
     HappyWhale,
     HumpbackWhaleID,
     NDD20v2,
