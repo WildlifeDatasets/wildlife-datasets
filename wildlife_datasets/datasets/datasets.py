@@ -644,13 +644,13 @@ class ATRW(DatasetFactory):
     archive = 'main.zip'
     downloads = [
         # Wild dataset (Detection)
-        ('https://lilablobssc.blob.core.windows.net/cvwc2019/test/atrw_detection_test.tar.gz', 'atrw_detection_test.tar.gz'),
+        ('https://lilawildlife.blob.core.windows.net/lila-wildlife/cvwc2019/test/atrw_detection_test.tar.gz', 'atrw_detection_test.tar.gz'),
 
         # Re-ID dataset
-        ('https://lilablobssc.blob.core.windows.net/cvwc2019/train/atrw_reid_train.tar.gz', 'atrw_reid_train.tar.gz'),
-        ('https://lilablobssc.blob.core.windows.net/cvwc2019/train/atrw_anno_reid_train.tar.gz', 'atrw_anno_reid_train.tar.gz'),
-        ('https://lilablobssc.blob.core.windows.net/cvwc2019/test/atrw_reid_test.tar.gz', 'atrw_reid_test.tar.gz'),
-        ('https://lilablobssc.blob.core.windows.net/cvwc2019/test/atrw_anno_reid_test.tar.gz', 'atrw_anno_reid_test.tar.gz'),
+        ('https://lilawildlife.blob.core.windows.net/lila-wildlife/cvwc2019/train/atrw_reid_train.tar.gz', 'atrw_reid_train.tar.gz'),
+        ('https://lilawildlife.blob.core.windows.net/lila-wildlife/cvwc2019/train/atrw_anno_reid_train.tar.gz', 'atrw_anno_reid_train.tar.gz'),
+        ('https://lilawildlife.blob.core.windows.net/lila-wildlife/cvwc2019/test/atrw_reid_test.tar.gz', 'atrw_reid_test.tar.gz'),
+        ('https://lilawildlife.blob.core.windows.net/lila-wildlife/cvwc2019/test/atrw_anno_reid_test.tar.gz', 'atrw_anno_reid_test.tar.gz'),
     ]
 
     @classmethod
@@ -744,20 +744,26 @@ class ATRW(DatasetFactory):
 
 
 class BelugaID(DatasetFactoryWildMe):
+    # TODO: new version released with test data
     metadata = metadata['BelugaID']
-    url = 'https://lilablobssc.blob.core.windows.net/liladata/wild-me/beluga.coco.tar.gz'
-    archive = 'beluga.coco.tar.gz'
-
-    def create_catalogue(self) -> pd.DataFrame:
-        return self.create_catalogue_wildme('beluga', 2022)
+    downloads = [
+        ('https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/beluga.coco.tar.gz', 'beluga.coco.tar.gz'),
+        ('https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/beluga-id-test.zip', 'beluga-id-test.zip'),
+    ]
 
     @classmethod
     def _download(cls):
-        utils.download_url(cls.url, cls.archive)
+        for url, archive in cls.downloads:
+            utils.download_url(url, archive)
 
     @classmethod
     def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
+        for url, archive in cls.downloads:
+            archive_name = archive.split('.')[0]
+            utils.extract_archive(archive, archive_name, delete=True)
+    
+    def create_catalogue(self) -> pd.DataFrame:
+        return self.create_catalogue_wildme(os.path.join('beluga', 'beluga'), 2022)
 
 
 class BirdIndividualID(DatasetFactory):
@@ -1256,7 +1262,7 @@ class FriesianCattle2017(DatasetFactory):
 
 class GiraffeZebraID(DatasetFactoryWildMe):
     metadata = metadata['GiraffeZebraID']
-    url = 'https://lilablobssc.blob.core.windows.net/giraffe-zebra-id/gzgc.coco.tar.gz'
+    url = 'https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/gzgc.coco.tar.gz'
     archive = 'gzgc.coco.tar.gz'
 
     @classmethod
@@ -1418,7 +1424,7 @@ class HumpbackWhaleID(DatasetFactory):
 
 class HyenaID2022(DatasetFactoryWildMe):
     metadata = metadata['HyenaID2022']
-    url = 'https://lilablobssc.blob.core.windows.net/liladata/wild-me/hyena.coco.tar.gz'
+    url = 'https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/hyena.coco.tar.gz'
     archive = 'hyena.coco.tar.gz'
 
     @classmethod
@@ -1518,7 +1524,7 @@ class IPanda50(DatasetFactory):
 
 class LeopardID2022(DatasetFactoryWildMe):
     metadata = metadata['LeopardID2022']
-    url = 'https://lilablobssc.blob.core.windows.net/liladata/wild-me/leopard.coco.tar.gz'
+    url = 'https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/leopard.coco.tar.gz'
     archive = 'leopard.coco.tar.gz'
 
     @classmethod
@@ -2149,6 +2155,8 @@ class StripeSpotter(DatasetFactory):
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#stripespotter'''
         if os.name == 'posix':
             os.system(f"zip -s- data-20110718.zip -O data-full.zip")
+            if not os.path.exists('data-full.zip'):
+                raise Exception('Download or extraction failed. Check if zip is installed.')
             os.system(f"unzip data-full.zip")
             os.remove('data-20110718.zip')
             os.remove('data-20110718.z01')
@@ -2185,7 +2193,7 @@ class StripeSpotter(DatasetFactory):
 
 class WhaleSharkID(DatasetFactoryWildMe):
     metadata = metadata['WhaleSharkID']
-    url = 'https://lilablobssc.blob.core.windows.net/whale-shark-id/whaleshark.coco.tar.gz'
+    url = 'https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/whaleshark.coco.tar.gz'
     archive = 'whaleshark.coco.tar.gz'
 
     @classmethod
