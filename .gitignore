@@ -1,5 +1,6 @@
 data/
 baselines/features
+baselines/clusters
 venv/
 venv*
 venv_gpu/
