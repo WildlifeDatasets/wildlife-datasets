@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.cluster import DBSCAN
 from tqdm import tqdm
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 from .lcg import Lcg
 
 
@@ -48,6 +48,7 @@ class BalancedSplit():
             eps_max: float = 0.50,
             eps_step: float = 0.01,
             min_samples: int = 2,
+            save_clusters_prefix: Optional[str] = None,
             ) -> Tuple[np.ndarray, np.ndarray]:
         
         """Creates a random re-split of an already existing split.
@@ -70,6 +71,7 @@ class BalancedSplit():
             eps_max (float, optional): Upper bound for epsilon.
             eps_step (float, optional): Step for epsilon.
             min_samples (int, optional): Minimal cluster size.
+            save_clusters_prefix (Optional[bool], optional): File name prefix for saving clusters.
 
         Returns:
             List of labels of the training and testing sets.
@@ -113,6 +115,9 @@ class BalancedSplit():
                         clusters_saved = clusters
                     else:
                         break
+                
+                if save_clusters_prefix is not None:
+                    np.save(f'{save_clusters_prefix}_{identity}.npy', clusters_saved.to_numpy())
                 
                 # Add all the clusters into the training set
                 idx_train_identity = []
