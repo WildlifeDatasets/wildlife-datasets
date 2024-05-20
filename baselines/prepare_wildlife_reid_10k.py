@@ -60,6 +60,8 @@ def resize_dataset(
                 'identity': row['identity'],
                 'path': img_path,
                 'species': species,
+                'date': row.get('date', np.nan),
+                'orientation': row.get('orientation', np.nan),
             })
     return pd.DataFrame(df_new)
 
@@ -227,6 +229,8 @@ def prepare_smalst(root, new_root="data/SMALST", size=None, copy_files=True):
             'identity': row['identity'],
             'path': img_path,
             'species': 'zebra',
+            'date': row.get('date', np.nan),
+            'orientation': row.get('orientation', np.nan),
         })
     return pd.DataFrame(df_new)
 
