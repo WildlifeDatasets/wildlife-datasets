@@ -5,8 +5,7 @@ from .datasets import DatasetFactory
 from .metadata import metadata
 
 class WildlifeReID10k(DatasetFactory):
-    # TODO: metadata
-    #metadata = metadata['SeaTurtleID2022']
+    metadata = metadata['WildlifeReID10k']
     archive = 'wildlifereid-10k.zip'
 
     @classmethod
