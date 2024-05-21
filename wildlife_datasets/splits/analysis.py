@@ -48,6 +48,7 @@ def analyze_split(df, idx_train, idx_test):
     
     n = len(idx_train)+len(idx_test)
     n_train = len(idx_train)
+    n_train_only = sum([sum(df_train['identity'] == ids) for ids in ids_train_only]) 
     n_test_only = sum([sum(df_test['identity'] == ids) for ids in ids_test_only])    
     
     ratio_train = n_train / n    
@@ -59,6 +60,7 @@ def analyze_split(df, idx_train, idx_test):
     print('Split: %s %s' % (time_split, id_split))
     print('Samples: train/test/unassigned/total = %d/%d/%d/%d' % (len(df_train), len(df_test), len(df)-len(df_train)-len(df_test), len(df)))
     print('Classes: train/test/unassigned/total = %d/%d/%d/%d' % (len(ids_train), len(ids_test), len(ids)-len(ids_train)-len(ids_test)+len(ids_train.intersection(ids_test)), len(ids)))
+    print('Samples: train only/test only        = %d/%d' % (n_train_only, n_test_only))
     print('Classes: train only/test only/joint  = %d/%d/%d' % (len(ids_train_only), len(ids_test_only),  len(ids_joint)))
     print('')    
     print('Fraction of train set     = %1.2f%%' % (100*ratio_train))
