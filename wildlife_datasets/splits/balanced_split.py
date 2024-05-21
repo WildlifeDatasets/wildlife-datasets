@@ -116,8 +116,10 @@ class BalancedSplit():
                     else:
                         break
                 
+                # Save the clusters
                 if save_clusters_prefix is not None:
-                    np.save(f'{save_clusters_prefix}_{identity}.npy', clusters_saved.to_numpy())
+                    df_save = pd.DataFrame({'cluster': clusters_saved.to_numpy()}, index=df_identity.index)
+                    df_save.to_csv(f'{save_clusters_prefix}_{identity}.csv')
                 
                 # Add all the clusters into the training set
                 idx_train_identity = []
