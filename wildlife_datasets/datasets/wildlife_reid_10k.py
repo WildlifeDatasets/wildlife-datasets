@@ -10,7 +10,6 @@ class WildlifeReID10k(DatasetFactory):
 
     @classmethod
     def _download(cls):
-        # TODO: check
         command = f"datasets download -d wildlifedatasets/wildlifereid-10k --force"
         exception_text = '''Kaggle must be setup.
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#wildlifereid-10k'''
@@ -22,5 +21,5 @@ class WildlifeReID10k(DatasetFactory):
 
     def create_catalogue(self) -> pd.DataFrame:
         df = pd.read_csv(os.path.join(self.root, 'metadata.csv'))
-        df['path'] = 'images/' + df['path']
+        df['image_id'] = range(len(df))
         return self.finalize_catalogue(df)
