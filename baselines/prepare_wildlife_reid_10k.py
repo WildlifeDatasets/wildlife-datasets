@@ -305,7 +305,7 @@ species_conversion = {
     'spotted hyena': 'hyena',
     'whale shark': 'shark',
     'zebra': 'zebra',
-    'zebra_finch': 'zebra',
+    'zebra_finch': 'bird',
     'zebra_plains': 'zebra',
     'zebrafish': 'fish',
 }
