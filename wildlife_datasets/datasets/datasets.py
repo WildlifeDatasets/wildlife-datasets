@@ -286,23 +286,28 @@ class DatasetFactory():
         im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, offset_h + n_rows*img_h + (n_rows-1)*offset), background_color)
 
         # Fill the grid image by image
-        for k in range(n):
-            i = k // n_cols
-            j = k % n_cols
+        pos_y = offset_h
+        for i in range(n_rows):
+            row_h = 0
+            for j in range(n_cols):
+                k = (n_cols)*i + j
+                if k < n:
+                    # Possibly rotate the image
+                    im = ims[k]
+                    if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
+                        im = im.transpose(Image.Transpose.ROTATE_90)
 
-            # Possibly rotate the image
-            im = ims[k]
-            if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
-                im = im.transpose(Image.Transpose.ROTATE_90)
+                    # Rescale the image
+                    im.thumbnail((img_w,img_h))
+                    row_h = max(row_h, im.size[1])
 
-            # Rescale the image
-            im.thumbnail((img_w,img_h))
-
-            # Place the image on the grid
-            pos_x = j*img_w + j*offset
-            pos_y = offset_h + i*img_h + i*offset        
-            im_grid.paste(im, (pos_x,pos_y))
-
+                    # Place the image on the grid
+                    pos_x = j*img_w + j*offset
+                    im_grid.paste(im, (pos_x,pos_y))
+            if row_h > 0:
+                pos_y += row_h + offset
+        im_grid = im_grid.crop((0, 0, im_grid.size[0], pos_y-offset))
+ 
         # Plot the image and add column headers if present
         fig = plt.figure()
         fig.patch.set_visible(False)
