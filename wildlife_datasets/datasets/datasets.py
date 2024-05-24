@@ -212,6 +212,7 @@ class DatasetFactory():
             header_cols: Optional[List[str]] = None,
             idx: Optional[Union[List[bool],List[int]]] = None,
             loader: Optional[Callable] = None,
+            background_color: Tuple[int] = (0, 0, 0),
             **kwargs
             ) -> None:
         """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
@@ -227,6 +228,7 @@ class DatasetFactory():
             header_cols (Optional[List[str]], optional): List of headers for each column.
             idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
             loader (Optional[Callable], optional): Loader of images. Useful for including transforms.
+            background_color (Tuple[int], optional): Background color of the grid.
         """
 
         if len(self.df) == 0:
@@ -281,7 +283,7 @@ class DatasetFactory():
             offset_h = 0
 
         # Create an empty image grid
-        im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, offset_h + n_rows*img_h + (n_rows-1)*offset))
+        im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, offset_h + n_rows*img_h + (n_rows-1)*offset), background_color)
 
         # Fill the grid image by image
         for k in range(n):
