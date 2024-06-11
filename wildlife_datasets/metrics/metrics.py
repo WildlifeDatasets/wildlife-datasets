@@ -1,31 +1,32 @@
 import numpy as np
 import sklearn.metrics as skm
 import pandas as pd
-from typing import List, Tuple, Union
-
-# TODO: add documentation
-# TODO: check all code
+from typing import List, Tuple, Union, Optional
 
 def unify_types(
         y_true: List,
         y_pred: List,
-        new_class: Union[int, str],
+        new_class: Optional[Union[int, str]] = None,
     ) -> Tuple[List, List, Union[int, str]]:
     """Unifies label types.
 
     If `new_class` is string and labels integers (or the other way round),
     it converts them to integers to allow to us numpy arrays.
+    If it is `None`, it only checks for compatibility of `y_true` and `y_pred`.
 
     Args:
         y_true (List): List of true labels.
         y_pred (List): List of predictions.
-        new_class (Union[int, str]): Name of the new class.
+        new_class (Optional[Union[int, str]]): Name of the new class.
 
     Returns:
         Unified label types.
     """
 
-    y_all = list(set(y_true).union(set(y_pred)) - set([new_class]))            
+    if new_class is not None:
+        y_all = list(set(y_true).union(set(y_pred)) - set([new_class]))
+    else:
+        y_all = list(set(y_true).union(set(y_pred)))
     is_integer = pd.api.types.is_integer_dtype(pd.Series(y_all))
     is_string = pd.api.types.is_string_dtype(pd.Series(y_all))
     if not is_integer and not is_string:
@@ -282,7 +283,7 @@ def average_precision(
         Computed average precision.
     """
 
-    unify_types([y_true], y_pred, None)
+    unify_types([y_true], y_pred)
     a = np.array(y_pred) == y_true
     b = np.linspace(1, 0, len(y_pred))
     if sum(a) == 0:
@@ -354,8 +355,23 @@ def BAKS(
         Computed BAKS.
     """
 
-    idx = ~np.isin(y_true, identity_test_only)
-    df = pd.DataFrame({'y_true': np.array(y_true)[idx], 'y_pred': np.array(y_pred)[idx]})
+    # Need to keep the object type due to mixed arrays
+    y_true = np.array(y_true, dtype=object)
+    y_pred = np.array(y_pred, dtype=object)
+    identity_test_only = np.array(identity_test_only, dtype=object)
+
+    # Remove data in identity_test_only
+    idx = np.where(~np.isin(y_true, identity_test_only))[0]
+    y_true_idx = y_true[idx]
+    y_pred_idx = y_pred[idx]
+    if len(y_true_idx) == 0:
+        return np.nan
+    
+    # Check if the remaining types are compatible
+    unify_types(y_true_idx, y_pred_idx)
+    df = pd.DataFrame({'y_true': y_true_idx, 'y_pred': y_pred_idx})
+
+    # Compute the balanced accuracy
     accuracy = 0
     for _, df_identity in df.groupby('y_true'):
         accuracy += 1 / df['y_true'].nunique() * np.mean(df_identity['y_pred'] == df_identity['y_true'])
@@ -380,10 +396,24 @@ def BAUS(
     Returns:
         Computed BAUS.
     """
-    
-    # TODO: there should be unify types
-    idx = np.isin(y_true, identity_test_only)
-    df = pd.DataFrame({'y_true': np.array(y_true)[idx], 'y_pred': np.array(y_pred)[idx]})
+
+    # Need to keep the object type due to mixed arrays
+    y_true = np.array(y_true, dtype=object)
+    y_pred = np.array(y_pred, dtype=object)
+    identity_test_only = np.array(identity_test_only, dtype=object)
+
+    # Remove data not in identity_test_only
+    idx = np.where(np.isin(y_true, identity_test_only))[0]
+    y_true_idx = y_true[idx]
+    y_pred_idx = y_pred[idx]
+    if len(y_true_idx) == 0:
+        return np.nan
+
+    # Check if the remaining types are compatible
+    y_true_idx, y_pred_idx, new_class = unify_types(y_true_idx, y_pred_idx, new_class)
+    df = pd.DataFrame({'y_true': y_true_idx, 'y_pred': y_pred_idx})
+
+    # Compute the balanced accuracy
     accuracy = 0
     for _, df_identity in df.groupby('y_true'):
         accuracy += 1 / df['y_true'].nunique() * np.mean(df_identity['y_pred'] == new_class)
