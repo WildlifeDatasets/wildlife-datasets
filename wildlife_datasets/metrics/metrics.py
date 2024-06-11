@@ -335,3 +335,56 @@ def auc_roc_new_class(
     a = np.array(y_true) == new_class
     b = -np.array(y_score)
     return skm.roc_auc_score(a, b)
+
+def BAKS(
+        y_true: List,
+        y_pred: List,
+        identity_test_only: List,
+    ) -> float:
+    """Computes BAKS (balanced accuracy on known samples).
+
+    It ignores `identity_test_only` because they are unknown identities.
+
+    Args:
+        y_true (List): List of true labels.
+        y_score (List): List of scores.
+        identity_test_only (List): List of new identities (only in the testing set).
+
+    Returns:
+        Computed BAKS.
+    """
+
+    idx = ~np.isin(y_true, identity_test_only)
+    df = pd.DataFrame({'y_true': np.array(y_true)[idx], 'y_pred': np.array(y_pred)[idx]})
+    accuracy = 0
+    for _, df_identity in df.groupby('y_true'):
+        accuracy += 1 / df['y_true'].nunique() * np.mean(df_identity['y_pred'] == df_identity['y_true'])
+    return accuracy
+
+def BAUS(
+        y_true: List,
+        y_pred: List,
+        identity_test_only: List,
+        new_class: Union[int, str]
+    ) -> float:
+    """Computes BAUS (balanced accuracy on unknown samples).
+
+    It handles only `identity_test_only` because they are unknown identities.
+
+    Args:
+        y_true (List): List of true labels.
+        y_score (List): List of scores.
+        identity_test_only (List): List of new identities (only in the testing set).
+        new_class (Union[int, str]): Name of the new class.
+
+    Returns:
+        Computed BAUS.
+    """
+    
+    # TODO: there should be unify types
+    idx = np.isin(y_true, identity_test_only)
+    df = pd.DataFrame({'y_true': np.array(y_true)[idx], 'y_pred': np.array(y_pred)[idx]})
+    accuracy = 0
+    for _, df_identity in df.groupby('y_true'):
+        accuracy += 1 / df['y_true'].nunique() * np.mean(df_identity['y_pred'] == new_class)
+    return accuracy
