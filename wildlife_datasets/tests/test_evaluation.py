@@ -391,6 +391,87 @@ class TestEvaluation(unittest.TestCase):
         y_pred = y_pred_basis        
         self.assertAlmostEqual(metric(y_true, y_pred), expected_value, delta=tol)
 
+    def test_baks(self):
+        identity_test_only = [[], [4], [1], [1, 2], [1, 3], [1, 2, 3]]
+        expected_values = [5/6, 5/6, 3/4, 1/2, 1, np.nan]
+        metric = metrics.BAKS
+        y_true_basis = y_true1
+        y_pred_basis = y_pred1
+
+        for id_test_only, expected_value in zip(identity_test_only, expected_values):
+            y_true = y_true_basis
+            y_pred = y_pred_basis
+            if id_test_only == [1, 2, 3]:
+                np.testing.assert_equal(metric(y_true, y_pred, id_test_only), expected_value)
+            else:
+                self.assertAlmostEqual(metric(y_true, y_pred, id_test_only), expected_value, delta=tol)
+                self.assertAlmostEqual(metric(np.array(y_true), y_pred, id_test_only), expected_value, delta=tol)
+                self.assertAlmostEqual(metric(y_true, np.array(y_pred), id_test_only), expected_value, delta=tol)
+                self.assertAlmostEqual(metric(y_true, y_pred, np.array(id_test_only)), expected_value, delta=tol)
+         
+        for id_test_only, expected_value in zip(identity_test_only, expected_values):
+            y_true = encode(y_true_basis, encoder1)
+            y_pred = encode(y_pred_basis, encoder1)
+            if id_test_only == [1, 2, 3]:
+                id_test_only = encode(id_test_only, encoder1)                
+                np.testing.assert_equal(metric(y_true, y_pred, id_test_only), expected_value)
+            else:
+                id_test_only = encode(id_test_only, encoder1)
+                self.assertAlmostEqual(metric(y_true, y_pred, id_test_only), expected_value, delta=tol)
+        
+        for id_test_only, expected_value in zip(identity_test_only, expected_values):
+            # The case [1, 3] is actually ok because the mixed labels are removed
+            y_true = encode(y_true_basis, encoder2)
+            y_pred = encode(y_pred_basis, encoder2)
+            if id_test_only == [1, 2, 3]:
+                id_test_only = encode(id_test_only, encoder2)
+                np.testing.assert_equal(metric(y_true, y_pred, id_test_only), expected_value)
+            elif id_test_only != [1, 3]:
+                id_test_only = encode(id_test_only, encoder2)
+                self.assertRaises(Exception, metric, y_true, y_pred, id_test_only)
+         
+        for id_test_only, expected_value in zip(identity_test_only, expected_values):
+            # The last case is actually ok because the mixed labels are removed
+            y_true = encode(y_true_basis, encoder3)
+            y_pred = encode(y_pred_basis, encoder3)
+            if id_test_only == [1, 2, 3]:
+                id_test_only = encode(id_test_only, encoder3)
+                np.testing.assert_equal(metric(y_true, y_pred, id_test_only), expected_value)
+            elif id_test_only != [1, 3]:
+                id_test_only = encode(id_test_only, encoder3)
+                self.assertRaises(Exception, metric, y_true, y_pred, id_test_only)
+
+    def test_baus(self):
+        identity_test_only = [[], [4], [1], [1, 2], [1, 3], [1, 2, 3]]
+        expected_values = [np.nan, np.nan, 1, 1/2, 3/4, 1/2]
+        new_class_basis = 1        
+        metric = metrics.BAUS
+        y_true_basis = y_true1
+        y_pred_basis = y_pred1
+
+        for id_test_only, expected_value in zip(identity_test_only, expected_values):
+            y_true = y_true_basis
+            y_pred = y_pred_basis
+            new_class = new_class_basis
+            if id_test_only == [] or id_test_only == [4]:
+                np.testing.assert_equal(metric(y_true, y_pred, id_test_only, new_class), expected_value)
+            else:
+                self.assertAlmostEqual(metric(y_true, y_pred, id_test_only, new_class), expected_value, delta=tol)
+                self.assertAlmostEqual(metric(np.array(y_true), y_pred, id_test_only, new_class), expected_value, delta=tol)
+                self.assertAlmostEqual(metric(y_true, np.array(y_pred), id_test_only, new_class), expected_value, delta=tol)
+                self.assertAlmostEqual(metric(y_true, y_pred, np.array(id_test_only), new_class), expected_value, delta=tol)
+        
+        for id_test_only, expected_value in zip(identity_test_only, expected_values):
+            y_true = encode(y_true_basis, encoder1)
+            y_pred = encode(y_pred_basis, encoder1)
+            new_class = encode(new_class_basis, encoder1)
+            if id_test_only == [] or id_test_only == [4]:
+                id_test_only = encode(id_test_only, encoder1)                
+                np.testing.assert_equal(metric(y_true, y_pred, id_test_only, new_class), expected_value)
+            else:
+                id_test_only = encode(id_test_only, encoder1)
+                self.assertAlmostEqual(metric(y_true, y_pred, id_test_only, new_class), expected_value, delta=tol)
+         
 if __name__ == '__main__':
     unittest.main()
 
