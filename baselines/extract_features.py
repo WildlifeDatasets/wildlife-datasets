@@ -6,7 +6,7 @@ from wildlife_tools.features import DeepFeatures
 from wildlife_tools.data import WildlifeDataset
 
 device = 'cuda'
-root = '/data/wildlife_datasets/data/WildlifeReID-10k'
+root = '/data/wildlife_datasets/data/WildlifeReID10k'
 d = datasets.WildlifeReID10k(root)
 
 # Extract features by Dinov2
