@@ -12,7 +12,7 @@ class AmvrakikosTurtles(DatasetFactory):
     def _download(cls):
         command = f"datasets download -d wildlifedatasets/amvrakikosturtles --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#amvrakikosturtles'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#amvrakikosturtles'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod

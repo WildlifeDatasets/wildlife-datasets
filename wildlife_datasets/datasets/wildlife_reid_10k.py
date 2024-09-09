@@ -12,7 +12,7 @@ class WildlifeReID10k(DatasetFactory):
     def _download(cls):
         command = f"datasets download -d wildlifedatasets/wildlifereid-10k --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#wildlifereid-10k'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#wildlifereid-10k'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod

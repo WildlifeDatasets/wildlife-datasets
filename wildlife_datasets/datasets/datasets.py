@@ -565,7 +565,7 @@ class AAUZebraFish(DatasetFactory):
     def _download(cls):
         command = f"datasets download -d aalborguniversity/aau-zebrafish-reid"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#aauzebrafish'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#aauzebrafish'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
@@ -815,7 +815,7 @@ class BirdIndividualID(DatasetFactory):
     @classmethod
     def _download(cls):
         exception_text = '''Dataset must be downloaded manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#birdindividualid'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#birdindividualid'''
         raise Exception(exception_text)
         # utils.gdown_download(cls.url, cls.archive, exception_text=exception_text)
     
@@ -907,7 +907,7 @@ class CatIndividualImages(DatasetFactory):
     def _download(cls):
         command = f"datasets download -d timost1234/cat-individuals --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#catindividualimages'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#catindividualimages'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
@@ -1324,7 +1324,7 @@ class Giraffes(DatasetFactory):
         url = 'ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021/'
         command = f"wget -rpk -l 10 -np -c --random-wait -U Mozilla {url} -P '.' "
         exception_text = '''Download works only on Linux. Please download it manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#giraffes'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#giraffes'''
         if os.name == 'posix':
             os.system(command)
         else:
@@ -1361,7 +1361,7 @@ class HappyWhale(DatasetFactory):
     def _download(cls):
         command = f"competitions download -c happy-whale-and-dolphin --force"
         exception_text = '''Kaggle terms must be agreed with.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#happywhale'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#happywhale'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
@@ -1371,7 +1371,7 @@ class HappyWhale(DatasetFactory):
         except:
             exception_text = '''Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
-                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#happywhale'''
+                Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#happywhale'''
             raise Exception(exception_text)
     
     def create_catalogue(self) -> pd.DataFrame:
@@ -1419,7 +1419,7 @@ class HumpbackWhaleID(DatasetFactory):
     def _download(cls):
         command = f"competitions download -c humpback-whale-identification --force"
         exception_text = '''Kaggle terms must be agreed with.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#humpbackwhale'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#humpbackwhale'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
@@ -1429,7 +1429,7 @@ class HumpbackWhaleID(DatasetFactory):
         except:
             exception_text = '''Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
-                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#humpbackwhale'''
+                Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#humpbackwhale'''
             raise Exception(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -1489,7 +1489,7 @@ class IPanda50(DatasetFactory):
     @classmethod
     def _download(cls):
         exception_text = '''Download failed. GDown quota probably reached. Download dataset manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#ipanda50'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#ipanda50'''
         for url, archive in cls.downloads:
             utils.gdown_download(url, archive, exception_text=exception_text)
 
@@ -1768,7 +1768,7 @@ class NOAARightWhale(DatasetFactory):
     def _download(cls):
         command = f"competitions download -c noaa-right-whale-recognition --force"
         exception_text = '''Kaggle terms must be agreed with.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#noaarightwhale'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#noaarightwhale'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
@@ -1782,7 +1782,7 @@ class NOAARightWhale(DatasetFactory):
         except:
             exception_text = '''Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
-                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#noaarightwhale'''
+                Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#noaarightwhale'''
             raise Exception(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -1921,7 +1921,7 @@ class GreenSeaTurtles(DatasetFactory):
     def _download(cls):
         command = f"datasets download -d wildlifedatasets/sarahzelvy --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#greenseaturtles'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#greenseaturtles'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
@@ -1952,7 +1952,7 @@ class SealID(DatasetFactory):
     @classmethod
     def _download(cls, url=None):
         if url is None:
-            raise(Exception('URL must be provided for SealID.\nCheck https://wildlifedatasets.github.io/wildlife-datasets/downloads/#sealid'))
+            raise(Exception('URL must be provided for SealID.\nCheck https://wildlifedatasets.github.io/wildlife-datasets/preprocessing/#sealid'))
         utils.download_url(url, cls.archive)
 
     @classmethod
@@ -2048,7 +2048,7 @@ class SeaTurtleID2022(DatasetFactory):
     def _download(cls):
         command = f"datasets download -d wildlifedatasets/seaturtleid2022 --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#seaturtleid'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
@@ -2095,7 +2095,7 @@ class SeaTurtleIDHeads(DatasetFactory):
     def _download(cls):
         command = f"datasets download -d wildlifedatasets/seaturtleidheads --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#seaturtleid'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
@@ -2133,13 +2133,13 @@ class SMALST(DatasetFactory):
     @classmethod
     def _download(cls):
         exception_text = '''Download failed. GDown quota probably reached. Download dataset manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#smalst'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#smalst'''
         utils.gdown_download(cls.url, cls.archive, exception_text)
 
     @classmethod
     def _extract(cls):
         exception_text = '''Extracting works only on Linux. Please extract it manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#smalst'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#smalst'''
         if os.name == 'posix':
             os.system('jar xvf ' + cls.archive)
             os.remove(cls.archive)
@@ -2191,7 +2191,7 @@ class StripeSpotter(DatasetFactory):
     @classmethod
     def _extract(cls):
         exception_text = '''Extracting works only on Linux. Please extract it manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#stripespotter'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#stripespotter'''
         if os.name == 'posix':
             os.system(f"zip -s- data-20110718.zip -O data-full.zip")
             if not os.path.exists('data-full.zip'):

@@ -13,7 +13,7 @@ class ReunionTurtles(DatasetFactory):
     def _download(cls):
         command = f"datasets download -d wildlifedatasets/reunionturtles --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#reunionturtles'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#reunionturtles'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
