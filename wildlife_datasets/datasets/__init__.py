@@ -1,6 +1,7 @@
 from .datasets import DatasetFactory
 from .datasets import AAUZebraFish
 from .datasets import AerialCattle2017
+from .amvrakikos_turtles import AmvrakikosTurtles
 from .datasets import ATRW
 from .datasets import BelugaID, BelugaIDv2
 from .datasets import BirdIndividualID
@@ -30,6 +31,7 @@ from .datasets import NOAARightWhale
 from .datasets import NyalaData
 from .datasets import OpenCows2020
 from .datasets import PolarBearVidID
+from .reunion_turtles import ReunionTurtles
 from .datasets import SealID
 from .datasets import SealIDSegmented
 from .datasets import SeaStarReID2023
@@ -39,6 +41,7 @@ from .datasets import SMALST
 from .datasets import StripeSpotter
 from .wildlife_reid_10k import WildlifeReID10k
 from .datasets import WhaleSharkID
+from .zakynthos_turtles import ZakynthosTurtles
 from .datasets import ZindiTurtleRecall
 from .metadata import Metadata
 from .utils import get_image
@@ -46,6 +49,7 @@ from .utils import get_image
 names_all = [
     AAUZebraFish,
     AerialCattle2017,
+    AmvrakikosTurtles,
     ATRW,
     BelugaIDv2,
     BirdIndividualID,
@@ -75,6 +79,7 @@ names_all = [
     NyalaData,
     OpenCows2020,
     PolarBearVidID,
+    ReunionTurtles,
     SealID,
     SealIDSegmented,
     SeaStarReID2023,
@@ -83,10 +88,12 @@ names_all = [
     SMALST,
     StripeSpotter,
     WhaleSharkID,
+    ZakynthosTurtles,
     ZindiTurtleRecall,
 ]
 
 names_wild = [
+    AmvrakikosTurtles,
     BelugaIDv2,
     GiraffeZebraID,
     GreenSeaTurtles,
@@ -97,10 +104,12 @@ names_wild = [
     NDD20v2,
     NOAARightWhale,
     NyalaData,
+    ReunionTurtles,
     SealID,
     SeaTurtleID2022,
     StripeSpotter,
     WhaleSharkID,
+    ZakynthosTurtles,
 ]
 
 names_small = [
@@ -117,8 +126,10 @@ names_small = [
     MPDD,
     NyalaData,
     PolarBearVidID,
+    ReunionTurtles,
     SeaTurtleIDHeads,
     StripeSpotter,
+    ZakynthosTurtles,
 ]
 
 names_cows = [
@@ -149,8 +160,11 @@ names_primates = [
 ]
 
 names_turtles = [
+    AmvrakikosTurtles,
     GreenSeaTurtles,
+    ReunionTurtles,
     SeaTurtleIDHeads,
+    ZakynthosTurtles,
     ZindiTurtleRecall,
 ]
 
