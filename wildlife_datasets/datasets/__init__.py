@@ -13,6 +13,7 @@ from .datasets import CowDataset
 from .datasets import Cows2021, Cows2021v2
 from .datasets import DogFaceNet
 from .datasets import Drosophila
+from .elpephants import ELPephants
 from .datasets import FriesianCattle2015, FriesianCattle2015v2
 from .datasets import FriesianCattle2017
 from .datasets import GiraffeZebraID
@@ -61,6 +62,7 @@ names_all = [
     Cows2021v2,
     DogFaceNet,
     Drosophila,
+    ELPephants,
     FriesianCattle2015v2,
     FriesianCattle2017,
     GiraffeZebraID,
@@ -95,6 +97,7 @@ names_all = [
 names_wild = [
     AmvrakikosTurtles,
     BelugaIDv2,
+    ELPephants,
     GiraffeZebraID,
     GreenSeaTurtles,
     HappyWhale,
@@ -118,6 +121,7 @@ names_small = [
     CTai,
     CZoo,
     DogFaceNet,
+    ELPephants,
     FriesianCattle2015v2,
     FriesianCattle2017,
     IPanda50,
