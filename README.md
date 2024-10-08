@@ -44,8 +44,11 @@ An introductory example is provided in a [Jupyter notebook](notebooks/introducti
 ## Changelog
 
 [08/10/2024] Added datasets AmvrakikosTurtles (sea turtles), ELPephants (elephants), ReunionTurtles (sea turtles) and ZakynthosTurtles (sea turtles).
+
 [13/06/2024] Added dataset WildlifeReID-10k (unification of multiple datasets).
+
 [09/05/2024] Added datasets CatIndividualImages (cats), CowDataset (cows) and DogFaceNet (dogs).
+
 [28/02/2024] Added datasets MPDD (dogs), PolarBearVidID (polar bears) and SeaStarReID2023 (sea stars).
 
 ## Summary of datasets
