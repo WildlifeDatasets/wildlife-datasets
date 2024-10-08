@@ -6,6 +6,7 @@ Some of the datasets require special treatment or the download of extraction wor
 |------------------------|:----------------------|:---------|
 | [AAUZebrafish](https://www.kaggle.com/datasets/aalborguniversity/aau-zebrafish-reid)          | Kaggle required                   |                  |
 | [AerialCattle2017](https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh)          |                                |                  |
+| [AmvrakikosTurtles](https://www.kaggle.com/datasets/wildlifedatasets/amvrakikosturtles)          | Kaggle required                   |                  |
 | [ATRW](https://lila.science/datasets/atrw)                   |                                |                  |
 | [BelugaID](https://lila.science/datasets/beluga-id-2022/)              |                                |                  |
 | [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID)     | Manual download    | Few images removed |
@@ -16,6 +17,7 @@ Some of the datasets require special treatment or the download of extraction wor
 | [Cows2021](https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7)              |                                | Labels fixed  |
 | [DogFaceNet](https://github.com/GuillaumeMougeot/DogFaceNet)          |                    |                  |
 | [Drosophila](https://github.com/j-schneider/fly_eye)             |                                | Few images removed |
+| [ELPephants](https://inf-cv.uni-jena.de/home/research/datasets/elpephants/)     | Manual download    |     |
 | [FriesianCattle2015](https://data.bris.ac.uk/data/dataset/wurzq71kfm561ljahbwjhx9n3)   |                                | Labels fixed |
 | [FriesianCattle2017](https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r)   |                                |                  |
 | [Giraffes](ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021)       | Only linux: downloading                               |                  |
@@ -33,12 +35,14 @@ Some of the datasets require special treatment or the download of extraction wor
 | [NyalaData](https://github.com/tvanzyl/wildlife_reidentification)             |                                |                  |
 | [OpenCows2020](https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17)           |                                |                  |
 | [PolarBearVidID](https://zenodo.org/records/7564529)          |                                |                  |
+| [ReunionTurtles](https://www.kaggle.com/datasets/wildlifedatasets/reunionturtles)          | Kaggle required                   |                  |
 | [SealID](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53)                 | Download with single use token |                  |
 | [SeaStarReID2023](https://lila.science/sea-star-re-id-2023/)          |                                |                  |
 | [SeaTurtleID](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid)                 | Kaggle required                   |                  |
 | [SMALST](https://github.com/silviazuffi/smalst)                 | Only linux: extracting            |                  |
 | [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads)          | Only linux: extracting            |                  |
 | [WhaleSharkID](https://lila.science/datasets/whale-shark-id)         |                                |                  |
+| [ZakynthosTurtles](https://www.kaggle.com/datasets/wildlifedatasets/zakynthosturtles)          | Kaggle required                   |                  |
 | [ZindiTurtleRecall](https://zindi.africa/competitions/turtle-recall-conservation-challenge)    |                                |                  |
 
 ## Manual download and extracting
@@ -48,6 +52,10 @@ Some of the datasets require special treatment or the download of extraction wor
 Some datasets are stored on Kaggle. To use our automatic download method, follow the [steps](https://www.kaggle.com/docs/api) described in the Installation and Authentication sections.
 
 ### AAUZebrafish
+
+[Kaggle requirements](#kaggle) need to be satisfied.
+
+### AmvrakikosTurtles
 
 [Kaggle requirements](#kaggle) need to be satisfied.
 
@@ -64,6 +72,14 @@ to extract it. Do not extract it manually because there is some postprocessing i
 ### CatIndividualImages
 
 [Kaggle requirements](#kaggle) need to be satisfied.
+
+### ELPephants
+
+The dataset is stored [privately](https://inf-cv.uni-jena.de/home/research/datasets/elpephants/) and needs to acknowledge license terms before downloading. After doing so, extract it manually or run
+
+```python
+datasets.ELPephants.extract('data/ELPephants')
+```
 
 ### Giraffes
 
@@ -88,6 +104,10 @@ datasets.IPanda50.extract('data/IPanda50')
 ### NOAARightWhale
 
 [Kaggle requirements](#kaggle) need to be satisfied. Also you need to go to the [competition website](https://www.kaggle.com/c/noaa-right-whale-recognition), the Data tab and agree with terms.
+
+### ReunionTurtles
+
+[Kaggle requirements](#kaggle) need to be satisfied.
 
 ### SealID
 
@@ -121,6 +141,10 @@ datasets.StripeSpotter.download('data/StripeSpotter')
 ```
 
 to download the dataset and then extract it manually.
+
+### ZakynthosTurtles
+
+[Kaggle requirements](#kaggle) need to be satisfied.
 
 ## Dataset modifications
 

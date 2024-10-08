@@ -14,7 +14,7 @@ Datasets AerialCattle2017, Cows2021, FriesianCattle2015, FriesianCattle2017 and 
 
 This dataset consists of photographs of Mediterranean loggerhead sea turtles taken at Amvrakikos Gulf, Greece (39°02'N, 21°06'E) which is wellknown foraging site for adult and juvenile turtles. Photographs were collected as part of a long-term capture-mark-recapture project conducted by ARCHELON, the Sea Turtle Protection Society of Greece. Turtles were captured from a boat using the sea turtle rodeo technique and among other data collected, photographs of the head sides were taken while the animal was on the boat. In all photographs, either the whole side of the head was fully shaded or fully illuminated by the sun. All photographs in this dataset were taken during the summer months (June-August) between 2014 and 2022, using a selection of different digital cameras of varying optical resolution.
 
-![](images/grid_AmvrokikosTurtles.png)
+![](images/grid_AmvrakikosTurtles.png)
 
 
 ## ATRW
@@ -186,7 +186,7 @@ PolarBearVidID is a dataset of 13 individual polar bears from 6 German zoos. The
 
 ## ReunionTurtles
 
-This dataset consists of photographs taken between 2007 and 2024 on Reunion Island, a French territory in the Indian Ocean (21°0'S, 55°30'E), whose shallow waters are known to be a development and foraging ground for green and hawksbill turtles. Photographs were taken by recreational divers as part of a citizen science programme with no specific associated protocols (no specific viewing angle or distance). Citizens shared their photographs whenever they wished with scientists for further analysis. All photographs are turtle head profiles taken during the same encounter and are stored in the TORSOOI database, see Section 3.4 for more details.
+This dataset consists of photographs taken between 2007 and 2024 on Reunion Island, a French territory in the Indian Ocean (21°0'S, 55°30'E), whose shallow waters are known to be a development and foraging ground for green and hawksbill turtles. Photographs were taken by recreational divers as part of a citizen science programme with no specific associated protocols (no specific viewing angle or distance). Citizens shared their photographs whenever they wished with scientists for further analysis. All photographs are turtle head profiles taken during the same encounter and are stored in the TORSOOI database.
 
 ![](images/grid_ReunionTurtles.png)
 

@@ -33,6 +33,7 @@ print_list_red(datasets.names_small) # markdown-exec: hide
 ![](images/grid_CTai.png)
 ![](images/grid_CZoo.png)
 ![](images/grid_DogFaceNet.png)
+![](images/grid_ELPephants.png)
 ![](images/grid_FriesianCattle2015.png)
 ![](images/grid_FriesianCattle2017.png)
 ![](images/grid_IPanda50.png)
@@ -42,6 +43,7 @@ print_list_red(datasets.names_small) # markdown-exec: hide
 ![](images/grid_PolarBearVidID.png)
 ![](images/grid_SeaTurtleIDHeads.png)
 ![](images/grid_StripeSpotter.png)
+![](images/grid_ZakynthosTurtles.png)
 
 
 ## Wild datasets
@@ -54,7 +56,9 @@ datasets.names_wild
 print_list_red(datasets.names_wild) # markdown-exec: hide
 ```
 
+![](images/grid_AmvrakikosTurtles.png)
 ![](images/grid_BelugaID.png)
+![](images/grid_ELPephants.png)
 ![](images/grid_GiraffeZebraID.png)
 ![](images/grid_HappyWhale.png)
 ![](images/grid_HumpbackWhaleID.png)
@@ -63,10 +67,12 @@ print_list_red(datasets.names_wild) # markdown-exec: hide
 ![](images/grid_NDD20.png)
 ![](images/grid_NOAARightWhale.png)
 ![](images/grid_NyalaData.png)
+![](images/grid_ReunionTurtles.png)
 ![](images/grid_SealID.png)
 ![](images/grid_SeaTurtleID.png)
 ![](images/grid_StripeSpotter.png)
 ![](images/grid_WhaleSharkID.png)
+![](images/grid_ZakynthosTurtles.png)
 
 
 ## Transfer learning
@@ -84,7 +90,10 @@ datasets.names_turtles
 print_list_red(datasets.names_turtles) # markdown-exec: hide
 ```
 
+![](images/grid_AmvrakikosTurtles.png)
+![](images/grid_ReunionTurtles.png)
 ![](images/grid_SeaTurtleIDHeads.png)
+![](images/grid_ZakynthosTurtles.png)
 ![](images/grid_ZindiTurtleRecall.png)
 
 ### Cows
