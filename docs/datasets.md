@@ -10,6 +10,13 @@ Datasets AerialCattle2017, Cows2021, FriesianCattle2015, FriesianCattle2017 and 
 
 ![](images/grid_AerialCattle2017.png)
 
+## AmvrokikosTurtles
+
+This dataset consists of photographs of Mediterranean loggerhead sea turtles taken at Amvrakikos Gulf, Greece (39°02'N, 21°06'E) which is wellknown foraging site for adult and juvenile turtles. Photographs were collected as part of a long-term capture-mark-recapture project conducted by ARCHELON, the Sea Turtle Protection Society of Greece. Turtles were captured from a boat using the sea turtle rodeo technique and among other data collected, photographs of the head sides were taken while the animal was on the boat. In all photographs, either the whole side of the head was fully shaded or fully illuminated by the sun. All photographs in this dataset were taken during the summer months (June-August) between 2014 and 2022, using a selection of different digital cameras of varying optical resolution.
+
+![](images/grid_AmvrokikosTurtles.png)
+
+
 ## ATRW
 
 The ATRW (Amur Tiger Re-identification in the Wild) dataset was collected with the help of WWF in ten zoos in China. The images were extracted from videos. Besides tiger re-identification, the dataset can also be used for tiger detection and pose estimation.
@@ -70,6 +77,12 @@ The dataset does not contain any description about its acquisition, only factual
 Twenty drosophila flies were collected few hours after eclosion and housed separately. On the third day, post-eclosion flies were individually mouth pipetted into a circular acrylic arena, illuminated with overhead LED bulbs and filmed in grayscale. This was repeated in three consecutive days. Since the sampling frequency from videos was high, this generated several million images. However, the differences between these images are small.
 
 ![](images/grid_Drosophila.png)
+
+## ELPephants
+
+This elephant dataset was provided by researchers from the Elephant Listening Project (ELP) at the Cornell University Ithaca, who are conducting research on forest elephants visiting the Dzanga bai clearing in the Dzanga-Ndoki National Park in the Central African Republic. It was devised for re-identification of elephants that have been documented before. The images have been taken over a range of about 15 years.
+
+![](images/grid_ELPephants.png)
 
 ## FriesianCattle2015
 
@@ -171,6 +184,12 @@ PolarBearVidID is a dataset of 13 individual polar bears from 6 German zoos. The
 
 ![](images/grid_PolarBearVidID.png)
 
+## ReunionTurtles
+
+This dataset consists of photographs taken between 2007 and 2024 on Reunion Island, a French territory in the Indian Ocean (21°0'S, 55°30'E), whose shallow waters are known to be a development and foraging ground for green and hawksbill turtles. Photographs were taken by recreational divers as part of a citizen science programme with no specific associated protocols (no specific viewing angle or distance). Citizens shared their photographs whenever they wished with scientists for further analysis. All photographs are turtle head profiles taken during the same encounter and are stored in the TORSOOI database, see Section 3.4 for more details.
+
+![](images/grid_ReunionTurtles.png)
+
 ## SealID
 
 SealID is a Saimaa ringed seals database from the Lake Saimaa in Finland. The data were collected annually during the Saimaa ringed seal molting season from 2010 to 2019 by both ordinary digital cameras during boat surveys and game camera traps. The GPS coordinates, the observation times, and the numbers of the seals were noted.  Seal images were matched by an expert using individually characteristic fur patterns. The dataset contains patches and syandard images. Patches show small patterned body parts which are sufficient for seal identification. Standard images are presented both as full images and their segmented version with seal only and black background.
@@ -184,7 +203,7 @@ This dataset contains 1204 images of 39 individual Asterias rubens sea stars and
 
 ![](images/grid_SeaStarReID2023.png)
 
-## SeaTurtleID
+## SeaTurtleID2022
 
 SeaTurtleID is a novel large-scale dataset of Mediterranean loggerhead sea turtles. These turtles are well-suited to photo-identification due to their unique scale patterns, which can be used to identify individual turtles and remain stable throughout their lives. These patterns are found on the lateral and dorsal sides of the turtle's head and differ between the left and right sides of the same turtle. 
  
@@ -212,6 +231,12 @@ StripeSpotter is the first published dataset. For seven consecutive days, the au
 WhaleSharkID contains images of whale sharks and represents a collaborative effort based on the data collection and population modeling efforts conducted at Ningaloo Marine Park in Western Australia from 1995 to 2008. Images are annotated with bounding boxes around each visible whale shark and viewpoints.
 
 ![](images/grid_WhaleSharkID.png)
+
+## ZakynthosTurtles
+
+See the description in [SeaTurtleID2022](#seaturtleid2022).
+
+![](images/grid_ZakynthosTurtles.png)
 
 ## ZindiTurtleRecall
 
