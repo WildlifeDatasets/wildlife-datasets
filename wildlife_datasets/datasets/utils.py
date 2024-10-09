@@ -167,3 +167,11 @@ def gdown_download(url, archive, exception_text=''):
     if not os.path.exists(archive):
         print(exception_text)
         raise Exception(exception_text)
+
+def get_split(x, data_train, data_test):
+    if x in data_train:
+        return 'train'
+    elif x in data_test:
+        return 'test'
+    else:
+        return np.nan

@@ -1116,11 +1116,18 @@ class Cows2021v2(Cows2021):
 class DogFaceNet(DatasetFactory):
     metadata = metadata['DogFaceNet']
     url = 'https://github.com/GuillaumeMougeot/DogFaceNet/releases/download/dataset/DogFaceNet_Dataset_224_1.zip'
+    url_split = [
+        'https://github.com/GuillaumeMougeot/DogFaceNet/releases/download/dataset/classes_train.txt',
+        'https://github.com/GuillaumeMougeot/DogFaceNet/releases/download/dataset/classes_test.txt'        
+    ]
     archive = 'DogFaceNet_Dataset_224_1.zip'
+    archive_split = ['classes_train.txt', 'classes_test.txt']
 
     @classmethod
     def _download(cls):
         utils.download_url(cls.url, cls.archive)
+        for url, archive in zip(cls.url_split, cls.archive_split):
+            utils.download_url(url, archive)
 
     @classmethod
     def _extract(cls):
@@ -1131,11 +1138,18 @@ class DogFaceNet(DatasetFactory):
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
 
+        # Load classes
+        classes_train = pd.read_csv(os.path.join(self.root, 'classes_train.txt'), header=None)
+        classes_train = classes_train[0].unique()
+        classes_test = pd.read_csv(os.path.join(self.root, 'classes_test.txt'), header=None)
+        classes_test = classes_test[0].unique()
+        
         # Finalize the dataframe
         df = pd.DataFrame({
             'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[1].astype(int),
+            'original_split': folders[1].astype(int).apply(lambda x: utils.get_split(x, classes_train, classes_test))
         })
         return self.finalize_catalogue(df)
 
