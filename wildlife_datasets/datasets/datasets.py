@@ -25,6 +25,7 @@ class DatasetAbstract:
         col_path: str = "path",        
     ):
         self.df = df.reset_index(drop=True)
+        self.metadata = self.df # Alias to df to unify with wildlife-tools
         self.root = root
         self.transform = transform
         self.img_load = img_load
