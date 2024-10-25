@@ -273,10 +273,7 @@ class DatasetFiles(DatasetAbstract):
         return img
     
     def load_image(self, path):
-        img = cv2.imread(path)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img = Image.fromarray(img)
-        return img
+        return utils.load_image(path)
 
 
 class Dataset_WD(DatasetAbstract):

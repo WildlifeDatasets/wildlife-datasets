@@ -41,7 +41,7 @@ from .wildlife_reid_10k import WildlifeReID10k
 from .datasets import WhaleSharkID
 from .datasets import ZindiTurtleRecall
 from .metadata import Metadata
-from .utils import get_image
+from .utils import get_image, load_image
 
 names_all = [
     AAUZebraFish,
