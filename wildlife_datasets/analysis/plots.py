@@ -1,8 +1,7 @@
 import os
-import cv2
 import numpy as np
 import pandas as pd
-from typing import Optional, List, Callable, Union
+from typing import List
 from matplotlib import pyplot as plt
 from PIL import Image
 from ..datasets import utils

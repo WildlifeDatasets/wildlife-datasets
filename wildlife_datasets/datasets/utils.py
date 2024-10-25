@@ -1,9 +1,8 @@
 import os
 import pandas as pd
 import numpy as np
-from typing import Tuple, List, Dict
+from typing import Tuple, List
 import hashlib
-from collections.abc import Iterable
 import urllib.request
 from tqdm import tqdm
 import shutil
