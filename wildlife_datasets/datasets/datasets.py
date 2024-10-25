@@ -1,4 +1,5 @@
 import os
+import cv2
 import shutil
 import pandas as pd
 import numpy as np
@@ -14,7 +15,157 @@ from .metadata import metadata
 from . import utils
 
 
-class DatasetFactory():
+class DatasetAbstract:
+    def __init__(
+        self,
+        df: pd.DataFrame,
+        root: Optional[str] = None,
+        transform: Optional[Callable] = None,
+        img_load: str = "full",
+        col_path: str = "path",        
+    ):
+        self.df = df.reset_index(drop=True)
+        self.root = root
+        self.transform = transform
+        self.img_load = img_load
+        self.col_path = col_path
+
+    def __len__(self):
+        return len(self.df)
+
+    def __getitem__(self, idx):
+        img = self.get_image(idx)
+        return self.apply_segmentation(img, idx)
+
+    def get_image(self, *args, **kwargs):
+        raise NotImplementedError('Must be implemented by subclasses')
+
+    def apply_segmentation(self, img, idx):        
+        if self.img_load in ["full_mask", "full_hide", "bbox_mask", "bbox_hide", "mask_crop"]:
+            data = self.df.iloc[idx]
+            if not ("segmentation" in data):
+                raise ValueError(f"{self.img_load} selected but no segmentation found.")
+            if type(data["segmentation"]) == str:
+                segmentation = eval(data["segmentation"])
+            else:
+                segmentation = data["segmentation"]
+            if isinstance(segmentation, list) or isinstance(segmentation, np.ndarray):
+                # Convert polygon to compressed RLE
+                # TODO: do something about the dependency
+                import pycocotools.mask as mask_coco
+                w, h = img.size
+                rles = mask_coco.frPyObjects([segmentation], h, w)
+                segmentation = mask_coco.merge(rles)
+            if isinstance(segmentation, dict) and (isinstance(segmentation['counts'], list) or isinstance(segmentation['counts'], np.ndarray)):            
+                # Convert uncompressed RLE to compressed RLE
+                import pycocotools.mask as mask_coco
+                h, w = segmentation['size']
+                segmentation = mask_coco.frPyObjects(segmentation, h, w)
+
+        if self.img_load in ["bbox"]:
+            data = self.df.iloc[idx]
+            if not ("bbox" in data):
+                raise ValueError(f"{self.img_load} selected but no bbox found.")
+            if type(data["bbox"]) == str:
+                bbox = json.loads(data["bbox"])
+            else:
+                bbox = data["bbox"]
+
+        # Load full image as it is.
+        if self.img_load == "full":
+            img = img
+
+        # Mask background using segmentation mask.
+        elif self.img_load == "full_mask":
+            if not np.any(pd.isnull(segmentation)):
+                mask = mask_coco.decode(segmentation).astype("bool")
+                img = Image.fromarray(img * mask[..., np.newaxis])
+
+        # Hide object using segmentation mask
+        elif self.img_load == "full_hide":
+            if not np.any(pd.isnull(segmentation)):
+                mask = mask_coco.decode(segmentation).astype("bool")
+                img = Image.fromarray(img * ~mask[..., np.newaxis])
+
+        # Crop to bounding box
+        elif self.img_load == "bbox":
+            if not np.any(pd.isnull(bbox)):
+                img = img.crop((bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]))
+
+        # Mask background using segmentation mask and crop to bounding box.
+        elif self.img_load == "bbox_mask":
+            if (not np.any(pd.isnull(segmentation))):
+                mask = mask_coco.decode(segmentation).astype("bool")
+                img = Image.fromarray(img * mask[..., np.newaxis])
+                y_nonzero, x_nonzero, _ = np.nonzero(img)
+                img = img.crop(
+                    (
+                        np.min(x_nonzero),
+                        np.min(y_nonzero),
+                        np.max(x_nonzero),
+                        np.max(y_nonzero),
+                    )
+                )
+
+        # Hide object using segmentation mask and crop to bounding box.
+        elif self.img_load == "bbox_hide":
+            if (not np.any(pd.isnull(segmentation))):
+                mask = mask_coco.decode(segmentation).astype("bool")
+                img = Image.fromarray(img * ~mask[..., np.newaxis])
+                y_nonzero, x_nonzero, _ = np.nonzero(img)
+                img = img.crop(
+                    (
+                        np.min(x_nonzero),
+                        np.min(y_nonzero),
+                        np.max(x_nonzero),
+                        np.max(y_nonzero),
+                    )
+                )
+
+        # Crop black background around images
+        elif self.img_load == "crop_black":
+            y_nonzero, x_nonzero, _ = np.nonzero(img)
+            img = img.crop(
+                (
+                    np.min(x_nonzero),
+                    np.min(y_nonzero),
+                    np.max(x_nonzero),
+                    np.max(y_nonzero),
+                )
+            )
+
+        else:
+            raise ValueError(f"Invalid img_load argument: {self.img_load}")
+
+        if self.transform:
+            img = self.transform(img)
+
+        return img
+        # TODO: add this
+        #if self.load_label:
+        #    return img, self.labels[idx]
+        #else:
+        #    return img  
+
+
+class DatasetFiles(DatasetAbstract):
+    def get_image(self, idx):
+        data = self.df.iloc[idx]
+        if self.root:
+            img_path = os.path.join(self.root, data[self.col_path])
+        else:
+            img_path = data[self.col_path]
+        img = self.load_image(img_path)
+        return img
+    
+    def load_image(self, path):
+        img = cv2.imread(path)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = Image.fromarray(img)
+        return img
+
+
+class Dataset_WD(DatasetAbstract):
     """Base class for creating datasets.
 
     Attributes:    
@@ -38,9 +189,12 @@ class DatasetFactory():
 
     def __init__(
             self, 
-            root: str,
+            root: str | None = None,
             df: Optional[pd.DataFrame] = None,
             update_wrong_labels: bool = True,
+            transform: Optional[Callable] = None,
+            img_load: str = "full",
+            col_path: str = "path",
             **kwargs) -> None:
         """Initializes the class.
 
@@ -57,12 +211,13 @@ class DatasetFactory():
             raise Exception('root does not exist. You may have have mispelled it.')
         if self.outdated_dataset:
             print('This dataset is outdated. You may want to call a newer version such as %sv2.' % self.__class__.__name__)
-        self.root = root
         self.update_wrong_labels = update_wrong_labels
+        self.root = root
         if df is None:
-            self.df = self.create_catalogue(**kwargs)
+            df = self.create_catalogue(**kwargs)
         else:
-            self.df = df.copy()
+            df = df.copy()
+        super().__init__(df=df, root=root, transform=transform, img_load=img_load, col_path=col_path)
 
     @classmethod
     def get_data(cls, root, force=False, **kwargs):
@@ -509,6 +664,11 @@ class DatasetFactory():
                 path.encode("iso-8859-1")
             except UnicodeEncodeError:
                 raise(Exception('Characters in path may cause problems. Please use only ISO-8859-1 characters: ' + os.path.join(path)))
+
+
+class DatasetFactory(DatasetFiles, Dataset_WD):
+    pass
+
 
 class DatasetFactoryWildMe(DatasetFactory):
     def create_catalogue_wildme(self, prefix: str, year: int) -> pd.DataFrame:
