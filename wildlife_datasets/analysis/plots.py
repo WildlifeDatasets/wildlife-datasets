@@ -67,18 +67,3 @@ def plot_bbox_segmentation(df: pd.DataFrame, root: str, n: int) -> None:
                 img = utils.get_image(os.path.join(root, df_red['path'].iloc[i]))
                 segmentation = df_red['segmentation'].iloc[i]
                 plot_segmentation(img, segmentation)
-
-def plot_grid(
-        df: pd.DataFrame,
-        root: str,
-        *args,
-        **kwargs
-        ) -> Image:
-    print("This function will be removed in future releases. Use d.plot_grid() instead.")
-    from .. import datasets
-    return datasets.DatasetFactory(root, df=df).plot_grid(*args, **kwargs)
-
-def get_image(*args, **kwargs) -> Image:
-    print("This function will be removed in future releases. Use datasets.get_image() instead.")
-    from .. import datasets
-    return datasets.get_image(*args, **kwargs)
