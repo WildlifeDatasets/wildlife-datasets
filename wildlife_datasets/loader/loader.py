@@ -70,7 +70,7 @@ def load_dataset(
     Returns:
         The loaded dataset.
     """
-
+    
     # Check if the dataset is downloaded.
     if not os.path.exists(root_dataset):
         raise(Exception('Data not found. Download them first.'))
