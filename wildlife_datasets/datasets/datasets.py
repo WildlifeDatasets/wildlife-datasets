@@ -156,15 +156,12 @@ class DatasetAbstract:
             rotate: bool = True,
             header_cols: Optional[List[str]] = None,
             idx: Optional[Union[List[bool],List[int]]] = None,
-            loader: Optional[Callable] = None,
             background_color: Tuple[int] = (0, 0, 0),
             **kwargs
             ) -> None:
         """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
 
         Args:
-            df (pd.DataFrame): Dataframe with column `path` (relative path).
-            root (str): Root folder where the images are stored. 
             n_rows (int, optional): The number of rows in the grid.
             n_cols (int, optional): The number of columns in the grid.
             offset (float, optional): The offset between images.
@@ -172,7 +169,6 @@ class DatasetAbstract:
             rotate (bool, optional): Rotates the images to have the same orientation.
             header_cols (Optional[List[str]], optional): List of headers for each column.
             idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
-            loader (Optional[Callable], optional): Loader of images. Useful for including transforms.
             background_color (Tuple[int], optional): Background color of the grid.
         """
 
@@ -197,11 +193,7 @@ class DatasetAbstract:
         for k in idx:
             if k >= 0:
                 # Load the image with index k
-                if loader is None:
-                    file_path = os.path.join(self.root, self.df.iloc[k]['path'])
-                    im = utils.get_image(file_path)
-                else:
-                    im = loader(k)
+                im = self[k]
                 ims.append(im)
                 ratios.append(im.size[0] / im.size[1])
             else:
