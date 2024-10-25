@@ -11,7 +11,7 @@ from contextlib import contextmanager
 from PIL import Image
 import cv2
 
-def get_image(path: str, max_size: int = None) -> Image:
+def load_image(path: str, max_size: int = None) -> Image:
     """Loads an image.
 
     Args:
@@ -32,6 +32,10 @@ def get_image(path: str, max_size: int = None) -> Image:
             c = max_size / max(w, h)
             img = img.resize((int(c*w), int(c*h)))
     return img
+
+def get_image(*args, **kwargs) -> Image:
+    print("This function will be removed in future releases. Use load_image() instead.")
+    return load_image(*args, **kwargs)
 
 def find_images(
         root: str,
