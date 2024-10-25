@@ -147,6 +147,128 @@ class DatasetAbstract:
         #else:
         #    return img  
 
+    def plot_grid(
+            self,
+            n_rows: int = 5,
+            n_cols: int = 8,
+            offset: float = 10,
+            img_min: float = 100,
+            rotate: bool = True,
+            header_cols: Optional[List[str]] = None,
+            idx: Optional[Union[List[bool],List[int]]] = None,
+            loader: Optional[Callable] = None,
+            background_color: Tuple[int] = (0, 0, 0),
+            **kwargs
+            ) -> None:
+        """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
+
+        Args:
+            df (pd.DataFrame): Dataframe with column `path` (relative path).
+            root (str): Root folder where the images are stored. 
+            n_rows (int, optional): The number of rows in the grid.
+            n_cols (int, optional): The number of columns in the grid.
+            offset (float, optional): The offset between images.
+            img_min (float, optional): The minimal size of the plotted images.
+            rotate (bool, optional): Rotates the images to have the same orientation.
+            header_cols (Optional[List[str]], optional): List of headers for each column.
+            idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
+            loader (Optional[Callable], optional): Loader of images. Useful for including transforms.
+            background_color (Tuple[int], optional): Background color of the grid.
+        """
+
+        if len(self.df) == 0:
+            return None
+        
+        # Select indices of images to be plotted
+        if idx is None:
+            n = min(len(self.df), n_rows*n_cols)
+            idx = np.random.permutation(len(self.df))[:n]
+        else:
+            if isinstance(idx, pd.Series):
+                idx = idx.values
+            if isinstance(idx[0], (bool, np.bool_)):
+                idx = np.where(idx)[0]
+            n = min(np.array(idx).size, n_rows*n_cols)
+            idx = np.matrix.flatten(np.array(idx))[:n]
+
+        # Load images and compute their ratio
+        ratios = []
+        ims = []
+        for k in idx:
+            if k >= 0:
+                # Load the image with index k
+                if loader is None:
+                    file_path = os.path.join(self.root, self.df.iloc[k]['path'])
+                    im = utils.get_image(file_path)
+                else:
+                    im = loader(k)
+                ims.append(im)
+                ratios.append(im.size[0] / im.size[1])
+            else:
+                # Load a black image
+                ims.append(Image.fromarray(np.zeros((2, 2), dtype = "uint8")))
+
+        # Safeguard when all indices are -1
+        if len(ratios) == 0:
+            return None
+        
+        # Get the size of the images after being resized
+        ratio = np.median(ratios)
+        if ratio > 1:    
+            img_w, img_h = int(img_min*ratio), int(img_min)
+        else:
+            img_w, img_h = int(img_min), int(img_min/ratio)
+
+        # Compute height offset if headers are present
+        if header_cols is not None:
+            offset_h = 30
+            if len(header_cols) != n_cols:
+                raise(Exception("Length of header_cols must be the same as n_cols."))
+        else:
+            offset_h = 0
+
+        # Create an empty image grid
+        im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, offset_h + n_rows*img_h + (n_rows-1)*offset), background_color)
+
+        # Fill the grid image by image
+        pos_y = offset_h
+        for i in range(n_rows):
+            row_h = 0
+            for j in range(n_cols):
+                k = (n_cols)*i + j
+                if k < n:
+                    # Possibly rotate the image
+                    im = ims[k]
+                    if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
+                        im = im.transpose(Image.Transpose.ROTATE_90)
+
+                    # Rescale the image
+                    im.thumbnail((img_w,img_h))
+                    row_h = max(row_h, im.size[1])
+
+                    # Place the image on the grid
+                    pos_x = j*img_w + j*offset
+                    im_grid.paste(im, (pos_x,pos_y))
+            if row_h > 0:
+                pos_y += row_h + offset
+        im_grid = im_grid.crop((0, 0, im_grid.size[0], pos_y-offset))
+ 
+        # Plot the image and add column headers if present
+        fig = plt.figure()
+        fig.patch.set_visible(False)
+        ax = fig.add_subplot(111)
+        plt.axis('off')
+        plt.imshow(im_grid)
+        if header_cols is not None:
+            color = kwargs.pop('color', 'white')
+            ha = kwargs.pop('ha', 'center')
+            va = kwargs.pop('va', 'center')
+            for i, header in enumerate(header_cols):
+                pos_x = (i+0.5)*img_w + i*offset
+                pos_y = offset_h/2
+                plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
+        return fig
+
 
 class DatasetFiles(DatasetAbstract):
     def get_image(self, idx):
@@ -356,128 +478,6 @@ class Dataset_WD(DatasetAbstract):
             elif n_replaced > 1:
                 print('File name %s with identity %s was found multiple times.' % (image_name, str(old_identity)))
         return df
-
-    def plot_grid(
-            self,
-            n_rows: int = 5,
-            n_cols: int = 8,
-            offset: float = 10,
-            img_min: float = 100,
-            rotate: bool = True,
-            header_cols: Optional[List[str]] = None,
-            idx: Optional[Union[List[bool],List[int]]] = None,
-            loader: Optional[Callable] = None,
-            background_color: Tuple[int] = (0, 0, 0),
-            **kwargs
-            ) -> None:
-        """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
-
-        Args:
-            df (pd.DataFrame): Dataframe with column `path` (relative path).
-            root (str): Root folder where the images are stored. 
-            n_rows (int, optional): The number of rows in the grid.
-            n_cols (int, optional): The number of columns in the grid.
-            offset (float, optional): The offset between images.
-            img_min (float, optional): The minimal size of the plotted images.
-            rotate (bool, optional): Rotates the images to have the same orientation.
-            header_cols (Optional[List[str]], optional): List of headers for each column.
-            idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
-            loader (Optional[Callable], optional): Loader of images. Useful for including transforms.
-            background_color (Tuple[int], optional): Background color of the grid.
-        """
-
-        if len(self.df) == 0:
-            return None
-        
-        # Select indices of images to be plotted
-        if idx is None:
-            n = min(len(self.df), n_rows*n_cols)
-            idx = np.random.permutation(len(self.df))[:n]
-        else:
-            if isinstance(idx, pd.Series):
-                idx = idx.values
-            if isinstance(idx[0], (bool, np.bool_)):
-                idx = np.where(idx)[0]
-            n = min(np.array(idx).size, n_rows*n_cols)
-            idx = np.matrix.flatten(np.array(idx))[:n]
-
-        # Load images and compute their ratio
-        ratios = []
-        ims = []
-        for k in idx:
-            if k >= 0:
-                # Load the image with index k
-                if loader is None:
-                    file_path = os.path.join(self.root, self.df.iloc[k]['path'])
-                    im = utils.get_image(file_path)
-                else:
-                    im = loader(k)
-                ims.append(im)
-                ratios.append(im.size[0] / im.size[1])
-            else:
-                # Load a black image
-                ims.append(Image.fromarray(np.zeros((2, 2), dtype = "uint8")))
-
-        # Safeguard when all indices are -1
-        if len(ratios) == 0:
-            return None
-        
-        # Get the size of the images after being resized
-        ratio = np.median(ratios)
-        if ratio > 1:    
-            img_w, img_h = int(img_min*ratio), int(img_min)
-        else:
-            img_w, img_h = int(img_min), int(img_min/ratio)
-
-        # Compute height offset if headers are present
-        if header_cols is not None:
-            offset_h = 30
-            if len(header_cols) != n_cols:
-                raise(Exception("Length of header_cols must be the same as n_cols."))
-        else:
-            offset_h = 0
-
-        # Create an empty image grid
-        im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, offset_h + n_rows*img_h + (n_rows-1)*offset), background_color)
-
-        # Fill the grid image by image
-        pos_y = offset_h
-        for i in range(n_rows):
-            row_h = 0
-            for j in range(n_cols):
-                k = (n_cols)*i + j
-                if k < n:
-                    # Possibly rotate the image
-                    im = ims[k]
-                    if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
-                        im = im.transpose(Image.Transpose.ROTATE_90)
-
-                    # Rescale the image
-                    im.thumbnail((img_w,img_h))
-                    row_h = max(row_h, im.size[1])
-
-                    # Place the image on the grid
-                    pos_x = j*img_w + j*offset
-                    im_grid.paste(im, (pos_x,pos_y))
-            if row_h > 0:
-                pos_y += row_h + offset
-        im_grid = im_grid.crop((0, 0, im_grid.size[0], pos_y-offset))
- 
-        # Plot the image and add column headers if present
-        fig = plt.figure()
-        fig.patch.set_visible(False)
-        ax = fig.add_subplot(111)
-        plt.axis('off')
-        plt.imshow(im_grid)
-        if header_cols is not None:
-            color = kwargs.pop('color', 'white')
-            ha = kwargs.pop('ha', 'center')
-            va = kwargs.pop('va', 'center')
-            for i, header in enumerate(header_cols):
-                pos_x = (i+0.5)*img_w + i*offset
-                pos_y = offset_h/2
-                plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
-        return fig
 
     def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
