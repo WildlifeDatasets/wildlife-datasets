@@ -1911,7 +1911,7 @@ class NDD20v2(NDD20):
             # Rewrite wrong segmentations. There is no dolphin -> should be deleted.
             # But that would break compability and the identity is unknown anyway.
             if len(df_row['segmentation']) == 4:
-                img = utils.get_image(os.path.join(self.root, df_row['path']))
+                img = utils.load_image(os.path.join(self.root, df_row['path']))
                 w, h = img.size
                 df.at[i, 'segmentation'] = np.array(utils.bbox_segmentation([0, 0, w, h]))
         return df
