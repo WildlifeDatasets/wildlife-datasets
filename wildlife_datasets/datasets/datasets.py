@@ -48,7 +48,7 @@ class DatasetAbstract:
         raise NotImplementedError('Must be implemented by subclasses')
 
     def apply_segmentation(self, img, idx):        
-        if self.img_load in ["full_mask", "full_hide", "bbox_mask", "bbox_hide", "mask_crop"]:
+        if self.img_load in ["full_mask", "full_hide", "bbox_mask", "bbox_hide"]:
             data = self.df.iloc[idx]
             if not ("segmentation" in data):
                 raise ValueError(f"{self.img_load} selected but no segmentation found.")
