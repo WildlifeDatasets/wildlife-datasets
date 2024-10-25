@@ -29,6 +29,13 @@ class DatasetAbstract:
         self.transform = transform
         self.img_load = img_load
         self.col_path = col_path
+        if self.img_load == "auto":
+            if "segmentation" in self.df:
+                self.img_load = "bbox_mask"
+            elif "bbox" in self.df:
+                self.img_load = "bbox"
+            else:
+                self.img_load = "full"
 
     def __len__(self):
         return len(self.df)
