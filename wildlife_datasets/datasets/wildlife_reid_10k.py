@@ -2,10 +2,10 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .metadata import metadata
+from .summary import summary
 
 class WildlifeReID10k(DatasetFactory):
-    metadata = metadata['WildlifeReID10k']
+    summary = summary['WildlifeReID10k']
     archive = 'wildlifereid-10k.zip'
 
     @classmethod

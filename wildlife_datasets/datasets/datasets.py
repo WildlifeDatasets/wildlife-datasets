@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import string
 
 from .. import splits
-from .metadata import metadata
+from .summary import summary
 from . import utils
 
 
@@ -288,7 +288,7 @@ class Dataset_WD(DatasetAbstract):
 
     Attributes:    
       df (pd.DataFrame): A full dataframe of the data.
-      metadata (dict): Metadata of the dataset.
+      summary (dict): Summary of the dataset.
       root (str): Root directory for the data.
       update_wrong_labels(bool): Whether `fix_labels` should be called.
       unknown_name (str): Name of the unknown class.
@@ -368,9 +368,9 @@ class Dataset_WD(DatasetAbstract):
             with utils.data_directory(root):
                 cls._download(**kwargs)
             open(mark_file_name, 'a').close()
-            if hasattr(cls, 'metadata') and 'licenses_url' in cls.metadata:
+            if hasattr(cls, 'summary') and 'licenses_url' in cls.summary:
                 with open(os.path.join(root, cls.license_file_name), 'w') as file:
-                    file.write(cls.metadata['licenses_url'])
+                    file.write(cls.summary['licenses_url'])
         
     @classmethod    
     def extract(cls, root, **kwargs):
@@ -714,7 +714,7 @@ class DatasetFactoryWildMe(DatasetFactory):
 
 
 class AAUZebraFish(DatasetFactory):
-    metadata = metadata['AAUZebraFish']
+    summary = summary['AAUZebraFish']
     archive = 'aau-zebrafish-reid.zip'
 
     @classmethod
@@ -773,7 +773,7 @@ class AAUZebraFish(DatasetFactory):
 
 
 class AerialCattle2017(DatasetFactory):
-    metadata = metadata['AerialCattle2017']
+    summary = summary['AerialCattle2017']
     url = 'https://data.bris.ac.uk/datasets/tar/3owflku95bxsx24643cybxu3qh.zip'
     archive = '3owflku95bxsx24643cybxu3qh.zip'
 
@@ -802,7 +802,7 @@ class AerialCattle2017(DatasetFactory):
 
 
 class ATRW(DatasetFactory):
-    metadata = metadata['ATRW']
+    summary = summary['ATRW']
     url = 'https://github.com/cvwc2019/ATRWEvalScript/archive/refs/heads/main.zip'
     archive = 'main.zip'
     downloads = [
@@ -908,7 +908,7 @@ class ATRW(DatasetFactory):
 
 class BelugaID(DatasetFactoryWildMe):
     outdated_dataset = True
-    metadata = metadata['BelugaID']
+    summary = summary['BelugaID']
     downloads = [
         ('https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/beluga.coco.tar.gz', 'beluga.coco.tar.gz'),
         ('https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/beluga-id-test.zip', 'beluga-id-test.zip'),
@@ -962,7 +962,7 @@ class BelugaIDv2(BelugaID):
 
 
 class BirdIndividualID(DatasetFactory):
-    metadata = metadata['BirdIndividualID']
+    summary = summary['BirdIndividualID']
     prefix1 = 'Original_pictures'
     prefix2 = 'IndividualID'
     url = 'https://drive.google.com/uc?id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA'
@@ -1056,7 +1056,7 @@ class BirdIndividualIDSegmented(BirdIndividualID):
 
 
 class CatIndividualImages(DatasetFactory):
-    metadata = metadata['CatIndividualImages']
+    summary = summary['CatIndividualImages']
     archive = 'cat-individuals.zip'
     
     @classmethod
@@ -1090,7 +1090,7 @@ class CatIndividualImages(DatasetFactory):
 
 
 class CTai(DatasetFactory):
-    metadata = metadata['CTai']
+    summary = summary['CTai']
     url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
     archive = 'master.zip'
 
@@ -1140,7 +1140,7 @@ class CTai(DatasetFactory):
 
 
 class CZoo(DatasetFactory):
-    metadata = metadata['CZoo']
+    summary = summary['CZoo']
     url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
     archive = 'master.zip'
 
@@ -1177,7 +1177,7 @@ class CZoo(DatasetFactory):
 
 
 class CowDataset(DatasetFactory):
-    metadata = metadata['CowDataset']
+    summary = summary['CowDataset']
     url = 'https://figshare.com/ndownloader/files/31210192'
     archive = 'cow-dataset.zip'
 
@@ -1210,7 +1210,7 @@ class CowDataset(DatasetFactory):
 
 class Cows2021(DatasetFactory):
     outdated_dataset = True
-    metadata = metadata['Cows2021']
+    summary = summary['Cows2021']
     url = 'https://data.bris.ac.uk/datasets/tar/4vnrca7qw1642qlwxjadp87h7.zip'
     archive = '4vnrca7qw1642qlwxjadp87h7.zip'
 
@@ -1270,7 +1270,7 @@ class Cows2021v2(Cows2021):
         
 
 class DogFaceNet(DatasetFactory):
-    metadata = metadata['DogFaceNet']
+    summary = summary['DogFaceNet']
     url = 'https://github.com/GuillaumeMougeot/DogFaceNet/releases/download/dataset/DogFaceNet_Dataset_224_1.zip'
     archive = 'DogFaceNet_Dataset_224_1.zip'
 
@@ -1297,7 +1297,7 @@ class DogFaceNet(DatasetFactory):
 
 
 class Drosophila(DatasetFactory):
-    metadata = metadata['Drosophila']
+    summary = summary['Drosophila']
     downloads = [
         ('https://dataverse.scholarsportal.info/api/access/datafile/71066', 'week1_Day1_train_01to05.zip'),
         ('https://dataverse.scholarsportal.info/api/access/datafile/71067', 'week1_Day1_train_06to10.zip'),
@@ -1384,7 +1384,7 @@ class Drosophila(DatasetFactory):
 
 class FriesianCattle2015(DatasetFactory):
     outdated_dataset = True
-    metadata = metadata['FriesianCattle2015']
+    summary = summary['FriesianCattle2015']
     url = 'https://data.bris.ac.uk/datasets/wurzq71kfm561ljahbwjhx9n3/wurzq71kfm561ljahbwjhx9n3.zip'
     archive = 'wurzq71kfm561ljahbwjhx9n3.zip'
 
@@ -1429,7 +1429,7 @@ class FriesianCattle2015v2(FriesianCattle2015):
 
 
 class FriesianCattle2017(DatasetFactory):
-    metadata = metadata['FriesianCattle2017']
+    summary = summary['FriesianCattle2017']
     url = 'https://data.bris.ac.uk/datasets/2yizcfbkuv4352pzc32n54371r/2yizcfbkuv4352pzc32n54371r.zip'
     archive = '2yizcfbkuv4352pzc32n54371r.zip'
 
@@ -1456,7 +1456,7 @@ class FriesianCattle2017(DatasetFactory):
 
 
 class GiraffeZebraID(DatasetFactoryWildMe):
-    metadata = metadata['GiraffeZebraID']
+    summary = summary['GiraffeZebraID']
     url = 'https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/gzgc.coco.tar.gz'
     archive = 'gzgc.coco.tar.gz'
 
@@ -1473,7 +1473,7 @@ class GiraffeZebraID(DatasetFactoryWildMe):
 
 
 class Giraffes(DatasetFactory):
-    metadata = metadata['Giraffes']
+    summary = summary['Giraffes']
 
     @classmethod
     def _download(cls):
@@ -1510,7 +1510,7 @@ class Giraffes(DatasetFactory):
 
 
 class HappyWhale(DatasetFactory):
-    metadata = metadata['HappyWhale']
+    summary = summary['HappyWhale']
     archive = 'happy-whale-and-dolphin.zip'
 
     @classmethod
@@ -1568,7 +1568,7 @@ class HappyWhale(DatasetFactory):
 
 
 class HumpbackWhaleID(DatasetFactory):
-    metadata = metadata['HumpbackWhaleID']
+    summary = summary['HumpbackWhaleID']
     archive = 'humpback-whale-identification.zip'
 
     @classmethod
@@ -1618,7 +1618,7 @@ class HumpbackWhaleID(DatasetFactory):
 
 
 class HyenaID2022(DatasetFactoryWildMe):
-    metadata = metadata['HyenaID2022']
+    summary = summary['HyenaID2022']
     url = 'https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/hyena.coco.tar.gz'
     archive = 'hyena.coco.tar.gz'
 
@@ -1635,7 +1635,7 @@ class HyenaID2022(DatasetFactoryWildMe):
 
 
 class IPanda50(DatasetFactory):
-    metadata = metadata['IPanda50']
+    summary = summary['IPanda50']
     downloads = [
         ('https://drive.google.com/uc?id=1nkh-g6a8JvWy-XsMaZqrN2AXoPlaXuFg', 'iPanda50-images.zip'),
         ('https://drive.google.com/uc?id=1gVREtFWkNec4xwqOyKkpuIQIyWU_Y_Ob', 'iPanda50-split.zip'),
@@ -1718,7 +1718,7 @@ class IPanda50(DatasetFactory):
 
 
 class LeopardID2022(DatasetFactoryWildMe):
-    metadata = metadata['LeopardID2022']
+    summary = summary['LeopardID2022']
     url = 'https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/leopard.coco.tar.gz'
     archive = 'leopard.coco.tar.gz'
 
@@ -1735,7 +1735,7 @@ class LeopardID2022(DatasetFactoryWildMe):
 
 
 class LionData(DatasetFactory):
-    metadata = metadata['LionData']
+    summary = summary['LionData']
     url = 'https://github.com/tvanzyl/wildlife_reidentification/archive/refs/heads/main.zip'
     archive = 'main.zip'
 
@@ -1763,7 +1763,7 @@ class LionData(DatasetFactory):
 
 
 class MacaqueFaces(DatasetFactory):
-    metadata = metadata['MacaqueFaces']
+    summary = summary['MacaqueFaces']
     
     @classmethod
     def _download(cls):
@@ -1796,7 +1796,7 @@ class MacaqueFaces(DatasetFactory):
 
 
 class MPDD(DatasetFactory):
-    metadata = metadata['MPDD']
+    summary = summary['MPDD']
     url = 'https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/v5j6m8dzhv-1.zip'
     archive = 'MPDD.zip'
     
@@ -1826,7 +1826,7 @@ class MPDD(DatasetFactory):
 
 class NDD20(DatasetFactory):
     outdated_dataset = True
-    metadata = metadata['NDD20']
+    summary = summary['NDD20']
     url = 'https://data.ncl.ac.uk/ndownloader/files/22774175'
     archive = 'NDD20.zip'
 
@@ -1917,7 +1917,7 @@ class NDD20v2(NDD20):
 
 
 class NOAARightWhale(DatasetFactory):
-    metadata = metadata['NOAARightWhale']
+    summary = summary['NOAARightWhale']
     archive = 'noaa-right-whale-recognition.zip'
 
     @classmethod
@@ -1966,7 +1966,7 @@ class NOAARightWhale(DatasetFactory):
 
 
 class NyalaData(DatasetFactory):
-    metadata = metadata['NyalaData']
+    summary = summary['NyalaData']
     url = 'https://github.com/tvanzyl/wildlife_reidentification/archive/refs/heads/main.zip'
     archive = 'main.zip'
 
@@ -2002,7 +2002,7 @@ class NyalaData(DatasetFactory):
 
 
 class OpenCows2020(DatasetFactory):
-    metadata = metadata['OpenCows2020']
+    summary = summary['OpenCows2020']
     url = 'https://data.bris.ac.uk/datasets/tar/10m32xl88x2b61zlkkgz3fml17.zip'
     archive = '10m32xl88x2b61zlkkgz3fml17.zip'
 
@@ -2038,7 +2038,7 @@ class OpenCows2020(DatasetFactory):
 
 
 class PolarBearVidID(DatasetFactory):
-    metadata = metadata['PolarBearVidID']
+    summary = summary['PolarBearVidID']
     url = 'https://zenodo.org/records/7564529/files/PolarBearVidID.zip?download=1'
     archive = 'PolarBearVidID.zip'
 
@@ -2101,7 +2101,7 @@ class GreenSeaTurtles(DatasetFactory):
 
 
 class SealID(DatasetFactory):
-    metadata = metadata['SealID']
+    summary = summary['SealID']
     prefix = 'source_'
     archive = '22b5191e-f24b-4457-93d3-95797c900fc0_ui65zipk.zip'
     
@@ -2169,7 +2169,7 @@ class SealIDSegmented(SealID):
 
 
 class SeaStarReID2023(DatasetFactory):
-    metadata = metadata['SeaStarReID2023']
+    summary = summary['SeaStarReID2023']
     url = 'https://storage.googleapis.com/public-datasets-lila/sea-star-re-id/sea-star-re-id.zip'
     archive = 'sea-star-re-id.zip'
     
@@ -2197,7 +2197,7 @@ class SeaStarReID2023(DatasetFactory):
 
 
 class SeaTurtleID2022(DatasetFactory):
-    metadata = metadata['SeaTurtleID2022']
+    summary = summary['SeaTurtleID2022']
     archive = 'seaturtleid2022.zip'
 
     @classmethod
@@ -2244,7 +2244,7 @@ class SeaTurtleID2022(DatasetFactory):
 
 
 class SeaTurtleIDHeads(DatasetFactory):
-    metadata = metadata['SeaTurtleIDHeads']
+    summary = summary['SeaTurtleIDHeads']
     archive = 'seaturtleidheads.zip'
 
     @classmethod
@@ -2282,7 +2282,7 @@ class SeaTurtleIDHeads(DatasetFactory):
 
 
 class SMALST(DatasetFactory):
-    metadata = metadata['SMALST']
+    summary = summary['SMALST']
     url = 'https://drive.google.com/uc?id=1yVy4--M4CNfE5x9wUr1QBmAXEcWb6PWF'
     archive = 'zebra_training_set.zip'
 
@@ -2332,7 +2332,7 @@ class SMALST(DatasetFactory):
 
 
 class StripeSpotter(DatasetFactory):
-    metadata = metadata['StripeSpotter']
+    summary = summary['StripeSpotter']
 
     @classmethod
     def _download(cls):
@@ -2387,7 +2387,7 @@ class StripeSpotter(DatasetFactory):
 
 
 class WhaleSharkID(DatasetFactoryWildMe):
-    metadata = metadata['WhaleSharkID']
+    summary = summary['WhaleSharkID']
     url = 'https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/whaleshark.coco.tar.gz'
     archive = 'whaleshark.coco.tar.gz'
 
@@ -2404,7 +2404,7 @@ class WhaleSharkID(DatasetFactoryWildMe):
 
 
 class ZindiTurtleRecall(DatasetFactory):
-    metadata = metadata['ZindiTurtleRecall']
+    summary = summary['ZindiTurtleRecall']
 
     @classmethod
     def _download(cls):

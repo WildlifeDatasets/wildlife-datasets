@@ -55,4 +55,4 @@ packages = [
 ]
 
 [tool.setuptools.package-data]
-wildlife_datasets = ["datasets/metadata.csv"]
+wildlife_datasets = ["datasets/summary.csv"]
