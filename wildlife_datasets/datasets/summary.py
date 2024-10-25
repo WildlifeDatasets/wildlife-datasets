@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-class Metadata():
+class Summary():
     """Class for storing metadata.
 
     Attributes:
@@ -27,4 +27,4 @@ class Metadata():
         return self.df.loc[item].dropna().to_dict()
 
 # Load the included metadata    
-metadata = Metadata(os.path.join(os.path.dirname(__file__), 'metadata.csv'))
+summary = Summary(os.path.join(os.path.dirname(__file__), 'summary.csv'))
