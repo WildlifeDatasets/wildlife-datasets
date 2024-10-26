@@ -78,7 +78,10 @@ def load_dataset(
     # Get paths of the dataset and the pickled dataframe
     root = get_dataset_folder(root_dataset, class_dataset)
     df_path = get_dataframe_path(root_dataframe, class_dataset)
-    if overwrite or not os.path.exists(df_path):
+    if not class_dataset.determined_by_df:
+        # Create the dataframe, no point in saving as it is not determined by it
+        dataset = class_dataset(root, None, **kwargs)
+    elif overwrite or not os.path.exists(df_path):
         # Create the dataframe, save it and create the dataset
         dataset = class_dataset(root, None, **kwargs)
         if not os.path.exists(root_dataframe):

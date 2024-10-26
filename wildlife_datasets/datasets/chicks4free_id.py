@@ -7,6 +7,8 @@ from datasets import load_dataset
 class Chicks4FreeID(DatasetFactory):
     summary = summary['Chicks4FreeID']
     hf_url = 'dariakern/Chicks4FreeID'
+    determined_by_df = False
+    saved_to_system_folder = True
 
     @classmethod
     def _download(cls):

@@ -287,6 +287,8 @@ class DatasetFactory(DatasetAbstract):
 
     unknown_name = 'unknown'
     outdated_dataset = False
+    determined_by_df = True
+    saved_to_system_folder = False
     download_warning = '''You are trying to download an already downloaded dataset.
         This message may have happened to due interrupted download or extract.
         To force the download use the `force=True` keyword such as
@@ -314,8 +316,8 @@ class DatasetFactory(DatasetAbstract):
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
             update_wrong_labels (bool, optional): Whether `fix_labels` should be called.
         """
-
-        if not os.path.exists(root):
+        
+        if not self.saved_to_system_folder and not os.path.exists(root):
             raise Exception('root does not exist. You may have have mispelled it.')
         if self.outdated_dataset:
             print('This dataset is outdated. You may want to call a newer version such as %sv2.' % self.__class__.__name__)
@@ -324,6 +326,8 @@ class DatasetFactory(DatasetAbstract):
         if df is None:
             df = self.create_catalogue(**kwargs)
         else:
+            if not self.determined_by_df:
+                print('This dataset is not determined by dataframe. But you construct it so.')
             df = df.copy()
         super().__init__(df=df, root=root, transform=transform, img_load=img_load, col_path=col_path)
 
@@ -333,7 +337,7 @@ class DatasetFactory(DatasetAbstract):
         mark_file_name = os.path.join(root, cls.download_mark_name)
         
         already_downloaded = os.path.exists(mark_file_name)
-        if already_downloaded and not force:
+        if not cls.saved_to_system_folder and already_downloaded and not force:
             print('DATASET %s: DOWNLOADING STARTED.' % dataset_name)
             print(cls.download_warning)
         else:
@@ -349,7 +353,9 @@ class DatasetFactory(DatasetAbstract):
         mark_file_name = os.path.join(root, cls.download_mark_name)
         
         already_downloaded = os.path.exists(mark_file_name)
-        if already_downloaded and not force:
+        if cls.saved_to_system_folder:
+            cls._download(**kwargs)
+        elif already_downloaded and not force:
             print('DATASET %s: DOWNLOADING STARTED.' % dataset_name)            
             print(cls.download_warning)
         else:
@@ -364,10 +370,13 @@ class DatasetFactory(DatasetAbstract):
         
     @classmethod    
     def extract(cls, root, **kwargs):
-        with utils.data_directory(root):
+        if cls.saved_to_system_folder:
             cls._extract(**kwargs)
-        mark_file_name = os.path.join(root, cls.download_mark_name)
-        open(mark_file_name, 'a').close()
+        else:
+            with utils.data_directory(root):
+                cls._extract(**kwargs)
+            mark_file_name = os.path.join(root, cls.download_mark_name)
+            open(mark_file_name, 'a').close()
     
     @classmethod
     def display_name(cls) -> str:
