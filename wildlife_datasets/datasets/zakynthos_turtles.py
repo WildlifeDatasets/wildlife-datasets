@@ -2,10 +2,10 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .metadata import metadata
+from .summary import summary
 
 class ZakynthosTurtles(DatasetFactory):    
-    metadata = metadata['ZakynthosTurtles']
+    summary = summary['ZakynthosTurtles']
     archive = 'zakynthosturtles.zip'
 
     @classmethod

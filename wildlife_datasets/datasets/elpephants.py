@@ -3,10 +3,10 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .metadata import metadata
+from .summary import summary
 
 class ELPephants(DatasetFactory):
-    metadata = metadata['ELPephants']
+    summary = summary['ELPephants']
     archive = 'ELPephant (elephant ID system).zip'
 
     @classmethod
