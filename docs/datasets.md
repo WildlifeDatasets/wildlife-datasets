@@ -42,6 +42,10 @@ The images were acquired using regular digital cameras or smartphones. The resol
 
 ![](images/grid_CatIndividualImages.png)
 
+## Chicks4FreeID
+
+![](images/grid_Chicks4FreeID.png)
+
 ## CTai
 
 CTai and CZoo datasets contain cropped chimpanzee faces. CZoo originates from a collaboration of the authors with animal researchers in Leipzig. Provided images are of high quality, are well exposed, and are taken without strong blurring artifacts. The images are complemented by biologically meaningful keypoints (centers of eyes, mouth, and earlobes) together with information about age and gender. CTai consists of recordings of chimpanzees living in the Taï National Park in Côte d'Ivoire. The image quality differs heavily and the annotation quality of additional information is not as high as for CZoo. CTai contains typos in six individuals (such as Woodstiock instead of the correct Woodstock), which we corrected. The unknown individuals were labelled as *Adult*, which we fixed as well.

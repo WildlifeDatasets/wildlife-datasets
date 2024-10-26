@@ -11,6 +11,7 @@ Some of the datasets require special treatment or the download of extraction wor
 | [BelugaID](https://lila.science/datasets/beluga-id-2022/)              |                                |                  |
 | [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID)     | Manual download    | Few images removed |
 | [CatIndividualImages](https://www.kaggle.com/datasets/timost1234/cat-individuals)          | Kaggle required                   |                  |
+| [Chicks4FreeID](https://huggingface.co/datasets/dariakern/Chicks4FreeID)          |                                |                  |
 | [CTai](https://github.com/cvjena/chimpanzee_faces)       |                                | Labels fixed |
 | [CZoo](https://github.com/cvjena/chimpanzee_faces)       |                                |                  |
 | [CowDataset](https://figshare.com/articles/dataset/data_set_zip/16879780)                   |                                |                  |

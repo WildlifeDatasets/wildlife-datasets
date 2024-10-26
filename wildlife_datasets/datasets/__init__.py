@@ -8,6 +8,7 @@ from .bird_individual_id import BirdIndividualID, BirdIndividualIDSegmented
 from .cat_individual_images import CatIndividualImages
 from .ctai import CTai
 from .czoo import CZoo
+from .chicks4free_id import Chicks4FreeID
 from .cow_dataset import CowDataset
 from .cows import Cows2021, Cows2021v2
 from .dog_face_net import DogFaceNet
@@ -53,6 +54,7 @@ names_all = [
     CatIndividualImages,
     CTai,
     CZoo,
+    Chicks4FreeID,
     CowDataset,
     Cows2021v2,
     DogFaceNet,
