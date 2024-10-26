@@ -5,9 +5,9 @@ from typing import Optional, List, Union, Callable, Tuple
 import json
 from PIL import Image
 import matplotlib.pyplot as plt
+import pycocotools.mask as mask_coco
 from .summary import summary
 from . import utils
-
 
 class DatasetAbstract:
     def __init__(
@@ -56,22 +56,24 @@ class DatasetAbstract:
             data = self.df.iloc[idx]
             if not ("segmentation" in data):
                 raise ValueError(f"{self.img_load} selected but no segmentation found.")
-            if type(data["segmentation"]) == str:
-                segmentation = eval(data["segmentation"])
-            else:
-                segmentation = data["segmentation"]
+            segmentation = data["segmentation"]
             if isinstance(segmentation, list) or isinstance(segmentation, np.ndarray):
                 # Convert polygon to compressed RLE
-                # TODO: do something about the dependency
-                import pycocotools.mask as mask_coco
                 w, h = img.size
                 rles = mask_coco.frPyObjects([segmentation], h, w)
                 segmentation = mask_coco.merge(rles)
-            if isinstance(segmentation, dict) and (isinstance(segmentation['counts'], list) or isinstance(segmentation['counts'], np.ndarray)):            
+            elif isinstance(segmentation, dict) and (isinstance(segmentation['counts'], list) or isinstance(segmentation['counts'], np.ndarray)):            
                 # Convert uncompressed RLE to compressed RLE
-                import pycocotools.mask as mask_coco
                 h, w = segmentation['size']
                 segmentation = mask_coco.frPyObjects(segmentation, h, w)
+            elif isinstance(segmentation, str):
+                # Load image mask and convert it to compressed RLE
+                segmentation = np.asfortranarray(utils.load_image(os.path.join(self.root, segmentation)))
+                if segmentation.ndim == 3:
+                    segmentation = segmentation[:,:,0]
+                segmentation = mask_coco.encode(segmentation)
+            elif not np.any(pd.isnull(segmentation)):
+                raise Exception('Segmentation type not recognized')
 
         if self.img_load in ["bbox"]:
             data = self.df.iloc[idx]
