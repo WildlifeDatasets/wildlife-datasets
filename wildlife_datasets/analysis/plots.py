@@ -1,8 +1,7 @@
 import os
-import cv2
 import numpy as np
 import pandas as pd
-from typing import Optional, List, Callable, Union
+from typing import List
 from matplotlib import pyplot as plt
 from PIL import Image
 from ..datasets import utils
@@ -46,12 +45,12 @@ def plot_bbox_segmentation(df: pd.DataFrame, root: str, n: int) -> None:
 
     if 'bbox' not in df.columns and 'segmentation' not in df.columns:
         for i in range(min(n, len(df))):
-            img = utils.get_image(os.path.join(root, df['path'].iloc[i]))
+            img = utils.load_image(os.path.join(root, df['path'].iloc[i]))
             plot_image(img)
     if 'bbox' in df.columns:
         df_red = df[~df['bbox'].isnull()]
         for i in range(min(n, len(df_red))):
-            img = utils.get_image(os.path.join(root, df_red['path'].iloc[i]))
+            img = utils.load_image(os.path.join(root, df_red['path'].iloc[i]))
             segmentation = utils.bbox_segmentation(df_red['bbox'].iloc[i])
             plot_segmentation(img, segmentation)
     if 'segmentation' in df.columns:
@@ -59,26 +58,11 @@ def plot_bbox_segmentation(df: pd.DataFrame, root: str, n: int) -> None:
         for i in range(min(n, len(df_red))):
             segmentation = df_red['segmentation'].iloc[i]
             if type(segmentation) == str:
-                img = utils.get_image(os.path.join(root, df_red['path'].iloc[i]))
+                img = utils.load_image(os.path.join(root, df_red['path'].iloc[i]))
                 plot_image(img)
-                img = utils.get_image(os.path.join(root, segmentation))
+                img = utils.load_image(os.path.join(root, segmentation))
                 plot_image(img)
             elif type(segmentation) == list or type(segmentation) == np.ndarray:
-                img = utils.get_image(os.path.join(root, df_red['path'].iloc[i]))
+                img = utils.load_image(os.path.join(root, df_red['path'].iloc[i]))
                 segmentation = df_red['segmentation'].iloc[i]
                 plot_segmentation(img, segmentation)
-
-def plot_grid(
-        df: pd.DataFrame,
-        root: str,
-        *args,
-        **kwargs
-        ) -> Image:
-    print("This function will be removed in future releases. Use d.plot_grid() instead.")
-    from .. import datasets
-    return datasets.DatasetFactory(root, df=df).plot_grid(*args, **kwargs)
-
-def get_image(*args, **kwargs) -> Image:
-    print("This function will be removed in future releases. Use datasets.get_image() instead.")
-    from .. import datasets
-    return datasets.get_image(*args, **kwargs)

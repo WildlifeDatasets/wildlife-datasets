@@ -96,7 +96,7 @@ dataset.df
 The dataset also contains basic metadata including information about the number of individuals, time span, licences or published year.
 
 ```
-dataset.metadata
+dataset.summary
 ```
 
 <picture>

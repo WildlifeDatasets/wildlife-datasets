@@ -35,8 +35,8 @@ def rename_index(df):
     rename = {}
     for dataset_name in df.index:
         try:
-            metadata = eval(f'datasets.{dataset_name}.metadata')
-            citation = " \cite{" + metadata['cite'] + "}"
+            summary = eval(f'datasets.{dataset_name}.summary')
+            citation = " \cite{" + summary['cite'] + "}"
         except:
             citation = ''
         rename[dataset_name] = dataset_name + citation

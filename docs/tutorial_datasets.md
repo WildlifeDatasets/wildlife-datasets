@@ -87,8 +87,8 @@ print(run('analysis.display_statistics(d.df)')) # markdown-exec: hide
 or [metadata](../dataframe#metadata) displayed
 
 ```python exec="true" source="above" result="console" session="run"
-d.metadata
-print_array(d.metadata) # markdown-exec: hide
+d.summary
+print_array(d.summary) # markdown-exec: hide
 ```
 
 ## Working with multiple datasets

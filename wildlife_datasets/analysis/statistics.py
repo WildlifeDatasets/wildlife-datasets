@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-import datetime
-from typing import List
 
 def display_statistics(df: pd.DataFrame, unknown_name: str = '') -> None:
     """Prints statistics about the dataframe.
