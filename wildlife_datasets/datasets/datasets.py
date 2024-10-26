@@ -39,8 +39,17 @@ class DatasetAbstract:
         img = self.get_image(idx)
         return self.apply_segmentation(img, idx)
 
-    def get_image(self, *args, **kwargs):
-        raise NotImplementedError('Must be implemented by subclasses')
+    def get_image(self, idx):
+        data = self.df.iloc[idx]
+        if self.root:
+            img_path = os.path.join(self.root, data[self.col_path])
+        else:
+            img_path = data[self.col_path]
+        img = self.load_image(img_path)
+        return img
+    
+    def load_image(self, path):
+        return utils.load_image(path)
 
     def apply_segmentation(self, img, idx):        
         if self.img_load in ["full_mask", "full_hide", "bbox_mask", "bbox_hide"]:
@@ -264,21 +273,7 @@ class DatasetAbstract:
         return fig
 
 
-class DatasetFiles(DatasetAbstract):
-    def get_image(self, idx):
-        data = self.df.iloc[idx]
-        if self.root:
-            img_path = os.path.join(self.root, data[self.col_path])
-        else:
-            img_path = data[self.col_path]
-        img = self.load_image(img_path)
-        return img
-    
-    def load_image(self, path):
-        return utils.load_image(path)
-
-
-class Dataset_WD(DatasetAbstract):
+class DatasetFactory(DatasetAbstract):
     """Base class for creating datasets.
 
     Attributes:    
@@ -655,7 +650,3 @@ class Dataset_WD(DatasetAbstract):
                 path.encode("iso-8859-1")
             except UnicodeEncodeError:
                 raise(Exception('Characters in path may cause problems. Please use only ISO-8859-1 characters: ' + os.path.join(path)))
-
-
-class DatasetFactory(DatasetFiles, Dataset_WD):
-    pass
