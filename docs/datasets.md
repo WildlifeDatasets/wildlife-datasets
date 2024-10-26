@@ -106,6 +106,12 @@ GiraffeZebraID contains images of plains zebra and Masai giraffe taken from a tw
 
 ![](images/grid_Giraffes.png)
 
+## GreenSeaTurtles
+
+GreenSeaTurtles is a collection of green sea turtles photos from two different sources in Sri Lanka. The first one comes from nesting turtles in the beaches Rekawa and Batigama, the seocnd one from multiple rescue centers in the southern coast of Sri Lanka. There is a significant shift between those two. The first source contains generally difficult photos taken with the red light in the night while the second source contains much simple photos.
+
+![](images/grid_GreenSeaTurtles.png)
+
 ## HappyWhale
 
 HappyWhale, HumpbackWhale and NOAARightWhale are datasets of various whale species. They are a product of multi-year collaboration of multiple research institutions and citizen scientists. All these datasets were released as Kaggle competitions to make it easy and rewarding for the public to participate in science by building innovative tools to engage anyone interested in marine mammals. The whales were photographed during aerial surveys. HumpbackWhale is the most uniform dataset with a clear view on the whale tail above water. NOAARightWhale contains images of submerging whales. HappyWhale is the most diverse dataset with images of dorsal fins. Some image contain only the dorsal fin, while others contain a significant part of the whale body.

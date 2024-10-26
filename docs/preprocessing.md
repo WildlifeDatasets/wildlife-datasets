@@ -22,6 +22,7 @@ Some of the datasets require special treatment or the download of extraction wor
 | [FriesianCattle2017](https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r)   |                                |                  |
 | [Giraffes](ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021)       | Only linux: downloading                               |                  |
 | [GiraffeZebraID](https://lila.science/datasets/great-zebra-giraffe-id)       |                                |                  |
+| [GreenSeaTurtles](https://www.kaggle.com/datasets/wildlifedatasets/greenseaturtles)          | Kaggle required                   |                  |
 | [HappyWhale](https://www.kaggle.com/competitions/happy-whale-and-dolphin)             | Kaggle required + terms   | Species fixed |
 | [HumpbackWhaleID](https://www.kaggle.com/competitions/humpback-whale-identification)          | Kaggle required + terms   | Unknown animals renamed |
 | [HyenaID2022](https://lila.science/datasets/hyena-id-2022/)               |                                |                  |
@@ -84,6 +85,10 @@ datasets.ELPephants.extract('data/ELPephants')
 ### Giraffes
 
 Downloading works only on Linux. Download it manually from the [FTP server](ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021/) by using some client such as [FileZilla](https://filezilla-project.org/download.php?type=client).
+
+### GreenSeaTurtles
+
+[Kaggle requirements](#kaggle) need to be satisfied.
 
 ### HappyWhale
 

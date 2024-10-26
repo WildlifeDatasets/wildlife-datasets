@@ -5,14 +5,12 @@ from .datasets import DatasetFactory
 from .summary import summary
 
 class GreenSeaTurtles(DatasetFactory):
-    # TODO: add metadata
-    # TODO: change the names everywhere
-    # TODO: fix documentation everywhere
-    archive = 'sarahzelvy.zip'
+    archive = 'greenseaturtles.zip'
+    summary = summary['GreenSeaTurtles']
 
     @classmethod
     def _download(cls):
-        command = f"datasets download -d wildlifedatasets/sarahzelvy --force"
+        command = f"datasets download -d wildlifedatasets/greenseaturtles --force"
         exception_text = '''Kaggle must be setup.
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#greenseaturtles'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
