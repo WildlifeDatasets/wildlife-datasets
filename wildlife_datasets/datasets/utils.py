@@ -36,6 +36,26 @@ def get_image(*args, **kwargs) -> Image:
     print("This function will be removed in future releases. Use load_image() instead.")
     return load_image(*args, **kwargs)
 
+def crop_black(img: Image) -> Image:
+    """Crops black borders from an image.    
+
+    Args:
+        img (Image): Image to be cropped.
+
+    Returns:
+        Cropped image.
+    """
+    
+    y_nonzero, x_nonzero, _ = np.nonzero(img)
+    return img.crop(
+        (
+            np.min(x_nonzero),
+            np.min(y_nonzero),
+            np.max(x_nonzero),
+            np.max(y_nonzero),
+        )
+    )
+
 def find_images(
         root: str,
         img_extensions: Tuple[str, ...] = ('.png', '.jpg', '.jpeg')

@@ -107,40 +107,16 @@ class DatasetAbstract:
             if (not np.any(pd.isnull(segmentation))):
                 mask = mask_coco.decode(segmentation).astype("bool")
                 img = Image.fromarray(img * mask[..., np.newaxis])
-                y_nonzero, x_nonzero, _ = np.nonzero(img)
-                img = img.crop(
-                    (
-                        np.min(x_nonzero),
-                        np.min(y_nonzero),
-                        np.max(x_nonzero),
-                        np.max(y_nonzero),
-                    )
-                )
+                img = utils.crop_black(img)
         # Hide object using segmentation mask and crop to bounding box.
         elif self.img_load == "bbox_hide":
             if (not np.any(pd.isnull(segmentation))):
                 mask = mask_coco.decode(segmentation).astype("bool")
                 img = Image.fromarray(img * ~mask[..., np.newaxis])
-                y_nonzero, x_nonzero, _ = np.nonzero(img)
-                img = img.crop(
-                    (
-                        np.min(x_nonzero),
-                        np.min(y_nonzero),
-                        np.max(x_nonzero),
-                        np.max(y_nonzero),
-                    )
-                )
+                img = utils.crop_black(img)
         # Crop black background around images
         elif self.img_load == "crop_black":
-            y_nonzero, x_nonzero, _ = np.nonzero(img)
-            img = img.crop(
-                (
-                    np.min(x_nonzero),
-                    np.min(y_nonzero),
-                    np.max(x_nonzero),
-                    np.max(y_nonzero),
-                )
-            )
+            img = utils.crop_black(img)
         else:
             raise ValueError(f"Invalid img_load argument: {self.img_load}")
 
