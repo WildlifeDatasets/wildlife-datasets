@@ -417,7 +417,7 @@ class DatasetFactory(DatasetAbstract):
             ) -> pd.DataFrame:
         """Replaces specified images with specified identities.
 
-        It looks for a subset of image_name in df['path'].
+        It looks for a subset of image_name in df[self.col_path].
         It may cause problems with `os.path.sep`.
 
         Args:
@@ -432,7 +432,7 @@ class DatasetFactory(DatasetAbstract):
             n_replaced = 0
             for index, df_row in df.iterrows():
                 # Check that there is a image with the required name and identity 
-                if image_name in df_row['path'] and old_identity == df_row[col]:
+                if image_name in df_row[self.col_path] and old_identity == df_row[col]:
                     df.loc[index, col] = new_identity
                     n_replaced += 1
             if n_replaced == 0:
@@ -462,8 +462,8 @@ class DatasetFactory(DatasetAbstract):
         df = self.reorder_df(df)
         df = self.remove_constant_columns(df)
         self.check_unique_id(df)
-        self.check_files_exist(df['path'])
-        self.check_files_names(df['path'])
+        self.check_files_exist(df[self.col_path])
+        self.check_files_names(df[self.col_path])
         if 'segmentation' in df.columns:
             self.check_files_exist(df['segmentation'])
         return df
@@ -475,7 +475,7 @@ class DatasetFactory(DatasetAbstract):
             df (pd.DataFrame): A full dataframe of the data.
         """
 
-        for col_name in ['image_id', 'identity', 'path']:
+        for col_name in ['image_id', 'identity', self.col_path]:
             if col_name not in df.columns:
                 raise(Exception('Column %s must be in the dataframe columns.' % col_name))
 
@@ -494,7 +494,7 @@ class DatasetFactory(DatasetAbstract):
         requirements = [
             ('image_id', ['int', 'str']),
             ('identity', ['int', 'str']),
-            ('path', ['str']),
+            (self.col_path, ['str']),
             ('bbox', ['list_numeric']),
             ('date', ['date']),
             ('keypoints', ['list_numeric']),
@@ -565,7 +565,7 @@ class DatasetFactory(DatasetAbstract):
             A full dataframe of the data, slightly modified.
         """
 
-        default_order = ['image_id', 'identity', 'path', 'bbox', 'date', 'keypoints', 'orientation', 'segmentation', 'species']
+        default_order = ['image_id', 'identity', self.col_path, 'bbox', 'date', 'keypoints', 'orientation', 'segmentation', 'species']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
