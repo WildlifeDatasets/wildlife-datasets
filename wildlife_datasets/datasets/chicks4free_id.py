@@ -11,15 +11,15 @@ class Chicks4FreeID(DatasetFactory):
     saved_to_system_folder = True
 
     @classmethod
-    def _download(cls):
-        load_dataset(cls.hf_url)
+    def _download(cls, hf_option = 'chicken-re-id-all-visibility'):
+        load_dataset(cls.hf_url, hf_option)
 
     @classmethod
-    def _extract(cls):
+    def _extract(cls, **kwargs):
         pass
 
-    def create_catalogue(self) -> pd.DataFrame:
-        dataset = load_dataset(self.hf_url)
+    def create_catalogue(self, hf_option = 'chicken-re-id-all-visibility') -> pd.DataFrame:
+        dataset = load_dataset(self.hf_url, hf_option)
         
         self.n_train = dataset['train'].num_rows
         self.n_test = dataset['test'].num_rows
