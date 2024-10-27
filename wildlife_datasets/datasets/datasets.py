@@ -51,7 +51,8 @@ class DatasetAbstract:
     def load_image(self, path):
         return utils.load_image(path)
 
-    def apply_segmentation(self, img, idx):        
+    def apply_segmentation(self, img, idx):
+        # Prepare for segmentations        
         if self.img_load in ["full_mask", "full_hide", "bbox_mask", "bbox_hide"]:
             data = self.df.iloc[idx]
             if not ("segmentation" in data):
@@ -74,8 +75,8 @@ class DatasetAbstract:
                 segmentation = mask_coco.encode(segmentation)
             elif not np.any(pd.isnull(segmentation)):
                 raise Exception('Segmentation type not recognized')
-
-        if self.img_load == "bbox":
+        # Prepare for bounding boxes
+        if self.img_load in ["bbox"]:
             data = self.df.iloc[idx]
             if not ("bbox" in data):
                 raise ValueError(f"{self.img_load} selected but no bbox found.")
@@ -83,8 +84,9 @@ class DatasetAbstract:
                 bbox = json.loads(data["bbox"])
             else:
                 bbox = data["bbox"]
+        
         # Load full image as it is.
-        elif self.img_load == "full":
+        if self.img_load == "full":
             img = img
         # Mask background using segmentation mask.
         elif self.img_load == "full_mask":
