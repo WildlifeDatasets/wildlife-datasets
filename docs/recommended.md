@@ -91,6 +91,7 @@ print_list_red(datasets.names_turtles) # markdown-exec: hide
 ```
 
 ![](images/grid_AmvrakikosTurtles.png)
+![](images/grid_GreenSeaTurtles.png)
 ![](images/grid_ReunionTurtles.png)
 ![](images/grid_SeaTurtleIDHeads.png)
 ![](images/grid_ZakynthosTurtles.png)
@@ -118,7 +119,7 @@ print_list_red(datasets.names_cows) # markdown-exec: hide
 Two datasets show images of various dog breeds.
 
 ```python exec="true" source="above" result="console" session="run"
-datasets.names_cows
+datasets.names_dogs
 
 print_list_red(datasets.names_dogs) # markdown-exec: hide
 ```

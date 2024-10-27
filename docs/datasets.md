@@ -44,6 +44,8 @@ The images were acquired using regular digital cameras or smartphones. The resol
 
 ## Chicks4FreeID
 
+The Chicks4FreeID dataset contains top-down view images of individually segmented and annotated chickens (with roosters and ducks also possibly present and labeled as such). 11 different coops with 54 individuals were visited for manual data collection. Each of the 677 images depicts at least one chicken. The identities of the 50 chickens, 2 roosters and 2 ducks were annotated for a total of 1270 animal instances. Annotation additionally contains visibility ratings of "best", "good", and "bad" for each animal instance.
+
 ![](images/grid_Chicks4FreeID.png)
 
 ## CTai
