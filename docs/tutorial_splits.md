@@ -28,9 +28,9 @@ The crucial part of machine learning is training a method on a training set and 
 - **open-set split**. The split where the testing set contains new individuals. For each sample from the testing set, the goal is to assign some individual from the training set or predict that the sample contain a new individual. The name follows from the fact that the population is open.
 - **disjoint-set split**. The split where there are no individuals in both the training and testing sets. For each sample from the testing set, the goal is to assign some individual from the testing set. The name follows from the fact that the two populations are disjoint.
 
-The splits are usually created randomly but in situations where the dataset contains timestamps, it is also possible to create the split based on timestamps. Due to our representation of the [random number generator](../reference_splits#lcg), the splits are both machine- and system-independent. We followed the presentation from [this paper](https://arxiv.org/abs/2211.10307).
+The splits are usually created randomly but in situations where the dataset contains timestamps, it is also possible to create the split based on timestamps. Due to our representation of the [random number generator](./reference_splits.md#lcg), the splits are both machine- and system-independent. We followed the presentation from [this paper](https://arxiv.org/abs/2211.10307).
 
-We assume that we have already [downloaded](../tutorial_datasets#downloading-datasets) the MacaqueFaces dataset. Then we load the dataset and the dataframe.
+We assume that we have already [downloaded](./tutorial_datasets.md#downloading-datasets) the MacaqueFaces dataset. Then we load the dataset and the dataframe.
 
 ```python
 from wildlife_datasets import datasets, splits

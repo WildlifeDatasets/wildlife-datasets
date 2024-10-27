@@ -23,18 +23,18 @@ Test('.').df
 print(Test('.').df) # markdown-exec: hide
 ```
 
-The dataframe `df` must satisfy [some requirements](../dataframe).
+The dataframe `df` must satisfy [some requirements](./dataframe.md).
 
 !!! info
 
-    Instead of returning `df` it is better to return `self.finalize_catalogue(df)`. This function will perform [multiple checks](../reference_datasets/#datasets.datasets.DatasetFactory.finalize_catalogue) to verify the created dataframe. However, in this case, this check would fail because the specified file paths do not exist.
+    Instead of returning `df` it is better to return `self.finalize_catalogue(df)`. This function will perform [multiple checks](./reference_datasets.md/#datasets.datasets.DatasetFactory.finalize_catalogue) to verify the created dataframe. However, in this case, this check would fail because the specified file paths do not exist.
 
 To incorporate the new dataset into the list of all available datasets, the [init script](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/__init__.py) must be appropriately modified.
 
 
 ## Optional: including metadata
 
-The metadata can be added by saving them in a csv file (such as [mysummary.csv](../csv/mysummary.csv)). Their full description is in a [separate file](../dataframe#metadata). Then they can be loaded into the class definition as a class attribute. 
+The metadata can be added by saving them in a csv file (such as [mysummary.csv](./csv/mysummary.csv)). Their full description is in a [separate file](./dataframe.md#metadata). Then they can be loaded into the class definition as a class attribute. 
 
 ```python exec="true" source="above" session="run2"
 import pandas as pd

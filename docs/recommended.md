@@ -15,7 +15,7 @@ def print_list_red(xs):
 
 # Recommended datasets 
 
-The package handles a large number of datasets. Even though it is possible to test developed methods on all these datasets, some combinations make more sense. We export several possible combinations. Before testing methods, the datasets need to be [downloaded](../tutorial_datasets#downloading-datasets).
+The package handles a large number of datasets. Even though it is possible to test developed methods on all these datasets, some combinations make more sense. We export several possible combinations. Before testing methods, the datasets need to be [downloaded](./tutorial_datasets.md#downloading-datasets).
 
 
 ## Small datasets

@@ -8,10 +8,6 @@ This file describes methods associated with dataset analysis and loading.
     options:
       heading_level: 3
 
-::: analysis.plots
-    options:
-      heading_level: 3
-
 ## Loading
 
 ::: loader.loader
