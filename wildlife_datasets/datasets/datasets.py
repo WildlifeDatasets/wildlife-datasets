@@ -75,7 +75,7 @@ class DatasetAbstract:
             elif not np.any(pd.isnull(segmentation)):
                 raise Exception('Segmentation type not recognized')
 
-        if self.img_load in ["bbox"]:
+        if self.img_load == "bbox":
             data = self.df.iloc[idx]
             if not ("bbox" in data):
                 raise ValueError(f"{self.img_load} selected but no bbox found.")
@@ -83,28 +83,23 @@ class DatasetAbstract:
                 bbox = json.loads(data["bbox"])
             else:
                 bbox = data["bbox"]
-
         # Load full image as it is.
-        if self.img_load == "full":
+        elif self.img_load == "full":
             img = img
-
         # Mask background using segmentation mask.
         elif self.img_load == "full_mask":
             if not np.any(pd.isnull(segmentation)):
                 mask = mask_coco.decode(segmentation).astype("bool")
                 img = Image.fromarray(img * mask[..., np.newaxis])
-
         # Hide object using segmentation mask
         elif self.img_load == "full_hide":
             if not np.any(pd.isnull(segmentation)):
                 mask = mask_coco.decode(segmentation).astype("bool")
                 img = Image.fromarray(img * ~mask[..., np.newaxis])
-
         # Crop to bounding box
         elif self.img_load == "bbox":
             if not np.any(pd.isnull(bbox)):
                 img = img.crop((bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]))
-
         # Mask background using segmentation mask and crop to bounding box.
         elif self.img_load == "bbox_mask":
             if (not np.any(pd.isnull(segmentation))):
@@ -119,7 +114,6 @@ class DatasetAbstract:
                         np.max(y_nonzero),
                     )
                 )
-
         # Hide object using segmentation mask and crop to bounding box.
         elif self.img_load == "bbox_hide":
             if (not np.any(pd.isnull(segmentation))):
@@ -134,7 +128,6 @@ class DatasetAbstract:
                         np.max(y_nonzero),
                     )
                 )
-
         # Crop black background around images
         elif self.img_load == "crop_black":
             y_nonzero, x_nonzero, _ = np.nonzero(img)
@@ -146,7 +139,6 @@ class DatasetAbstract:
                     np.max(y_nonzero),
                 )
             )
-
         else:
             raise ValueError(f"Invalid img_load argument: {self.img_load}")
 
@@ -154,11 +146,6 @@ class DatasetAbstract:
             img = self.transform(img)
 
         return img
-        # TODO: add this
-        #if self.load_label:
-        #    return img, self.labels[idx]
-        #else:
-        #    return img  
 
     def plot_grid(
             self,
