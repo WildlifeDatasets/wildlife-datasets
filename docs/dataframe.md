@@ -10,7 +10,6 @@ The following three columns must be part of all dataframes.
 | id | `int` or `str` | Unique id of the entry. |
 | identity | `int` or `str` | Identity (or label) of the depicted individual animal. |
 | path | `str` | Relative path to the image. |
-| split | `str` | Automatically generated. Determines whether the sample belongs to the training or testing set. It is `null` whenever the animal identity is unknown. |
 
 There is a special value for `identity` which describes an unknown individual. Its default value for unknown animals is
 
@@ -51,10 +50,13 @@ Besides the dataframe, each dataset also contains some metadata. The metadata ar
 | url | URL for the dataset. |
 | cite | Citation in Google Scholar type of the paper. |
 | animals | List of all animal species in the dataset. |
+| animals_simple | List of all animal species in the dataset. |
 | real_animals | Determines whether the dataset contains real animals. |
+| year | Publication year of the dataset. |
 | reported_n_total | The reported number of total animals. |
 | reported_n_identified | The reported number of identified animals. |
 | reported_n_photos | The reported number of photos. |
+| eported_n_individuals | The reported number of individuals. |
 | wild | Determines whether the photos were taken in the wild. |
 | clear_photos | Determines whether the photos are clear. |
 | pose | Determines whether the photos have one orientation (single), two orientation such as left and right flanks (double) or more (multiple). |
@@ -62,3 +64,4 @@ Besides the dataframe, each dataset also contains some metadata. The metadata ar
 | from_video | Determines whether the dataset was created from photos or videos. |
 | cropped | Determines whether the photos are cropped. |
 | span | The span of the dataset (the time difference between the last and first photos). |
+| size | Size of the zipped datasets (in MB). |
