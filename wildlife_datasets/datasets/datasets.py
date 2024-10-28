@@ -35,11 +35,29 @@ class DatasetAbstract:
     def __len__(self):
         return len(self.df)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> Image:
+        """Load an image with iloc `idx` with transforms `self.transform` and `self.img_load` applied.
+
+        Args:
+            idx (int): Index of the image.
+
+        Returns:
+            Loaded image.
+        """
+
         img = self.get_image(idx)
         return self.apply_segmentation(img, idx)
 
-    def get_image(self, idx):
+    def get_image(self, idx: int) -> Image:
+        """Load an image with iloc `idx`.
+
+        Args:
+            idx (int): Index of the image.
+
+        Returns:
+            Loaded image.
+        """
+
         data = self.df.iloc[idx]
         if self.root:
             img_path = os.path.join(self.root, data[self.col_path])
@@ -48,10 +66,37 @@ class DatasetAbstract:
         img = self.load_image(img_path)
         return img
     
-    def load_image(self, path):
+    def load_image(self, path: str) -> Image:
+        """Load an image with `path`.
+
+        Args:
+            path (str): Path to the image.
+
+        Returns:
+            Loaded image.
+        """
+
         return utils.load_image(path)
 
-    def apply_segmentation(self, img, idx):
+    def apply_segmentation(self, img: Image, idx: int) -> Image:
+        """_summary_
+
+        Args:
+            img (Image): _description_
+            idx (int): Index of the image.
+
+        Raises:
+            ValueError: _description_
+            Exception: _description_
+            ValueError: _description_
+            ValueError: _description_
+
+        Returns:
+            Loaded image.
+        """
+
+        # TODO: finish
+        
         # Prepare for segmentations        
         if self.img_load in ["full_mask", "full_hide", "bbox_mask", "bbox_hide"]:
             data = self.df.iloc[idx]
@@ -250,6 +295,11 @@ class DatasetFactory(DatasetAbstract):
       update_wrong_labels(bool): Whether `fix_labels` should be called.
       unknown_name (str): Name of the unknown class.
       outdated_dataset (bool): Tracks whether dataset was replaced by a new version.
+      determined_by_df (bool): Specifies whether dataset is completely determined by its dataframe.
+      saved_to_system_folder (bool): Specifies whether dataset is saved to system (hidden) folders.
+      transform (Callable): Applied transform when loading the image.
+      img_load (str): Applied transform when loading the image.
+      col_path (str): Column in the dataframe denoting the path to images.
     """
 
     unknown_name = 'unknown'
@@ -273,6 +323,7 @@ class DatasetFactory(DatasetAbstract):
             img_load: str = "full",
             col_path: str = "path",
             **kwargs) -> None:
+        # TODO: fix this
         """Initializes the class.
 
         If `df` is specified, it copies it. Otherwise, it creates it
