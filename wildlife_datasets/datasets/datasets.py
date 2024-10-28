@@ -400,6 +400,12 @@ class DatasetFactory(DatasetAbstract):
             cls_parent = cls.__bases__[0]            
         return cls.__name__
 
+    def _download(self):
+        raise NotImplementedError('Needs to be implemented by subclasses.')
+
+    def _extract(self):
+        raise NotImplementedError('Needs to be implemented by subclasses.')
+
     def create_catalogue(self):
         """Creates the dataframe.
 
