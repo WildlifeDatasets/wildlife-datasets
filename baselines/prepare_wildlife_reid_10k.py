@@ -99,6 +99,11 @@ def prepare_aerial_cattle_2017(root, new_root, size=None, **kwargs):
     idx = get_every_k(dataset, 10, ['identity', 'video'])
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
+def prepare_amvrakikos_turtles(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.AmvrakikosTurtles(root, img_load="bbox", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
+
 def prepare_atrw(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.ATRW(root, img_load="bbox", transform=transform)
@@ -119,6 +124,13 @@ def prepare_bird_individual_id(root, new_root, size=None, segmented=True, **kwar
 def prepare_cat_individual_images(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.CatIndividualImages(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
+
+def prepare_chicks4free_id(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.Chicks4FreeID(root, img_load="full", transform=transform)
+    # Change the path from np.nan so that it is saved correctly
+    dataset.df['path'] = 'images/' + dataset.df['image_id'].astype('str') + '.jpg'
     return resize_dataset(dataset, new_root, **kwargs)
 
 def prepare_cow_dataset(root, new_root, size=None, **kwargs):
@@ -166,6 +178,11 @@ def prepare_giraffe_zebra_id(root, new_root, size=None, **kwargs):
     dataset = datasets.GiraffeZebraID(root, img_load="bbox", transform=transform)
     return resize_dataset(dataset, new_root, **kwargs)
 
+def prepare_green_sea_turtles(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.GreenSeaTurtles(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
+
 def prepare_hyena_id_2022(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.HyenaID2022(root, img_load="bbox", transform=transform)
@@ -207,6 +224,11 @@ def prepare_polar_bear_vidid(root, new_root, size=None, **kwargs):
     idx = get_every_k(dataset, 10, ['identity', 'video'])
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
+def prepare_reunion_turtles(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.ReunionTurtles(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
+
 def prepare_seal_id(root, new_root, size=None, segmented=True, **kwargs):
     if segmented:
         root = root + "Segmented"
@@ -239,6 +261,11 @@ def prepare_whaleshark_id(root, new_root, size=None, **kwargs):
     dataset = datasets.WhaleSharkID(root, img_load="bbox", transform=transform)
     return resize_dataset(dataset, new_root, **kwargs)
 
+def prepare_zakynthos_turtles(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.ZakynthosTurtles(root, img_load="bbox", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
+
 def prepare_zindi_turtle_recall(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.ZindiTurtleRecall(root, img_load="full", transform=transform)
@@ -247,10 +274,12 @@ def prepare_zindi_turtle_recall(root, new_root, size=None, **kwargs):
 prepare_functions = {
     'AAUZebraFish': prepare_aau_zebrafish,
     'AerialCattle2017': prepare_aerial_cattle_2017,
+    'AmvrakikosTurtles': prepare_amvrakikos_turtles,
     'ATRW': prepare_atrw,
     'BelugaID': prepare_beluga_id,
     'BirdIndividualID': prepare_bird_individual_id,
     'CatIndividualImages': prepare_cat_individual_images,
+    'Chicks4FreeID': prepare_chicks4free_id,
     'CowDataset': prepare_cow_dataset,
     'Cows2021': prepare_cows2021,
     'CTai': prepare_ctai,
@@ -260,6 +289,7 @@ prepare_functions = {
     'FriesianCattle2017': prepare_friesian_cattle_2017,
     'Giraffes': prepare_giraffes,
     'GiraffeZebraID': prepare_giraffe_zebra_id,
+    'GreenSeaTurtles': prepare_green_sea_turtles,
     'HyenaID2022': prepare_hyena_id_2022,
     'IPanda50': prepare_ipanda_50,
     'LeopardID2022': prepare_leopard_id_2022,
@@ -268,12 +298,14 @@ prepare_functions = {
     'NyalaData': prepare_nyala_data,
     'OpenCows2020': prepare_open_cows_2020,
     'PolarBearVidID': prepare_polar_bear_vidid,
+    'ReunionTurtles': prepare_reunion_turtles,
     'SealID': prepare_seal_id,
     'SeaStarReID2023': prepare_sea_star_reid_2023,
     'SeaTurtleID2022': prepare_sea_turtle_id_2022,
     'SMALST': prepare_smalst,
     'StripeSpotter': prepare_stripe_spotter,
     'WhaleSharkID': prepare_whaleshark_id,
+    'ZakynthosTurtles': prepare_zakynthos_turtles,
     'ZindiTurtleRecall': prepare_zindi_turtle_recall,
 }
 
@@ -286,6 +318,7 @@ species_conversion = {
     'amur tiger': 'tiger',
     'beluga whale': 'whale',
     'cat': 'cat',
+    'chickens': 'chicken',
     'chimpanzee': 'chimpanzee',
     'cow': 'cow',
     'dog': 'dog',
@@ -293,6 +326,9 @@ species_conversion = {
     'giraffe_masai': 'giraffe',
     'great panda': 'panda',
     'great_tits': 'bird',
+    'green turtle': 'sea turtle',
+    'Green': 'sea turtle',
+    'Hawksbill': 'sea turtle',
     'leopard': 'leopard',
     'loggerhead turtle': 'sea turtle',
     'nyala': 'nyala',
