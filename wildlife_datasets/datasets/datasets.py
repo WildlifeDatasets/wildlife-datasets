@@ -401,9 +401,21 @@ class DatasetFactory(DatasetAbstract):
         return cls.__name__
 
     def _download(self):
+        """Downloads the dataset. Needs to be implemented by subclasses.
+
+        Raises:
+            NotImplementedError: Needs to be implemented by subclasses.
+        """
+
         raise NotImplementedError('Needs to be implemented by subclasses.')
 
     def _extract(self):
+        """Extracts the dataset. Needs to be implemented by subclasses.
+
+        Raises:
+            NotImplementedError: Needs to be implemented by subclasses.
+        """
+
         raise NotImplementedError('Needs to be implemented by subclasses.')
 
     def create_catalogue(self):
