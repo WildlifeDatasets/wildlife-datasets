@@ -77,24 +77,16 @@ class DatasetAbstract:
         return utils.load_image(path)
 
     def apply_segmentation(self, img: Image, idx: int) -> Image:
-        """_summary_
+        """Applies segmentation or bounding box when loading an image.
 
         Args:
-            img (Image): _description_
+            img (Image): Loaded image.
             idx (int): Index of the image.
-
-        Raises:
-            ValueError: _description_
-            Exception: _description_
-            ValueError: _description_
-            ValueError: _description_
 
         Returns:
             Loaded image.
         """
 
-        # TODO: finish
-        
         # Prepare for segmentations        
         if self.img_load in ["full_mask", "full_hide", "bbox_mask", "bbox_hide"]:
             data = self.df.iloc[idx]
@@ -313,22 +305,23 @@ class DatasetFactory(DatasetAbstract):
 
     def __init__(
             self, 
-            root: str | None = None,
+            root: Optional[str] = None,
             df: Optional[pd.DataFrame] = None,
             update_wrong_labels: bool = True,
             transform: Optional[Callable] = None,
             img_load: str = "full",
             **kwargs) -> None:
-        # TODO: fix this
         """Initializes the class.
 
         If `df` is specified, it copies it. Otherwise, it creates it
         by the `create_catalogue` method.
 
         Args:
-            root (str): Root directory for the data.
+            root (Optional[str], optional): Root directory for the data.
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
             update_wrong_labels (bool, optional): Whether `fix_labels` should be called.
+            transform (Optional[Callable], optional): Applied transform when loading the image.
+            img_load (str, optional): Applied transform when loading the image.
         """
         
         if not self.saved_to_system_folder and not os.path.exists(root):
@@ -346,7 +339,19 @@ class DatasetFactory(DatasetAbstract):
         super().__init__(df=df, root=root, transform=transform, img_load=img_load)
 
     @classmethod
-    def get_data(cls, root, force=False, **kwargs):
+    def get_data(
+            cls,
+            root: str,
+            force: bool = False,
+            **kwargs
+            ) -> None:
+        """Downloads and extracts the data. Wrapper around `cls._download` and `cls._extract.`
+
+        Args:
+            root (str): Where the data should be stored.
+            force (bool, optional): It the root exists, whether it should be overwritten.
+        """
+
         dataset_name = cls.__name__
         mark_file_name = os.path.join(root, cls.download_mark_name)
         
@@ -362,7 +367,19 @@ class DatasetFactory(DatasetAbstract):
             print('DATASET %s: FINISHED.\n' % dataset_name)
 
     @classmethod
-    def download(cls, root, force=False, **kwargs):
+    def download(
+            cls,
+            root: str,
+            force: bool = False,
+            **kwargs
+            ) -> None:
+        """Downloads the data. Wrapper around `cls._download`.
+
+        Args:
+            root (str): Where the data should be stored.
+            force (bool, optional): It the root exists, whether it should be overwritten.
+        """
+        
         dataset_name = cls.__name__
         mark_file_name = os.path.join(root, cls.download_mark_name)
         
@@ -383,7 +400,13 @@ class DatasetFactory(DatasetAbstract):
                     file.write(cls.summary['licenses_url'])
         
     @classmethod    
-    def extract(cls, root, **kwargs):
+    def extract(cls, root: str, **kwargs) -> None:
+        """Extract the data. Wrapper around `cls._extract`.
+
+        Args:
+            root (str): Where the data should be stored.
+        """
+
         if cls.saved_to_system_folder:
             cls._extract(**kwargs)
         else:
@@ -394,6 +417,12 @@ class DatasetFactory(DatasetAbstract):
     
     @classmethod
     def display_name(cls) -> str:
+        """Returns name of the dataset without the v2 ending.
+
+        Returns:
+            Name of the dataset.
+        """
+
         cls_parent = cls.__bases__[0]
         while cls_parent != object and cls_parent.outdated_dataset:
             cls = cls_parent
