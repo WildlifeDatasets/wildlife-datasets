@@ -12,6 +12,17 @@ def resize_dataset(
         idx: Optional[List[int]] = None,
         copy_files: bool = True
         ) -> pd.DataFrame:
+    """Resizes dataset using `dataset.transform` into `new_root`.
+
+    Args:
+        dataset (datasets.DatasetFactory): Dataset to be resized.
+        new_root (str): Root to store new images.
+        idx (Optional[List[int]], optional): If specified, then indices to consider.
+        copy_files (bool, optional): Whether files should be copied as well or only datatframe created.
+
+    Returns:
+        Description of the new dataset.
+    """
     
     if idx is None:
         idx = np.where(dataset.metadata['identity'] != 'unknown')[0]
@@ -54,8 +65,28 @@ def resize_dataset(
             })
     return pd.DataFrame(df_new)
 
-def get_idx():
-    pass
+def get_every_k(
+        dataset: datasets.DatasetFactory,
+        k: int,
+        groupby_cols: str | List[str],
+        ) -> List[int]:
+    """Gets indices of every k-th image based on columns in `groupby_cols`.
+
+    Args:
+        dataset (datasets.DatasetFactory): Dataset to be resized.
+        k (int): Number of images to skip.
+        groupby_cols (str | List[str]): For which groups the indices will be computed.
+
+    Returns:
+        Computed indices.
+    """
+    
+    idx = np.array([], dtype=int)
+    for _, df_red in dataset.df.groupby(groupby_cols):
+        idx = np.hstack((idx, df_red.index[np.arange(0, len(df_red), k)]))
+    # Convert loc to iloc
+    idx = dataset.df.index.get_indexer(idx)
+    return np.sort(idx)
 
 def prepare_aau_zebrafish(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
@@ -65,11 +96,7 @@ def prepare_aau_zebrafish(root, new_root, size=None, **kwargs):
 def prepare_aerial_cattle_2017(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.AerialCattle2017(root, img_load="full", transform=transform)
-    # Take only every tenth frame in videos
-    idx = np.array([], dtype=int)
-    for _, df_red in dataset.df.groupby(['identity', 'video']):
-        idx = np.hstack((idx, df_red.index[np.arange(0, len(df_red), 10)]))
-    idx = np.sort(idx)
+    idx = get_every_k(dataset, 10, ['identity', 'video'])
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_atrw(root, new_root, size=None, **kwargs):
@@ -177,11 +204,7 @@ def prepare_open_cows_2020(root, new_root, size=None, **kwargs):
 def prepare_polar_bear_vidid(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.PolarBearVidID(root, img_load="full", transform=transform)
-    # Take only every tenth frame in videos
-    idx = np.array([], dtype=int)
-    for _, df_red in dataset.df.groupby(['identity', 'video']):
-        idx = np.hstack((idx, df_red.index[np.arange(0, len(df_red), 10)]))
-    idx = np.sort(idx)
+    idx = get_every_k(dataset, 10, ['identity', 'video'])
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_seal_id(root, new_root, size=None, segmented=True, **kwargs):
