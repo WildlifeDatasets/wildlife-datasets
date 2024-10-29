@@ -2,30 +2,19 @@ import os
 import numpy as np
 import pandas as pd
 import torchvision.transforms as T
-from PIL import Image
 from tqdm import tqdm
 from wildlife_datasets import datasets
-from wildlife_tools.data.dataset import WildlifeDataset
-
+from typing import Optional, List
 
 def resize_dataset(
-        dataset_factory,
-        new_root,
-        idx=None,
-        size=None,
-        img_load="bbox",
-        copy_files=True
-        ):
+        dataset: datasets.DatasetFactory,
+        new_root: str,
+        idx: Optional[List[int]] = None,
+        copy_files: bool = True
+        ) -> pd.DataFrame:
     
-    # Create dataset loader
     if idx is None:
-        idx = np.where(dataset_factory.df['identity'] != 'unknown')[0]
-    if size is not None:
-        transform = T.Resize(size=size)
-    else:
-        transform = None
-    dataset = WildlifeDataset(dataset_factory.df, dataset_factory.root,
-        transform=transform, img_load=img_load)
+        idx = np.where(dataset.metadata['identity'] != 'unknown')[0]
 
     df_new = []
     for i in tqdm(idx, mininterval=1, ncols=100):
@@ -39,7 +28,7 @@ def resize_dataset(
 
             # Save image to new root with unique image path
             if copy_files:
-                image, _ = dataset[i]
+                image = dataset[i]
                 full_img_path = os.path.join(new_root, img_path)
                 if not os.path.exists(os.path.dirname(full_img_path)):
                     os.makedirs(os.path.dirname(full_img_path))
@@ -49,7 +38,7 @@ def resize_dataset(
             if 'species' in row:
                 species = row['species']
             else:
-                species = dataset_factory.summary['animals']
+                species = dataset.summary['animals']
                 if len(species) != 1:
                     raise Exception('There should be only one species')
                 species = list(species)[0]
@@ -65,186 +54,172 @@ def resize_dataset(
             })
     return pd.DataFrame(df_new)
 
-def prepare_aau_zebrafish(root, new_root="data/AAUZebraFish", **kwargs):
-    dataset_factory = datasets.AAUZebraFish(root)
-    return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
+def get_idx():
+    pass
 
-def prepare_aerial_cattle_2017(root, new_root="data/AerialCattle2017", **kwargs):
-    dataset_factory = datasets.AerialCattle2017(root)
+def prepare_aau_zebrafish(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.AAUZebraFish(root, img_load="bbox", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
+
+def prepare_aerial_cattle_2017(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.AerialCattle2017(root, img_load="full", transform=transform)
     # Take only every tenth frame in videos
     idx = np.array([], dtype=int)
-    for _, df_red in dataset_factory.df.groupby(['identity', 'video']):
+    for _, df_red in dataset.df.groupby(['identity', 'video']):
         idx = np.hstack((idx, df_red.index[np.arange(0, len(df_red), 10)]))
-    dataset_factory.df = dataset_factory.df.loc[np.sort(idx)]
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+    idx = np.sort(idx)
+    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
-def prepare_atrw(root, new_root="data/ATRW", **kwargs):
-    dataset_factory = datasets.ATRW(root)
-    return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
+def prepare_atrw(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.ATRW(root, img_load="bbox", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_beluga_id(root, new_root="data/BelugaID", **kwargs):
-    dataset_factory = datasets.BelugaIDv2(root)
-    return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
+def prepare_beluga_id(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.BelugaIDv2(root, img_load="bbox", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_bird_individual_id(root, new_root="data/BirdIndividualID", segmented=True, **kwargs):
+def prepare_bird_individual_id(root, new_root, size=None, segmented=True, **kwargs):
     if segmented:
         root = root + "Segmented"
-    dataset_factory = datasets.BirdIndividualIDSegmented(root)
-    return resize_dataset(dataset_factory, new_root, img_load="crop_black", **kwargs)
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.BirdIndividualIDSegmented(root, img_load="crop_black", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_cat_individual_images(root, new_root="data/CatIndividualImages", **kwargs):
-    dataset_factory = datasets.CatIndividualImages(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_cat_individual_images(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.CatIndividualImages(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_cow_dataset(root, new_root="data/CowDataset", **kwargs):
-    dataset_factory = datasets.CowDataset(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_cow_dataset(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.CowDataset(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_cows2021(root, new_root="data/Cows2021", **kwargs):
-    dataset_factory = datasets.Cows2021v2(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_cows2021(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.Cows2021v2(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_ctai(root, new_root="data/CTai", **kwargs):
-    dataset_factory = datasets.CTai(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_ctai(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.CTai(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_czoo(root, new_root="data/CZoo", **kwargs):
-    dataset_factory = datasets.CZoo(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_czoo(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.CZoo(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_dog_facenet(root, new_root="data/DogFaceNet", **kwargs):
-    dataset_factory = datasets.DogFaceNet(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_dog_facenet(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.DogFaceNet(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_friesian_cattle_2015(root, new_root="data/FriesianCattle2015", **kwargs):
-    dataset_factory = datasets.FriesianCattle2015v2(root)
-    return resize_dataset(dataset_factory, new_root, img_load="crop_black", **kwargs)
+def prepare_friesian_cattle_2015(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.FriesianCattle2015v2(root, img_load="crop_black", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_friesian_cattle_2017(root, new_root="data/FriesianCattle2017", **kwargs):
-    dataset_factory = datasets.FriesianCattle2017(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_friesian_cattle_2017(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.FriesianCattle2017(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_giraffes(root, new_root="data/Giraffes", **kwargs):
-    dataset_factory = datasets.Giraffes(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_giraffes(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.Giraffes(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_giraffe_zebra_id(root, new_root="data/GiraffeZebraID", **kwargs):
-    dataset_factory = datasets.GiraffeZebraID(root)
-    return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
+def prepare_giraffe_zebra_id(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.GiraffeZebraID(root, img_load="bbox", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_hyena_id_2022(root, new_root="data/HyenaID2022", **kwargs):
-    dataset_factory = datasets.HyenaID2022(root)
-    return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
+def prepare_hyena_id_2022(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.HyenaID2022(root, img_load="bbox", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_ipanda_50(root, new_root="data/IPanda50", **kwargs):
-    dataset_factory = datasets.IPanda50(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_ipanda_50(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.IPanda50(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_leopard_id_2022(root, new_root="data/LeopardID2022", **kwargs):
-    dataset_factory = datasets.LeopardID2022(root)
-    return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
+def prepare_leopard_id_2022(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.LeopardID2022(root, img_load="bbox", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_mpdd(root, new_root="data/MPDD", **kwargs):
-    dataset_factory = datasets.MPDD(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_mpdd(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.MPDD(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_ndd20(root, new_root="data/NDD20", **kwargs):
-    dataset_factory = datasets.NDD20v2(root)
-    return resize_dataset(dataset_factory, new_root, img_load="bbox_mask", **kwargs)
+def prepare_ndd20(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.NDD20v2(root, img_load="bbox_mask", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_nyala_data(root, new_root="data/NyalaData", **kwargs):
-    dataset_factory = datasets.NyalaData(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_nyala_data(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.NyalaData(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_open_cows_2020(root, new_root="data/OpenCows2020", **kwargs):
-    dataset_factory = datasets.OpenCows2020(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_open_cows_2020(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.OpenCows2020(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_polar_bear_vidid(root, new_root="data/PolarBearVidID", **kwargs):
-    dataset_factory = datasets.PolarBearVidID(root)
+def prepare_polar_bear_vidid(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.PolarBearVidID(root, img_load="full", transform=transform)
     # Take only every tenth frame in videos
     idx = np.array([], dtype=int)
-    for _, df_red in dataset_factory.df.groupby(['identity', 'video']):
+    for _, df_red in dataset.df.groupby(['identity', 'video']):
         idx = np.hstack((idx, df_red.index[np.arange(0, len(df_red), 10)]))
-    dataset_factory.df = dataset_factory.df.loc[np.sort(idx)]
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+    idx = np.sort(idx)
+    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
-def prepare_seal_id(root, new_root="data/SealID", segmented=True, **kwargs):
+def prepare_seal_id(root, new_root, size=None, segmented=True, **kwargs):
     if segmented:
         root = root + "Segmented"
-    dataset_factory = datasets.SealIDSegmented(root)
-    return resize_dataset(dataset_factory, new_root, img_load="crop_black", **kwargs)
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.SealIDSegmented(root, img_load="crop_black", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_sea_star_reid_2023(root, new_root="data/SeaStarReID2023", **kwargs):
-    dataset_factory = datasets.SeaStarReID2023(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_sea_star_reid_2023(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.SeaStarReID2023(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_sea_turtle_id_2022(root, new_root="data/SeaTurtleID2022", **kwargs):
-    dataset_factory = datasets.SeaTurtleID2022(root)
-    return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
+def prepare_sea_turtle_id_2022(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.SeaTurtleID2022(root, img_load="bbox", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_smalst(root, new_root="data/SMALST", size=None, copy_files=True):
-    dataset_factory = datasets.SMALST(root)
-    dataset = WildlifeDataset(
-        dataset_factory.df,
-        dataset_factory.root,
-        img_load="full",
-    )
-    dataset_masks = WildlifeDataset(
-        dataset_factory.df,
-        dataset_factory.root,
-        img_load="full",
-        col_path="segmentation",
-    )
+def prepare_smalst(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.SMALST(root, img_load="bbox_mask", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-    df_new = []
-    for i in tqdm(range(len(dataset))):
-        row = dataset.metadata.iloc[i]
-        img_path = row["path"].replace('\\\\', '/')
-        img_path = img_path.replace('\\', '/')
+def prepare_stripe_spotter(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.StripeSpotter(root, img_load="bbox", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-        if copy_files:
-            if not os.path.exists(os.path.dirname(os.path.join(new_root, img_path))):
-                os.makedirs(os.path.dirname(os.path.join(new_root, img_path)))
+def prepare_whaleshark_id(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.WhaleSharkID(root, img_load="bbox", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
-            # Apply mask
-            img, _ = dataset[i]
-            mask, _ = dataset_masks[i]
-            img = Image.fromarray(img * np.array(mask).astype(bool))
-
-            # Crop black parts and resize
-            y_nonzero, x_nonzero, _ = np.nonzero(img)
-            img = img.crop(
-                (np.min(x_nonzero), np.min(y_nonzero), np.max(x_nonzero), np.max(y_nonzero))
-            )
-            if size is not None:
-                img = T.Resize(size=size)(img)
-
-            # Save image
-            img.save(os.path.join(new_root, img_path))
-
-        # Update dataframe
-        df_new.append({
-            'image_id': row['image_id'],
-            'identity': row['identity'],
-            'path': img_path,
-            'species': 'zebra',
-            'date': row.get('date', np.nan),
-            'orientation': row.get('orientation', np.nan),
-        })
-    return pd.DataFrame(df_new)
-
-def prepare_stripe_spotter(root, new_root="data/StripeSpotter", **kwargs):
-    dataset_factory = datasets.StripeSpotter(root)
-    return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
-
-def prepare_whaleshark_id(root, new_root="data/WhaleSharkID", **kwargs):
-    dataset_factory = datasets.WhaleSharkID(root)
-    return resize_dataset(dataset_factory, new_root, img_load="bbox", **kwargs)
-
-def prepare_zindi_turtle_recall(root, new_root="data/ZindiTurtleRecall", **kwargs):
-    dataset_factory = datasets.ZindiTurtleRecall(root)
-    return resize_dataset(dataset_factory, new_root, img_load="full", **kwargs)
+def prepare_zindi_turtle_recall(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.ZindiTurtleRecall(root, img_load="full", transform=transform)
+    return resize_dataset(dataset, new_root, **kwargs)
 
 prepare_functions = {
     'AAUZebraFish': prepare_aau_zebrafish,
