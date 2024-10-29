@@ -49,7 +49,7 @@ def resize_dataset(
             if 'species' in row:
                 species = row['species']
             else:
-                species = dataset_factory.metadata['animals']
+                species = dataset_factory.summary['animals']
                 if len(species) != 1:
                     raise Exception('There should be only one species')
                 species = list(species)[0]
