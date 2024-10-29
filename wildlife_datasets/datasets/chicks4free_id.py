@@ -25,6 +25,7 @@ class Chicks4FreeID(DatasetFactory):
         self.n_test = dataset['test'].num_rows
         self.dataset = dataset
         return pd.DataFrame({
+            'image_id': range(self.n_train+self.n_test),
             'identity': dataset['train']['identity'] + dataset['test']['identity'],
             'path': np.nan,
             'split_original': self.n_train*['train'] + self.n_test*['test']
