@@ -90,12 +90,13 @@ def get_every_k(
 def prepare_aau_zebrafish(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.AAUZebraFish(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    idx = get_every_k(dataset, 20, 'identity')
+    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_aerial_cattle_2017(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.AerialCattle2017(root, img_load="full", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 10, ['identity', 'video'])
+    idx = get_every_k(dataset, 20, 'identity')
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_amvrakikos_turtles(root, new_root, size=None, **kwargs):
@@ -118,7 +119,8 @@ def prepare_bird_individual_id(root, new_root, size=None, segmented=True, **kwar
         root = root + "Segmented"
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.BirdIndividualIDSegmented(root, img_load="crop_black", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    idx = get_every_k(dataset, 20, 'identity')
+    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_cat_individual_images(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
@@ -241,7 +243,7 @@ def prepare_open_cows_2020(root, new_root, size=None, **kwargs):
 def prepare_polar_bear_vidid(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.PolarBearVidID(root, img_load="full", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 10, ['identity', 'video'])
+    idx = get_every_k(dataset, 100, 'identity')
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_reunion_turtles(root, new_root, size=None, **kwargs):
@@ -269,7 +271,8 @@ def prepare_sea_turtle_id_2022(root, new_root, size=None, **kwargs):
 def prepare_smalst(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.SMALST(root, img_load="bbox_mask", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    idx = get_every_k(dataset, 10, 'identity')
+    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_southern_province_turtles(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
