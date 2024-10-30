@@ -9,17 +9,68 @@ import pycocotools.mask as mask_coco
 from .summary import summary
 from . import utils
 
-class DatasetAbstract:
+class DatasetFactory:
+    """Base class for creating datasets.
+
+    Attributes:    
+      df (pd.DataFrame): A full dataframe of the data.
+      summary (dict): Summary of the dataset.
+      root (str): Root directory for the data.
+      update_wrong_labels(bool): Whether `fix_labels` should be called.
+      unknown_name (str): Name of the unknown class.
+      outdated_dataset (bool): Tracks whether dataset was replaced by a new version.
+      determined_by_df (bool): Specifies whether dataset is completely determined by its dataframe.
+      saved_to_system_folder (bool): Specifies whether dataset is saved to system (hidden) folders.
+      transform (Callable): Applied transform when loading the image.
+      img_load (str): Applied transform when loading the image.
+    """
+
+    unknown_name = 'unknown'
+    outdated_dataset = False
+    determined_by_df = True
+    saved_to_system_folder = False
+    download_warning = '''You are trying to download an already downloaded dataset.
+        This message may have happened to due interrupted download or extract.
+        To force the download use the `force=True` keyword such as
+        get_data(..., force=True) or download(..., force=True).
+        '''
+    download_mark_name = 'already_downloaded'
+    license_file_name = 'LICENSE_link'
+
     def __init__(
-        self,
-        df: pd.DataFrame,
-        root: Optional[str] = None,
-        transform: Optional[Callable] = None,
-        img_load: str = "full",
-    ):
-        self.df = df.reset_index(drop=True)
-        self.metadata = self.df # Alias to df to unify with wildlife-tools
+            self, 
+            root: Optional[str] = None,
+            df: Optional[pd.DataFrame] = None,
+            update_wrong_labels: bool = True,
+            transform: Optional[Callable] = None,
+            img_load: str = "full",
+            **kwargs) -> None:
+        """Initializes the class.
+
+        If `df` is specified, it copies it. Otherwise, it creates it
+        by the `create_catalogue` method.
+
+        Args:
+            root (Optional[str], optional): Root directory for the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
+            update_wrong_labels (bool, optional): Whether `fix_labels` should be called.
+            transform (Optional[Callable], optional): Applied transform when loading the image.
+            img_load (str, optional): Applied transform when loading the image.
+        """
+        
+        if not self.saved_to_system_folder and not os.path.exists(root):
+            raise Exception('root does not exist. You may have have mispelled it.')
+        if self.outdated_dataset:
+            print('This dataset is outdated. You may want to call a newer version such as %sv2.' % self.__class__.__name__)
+        self.update_wrong_labels = update_wrong_labels
         self.root = root
+        if df is None:
+            self.df = self.create_catalogue(**kwargs).reset_index(drop=True)
+        else:
+            if not self.determined_by_df:
+                print('This dataset is not determined by dataframe. But you construct it so.')
+            self.df = df.reset_index(drop=True)
+        self.metadata = self.df # Alias to df to unify with wildlife-tools
         self.transform = transform
         self.img_load = img_load
         if self.img_load == "auto":
@@ -159,184 +210,6 @@ class DatasetAbstract:
             img = self.transform(img)
 
         return img
-
-    def plot_grid(
-            self,
-            n_rows: int = 5,
-            n_cols: int = 8,
-            offset: float = 10,
-            img_min: float = 100,
-            rotate: bool = True,
-            header_cols: Optional[List[str]] = None,
-            idx: Optional[Union[List[bool],List[int]]] = None,
-            background_color: Tuple[int] = (0, 0, 0),
-            **kwargs
-            ) -> None:
-        """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
-
-        Args:
-            n_rows (int, optional): The number of rows in the grid.
-            n_cols (int, optional): The number of columns in the grid.
-            offset (float, optional): The offset between images.
-            img_min (float, optional): The minimal size of the plotted images.
-            rotate (bool, optional): Rotates the images to have the same orientation.
-            header_cols (Optional[List[str]], optional): List of headers for each column.
-            idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
-            background_color (Tuple[int], optional): Background color of the grid.
-        """
-
-        if len(self.df) == 0:
-            return None
-        
-        # Select indices of images to be plotted
-        if idx is None:
-            n = min(len(self.df), n_rows*n_cols)
-            idx = np.random.permutation(len(self.df))[:n]
-        else:
-            if isinstance(idx, pd.Series):
-                idx = idx.values
-            if isinstance(idx[0], (bool, np.bool_)):
-                idx = np.where(idx)[0]
-            n = min(np.array(idx).size, n_rows*n_cols)
-            idx = np.matrix.flatten(np.array(idx))[:n]
-
-        # Load images and compute their ratio
-        ratios = []
-        ims = []
-        for k in idx:
-            if k >= 0:
-                # Load the image with index k
-                im = self[k]
-                ims.append(im)
-                ratios.append(im.size[0] / im.size[1])
-            else:
-                # Load a black image
-                ims.append(Image.fromarray(np.zeros((2, 2), dtype = "uint8")))
-
-        # Safeguard when all indices are -1
-        if len(ratios) == 0:
-            return None
-        
-        # Get the size of the images after being resized
-        ratio = np.median(ratios)
-        if ratio > 1:    
-            img_w, img_h = int(img_min*ratio), int(img_min)
-        else:
-            img_w, img_h = int(img_min), int(img_min/ratio)
-
-        # Compute height offset if headers are present
-        if header_cols is not None:
-            offset_h = 30
-            if len(header_cols) != n_cols:
-                raise(Exception("Length of header_cols must be the same as n_cols."))
-        else:
-            offset_h = 0
-
-        # Create an empty image grid
-        im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, offset_h + n_rows*img_h + (n_rows-1)*offset), background_color)
-
-        # Fill the grid image by image
-        pos_y = offset_h
-        for i in range(n_rows):
-            row_h = 0
-            for j in range(n_cols):
-                k = (n_cols)*i + j
-                if k < n:
-                    # Possibly rotate the image
-                    im = ims[k]
-                    if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
-                        im = im.transpose(Image.Transpose.ROTATE_90)
-
-                    # Rescale the image
-                    im.thumbnail((img_w,img_h))
-                    row_h = max(row_h, im.size[1])
-
-                    # Place the image on the grid
-                    pos_x = j*img_w + j*offset
-                    im_grid.paste(im, (pos_x,pos_y))
-            if row_h > 0:
-                pos_y += row_h + offset
-        im_grid = im_grid.crop((0, 0, im_grid.size[0], pos_y-offset))
- 
-        # Plot the image and add column headers if present
-        fig = plt.figure()
-        fig.patch.set_visible(False)
-        ax = fig.add_subplot(111)
-        plt.axis('off')
-        plt.imshow(im_grid)
-        if header_cols is not None:
-            color = kwargs.pop('color', 'white')
-            ha = kwargs.pop('ha', 'center')
-            va = kwargs.pop('va', 'center')
-            for i, header in enumerate(header_cols):
-                pos_x = (i+0.5)*img_w + i*offset
-                pos_y = offset_h/2
-                plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
-        return fig
-
-
-class DatasetFactory(DatasetAbstract):
-    """Base class for creating datasets.
-
-    Attributes:    
-      df (pd.DataFrame): A full dataframe of the data.
-      summary (dict): Summary of the dataset.
-      root (str): Root directory for the data.
-      update_wrong_labels(bool): Whether `fix_labels` should be called.
-      unknown_name (str): Name of the unknown class.
-      outdated_dataset (bool): Tracks whether dataset was replaced by a new version.
-      determined_by_df (bool): Specifies whether dataset is completely determined by its dataframe.
-      saved_to_system_folder (bool): Specifies whether dataset is saved to system (hidden) folders.
-      transform (Callable): Applied transform when loading the image.
-      img_load (str): Applied transform when loading the image.
-    """
-
-    unknown_name = 'unknown'
-    outdated_dataset = False
-    determined_by_df = True
-    saved_to_system_folder = False
-    download_warning = '''You are trying to download an already downloaded dataset.
-        This message may have happened to due interrupted download or extract.
-        To force the download use the `force=True` keyword such as
-        get_data(..., force=True) or download(..., force=True).
-        '''
-    download_mark_name = 'already_downloaded'
-    license_file_name = 'LICENSE_link'
-
-    def __init__(
-            self, 
-            root: Optional[str] = None,
-            df: Optional[pd.DataFrame] = None,
-            update_wrong_labels: bool = True,
-            transform: Optional[Callable] = None,
-            img_load: str = "full",
-            **kwargs) -> None:
-        """Initializes the class.
-
-        If `df` is specified, it copies it. Otherwise, it creates it
-        by the `create_catalogue` method.
-
-        Args:
-            root (Optional[str], optional): Root directory for the data.
-            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
-            update_wrong_labels (bool, optional): Whether `fix_labels` should be called.
-            transform (Optional[Callable], optional): Applied transform when loading the image.
-            img_load (str, optional): Applied transform when loading the image.
-        """
-        
-        if not self.saved_to_system_folder and not os.path.exists(root):
-            raise Exception('root does not exist. You may have have mispelled it.')
-        if self.outdated_dataset:
-            print('This dataset is outdated. You may want to call a newer version such as %sv2.' % self.__class__.__name__)
-        self.update_wrong_labels = update_wrong_labels
-        self.root = root
-        if df is None:
-            df = self.create_catalogue(**kwargs)
-        else:
-            if not self.determined_by_df:
-                print('This dataset is not determined by dataframe. But you construct it so.')
-            df = df.copy()
-        super().__init__(df=df, root=root, transform=transform, img_load=img_load)
 
     @classmethod
     def get_data(
@@ -720,3 +593,117 @@ class DatasetFactory(DatasetAbstract):
                 path.encode("iso-8859-1")
             except UnicodeEncodeError:
                 raise(Exception('Characters in path may cause problems. Please use only ISO-8859-1 characters: ' + os.path.join(path)))
+
+    def plot_grid(
+            self,
+            n_rows: int = 5,
+            n_cols: int = 8,
+            offset: float = 10,
+            img_min: float = 100,
+            rotate: bool = True,
+            header_cols: Optional[List[str]] = None,
+            idx: Optional[Union[List[bool],List[int]]] = None,
+            background_color: Tuple[int] = (0, 0, 0),
+            **kwargs
+            ) -> None:
+        """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
+
+        Args:
+            n_rows (int, optional): The number of rows in the grid.
+            n_cols (int, optional): The number of columns in the grid.
+            offset (float, optional): The offset between images.
+            img_min (float, optional): The minimal size of the plotted images.
+            rotate (bool, optional): Rotates the images to have the same orientation.
+            header_cols (Optional[List[str]], optional): List of headers for each column.
+            idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
+            background_color (Tuple[int], optional): Background color of the grid.
+        """
+
+        if len(self.df) == 0:
+            return None
+        
+        # Select indices of images to be plotted
+        if idx is None:
+            n = min(len(self.df), n_rows*n_cols)
+            idx = np.random.permutation(len(self.df))[:n]
+        else:
+            if isinstance(idx, pd.Series):
+                idx = idx.values
+            if isinstance(idx[0], (bool, np.bool_)):
+                idx = np.where(idx)[0]
+            n = min(np.array(idx).size, n_rows*n_cols)
+            idx = np.matrix.flatten(np.array(idx))[:n]
+
+        # Load images and compute their ratio
+        ratios = []
+        ims = []
+        for k in idx:
+            if k >= 0:
+                # Load the image with index k
+                im = self[k]
+                ims.append(im)
+                ratios.append(im.size[0] / im.size[1])
+            else:
+                # Load a black image
+                ims.append(Image.fromarray(np.zeros((2, 2), dtype = "uint8")))
+
+        # Safeguard when all indices are -1
+        if len(ratios) == 0:
+            return None
+        
+        # Get the size of the images after being resized
+        ratio = np.median(ratios)
+        if ratio > 1:    
+            img_w, img_h = int(img_min*ratio), int(img_min)
+        else:
+            img_w, img_h = int(img_min), int(img_min/ratio)
+
+        # Compute height offset if headers are present
+        if header_cols is not None:
+            offset_h = 30
+            if len(header_cols) != n_cols:
+                raise(Exception("Length of header_cols must be the same as n_cols."))
+        else:
+            offset_h = 0
+
+        # Create an empty image grid
+        im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, offset_h + n_rows*img_h + (n_rows-1)*offset), background_color)
+
+        # Fill the grid image by image
+        pos_y = offset_h
+        for i in range(n_rows):
+            row_h = 0
+            for j in range(n_cols):
+                k = (n_cols)*i + j
+                if k < n:
+                    # Possibly rotate the image
+                    im = ims[k]
+                    if rotate and ((ratio > 1 and im.size[0] < im.size[1]) or (ratio < 1 and im.size[0] > im.size[1])):
+                        im = im.transpose(Image.Transpose.ROTATE_90)
+
+                    # Rescale the image
+                    im.thumbnail((img_w,img_h))
+                    row_h = max(row_h, im.size[1])
+
+                    # Place the image on the grid
+                    pos_x = j*img_w + j*offset
+                    im_grid.paste(im, (pos_x,pos_y))
+            if row_h > 0:
+                pos_y += row_h + offset
+        im_grid = im_grid.crop((0, 0, im_grid.size[0], pos_y-offset))
+ 
+        # Plot the image and add column headers if present
+        fig = plt.figure()
+        fig.patch.set_visible(False)
+        ax = fig.add_subplot(111)
+        plt.axis('off')
+        plt.imshow(im_grid)
+        if header_cols is not None:
+            color = kwargs.pop('color', 'white')
+            ha = kwargs.pop('ha', 'center')
+            va = kwargs.pop('va', 'center')
+            for i, header in enumerate(header_cols):
+                pos_x = (i+0.5)*img_w + i*offset
+                pos_y = offset_h/2
+                plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
+        return fig
