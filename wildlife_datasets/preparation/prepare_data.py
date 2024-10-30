@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import torchvision.transforms as T
 from tqdm import tqdm
-from wildlife_datasets import datasets
+from .. import datasets
 from typing import Optional, List
 
 def resize_dataset(
@@ -23,6 +23,9 @@ def resize_dataset(
     Returns:
         Description of the new dataset.
     """
+    
+    if idx is None:
+        idx = range(len(dataset))
     
     df_new = []
     for i in tqdm(idx, mininterval=1, ncols=100):
@@ -174,11 +177,6 @@ def prepare_giraffe_zebra_id(root, new_root, size=None, **kwargs):
     dataset = datasets.GiraffeZebraID(root, img_load="bbox", transform=transform, remove_unknown=True)
     return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_green_sea_turtles(root, new_root, size=None, **kwargs):
-    transform = None if size is None else T.Resize(size=size)
-    dataset = datasets.GreenSeaTurtles(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
-
 def prepare_hyena_id_2022(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.HyenaID2022(root, img_load="bbox", transform=transform, remove_unknown=True)
@@ -247,6 +245,11 @@ def prepare_smalst(root, new_root, size=None, **kwargs):
     dataset = datasets.SMALST(root, img_load="bbox_mask", transform=transform, remove_unknown=True)
     return resize_dataset(dataset, new_root, **kwargs)
 
+def prepare_southern_province_turtles(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.SouthernProvinceTurtles(root, img_load="full", transform=transform, remove_unknown=True)
+    return resize_dataset(dataset, new_root, **kwargs)
+
 def prepare_stripe_spotter(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.StripeSpotter(root, img_load="bbox", transform=transform, remove_unknown=True)
@@ -285,7 +288,6 @@ prepare_functions = {
     'FriesianCattle2017': prepare_friesian_cattle_2017,
     'Giraffes': prepare_giraffes,
     'GiraffeZebraID': prepare_giraffe_zebra_id,
-    'GreenSeaTurtles': prepare_green_sea_turtles,
     'HyenaID2022': prepare_hyena_id_2022,
     'IPanda50': prepare_ipanda_50,
     'LeopardID2022': prepare_leopard_id_2022,
@@ -299,6 +301,7 @@ prepare_functions = {
     'SeaStarReID2023': prepare_sea_star_reid_2023,
     'SeaTurtleID2022': prepare_sea_turtle_id_2022,
     'SMALST': prepare_smalst,
+    'SouthernProvinceTurtles': prepare_southern_province_turtles,
     'StripeSpotter': prepare_stripe_spotter,
     'WhaleSharkID': prepare_whaleshark_id,
     'ZakynthosTurtles': prepare_zakynthos_turtles,
