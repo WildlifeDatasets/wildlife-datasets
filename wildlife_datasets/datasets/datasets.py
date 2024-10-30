@@ -707,3 +707,7 @@ class DatasetFactory:
                 pos_y = offset_h/2
                 plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
         return fig
+
+# Alias for DatasetFactory
+class WildlifeDataset(DatasetFactory):    
+    pass

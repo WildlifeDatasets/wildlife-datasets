@@ -1,4 +1,4 @@
-from .datasets import DatasetFactory
+from .datasets import DatasetFactory, WildlifeDataset
 from .aau_zebrafish import AAUZebraFish
 from .aerial_cattle import AerialCattle2017
 from .atrw import ATRW
