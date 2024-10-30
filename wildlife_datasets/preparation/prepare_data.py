@@ -157,6 +157,12 @@ def prepare_dog_facenet(root, new_root, size=None, **kwargs):
     dataset = datasets.DogFaceNet(root, img_load="full", transform=transform, remove_unknown=True)
     return resize_dataset(dataset, new_root, **kwargs)
 
+def prepare_drosophila(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.Drosophila(root, img_load="full", transform=transform, remove_unknown=True)
+    idx = get_every_k(dataset, 1000, 'identity')
+    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
+
 def prepare_friesian_cattle_2015(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.FriesianCattle2015v2(root, img_load="crop_black", transform=transform, remove_unknown=True)
@@ -177,6 +183,16 @@ def prepare_giraffe_zebra_id(root, new_root, size=None, **kwargs):
     dataset = datasets.GiraffeZebraID(root, img_load="bbox", transform=transform, remove_unknown=True)
     return resize_dataset(dataset, new_root, **kwargs)
 
+def prepare_happy_whale(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.HappyWhale(root, img_load="full", transform=transform, remove_unknown=True)
+    return resize_dataset(dataset, new_root, **kwargs)
+
+def prepare_humpback_whale_id(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.HumpbackWhaleID(root, img_load="full", transform=transform, remove_unknown=True)
+    return resize_dataset(dataset, new_root, **kwargs)
+
 def prepare_hyena_id_2022(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.HyenaID2022(root, img_load="bbox", transform=transform, remove_unknown=True)
@@ -192,6 +208,11 @@ def prepare_leopard_id_2022(root, new_root, size=None, **kwargs):
     dataset = datasets.LeopardID2022(root, img_load="bbox", transform=transform, remove_unknown=True)
     return resize_dataset(dataset, new_root, **kwargs)
 
+def prepare_macaque_faces(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.MacaqueFaces(root, img_load="full", transform=transform, remove_unknown=True)
+    return resize_dataset(dataset, new_root, **kwargs)
+
 def prepare_mpdd(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.MPDD(root, img_load="full", transform=transform, remove_unknown=True)
@@ -200,6 +221,11 @@ def prepare_mpdd(root, new_root, size=None, **kwargs):
 def prepare_ndd20(root, new_root, size=None, **kwargs):
     transform = None if size is None else T.Resize(size=size)
     dataset = datasets.NDD20v2(root, img_load="bbox_mask", transform=transform, remove_unknown=True)
+    return resize_dataset(dataset, new_root, **kwargs)
+
+def prepare_noaa_right_whale(root, new_root, size=None, **kwargs):
+    transform = None if size is None else T.Resize(size=size)
+    dataset = datasets.NOAARightWhale(root, img_load="full", transform=transform, remove_unknown=True)
     return resize_dataset(dataset, new_root, **kwargs)
 
 def prepare_nyala_data(root, new_root, size=None, **kwargs):
@@ -284,15 +310,20 @@ prepare_functions = {
     'CTai': prepare_ctai,
     'CZoo': prepare_czoo,
     'DogFaceNet': prepare_dog_facenet,
+    'Drosophila': prepare_drosophila,
     'FriesianCattle2015': prepare_friesian_cattle_2015,
     'FriesianCattle2017': prepare_friesian_cattle_2017,
     'Giraffes': prepare_giraffes,
     'GiraffeZebraID': prepare_giraffe_zebra_id,
+    'HappyWhale': prepare_happy_whale,
+    'HumpbackWhaleID': prepare_humpback_whale_id,
     'HyenaID2022': prepare_hyena_id_2022,
     'IPanda50': prepare_ipanda_50,
     'LeopardID2022': prepare_leopard_id_2022,
+    'MacaqueFaces': prepare_macaque_faces,
     'MPDD': prepare_mpdd,
     'NDD20': prepare_ndd20,
+    'NOAARightWhale': prepare_noaa_right_whale,
     'NyalaData': prepare_nyala_data,
     'OpenCows2020': prepare_open_cows_2020,
     'PolarBearVidID': prepare_polar_bear_vidid,
