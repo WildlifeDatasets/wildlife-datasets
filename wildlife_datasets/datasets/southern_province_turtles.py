@@ -4,15 +4,15 @@ from . import utils
 from .datasets import DatasetFactory
 from .summary import summary
 
-class GreenSeaTurtles(DatasetFactory):
-    archive = 'greenseaturtles.zip'
-    summary = summary['GreenSeaTurtles']
+class SouthernProvinceTurtles(DatasetFactory):
+    archive = 'southernprovinceturtles.zip'
+    summary = summary['SouthernProvinceTurtles']
 
     @classmethod
     def _download(cls):
-        command = f"datasets download -d wildlifedatasets/greenseaturtles --force"
+        command = f"datasets download -d wildlifedatasets/southernprovinceturtles --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#greenseaturtles'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#southernprovinceturtles'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
