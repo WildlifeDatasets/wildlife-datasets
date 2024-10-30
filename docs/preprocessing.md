@@ -2,49 +2,81 @@
 
 Some of the datasets require special treatment or the download of extraction works only on Linux. These are described below in the `Processsing requirements` column. We also fixed labels in some datasets as described in the `Dataset modifications` column.
 
-| Dataset                |              Processing requirements           | Dataset modifications |
-|------------------------|:----------------------|:---------|
-| [AAUZebrafish](https://www.kaggle.com/datasets/aalborguniversity/aau-zebrafish-reid)          | Kaggle required                   |                  |
-| [AerialCattle2017](https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh)          |                                |                  |
-| [AmvrakikosTurtles](https://www.kaggle.com/datasets/wildlifedatasets/amvrakikosturtles)          | Kaggle required                   |                  |
-| [ATRW](https://lila.science/datasets/atrw)                   |                                |                  |
+| Dataset                | Publication |             Processing requirements           | Dataset modifications |
+|------------------------|:----------------------|:---------|:--|
+| [AAUZebrafish](https://www.kaggle.com/datasets/aalborguniversity/aau-zebrafish-reid) | <a href="https://openaccess.thecvf.com/content_WACVW_2020/html/w2/Haurum_Re-Identification_of_Zebrafish_using_Metric_Learning_WACVW_2020_paper.html"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+         | Kaggle required                   |                  |
+| [AerialCattle2017](https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh)  | <a href="https://openaccess.thecvf.com/content_ICCV_2017_workshops/w41/html/Andrew_Visual_Localisation_and_ICCV_2017_paper.html"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+        |                                |                  |
+| [AmvrakikosTurtles](https://www.kaggle.com/datasets/wildlifedatasets/amvrakikosturtles)  | <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+        | Kaggle required                   |                  |
+| [ATRW](https://lila.science/datasets/atrw) | <a href="https://arxiv.org/abs/1906.05586"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+                  |                                |                  |
 | [BelugaID](https://lila.science/datasets/beluga-id-2022/)              |                                |                  |
-| [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID)     | Manual download    | Few images removed |
+| [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID) | <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13436"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+    | Manual download    | Few images removed |
 | [CatIndividualImages](https://www.kaggle.com/datasets/timost1234/cat-individuals)          | Kaggle required                   |                  |
 | [Chicks4FreeID](https://huggingface.co/datasets/dariakern/Chicks4FreeID)          |                                |                  |
-| [CTai](https://github.com/cvjena/chimpanzee_faces)       |                                | Labels fixed |
-| [CZoo](https://github.com/cvjena/chimpanzee_faces)       |                                |                  |
+| [CTai](https://github.com/cvjena/chimpanzee_faces) | <a href="https://link.springer.com/chapter/10.1007/978-3-319-45886-1_5"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+      |                                | Labels fixed |
+| [CZoo](https://github.com/cvjena/chimpanzee_faces) | <a href="https://link.springer.com/chapter/10.1007/978-3-319-45886-1_5"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+      |                                |                  |
 | [CowDataset](https://figshare.com/articles/dataset/data_set_zip/16879780)                   |                                |                  |
-| [Cows2021](https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7)              |                                | Labels fixed  |
-| [DogFaceNet](https://github.com/GuillaumeMougeot/DogFaceNet)          |                    |                  |
-| [Drosophila](https://github.com/j-schneider/fly_eye)             |                                | Few images removed |
-| [ELPephants](https://inf-cv.uni-jena.de/home/research/datasets/elpephants/)     | Manual download    |     |
-| [FriesianCattle2015](https://data.bris.ac.uk/data/dataset/wurzq71kfm561ljahbwjhx9n3)   |                                | Labels fixed |
-| [FriesianCattle2017](https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r)   |                                |                  |
-| [Giraffes](ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021)       | Only linux: downloading                               |                  |
-| [GiraffeZebraID](https://lila.science/datasets/great-zebra-giraffe-id)       |                                |                  |
-| [GreenSeaTurtles](https://www.kaggle.com/datasets/wildlifedatasets/greenseaturtles)          | Kaggle required                   |                  |
-| [HappyWhale](https://www.kaggle.com/competitions/happy-whale-and-dolphin)             | Kaggle required + terms   | Species fixed |
+| [Cows2021](https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7) | <a href="https://arxiv.org/abs/2105.01938"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+             |                                | Labels fixed  |
+| [DogFaceNet](https://github.com/GuillaumeMougeot/DogFaceNet) | <a href="https://link.springer.com/chapter/10.1007/978-3-030-29894-4_34"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+         |                    |                  |
+| [Drosophila](https://github.com/j-schneider/fly_eye) | <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205043"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+            |                                | Few images removed |
+| [ELPephants](https://inf-cv.uni-jena.de/home/research/datasets/elpephants/)  | <a href="https://openaccess.thecvf.com/content_ICCVW_2019/html/CVWC/Korschens_ELPephants_A_Fine-Grained_Dataset_for_Elephant_Re-Identification_ICCVW_2019_paper.html"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+   | Manual download    |     |
+| [FriesianCattle2015](https://data.bris.ac.uk/data/dataset/wurzq71kfm561ljahbwjhx9n3) | <a href="https://ieeexplore.ieee.org/abstract/document/7532404"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+  |                                | Labels fixed |
+| [FriesianCattle2017](https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r) | <a href="https://openaccess.thecvf.com/content_ICCV_2017_workshops/w41/html/Andrew_Visual_Localisation_and_ICCV_2017_paper.html"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+  |                                |                  |
+| [Giraffes](ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021)  | <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13577"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+     | Only linux: downloading                               |                  |
+| [GiraffeZebraID](https://lila.science/datasets/great-zebra-giraffe-id)  | <a href="https://aaai.org/papers/15245-15245-animal-population-censusing-at-scale-with-citizen-science-and-photographic-identification/"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+     |                                |                  |
+| [GreenSeaTurtles](https://www.kaggle.com/datasets/wildlifedatasets/greenseaturtles) | <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+         | Kaggle required                   |                  |
+| [HappyWhale](https://www.kaggle.com/competitions/happy-whale-and-dolphin)  | <a href="https://link.springer.com/article/10.1007/s42991-021-00180-9"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+           | Kaggle required + terms   | Species fixed |
 | [HumpbackWhaleID](https://www.kaggle.com/competitions/humpback-whale-identification)          | Kaggle required + terms   | Unknown animals renamed |
 | [HyenaID2022](https://lila.science/datasets/hyena-id-2022/)               |                                |                  |
-| [IPanda50](https://github.com/iPandaDateset/iPanda-50)              |                                | Few image renamed |
+| [IPanda50](https://github.com/iPandaDateset/iPanda-50) | <a href="https://ieeexplore.ieee.org/abstract/document/9347819"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+             |                                | Few image renamed |
 | [LeopardID2022](https://lila.science/datasets/leopard-id-2022/)             |                                | Unknown animals renamed |
-| [LionData](https://github.com/tvanzyl/wildlife_reidentification)              |                                |                  |
-| [MacaqueFaces](https://github.com/clwitham/MacaqueFaces)          |                                |                  |
+| [LionData](https://github.com/tvanzyl/wildlife_reidentification)  | <a href="https://ieeexplore.ieee.org/abstract/document/9311574"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+            |                                |                  |
+| [MacaqueFaces](https://github.com/clwitham/MacaqueFaces) | <a href="https://www.sciencedirect.com/science/article/pii/S0165027017302637"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+         |                                |                  |
 | [MPDD](https://data.mendeley.com/datasets/v5j6m8dzhv/1)          |                                |                  |
-| [NDD20](https://doi.org/10.25405/data.ncl.c.4982342)                  |                                |                  |
+| [NDD20](https://doi.org/10.25405/data.ncl.c.4982342) | <a href="https://arxiv.org/abs/2005.13359"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+                 |                                |                  |
 | [NOAARightWhale](https://www.kaggle.com/c/noaa-right-whale-recognition)        | Kaggle required + terms   |                  |
-| [NyalaData](https://github.com/tvanzyl/wildlife_reidentification)             |                                |                  |
-| [OpenCows2020](https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17)           |                                |                  |
-| [PolarBearVidID](https://zenodo.org/records/7564529)          |                                |                  |
-| [ReunionTurtles](https://www.kaggle.com/datasets/wildlifedatasets/reunionturtles)          | Kaggle required                   |                  |
-| [SealID](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53)                 | Download with single use token |                  |
-| [SeaStarReID2023](https://lila.science/sea-star-re-id-2023/)          |                                |                  |
-| [SeaTurtleID](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid)                 | Kaggle required                   |                  |
-| [SMALST](https://github.com/silviazuffi/smalst)                 | Only linux: extracting            |                  |
-| [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads)          | Only linux: extracting            |                  |
+| [NyalaData](https://github.com/tvanzyl/wildlife_reidentification)  | <a href="https://ieeexplore.ieee.org/abstract/document/9311574"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+           |                                |                  |
+| [OpenCows2020](https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17) | <a href="https://www.sciencedirect.com/science/article/pii/S0168169921001514"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+          |                                |                  |
+| [PolarBearVidID](https://zenodo.org/records/7564529) | <a href="https://www.mdpi.com/2076-2615/13/5/801"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+         |                                |                  |
+| [ReunionTurtles](https://www.kaggle.com/datasets/wildlifedatasets/reunionturtles)  | <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+        | Kaggle required                   |                  |
+| [SealID](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53)  | <a href="https://www.mdpi.com/1424-8220/22/19/7602"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+               | Download with single use token |                  |
+| [SeaStarReID2023](https://lila.science/sea-star-re-id-2023/)  | <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.14278"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+        |                                |                  |
+| [SeaTurtleID](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid)   | <a href="https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+              | Kaggle required                   |                  |
+| [SMALST](https://github.com/silviazuffi/smalst)  | <a href="https://openaccess.thecvf.com/content_ICCV_2019/html/Zuffi_Three-D_Safari_Learning_to_Estimate_Zebra_Pose_Shape_and_Texture_ICCV_2019_paper.html"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+               | Only linux: extracting            |                  |
+| [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads)  | <a href="https://dl.acm.org/doi/abs/10.1145/1991996.1992002"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+        | Only linux: extracting            |                  |
 | [WhaleSharkID](https://lila.science/datasets/whale-shark-id)         |                                |                  |
-| [ZakynthosTurtles](https://www.kaggle.com/datasets/wildlifedatasets/zakynthosturtles)          | Kaggle required                   |                  |
+| [ZakynthosTurtles](https://www.kaggle.com/datasets/wildlifedatasets/zakynthosturtles) | <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+ | <a href="https://www.int-res.com/abstracts/esr/v7/n1/p39-53/"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+        | Kaggle required                   |                  |
 | [ZindiTurtleRecall](https://zindi.africa/competitions/turtle-recall-conservation-challenge)    |                                |                  |
 
 ## Manual download and extracting
