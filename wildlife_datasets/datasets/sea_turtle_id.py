@@ -14,7 +14,7 @@ class SeaTurtleID2022(DatasetFactory):
     def _download(cls):
         command = f"datasets download -d wildlifedatasets/seaturtleid2022 --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid2022'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod

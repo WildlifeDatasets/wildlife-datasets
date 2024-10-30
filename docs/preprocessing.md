@@ -40,7 +40,7 @@ Some of the datasets require special treatment or the download of extraction wor
 | [ReunionTurtles](https://www.kaggle.com/datasets/wildlifedatasets/reunionturtles)  | <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Kaggle required                   |                  |
 | [SealID](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53)  | <a href="https://www.mdpi.com/1424-8220/22/19/7602" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Download with single use token |                  |
 | [SeaStarReID2023](https://lila.science/sea-star-re-id-2023/)  | <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.14278" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> |                                |                  |
-| [SeaTurtleID](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid)   | <a href="https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Kaggle required                   |                  |
+| [SeaTurtleID2022](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid2022)   | <a href="https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Kaggle required                   |                  |
 | [SMALST](https://github.com/silviazuffi/smalst)  | <a href="https://openaccess.thecvf.com/content_ICCV_2019/html/Zuffi_Three-D_Safari_Learning_to_Estimate_Zebra_Pose_Shape_and_Texture_ICCV_2019_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Only linux: extracting            |                  |
 | [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads)  | <a href="https://dl.acm.org/doi/abs/10.1145/1991996.1992002" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Only linux: extracting            |                  |
 | [WhaleSharkID](https://lila.science/datasets/whale-shark-id) | <a href="https://www.int-res.com/abstracts/esr/v7/n1/p39-53/" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> |        |                                |                  |
@@ -124,7 +124,7 @@ url = '' # Paste the URL here
 datasets.SealID.get_data('data/SealID', url=url)
 ```
 
-### SeaTurtleID
+### SeaTurtleID2022
 
 [Kaggle requirements](#kaggle) need to be satisfied.
 
