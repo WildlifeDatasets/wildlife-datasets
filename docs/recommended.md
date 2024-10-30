@@ -42,6 +42,7 @@ print_list_red(datasets.names_small) # markdown-exec: hide
 ![](images/grid_NyalaData.png)
 ![](images/grid_PolarBearVidID.png)
 ![](images/grid_SeaTurtleIDHeads.png)
+![](images/grid_SouthernProvinceTurtles.png)
 ![](images/grid_StripeSpotter.png)
 ![](images/grid_ZakynthosTurtles.png)
 
@@ -91,9 +92,9 @@ print_list_red(datasets.names_turtles) # markdown-exec: hide
 ```
 
 ![](images/grid_AmvrakikosTurtles.png)
-![](images/grid_GreenSeaTurtles.png)
 ![](images/grid_ReunionTurtles.png)
 ![](images/grid_SeaTurtleIDHeads.png)
+![](images/grid_SouthernProvinceTurtles.png)
 ![](images/grid_ZakynthosTurtles.png)
 ![](images/grid_ZindiTurtleRecall.png)
 

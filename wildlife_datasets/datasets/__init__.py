@@ -17,7 +17,6 @@ from .elpephants import ELPephants
 from .friesian_cattle import FriesianCattle2015, FriesianCattle2015v2, FriesianCattle2017
 from .giraffe_zebra_id import GiraffeZebraID
 from .giraffes import Giraffes
-from .green_sea_turtles import GreenSeaTurtles
 from .happy_whale import HappyWhale
 from .humpback_whale_id import HumpbackWhaleID
 from .hyena_id import HyenaID2022
@@ -36,6 +35,7 @@ from .seal_id import SealID, SealIDSegmented
 from .sea_star_reid import SeaStarReID2023
 from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
 from .smalst import SMALST
+from .southern_province_turtles import SouthernProvinceTurtles
 from .stripe_spotter import StripeSpotter
 from .wildlife_reid_10k import WildlifeReID10k
 from .whaleshark_id import WhaleSharkID
@@ -64,7 +64,6 @@ names_all = [
     FriesianCattle2017,
     GiraffeZebraID,
     Giraffes,
-    GreenSeaTurtles,
     HappyWhale,
     HumpbackWhaleID,
     HyenaID2022,
@@ -83,6 +82,7 @@ names_all = [
     SeaStarReID2023,
     SeaTurtleID2022, SeaTurtleIDHeads,
     SMALST,
+    SouthernProvinceTurtles,
     StripeSpotter,
     WhaleSharkID,
     ZakynthosTurtles,
@@ -94,7 +94,6 @@ names_wild = [
     BelugaIDv2,
     ELPephants,
     GiraffeZebraID,
-    GreenSeaTurtles,
     HappyWhale,
     HumpbackWhaleID,
     HyenaID2022,
@@ -105,6 +104,7 @@ names_wild = [
     ReunionTurtles,
     SealID,
     SeaTurtleID2022,
+    SouthernProvinceTurtles,
     StripeSpotter,
     WhaleSharkID,
     ZakynthosTurtles,
@@ -120,13 +120,13 @@ names_small = [
     FriesianCattle2015v2,
     FriesianCattle2017,
     IPanda50,
-    GreenSeaTurtles,
     MacaqueFaces,
     MPDD,
     NyalaData,
     PolarBearVidID,
     ReunionTurtles,
     SeaTurtleIDHeads,
+    SouthernProvinceTurtles,
     StripeSpotter,
     ZakynthosTurtles,
 ]
@@ -160,9 +160,9 @@ names_primates = [
 
 names_turtles = [
     AmvrakikosTurtles,
-    GreenSeaTurtles,
     ReunionTurtles,
     SeaTurtleIDHeads,
+    SouthernProvinceTurtles,
     ZakynthosTurtles,
     ZindiTurtleRecall,
 ]

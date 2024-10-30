@@ -111,12 +111,6 @@ GiraffeZebraID contains images of plains zebra and Masai giraffe taken from a tw
 
 ![](images/grid_Giraffes.png)
 
-## [GreenSeaTurtles](https://www.kaggle.com/datasets/wildlifedatasets/greenseaturtles) <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
-
-GreenSeaTurtles is a collection of green sea turtles photos from two different sources in Sri Lanka. The first one comes from nesting turtles in the beaches Rekawa and Batigama, the seocnd one from multiple rescue centers in the southern coast of Sri Lanka. There is a significant shift between those two. The first source contains generally difficult photos taken with the red light in the night while the second source contains much simple photos.
-
-![](images/grid_GreenSeaTurtles.png)
-
 ## [HappyWhale](https://www.kaggle.com/competitions/happy-whale-and-dolphin) <a href="https://link.springer.com/article/10.1007/s42991-021-00180-9" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
 HappyWhale, HumpbackWhale and NOAARightWhale are datasets of various whale species. They are a product of multi-year collaboration of multiple research institutions and citizen scientists. All these datasets were released as Kaggle competitions to make it easy and rewarding for the public to participate in science by building innovative tools to engage anyone interested in marine mammals. The whales were photographed during aerial surveys. HumpbackWhale is the most uniform dataset with a clear view on the whale tail above water. NOAARightWhale contains images of submerging whales. HappyWhale is the most diverse dataset with images of dorsal fins. Some image contain only the dorsal fin, while others contain a significant part of the whale body.
@@ -230,6 +224,12 @@ The annotation of individual identities for the SeaTurtleID dataset was done man
 SMALST is a unique dataset because it does not contain images of real animals. Instead, the authors used the SMALR method to render 3D models of artificial Grevy's zebras from real zebra images. Then they used projections to generate multiple zebra images from each 3D model. Finally, they put the generated image on some background images. The advantages of this approach are the possibility to generate infinite numbre of images and to have precise segmentations for free. The disadvantage is that the images are computer-generated and placed in non-real background.
 
 ![](images/grid_SMALST.png)
+
+## [SouthernProvinceTurtles](https://www.kaggle.com/datasets/wildlifedatasets/southernprovinceturtles) <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+SouthernProvinceTurtles is a collection of green sea turtles photos from two different sources in Southern Province, Sri Lanka. The first one comes from nesting turtles in the beaches Rekawa and Batigama, the seocnd one from multiple rescue centers in the southern coast of Sri Lanka. There is a significant shift between those two. The first source contains generally difficult photos taken with the red light in the night while the second source contains much simple photos.
+
+![](images/grid_SouthernProvinceTurtles.png)
 
 ## [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads) <a href="https://dl.acm.org/doi/abs/10.1145/1991996.1992002" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 

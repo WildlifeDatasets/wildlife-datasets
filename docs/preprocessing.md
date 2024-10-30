@@ -23,7 +23,6 @@ Some of the datasets require special treatment or the download of extraction wor
 | [FriesianCattle2017](https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r) | <a href="https://openaccess.thecvf.com/content_ICCV_2017_workshops/w41/html/Andrew_Visual_Localisation_and_ICCV_2017_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> |                                |                  |
 | [Giraffes](ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021)  | <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13577" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Only linux: downloading                               |                  |
 | [GiraffeZebraID](https://lila.science/datasets/great-zebra-giraffe-id)  | <a href="https://aaai.org/papers/15245-15245-animal-population-censusing-at-scale-with-citizen-science-and-photographic-identification/" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> |                                |                  |
-| [GreenSeaTurtles](https://www.kaggle.com/datasets/wildlifedatasets/greenseaturtles) | <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Kaggle required                   |                  |
 | [HappyWhale](https://www.kaggle.com/competitions/happy-whale-and-dolphin)  | <a href="https://link.springer.com/article/10.1007/s42991-021-00180-9" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Kaggle required + terms   | Species fixed |
 | [HumpbackWhaleID](https://www.kaggle.com/competitions/humpback-whale-identification) |          | Kaggle required + terms   | Unknown animals renamed |
 | [HyenaID2022](https://lila.science/datasets/hyena-id-2022/) |               |                                |                  |
@@ -42,6 +41,7 @@ Some of the datasets require special treatment or the download of extraction wor
 | [SeaStarReID2023](https://lila.science/sea-star-re-id-2023/)  | <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.14278" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> |                                |                  |
 | [SeaTurtleID2022](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid2022)   | <a href="https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Kaggle required                   |                  |
 | [SMALST](https://github.com/silviazuffi/smalst)  | <a href="https://openaccess.thecvf.com/content_ICCV_2019/html/Zuffi_Three-D_Safari_Learning_to_Estimate_Zebra_Pose_Shape_and_Texture_ICCV_2019_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Only linux: extracting            |                  |
+| [SouthernProvinceTurtles](https://www.kaggle.com/datasets/wildlifedatasets/southernprovinceturtles) | <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Kaggle required                   |                  |
 | [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads)  | <a href="https://dl.acm.org/doi/abs/10.1145/1991996.1992002" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Only linux: extracting            |                  |
 | [WhaleSharkID](https://lila.science/datasets/whale-shark-id) | <a href="https://www.int-res.com/abstracts/esr/v7/n1/p39-53/" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> |        |                                |                  |
 | [ZakynthosTurtles](https://www.kaggle.com/datasets/wildlifedatasets/zakynthosturtles) | <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Kaggle required                   |                  |
@@ -86,10 +86,6 @@ datasets.ELPephants.extract('data/ELPephants')
 ### Giraffes
 
 Downloading works only on Linux. Download it manually from the [FTP server](ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021/) by using some client such as [FileZilla](https://filezilla-project.org/download.php?type=client).
-
-### GreenSeaTurtles
-
-[Kaggle requirements](#kaggle) need to be satisfied.
 
 ### HappyWhale
 
@@ -137,6 +133,10 @@ datasets.SMALST.download('data/SMALST')
 ```
 
 to download the dataset and then extract it manually.
+
+### SouthernProvinceTurtles
+
+[Kaggle requirements](#kaggle) need to be satisfied.
 
 ### StripeSpotter
 
