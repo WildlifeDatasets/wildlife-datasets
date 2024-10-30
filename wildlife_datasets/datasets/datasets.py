@@ -44,6 +44,7 @@ class DatasetFactory:
             update_wrong_labels: bool = True,
             transform: Optional[Callable] = None,
             img_load: str = "full",
+            remove_unknown: bool = False,
             **kwargs) -> None:
         """Initializes the class.
 
@@ -56,6 +57,7 @@ class DatasetFactory:
             update_wrong_labels (bool, optional): Whether `fix_labels` should be called.
             transform (Optional[Callable], optional): Applied transform when loading the image.
             img_load (str, optional): Applied transform when loading the image.
+            remove_unknown (bool, optional): Whether unknown identities should be removed.
         """
         
         if not self.saved_to_system_folder and not os.path.exists(root):
@@ -65,11 +67,13 @@ class DatasetFactory:
         self.update_wrong_labels = update_wrong_labels
         self.root = root
         if df is None:
-            self.df = self.create_catalogue(**kwargs).reset_index(drop=True)
+            df = self.create_catalogue(**kwargs)
         else:
             if not self.determined_by_df:
                 print('This dataset is not determined by dataframe. But you construct it so.')
-            self.df = df.reset_index(drop=True)
+        if remove_unknown:
+            df = df[df['identity'] != self.unknown_name]
+        self.df = df.reset_index(drop=True)
         self.metadata = self.df # Alias to df to unify with wildlife-tools
         self.transform = transform
         self.img_load = img_load
