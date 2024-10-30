@@ -312,9 +312,9 @@ prepare_functions = {
 species_conversion = {
     'Anthenea australiae': 'sea star',
     'Asteria rubens': 'sea star',
-    'BND': 'doplhin',
+    'BND': 'dolphin',
     'Friesian cattle': 'cow',
-    'WBD': 'doplhin',
+    'WBD': 'dolphin',
     'amur tiger': 'tiger',
     'beluga whale': 'whale',
     'cat': 'cat',
