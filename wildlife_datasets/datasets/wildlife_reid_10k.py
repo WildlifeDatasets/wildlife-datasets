@@ -20,6 +20,6 @@ class WildlifeReID10k(DatasetFactory):
         utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
-        df = pd.read_csv(os.path.join(self.root, 'metadata.csv'))
+        df = pd.read_csv(os.path.join(self.root, 'metadata.csv'), low_memory=False)
         df['image_id'] = range(len(df))
         return self.finalize_catalogue(df)

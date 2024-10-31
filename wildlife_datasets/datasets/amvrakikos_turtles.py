@@ -32,7 +32,7 @@ class AmvrakikosTurtles(DatasetFactory):
             'image_id': range(len(data)),
             'path': 'images' + os.path.sep + data['image_name'],
             'identity': data['image_name'].apply(lambda x: x.split('_')[0]).astype(int),
-            'date': data['image_name'].apply(lambda x: x.split('_')[1]).astype(int),
+            'year': data['image_name'].apply(lambda x: x.split('_')[1]).astype(int),
             'orientation': data['image_name'].apply(lambda x: x.split('_')[2]),
             'bbox': bbox,
         })
