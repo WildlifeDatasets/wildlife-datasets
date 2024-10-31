@@ -43,7 +43,7 @@ An introductory example is provided in a [Jupyter notebook](notebooks/introducti
 
 ## Changelog
 
-[08/10/2024] Added AmvrakikosTurtles, ReunionTurtles, SouthernProvinceTurtles, ZakynthosTurtles (sea turtles), ELPephants (elephants) and Chicks4FreeID (chickens).  
+[31/10/2024] Added AmvrakikosTurtles, ReunionTurtles, SouthernProvinceTurtles, ZakynthosTurtles (sea turtles), ELPephants (elephants) and Chicks4FreeID (chickens).  
 [13/06/2024] Added WildlifeReID-10k (unification of multiple datasets).  
 [09/05/2024] Added CatIndividualImages (cats), CowDataset (cows) and DogFaceNet (dogs).  
 [28/02/2024] Added MPDD (dogs), PolarBearVidID (polar bears) and SeaStarReID2023 (sea stars).  
