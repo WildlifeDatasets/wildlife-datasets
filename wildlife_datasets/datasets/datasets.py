@@ -46,6 +46,7 @@ class DatasetFactory:
             transform: Optional[Callable] = None,
             img_load: str = "full",
             remove_unknown: bool = False,
+            load_label: bool = False,
             **kwargs) -> None:
         """Initializes the class.
 
@@ -59,6 +60,7 @@ class DatasetFactory:
             transform (Optional[Callable], optional): Applied transform when loading the image.
             img_load (str, optional): Applied transform when loading the image.
             remove_unknown (bool, optional): Whether unknown identities should be removed.
+            load_label (bool, optional): Whether dataset[k] should return only image or also identity.
         """
         
         if not self.saved_to_system_folder and not os.path.exists(root):
@@ -85,6 +87,7 @@ class DatasetFactory:
                 self.img_load = "bbox"
             else:
                 self.img_load = "full"
+        self.load_label = load_label
 
     @property
     def labels_string(self):
@@ -108,7 +111,11 @@ class DatasetFactory:
         """
 
         img = self.get_image(idx)
-        return self.apply_segmentation(img, idx)
+        img = self.apply_segmentation(img, idx)
+        if self.load_label:
+            return img, self.df['identity'].iloc[idx]
+        else:
+            return img
 
     def get_image(self, idx: int) -> Image:
         """Load an image with iloc `idx`.
@@ -653,7 +660,10 @@ class DatasetFactory:
         for k in idx:
             if k >= 0:
                 # Load the image with index k
-                im = self[k]
+                if self.load_label:
+                    im, _ = self[k]
+                else:
+                    im = self[k]
                 ims.append(im)
                 ratios.append(im.size[0] / im.size[1])
             else:
