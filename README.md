@@ -35,7 +35,7 @@
 
 The aim of the project is to provide comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
 
-- overview of 41 publicly available wildlife re-identification datasets.
+- overview of 42 publicly available wildlife re-identification datasets.
 - utilities to mass download and convert them into a unified format and fix some wrong labels.
 - default splits for several machine learning tasks including the ability create additional splits.
 
@@ -43,7 +43,7 @@ An introductory example is provided in a [Jupyter notebook](notebooks/introducti
 
 ## Changelog
 
-[08/10/2024] Added AmvrakikosTurtles, ReunionTurtles, ZakynthosTurtles (sea turtles), ELPephants (elephants) and Chicks4FreeID (chickens).  
+[08/10/2024] Added AmvrakikosTurtles, ReunionTurtles, SouthernProvinceTurtles, ZakynthosTurtles (sea turtles), ELPephants (elephants) and Chicks4FreeID (chickens).  
 [13/06/2024] Added WildlifeReID-10k (unification of multiple datasets).  
 [09/05/2024] Added CatIndividualImages (cats), CowDataset (cows) and DogFaceNet (dogs).  
 [28/02/2024] Added MPDD (dogs), PolarBearVidID (polar bears) and SeaStarReID2023 (sea stars).  
