@@ -24,8 +24,6 @@ class DatasetFactory:
       transform (Callable): Applied transform when loading the image.
       img_load (str): Applied transform when loading the image.
       labels_string (List[str]): List of labels in strings.
-      labels (List[str]): List of labels converted to 0..n-1.
-      labels_map (List): Map between labels and labels_string.
     """
 
     unknown_name = 'unknown'
@@ -87,9 +85,6 @@ class DatasetFactory:
                 self.img_load = "bbox"
             else:
                 self.img_load = "full"
-        self.labels, self.labels_map = pd.factorize(
-            self.df['identity'].astype(str).to_numpy()
-        )
 
     @property
     def labels_string(self):
@@ -97,7 +92,7 @@ class DatasetFactory:
 
     @property
     def num_classes(self):
-        return len(self.labels_map)
+        return self.df['identity'].nunique()
 
     def __len__(self):
         return len(self.df)
