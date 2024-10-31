@@ -1,0 +1,100 @@
+import os
+import shutil
+import numpy as np
+import pandas as pd
+from . import utils
+from .datasets import DatasetFactory
+from .summary import summary
+
+class BirdIndividualID(DatasetFactory):
+    summary = summary['BirdIndividualID']
+    prefix1 = 'Original_pictures'
+    prefix2 = 'IndividualID'
+    url = 'https://drive.google.com/uc?id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA'
+    archive = 'ferreira_et_al_2020.zip'
+
+    @classmethod
+    def _download(cls):
+        exception_text = '''Dataset must be downloaded manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#birdindividualid'''
+        raise Exception(exception_text)
+        # utils.gdown_download(cls.url, cls.archive, exception_text=exception_text)
+    
+    @classmethod
+    def _extract(cls):
+        utils.extract_archive(cls.archive, delete=True)
+
+        # Create new folder for segmented images
+        folder_new = os.getcwd() + 'Segmented'
+        if not os.path.exists(folder_new):
+            os.makedirs(folder_new)
+
+        # Move segmented images to new folder
+        folder_move = 'Cropped_pictures'
+        shutil.move(folder_move, os.path.join(folder_new, folder_move))
+
+    def create_catalogue(self) -> pd.DataFrame:
+        # Find all images in root
+        path = os.path.join(self.root, self.prefix1, self.prefix2)
+        data = utils.find_images(path)
+        folders = data['path'].str.split(os.path.sep, expand=True)
+
+        # Remove images with multiple labels
+        idx = folders[2].str.contains('_')
+        data = data.loc[~idx]
+        folders = folders.loc[~idx]
+
+        # Remove some problems with the sociable_weavers/Test_dataset
+        if folders.shape[1] == 4:
+            idx = folders[3].isnull()
+            folders.loc[~idx, 2] = folders.loc[~idx, 3]
+
+        # Extract information from the folder structure
+        split = folders[1].replace({'Test_datasets': 'test', 'Test': 'test', 'Train': 'train', 'Val': 'val'})
+        identity = folders[2]
+        species = folders[0]
+
+        # Finalize the dataframe
+        df1 = pd.DataFrame({    
+            'image_id': utils.create_id(split + data['file']),
+            'path': self.prefix1 + os.path.sep + self.prefix2 + os.path.sep + data['path'] + os.path.sep + data['file'],
+            'identity': identity,
+            'species': species,
+            'original_split': split,
+        })
+
+        # Add images without labels
+        path = os.path.join(self.root, self.prefix1, 'New_birds')
+        data = utils.find_images(path)
+        species = data['path']
+
+        # Finalize the dataframe
+        df2 = pd.DataFrame({    
+            'image_id': utils.create_id(data['file']),
+            'path': self.prefix1 + os.path.sep + 'New_birds' + os.path.sep + data['path'] + os.path.sep + data['file'],
+            'identity': self.unknown_name,
+            'species': species,
+            'original_split': np.nan,
+        })
+        df = pd.concat([df1, df2])
+        return self.finalize_catalogue(df)
+
+
+class BirdIndividualIDSegmented(BirdIndividualID):
+    prefix1 = 'Cropped_pictures'
+    prefix2 = 'IndividuaID'
+    warning = '''You are trying to download or extract a segmented dataset.
+        It is already included in its non-segmented version.
+        Skipping.'''
+    
+    @classmethod
+    def get_data(cls, root, name=None):
+        print(cls.warning)
+
+    @classmethod
+    def _download(cls):
+        print(cls.warning)
+
+    @classmethod
+    def _extract(cls):
+        print(cls.warning)

@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from typing import List
-from ..datasets import DatasetFactory, SealID
+from ..datasets import DatasetFactory
 
 
 def get_dataset_folder(root_dataset: str, class_dataset: type) -> str:
@@ -53,7 +53,8 @@ def load_dataset(
         class_dataset: type,
         root_dataset: str,
         root_dataframe: str,
-        overwrite: bool = False
+        overwrite: bool = False,
+        **kwargs
         ) -> DatasetFactory:
     """Loads dataset from a pickled dataframe or creates it.
 
@@ -69,7 +70,7 @@ def load_dataset(
     Returns:
         The loaded dataset.
     """
-
+    
     # Check if the dataset is downloaded.
     if not os.path.exists(root_dataset):
         raise(Exception('Data not found. Download them first.'))
@@ -77,14 +78,17 @@ def load_dataset(
     # Get paths of the dataset and the pickled dataframe
     root = get_dataset_folder(root_dataset, class_dataset)
     df_path = get_dataframe_path(root_dataframe, class_dataset)
-    if overwrite or not os.path.exists(df_path):
+    if not class_dataset.determined_by_df:
+        # Create the dataframe, no point in saving as it is not determined by it
+        dataset = class_dataset(root, None, **kwargs)
+    elif overwrite or not os.path.exists(df_path):
         # Create the dataframe, save it and create the dataset
-        dataset = class_dataset(root, None)
+        dataset = class_dataset(root, None, **kwargs)
         if not os.path.exists(root_dataframe):
             os.makedirs(root_dataframe)
         dataset.df.to_pickle(df_path)
     else:
         # Load the dataframe and create the dataset
         df = pd.read_pickle(df_path)
-        dataset = class_dataset(root, df)
+        dataset = class_dataset(root, df, **kwargs)
     return dataset

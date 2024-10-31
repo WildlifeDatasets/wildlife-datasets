@@ -10,7 +10,7 @@ This file describes methods associated with dataset creation and metadata.
 
 ## Metadata
 
-::: datasets.metadata.Metadata
+::: datasets.summary.Summary
     options:
       heading_level: 3   
 

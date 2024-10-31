@@ -22,11 +22,11 @@ df = dataset.df
 
 # Default splits
 
-The dataset already contains a default split. However, this split can be used only the the closed-set setting. This is the most common case in machine learning, where the identities (classes) in the training and testing sets coincide. Researcher may want to perform experiments on [other splits](../tutorial_splits) such as the open-set or disjoint-set splits. For comparability of methods, here we list the recommended way of creating splits. We note that the resulting splits are machine-independent and that it is possible to generate additional splits by using different seeds or proportion of the two sets.
+The dataset already contains a default split. However, this split can be used only the the closed-set setting. This is the most common case in machine learning, where the identities (classes) in the training and testing sets coincide. Researcher may want to perform experiments on [other splits](./tutorial_splits.md) such as the open-set or disjoint-set splits. For comparability of methods, here we list the recommended way of creating splits. We note that the resulting splits are machine-independent and that it is possible to generate additional splits by using different seeds or proportion of the two sets.
 
 ## Splits based on identities
 
-For a proper description, see its [own page](../tutorial_splits).
+For a proper description, see its [own page](./tutorial_splits.md).
 
 ### Closed-set split
 
@@ -55,7 +55,7 @@ for idx_train, idx_test in splitter.split(df):
 
 ## Splits based on time
 
-For a proper description, see its [own page](../tutorial_splits#splits-based-on-time).
+For a proper description, see its [own page](./tutorial_splits.md#splits-based-on-time).
 
 ### Time-proportion split
 

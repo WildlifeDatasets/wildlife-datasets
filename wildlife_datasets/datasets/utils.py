@@ -1,9 +1,8 @@
 import os
 import pandas as pd
 import numpy as np
-from typing import Tuple, List, Dict
+from typing import Tuple, List
 import hashlib
-from collections.abc import Iterable
 import urllib.request
 from tqdm import tqdm
 import shutil
@@ -11,7 +10,7 @@ from contextlib import contextmanager
 from PIL import Image
 import cv2
 
-def get_image(path: str, max_size: int = None) -> Image:
+def load_image(path: str, max_size: int = None) -> Image:
     """Loads an image.
 
     Args:
@@ -32,6 +31,30 @@ def get_image(path: str, max_size: int = None) -> Image:
             c = max_size / max(w, h)
             img = img.resize((int(c*w), int(c*h)))
     return img
+
+def get_image(*args, **kwargs) -> Image:
+    print("This function will be removed in future releases. Use load_image() instead.")
+    return load_image(*args, **kwargs)
+
+def crop_black(img: Image) -> Image:
+    """Crops black borders from an image.    
+
+    Args:
+        img (Image): Image to be cropped.
+
+    Returns:
+        Cropped image.
+    """
+    
+    y_nonzero, x_nonzero, _ = np.nonzero(img)
+    return img.crop(
+        (
+            np.min(x_nonzero),
+            np.min(y_nonzero),
+            np.max(x_nonzero),
+            np.max(y_nonzero),
+        )
+    )
 
 def find_images(
         root: str,
@@ -167,3 +190,11 @@ def gdown_download(url, archive, exception_text=''):
     if not os.path.exists(archive):
         print(exception_text)
         raise Exception(exception_text)
+
+def get_split(x, data_train, data_test):
+    if x in data_train:
+        return 'train'
+    elif x in data_test:
+        return 'test'
+    else:
+        return np.nan

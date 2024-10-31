@@ -35,6 +35,8 @@ dependencies=[
           'Pillow>=7.1.2',
           'scikit-learn>=1.0.1',
           'matplotlib>=3.5.1',
+          'pycocotools>=2.0.1',
+          'datasets',
           'gdown',
           'kaggle',
 ]
@@ -55,4 +57,4 @@ packages = [
 ]
 
 [tool.setuptools.package-data]
-wildlife_datasets = ["datasets/metadata.csv"]
+wildlife_datasets = ["datasets/summary.csv"]

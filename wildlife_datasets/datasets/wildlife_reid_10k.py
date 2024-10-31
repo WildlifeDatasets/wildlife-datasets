@@ -2,17 +2,17 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .metadata import metadata
+from .summary import summary
 
 class WildlifeReID10k(DatasetFactory):
-    metadata = metadata['WildlifeReID10k']
+    summary = summary['WildlifeReID10k']
     archive = 'wildlifereid-10k.zip'
 
     @classmethod
     def _download(cls):
         command = f"datasets download -d wildlifedatasets/wildlifereid-10k --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#wildlifereid-10k'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#wildlifereid-10k'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
@@ -20,6 +20,6 @@ class WildlifeReID10k(DatasetFactory):
         utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
-        df = pd.read_csv(os.path.join(self.root, 'metadata.csv'))
+        df = pd.read_csv(os.path.join(self.root, 'metadata.csv'), low_memory=False)
         df['image_id'] = range(len(df))
         return self.finalize_catalogue(df)

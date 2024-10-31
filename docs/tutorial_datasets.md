@@ -51,7 +51,7 @@ The majority of datasets used in this library can be downloaded fully automatica
 datasets.MacaqueFaces.get_data('data/MacaqueFaces')
 ```
 
- Some of the datasets require special handling as described in a [special page](../downloads). 
+ Some of the datasets require special handling as described in a [special page](./preprocessing.md). 
 
 ## Working with one dataset
 
@@ -61,7 +61,7 @@ When a dataset is already downloaded, it can be loaded
 d = datasets.MacaqueFaces('data/MacaqueFaces')
 ```
 
-Since this a subclass of the `DatasetFactory` parent class, it inherits all the methods and attributes listed in its [documentation](reference_datasets.md). Its main component is the [pandas dataframe](../dataframe) of all samples
+Since this a subclass of the `DatasetFactory` parent class, it inherits all the methods and attributes listed in its [documentation](./reference_datasets.md). Its main component is the [pandas dataframe](./dataframe.md) of all samples
 
 ```python exec="true" source="above" result="console" session="run"
 d.df
@@ -84,11 +84,11 @@ analysis.display_statistics(d.df)
 print(run('analysis.display_statistics(d.df)')) # markdown-exec: hide
 ```
 
-or [metadata](../dataframe#metadata) displayed
+or [metadata](./dataframe.md#metadata) displayed
 
 ```python exec="true" source="above" result="console" session="run"
-d.metadata
-print_array(d.metadata) # markdown-exec: hide
+d.summary
+print_array(d.summary) # markdown-exec: hide
 ```
 
 ## Working with multiple datasets

@@ -23,25 +23,25 @@ Test('.').df
 print(Test('.').df) # markdown-exec: hide
 ```
 
-The dataframe `df` must satisfy [some requirements](../dataframe).
+The dataframe `df` must satisfy [some requirements](./dataframe.md).
 
 !!! info
 
-    Instead of returning `df` it is better to return `self.finalize_catalogue(df)`. This function will perform [multiple checks](../reference_datasets/#datasets.datasets.DatasetFactory.finalize_catalogue) to verify the created dataframe. However, in this case, this check would fail because the specified file paths do not exist.
+    Instead of returning `df` it is better to return `self.finalize_catalogue(df)`. This function will perform [multiple checks](./reference_datasets.md/#datasets.datasets.DatasetFactory.finalize_catalogue) to verify the created dataframe. However, in this case, this check would fail because the specified file paths do not exist.
 
 To incorporate the new dataset into the list of all available datasets, the [init script](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/__init__.py) must be appropriately modified.
 
 
 ## Optional: including metadata
 
-The metadata can be added by saving them in a csv file (such as [mymetadata.csv](../csv/mymetadata.csv)). Their full description is in a [separate file](../dataframe#metadata). Then they can be loaded into the class definition as a class attribute. 
+The metadata can be added by saving them in a csv file (such as [mysummary.csv](./csv/mysummary.csv)). Their full description is in a [separate file](./dataframe.md#metadata). Then they can be loaded into the class definition as a class attribute. 
 
 ```python exec="true" source="above" session="run2"
 import pandas as pd
 from wildlife_datasets import datasets
 
 class Test(datasets.DatasetFactory):
-    metadata = datasets.Metadata('docs/csv/mymetadata.csv')['Test']
+    summary = datasets.Summary('docs/csv/mysummary.csv')['Test']
 
     def create_catalogue(self) -> pd.DataFrame:
         df = pd.DataFrame({
@@ -55,8 +55,8 @@ class Test(datasets.DatasetFactory):
 The metadata can be accessed by
 
 ```python exec="true" source="above" result="console" session="run2"
-Test('.').metadata
-print(Test('.').metadata) # markdown-exec: hide
+Test('.').summary
+print(Test('.').summary) # markdown-exec: hide
 ```
 
 ## Optional: including download
@@ -68,7 +68,7 @@ import pandas as pd
 from wildlife_datasets import datasets
 
 class Test(datasets.DatasetFactory):
-    metadata = datasets.Metadata('docs/csv/mymetadata.csv')['Test']
+    summary = datasets.Summary('docs/csv/mysummary.csv')['Test']
 
     @classmethod
     def _download(cls):
@@ -92,5 +92,5 @@ class Test(datasets.DatasetFactory):
 New datasets may be integrated into the core package by pull requests on the [Github repo](https://github.com/WildlifeDatasets/wildlife-datasets). In such a case, the dataset should be freely downloadable and both download script and metadata should be provided. The fuctions should be included in the following files:
 
   - `DatasetFactory` definition in [datasets.py](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/datasets.py).
-  - Metadata as an extension to the existing [metadata.csv](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/wildlife_datasets/datasets).
+  - Metadata as an extension to the existing [summary.csv](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/wildlife_datasets/datasets).
 

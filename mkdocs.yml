@@ -1,4 +1,6 @@
 site_name: Wildlife Datasets
+repo_url: https://github.com/WildlifeDatasets/wildlife-datasets
+repo_name: wildlife-datasets
 
 theme:
   name: "material"

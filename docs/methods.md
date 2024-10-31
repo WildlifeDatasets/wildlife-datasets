@@ -36,7 +36,7 @@ from wildlife_datasets import datasets, loader, metrics
 
 ## Data preparation
 
-The datasets need to be [downloaded first](../tutorial_datasets#downloading-datasets). Assume that we have already downloaded the MacaqueFaces dataset. Then we [load it](../tutorial_datasets#working-with-multiple-datasets)
+The datasets need to be [downloaded first](./tutorial_datasets.md#downloading-datasets). Assume that we have already downloaded the MacaqueFaces dataset. Then we [load it](./tutorial_datasets.md#working-with-multiple-datasets)
 
 ```python
 d = loader.load_dataset(datasets.MacaqueFaces, 'data', 'dataframes')
@@ -60,7 +60,7 @@ df_test = d.df.loc[idx_test]
 print(df_test) # markdown-exec: hide
 ```
 
-Any photo, where the animal was not recognized, are ignored for the split. Therefore, the union of the training and testing sets may be smaller than the whole dataset. It is also possible to create [custom splits](../tutorial_splits).
+Any photo, where the animal was not recognized, are ignored for the split. Therefore, the union of the training and testing sets may be smaller than the whole dataset. It is also possible to create [custom splits](./tutorial_splits.md).
 
 ## Write your ML method
 
@@ -79,8 +79,6 @@ y_true = df_test['identity']
 metrics.accuracy(y_true, y_pred)
 print(metrics.accuracy(y_true, y_pred)) # markdown-exec: hide
 ```
-
-or any other [implemented metric](tutorial_evaluation.md).
 
 ## Mass evaluation
 

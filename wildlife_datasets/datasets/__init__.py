@@ -1,67 +1,69 @@
-from .datasets import DatasetFactory
-from .datasets import AAUZebraFish
-from .datasets import AerialCattle2017
-from .datasets import ATRW
-from .datasets import BelugaID, BelugaIDv2
-from .datasets import BirdIndividualID
-from .datasets import BirdIndividualIDSegmented
-from .datasets import CatIndividualImages
-from .datasets import CTai
-from .datasets import CZoo
-from .datasets import CowDataset
-from .datasets import Cows2021, Cows2021v2
-from .datasets import DogFaceNet
-from .datasets import Drosophila
-from .datasets import FriesianCattle2015, FriesianCattle2015v2
-from .datasets import FriesianCattle2017
-from .datasets import GiraffeZebraID
-from .datasets import Giraffes
-from .datasets import GreenSeaTurtles
-from .datasets import HappyWhale
-from .datasets import HumpbackWhaleID
-from .datasets import HyenaID2022
-from .datasets import IPanda50
-from .datasets import LeopardID2022
-from .datasets import LionData
-from .datasets import MacaqueFaces
-from .datasets import MPDD
-from .datasets import NDD20, NDD20v2
-from .datasets import NOAARightWhale
-from .datasets import NyalaData
-from .datasets import OpenCows2020
-from .datasets import PolarBearVidID
-from .datasets import SealID
-from .datasets import SealIDSegmented
-from .datasets import SeaStarReID2023
-from .datasets import SeaTurtleID2022
-from .datasets import SeaTurtleIDHeads
-from .datasets import SMALST
-from .datasets import StripeSpotter
+from .datasets import DatasetFactory, WildlifeDataset
+from .aau_zebrafish import AAUZebraFish
+from .aerial_cattle import AerialCattle2017
+from .atrw import ATRW
+from .amvrakikos_turtles import AmvrakikosTurtles
+from .beluga_id import BelugaID, BelugaIDv2
+from .bird_individual_id import BirdIndividualID, BirdIndividualIDSegmented
+from .cat_individual_images import CatIndividualImages
+from .ctai import CTai
+from .czoo import CZoo
+from .chicks4free_id import Chicks4FreeID
+from .cow_dataset import CowDataset
+from .cows import Cows2021, Cows2021v2
+from .dog_face_net import DogFaceNet
+from .drosophila import Drosophila
+from .elpephants import ELPephants
+from .friesian_cattle import FriesianCattle2015, FriesianCattle2015v2, FriesianCattle2017
+from .giraffe_zebra_id import GiraffeZebraID
+from .giraffes import Giraffes
+from .happy_whale import HappyWhale
+from .humpback_whale_id import HumpbackWhaleID
+from .hyena_id import HyenaID2022
+from .ipanda import IPanda50
+from .leopard_id import LeopardID2022
+from .lion_data import LionData
+from .macaque_faces import MacaqueFaces
+from .mpdd import MPDD
+from .ndd import NDD20, NDD20v2
+from .noaa_right_whale import NOAARightWhale
+from .nyala_data import NyalaData
+from .open_cows import OpenCows2020
+from .polar_bear_vid_id import PolarBearVidID
+from .reunion_turtles import ReunionTurtles
+from .seal_id import SealID, SealIDSegmented
+from .sea_star_reid import SeaStarReID2023
+from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
+from .smalst import SMALST
+from .southern_province_turtles import SouthernProvinceTurtles
+from .stripe_spotter import StripeSpotter
 from .wildlife_reid_10k import WildlifeReID10k
-from .datasets import WhaleSharkID
-from .datasets import ZindiTurtleRecall
-from .metadata import Metadata
-from .utils import get_image
+from .whaleshark_id import WhaleSharkID
+from .zakynthos_turtles import ZakynthosTurtles
+from .zindi_turtle_recall import ZindiTurtleRecall
+from .summary import Summary
+from .utils import get_image, load_image
 
 names_all = [
     AAUZebraFish,
     AerialCattle2017,
+    AmvrakikosTurtles,
     ATRW,
     BelugaIDv2,
-    BirdIndividualID,
-    BirdIndividualIDSegmented,
+    BirdIndividualID, BirdIndividualIDSegmented,
     CatIndividualImages,
     CTai,
     CZoo,
+    Chicks4FreeID,
     CowDataset,
     Cows2021v2,
     DogFaceNet,
     Drosophila,
+    ELPephants,
     FriesianCattle2015v2,
     FriesianCattle2017,
     GiraffeZebraID,
     Giraffes,
-    GreenSeaTurtles,
     HappyWhale,
     HumpbackWhaleID,
     HyenaID2022,
@@ -75,21 +77,23 @@ names_all = [
     NyalaData,
     OpenCows2020,
     PolarBearVidID,
-    SealID,
-    SealIDSegmented,
+    ReunionTurtles,
+    SealID, SealIDSegmented,
     SeaStarReID2023,
-    SeaTurtleID2022,
-    SeaTurtleIDHeads,
+    SeaTurtleID2022, SeaTurtleIDHeads,
     SMALST,
+    SouthernProvinceTurtles,
     StripeSpotter,
     WhaleSharkID,
+    ZakynthosTurtles,
     ZindiTurtleRecall,
 ]
 
 names_wild = [
+    AmvrakikosTurtles,
     BelugaIDv2,
+    ELPephants,
     GiraffeZebraID,
-    GreenSeaTurtles,
     HappyWhale,
     HumpbackWhaleID,
     HyenaID2022,
@@ -97,10 +101,13 @@ names_wild = [
     NDD20v2,
     NOAARightWhale,
     NyalaData,
+    ReunionTurtles,
     SealID,
     SeaTurtleID2022,
+    SouthernProvinceTurtles,
     StripeSpotter,
     WhaleSharkID,
+    ZakynthosTurtles,
 ]
 
 names_small = [
@@ -109,16 +116,19 @@ names_small = [
     CTai,
     CZoo,
     DogFaceNet,
+    ELPephants,
     FriesianCattle2015v2,
     FriesianCattle2017,
     IPanda50,
-    GreenSeaTurtles,
     MacaqueFaces,
     MPDD,
     NyalaData,
     PolarBearVidID,
+    ReunionTurtles,
     SeaTurtleIDHeads,
+    SouthernProvinceTurtles,
     StripeSpotter,
+    ZakynthosTurtles,
 ]
 
 names_cows = [
@@ -149,8 +159,11 @@ names_primates = [
 ]
 
 names_turtles = [
-    GreenSeaTurtles,
+    AmvrakikosTurtles,
+    ReunionTurtles,
     SeaTurtleIDHeads,
+    SouthernProvinceTurtles,
+    ZakynthosTurtles,
     ZindiTurtleRecall,
 ]
 
