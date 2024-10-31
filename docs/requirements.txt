@@ -58,4 +58,4 @@ tzdata==2023.4
 urllib3==2.1.0
 watchdog==3.0.0
 webencodings==0.5.1
-wildlife-datasets==1.0.4
+wildlife-datasets==1.0.5
