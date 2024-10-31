@@ -36,7 +36,6 @@ dependencies=[
           'scikit-learn>=1.0.1',
           'matplotlib>=3.5.1',
           'pycocotools>=2.0.1',
-          'torchvision>=0.18.0',
           'datasets',
           'gdown',
           'kaggle',
