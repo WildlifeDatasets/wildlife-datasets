@@ -150,6 +150,10 @@ def prepare_drosophila(root, new_root, transform=None, **kwargs):
     idx = get_every_k(dataset, 1000, 'identity')
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
+def prepare_elpephants(root, new_root, transform=None, **kwargs):
+    dataset = datasets.ELPephants(root, img_load="full", transform=transform, remove_unknown=True)
+    return resize_dataset(dataset, new_root, **kwargs)
+
 def prepare_friesian_cattle_2015(root, new_root, transform=None, **kwargs):
     dataset = datasets.FriesianCattle2015v2(root, img_load="crop_black", transform=transform, remove_unknown=True)
     return resize_dataset(dataset, new_root, **kwargs)
@@ -258,6 +262,7 @@ def prepare_zindi_turtle_recall(root, new_root, transform=None, **kwargs):
     dataset = datasets.ZindiTurtleRecall(root, img_load="full", transform=transform, remove_unknown=True)
     return resize_dataset(dataset, new_root, **kwargs)
 
+# LionData are missing
 prepare_functions = {
     'AAUZebraFish': prepare_aau_zebrafish,
     'AerialCattle2017': prepare_aerial_cattle_2017,
@@ -273,6 +278,7 @@ prepare_functions = {
     'CZoo': prepare_czoo,
     'DogFaceNet': prepare_dog_facenet,
     'Drosophila': prepare_drosophila,
+    'ELPephants': prepare_elpephants,
     'FriesianCattle2015': prepare_friesian_cattle_2015,
     'FriesianCattle2017': prepare_friesian_cattle_2017,
     'Giraffes': prepare_giraffes,
