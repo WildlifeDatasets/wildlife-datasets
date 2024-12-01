@@ -35,7 +35,7 @@ def recognize_time_split(df_train, df_test):
                 time_split = 'time-proportion'
     return time_split
 
-def analyze_split(df, idx_train, idx_test):
+def extract_data_split(df, idx_train, idx_test):
     df_train = df.loc[idx_train]
     df_test = df.loc[idx_test]
     
@@ -44,27 +44,38 @@ def analyze_split(df, idx_train, idx_test):
     ids_test = set(df_test['identity'])
     ids_train_only = ids_train - ids_test
     ids_test_only = ids_test - ids_train
-    ids_joint = ids_train.intersection(ids_test)
-    
-    n = len(idx_train)+len(idx_test)
-    n_train = len(idx_train)
-    n_train_only = sum([sum(df_train['identity'] == ids) for ids in ids_train_only]) 
-    n_test_only = sum([sum(df_test['identity'] == ids) for ids in ids_test_only])    
-    
-    ratio_train = n_train / n    
-    ratio_test_only = n_test_only / n
     
     id_split = recognize_id_split(ids_train, ids_test)
     time_split = recognize_time_split(df_train, df_test)
-            
-    print('Split: %s %s' % (time_split, id_split))
-    print('Samples: train/test/unassigned/total = %d/%d/%d/%d' % (len(df_train), len(df_test), len(df)-len(df_train)-len(df_test), len(df)))
-    print('Classes: train/test/unassigned/total = %d/%d/%d/%d' % (len(ids_train), len(ids_test), len(ids)-len(ids_train)-len(ids_test)+len(ids_train.intersection(ids_test)), len(ids)))
-    print('Samples: train only/test only        = %d/%d' % (n_train_only, n_test_only))
-    print('Classes: train only/test only/joint  = %d/%d/%d' % (len(ids_train_only), len(ids_test_only),  len(ids_joint)))
+
+    return {
+        'id_split': id_split,
+        'time_split': time_split,
+        'n': len(df),
+        'n_train': len(df_train),
+        'n_test': len(df_test),
+        'n_train_only': sum([sum(df_train['identity'] == ids) for ids in ids_train_only]),
+        'n_test_only': sum([sum(df_test['identity'] == ids) for ids in ids_test_only]),
+        'n_unassigned': len(df)-len(df_train)-len(df_test),
+        'n_ids': len(ids),
+        'n_ids_train': len(ids_train),
+        'n_ids_test': len(ids_test),
+        'n_ids_joint': len(ids_train.intersection(ids_test)),
+        'n_ids_train_only': len(ids_train_only),
+        'n_ids_test_only': len(ids_test_only),
+        'n_ids_unassigned': len(ids)-len(ids_train)-len(ids_test)+len(ids_train.intersection(ids_test)),
+    }
+
+def analyze_split(df, idx_train, idx_test):
+    data = extract_data_split(df, idx_train, idx_test)
+    print('Split: %s %s' % (data['time_split'], data['id_split']))
+    print('Samples: train/test/unassigned/total = %d/%d/%d/%d' % (data['n_train'], data['n_test'], data['n_unassigned'], data['n']))
+    print('Classes: train/test/unassigned/total = %d/%d/%d/%d' % (data['n_ids_train'], data['n_ids_test'], data['n_ids_unassigned'], data['n_ids']))
+    print('Samples: train only/test only        = %d/%d' % (data['n_train_only'], data['n_test_only']))
+    print('Classes: train only/test only/joint  = %d/%d/%d' % (data['n_ids_train_only'], data['n_ids_test_only'],  data['n_ids_joint']))
     print('')    
-    print('Fraction of train set     = %1.2f%%' % (100*ratio_train))
-    print('Fraction of test set only = %1.2f%%' % (100*ratio_test_only))
+    print('Fraction of train set     = %1.2f%%' % (100*data['n_train']/data['n']))
+    print('Fraction of test set only = %1.2f%%' % (100*data['n_test_only']/data['n']))
 
 def visualize_split(df_train, df_test, selection=None, ylabels=True):
     if selection == None:
