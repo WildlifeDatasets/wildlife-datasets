@@ -1,6 +1,6 @@
 data/
 baselines/features
-baselines/clusters
+baselines/clusters*
 baselines/summary*
 venv/
 venv*
