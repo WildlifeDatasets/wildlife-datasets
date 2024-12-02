@@ -25,6 +25,7 @@ from .leopard_id import LeopardID2022
 from .lion_data import LionData
 from .macaque_faces import MacaqueFaces
 from .mpdd import MPDD
+from .multi_cam_cows import MultiCamCows2024
 from .ndd import NDD20, NDD20v2
 from .noaa_right_whale import NOAARightWhale
 from .nyala_data import NyalaData
@@ -72,6 +73,7 @@ names_all = [
     LionData,
     MacaqueFaces,
     MPDD,
+    MultiCamCows2024,
     NDD20v2,
     NOAARightWhale,
     NyalaData,
@@ -137,6 +139,7 @@ names_cows = [
     Cows2021v2,
     FriesianCattle2015v2,
     FriesianCattle2017,
+    MultiCamCows2024,
     OpenCows2020,
 ]
 

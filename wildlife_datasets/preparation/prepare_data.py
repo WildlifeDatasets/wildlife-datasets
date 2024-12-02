@@ -202,6 +202,11 @@ def prepare_mpdd(root, new_root, transform=None, **kwargs):
     dataset = datasets.MPDD(root, img_load="full", transform=transform, remove_unknown=True)
     return resize_dataset(dataset, new_root, **kwargs)
 
+def prepare_multi_cam_cows_2024(root, new_root, transform=None, **kwargs):
+    dataset = datasets.MultiCamCows2024(root, img_load="full", transform=transform, remove_unknown=True)
+    idx = get_every_k(dataset, 20, 'identity')
+    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
+
 def prepare_ndd20(root, new_root, transform=None, **kwargs):
     dataset = datasets.NDD20v2(root, img_load="bbox_mask", transform=transform, remove_unknown=True)
     return resize_dataset(dataset, new_root, **kwargs)
@@ -294,6 +299,7 @@ prepare_functions = {
     'LeopardID2022': prepare_leopard_id_2022,
     'MacaqueFaces': prepare_macaque_faces,
     'MPDD': prepare_mpdd,
+    'MultiCamCows2024': prepare_multi_cam_cows_2024,
     'NDD20': prepare_ndd20,
     'NOAARightWhale': prepare_noaa_right_whale,
     'NyalaData': prepare_nyala_data,
