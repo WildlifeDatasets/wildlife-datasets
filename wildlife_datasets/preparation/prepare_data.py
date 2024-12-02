@@ -9,7 +9,8 @@ def resize_dataset(
         dataset: datasets.DatasetFactory,
         new_root: str,
         idx: Optional[List[int]] = None,
-        copy_files: bool = True
+        copy_files: bool = True,
+        remove_str: List[str] = [],
         ) -> pd.DataFrame:
     """Resizes dataset using `dataset.transform` into `new_root`.
 
@@ -18,6 +19,7 @@ def resize_dataset(
         new_root (str): Root to store new images.
         idx (Optional[List[int]], optional): If specified, then indices to consider.
         copy_files (bool, optional): Whether files should be copied as well or only datatframe created.
+        remove_str (List[str], optional): List of strings to be removed from file names.
 
     Returns:
         Description of the new dataset.
@@ -34,6 +36,8 @@ def resize_dataset(
         img_path = base + "_" + str(row["image_id"]) + ext
         img_path = img_path.replace('\\\\', '/')
         img_path = img_path.replace('\\', '/')
+        for remove in remove_str:
+            img_path = img_path.replace(remove, '')
 
         # Save image to new root with unique image path
         if copy_files:
