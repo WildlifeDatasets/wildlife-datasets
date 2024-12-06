@@ -46,7 +46,7 @@ def extract_data_split(df, idx_train, idx_test, col_label='identity'):
     ids_test_only = ids_test - ids_train
     
     id_split = recognize_id_split(ids_train, ids_test)
-    time_split = recognize_time_split(df_train, df_test)
+    time_split = recognize_time_split(df_train, df_test, col_label=col_label)
 
     return {
         'id_split': id_split,

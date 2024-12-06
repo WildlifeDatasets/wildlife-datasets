@@ -251,7 +251,13 @@ class TimeCutoffSplitAll(TimeAwareSplit):
         years = np.sort(df['year'].unique())[1:]
         splits = []
         for year in years:
-            splitter = TimeCutoffSplit(year, self.test_one_year_only)
+            splitter = TimeCutoffSplit(
+                year,
+                test_one_year_only=self.test_one_year_only,
+                seed=self.seed,
+                identity_skip=self.identity_skip,
+                col_label=self.col_label
+                )
             for split in splitter.split(df):
                 splits.append(split)
         return splits
@@ -269,3 +275,6 @@ class RandomProportion():
         for idx_train, idx_test in self.splitter.split(df):
             splits.append(self.splitter.resplit_random(df, idx_train, idx_test))
         return splits
+    
+    def set_col_label(self, *args, **kwargs):
+        self.splitter.set_col_label(*args, **kwargs)
