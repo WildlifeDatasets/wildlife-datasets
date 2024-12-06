@@ -24,6 +24,8 @@ class DatasetFactory:
       transform (Callable): Applied transform when loading the image.
       img_load (str): Applied transform when loading the image.
       labels_string (List[str]): List of labels in strings.
+      col_path (str): Column name containing image paths.
+      col_label (str): Column name containing individual animal names (labels).
     """
 
     unknown_name = 'unknown'
@@ -46,6 +48,9 @@ class DatasetFactory:
             transform: Optional[Callable] = None,
             img_load: str = "full",
             remove_unknown: bool = False,
+            load_label: bool = False,
+            col_path: str = "path",
+            col_label: str = "identity",            
             **kwargs) -> None:
         """Initializes the class.
 
@@ -59,6 +64,9 @@ class DatasetFactory:
             transform (Optional[Callable], optional): Applied transform when loading the image.
             img_load (str, optional): Applied transform when loading the image.
             remove_unknown (bool, optional): Whether unknown identities should be removed.
+            load_label (bool, optional): Whether dataset[k] should return only image or also identity.
+            col_path (str, optional): Column name containing image paths.
+            col_label (str, optional): Column name containing individual animal names (labels).
         """
         
         if not self.saved_to_system_folder and not os.path.exists(root):
@@ -67,13 +75,15 @@ class DatasetFactory:
             print('This dataset is outdated. You may want to call a newer version such as %sv2.' % self.__class__.__name__)
         self.update_wrong_labels = update_wrong_labels
         self.root = root
+        self.col_path = col_path
+        self.col_label = col_label
         if df is None:
             df = self.create_catalogue(**kwargs)
         else:
             if not self.determined_by_df:
                 print('This dataset is not determined by dataframe. But you construct it so.')
         if remove_unknown:
-            df = df[df['identity'] != self.unknown_name]
+            df = df[df[self.col_label] != self.unknown_name]
         self.df = df.reset_index(drop=True)
         self.metadata = self.df # Alias to df to unify with wildlife-tools
         self.transform = transform
@@ -85,14 +95,15 @@ class DatasetFactory:
                 self.img_load = "bbox"
             else:
                 self.img_load = "full"
+        self.load_label = load_label
 
     @property
     def labels_string(self):
-        return self.df['identity'].astype(str).to_numpy()
+        return self.df[self.col_label].astype(str).to_numpy()
 
     @property
     def num_classes(self):
-        return self.df['identity'].nunique()
+        return self.df[self.col_label].nunique()
 
     def __len__(self):
         return len(self.df)
@@ -108,7 +119,11 @@ class DatasetFactory:
         """
 
         img = self.get_image(idx)
-        return self.apply_segmentation(img, idx)
+        img = self.apply_segmentation(img, idx)
+        if self.load_label:
+            return img, self.df[self.col_label].iloc[idx]
+        else:
+            return img
 
     def get_image(self, idx: int) -> Image:
         """Load an image with iloc `idx`.
@@ -122,9 +137,9 @@ class DatasetFactory:
 
         data = self.df.iloc[idx]
         if self.root:
-            img_path = os.path.join(self.root, data['path'])
+            img_path = os.path.join(self.root, data[self.col_path])
         else:
-            img_path = data['path']
+            img_path = data[self.col_path]
         img = self.load_image(img_path)
         return img
     
@@ -397,7 +412,7 @@ class DatasetFactory:
             ) -> pd.DataFrame:
         """Replaces specified images with specified identities.
 
-        It looks for a subset of image_name in df['path'].
+        It looks for a subset of image_name in df[self.col_path].
         It may cause problems with `os.path.sep`.
 
         Args:
@@ -412,7 +427,7 @@ class DatasetFactory:
             n_replaced = 0
             for index, df_row in df.iterrows():
                 # Check that there is a image with the required name and identity 
-                if image_name in df_row['path'] and old_identity == df_row[col]:
+                if image_name in df_row[self.col_path] and old_identity == df_row[col]:
                     df.loc[index, col] = new_identity
                     n_replaced += 1
             if n_replaced == 0:
@@ -435,18 +450,25 @@ class DatasetFactory:
             A full dataframe of the data, slightly modified.
         """
 
-        if self.update_wrong_labels:
-            df = self.fix_labels(df)
+        df = self.rename_column(df, 'path', self.col_path)
+        df = self.rename_column(df, 'identity', self.col_label)
         self.check_required_columns(df)
         self.check_types_columns(df)
         df = self.reorder_df(df)
         df = self.remove_constant_columns(df)
         self.check_unique_id(df)
-        self.check_files_exist(df['path'])
-        self.check_files_names(df['path'])
+        self.check_files_exist(df[self.col_path])
+        self.check_files_names(df[self.col_path])
         if 'segmentation' in df.columns:
             self.check_files_exist(df['segmentation'])
         return df
+
+    def rename_column(self, df, name_old, name_new):
+        if name_old != name_new:
+            if name_new in df.columns:
+                raise Exception(f'Column {name_old} already present in dataframe. Cannot rename {name_old} to it.')
+            else:
+                return df.rename({name_old: name_new}, axis=1)
 
     def check_required_columns(self, df: pd.DataFrame) -> None:
         """Check if all required columns are present.
@@ -455,7 +477,7 @@ class DatasetFactory:
             df (pd.DataFrame): A full dataframe of the data.
         """
 
-        for col_name in ['image_id', 'identity', 'path']:
+        for col_name in ['image_id', self.col_label, self.col_path]:
             if col_name not in df.columns:
                 raise(Exception('Column %s must be in the dataframe columns.' % col_name))
 
@@ -473,8 +495,8 @@ class DatasetFactory:
 
         requirements = [
             ('image_id', ['int', 'str']),
-            ('identity', ['int', 'str']),
-            ('path', ['str']),
+            (self.col_label, ['int', 'str']),
+            (self.col_path, ['str']),
             ('bbox', ['list_numeric']),
             ('date', ['date']),
             ('keypoints', ['list_numeric']),
@@ -545,7 +567,7 @@ class DatasetFactory:
             A full dataframe of the data, slightly modified.
         """
 
-        default_order = ['image_id', 'identity', 'path', 'bbox', 'date', 'keypoints', 'orientation', 'segmentation', 'species']
+        default_order = ['image_id', self.col_label, self.col_path, 'bbox', 'date', 'keypoints', 'orientation', 'segmentation', 'species']
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
@@ -653,7 +675,10 @@ class DatasetFactory:
         for k in idx:
             if k >= 0:
                 # Load the image with index k
-                im = self[k]
+                if self.load_label:
+                    im, _ = self[k]
+                else:
+                    im = self[k]
                 ims.append(im)
                 ratios.append(im.size[0] / im.size[1])
             else:

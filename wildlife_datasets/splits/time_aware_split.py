@@ -28,7 +28,7 @@ class TimeAwareSplit(BalancedSplit):
         
         # Remove identities to be skipped
         df = df.copy()
-        df = df[df['identity'] != self.identity_skip]
+        df = df[df[self.col_label] != self.identity_skip]
 
         # Removes entries without dates
         df = df[~df['date'].isnull()]
@@ -69,17 +69,17 @@ class TimeAwareSplit(BalancedSplit):
         
         # Compute the number of samples for each individual in the training set
         counts_train = {}
-        for name, df_name in df.loc[idx_train].groupby('identity'):
+        for name, df_name in df.loc[idx_train].groupby(self.col_label):
             counts_train[name] = len(df_name)
         # Compute the number of samples for each individual in the testing set
         counts_test = {}
-        for name, df_name in df.loc[idx_test].groupby('identity'):
+        for name, df_name in df.loc[idx_test].groupby(self.col_label):
             counts_test[name] = len(df_name)
 
         idx_train_new = []
         idx_test_new = []
         # Loop over all individuals
-        for name, df_name in df.groupby('identity'):
+        for name, df_name in df.groupby(self.col_label):
             # Extract the number of individuals in the training and testing sets
             n_train = counts_train.get(name, 0)
             n_test = counts_test.get(name, 0)
@@ -110,6 +110,7 @@ class TimeProportionSplit(TimeAwareSplit):
             ratio: float = 0.5,
             seed: int = 666,
             identity_skip: str = 'unknown',
+            col_label: str = 'identity',
             ):
         """Initializes the class.
 
@@ -117,11 +118,13 @@ class TimeProportionSplit(TimeAwareSplit):
             ratio (float, optional): The fraction of dates going to the testing set.
             seed (int, optional): Initial seed for the LCG random generator.
             identity_skip (str, optional): Name of the identities to ignore.
+            col_label (str, optional): Column name containing individual animal names (labels).            
         """
 
         self.ratio = ratio
         self.identity_skip = identity_skip
         self.seed = seed
+        self.col_label = col_label
 
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -137,7 +140,7 @@ class TimeProportionSplit(TimeAwareSplit):
         idx_train = []
         idx_test = []
         # Loop over all identities; x is a tuple (identity, df with unique identity)
-        for _, df_name in df.groupby('identity'):            
+        for _, df_name in df.groupby(self.col_label):            
             dates = df_name.groupby('date')
             n_dates = len(dates)
             if n_dates > 1:
@@ -168,6 +171,7 @@ class TimeCutoffSplit(TimeAwareSplit):
             test_one_year_only: bool = True,
             seed: int = 666,
             identity_skip: str = 'unknown',
+            col_label: str = 'identity',
             ) -> None:
         """Initializes the class.
 
@@ -176,12 +180,14 @@ class TimeCutoffSplit(TimeAwareSplit):
             test_one_year_only (bool, optional): Whether the test set is `df['year'] == year` or `df['year'] >= year`.
             seed (int, optional): Initial seed for the LCG random generator.            
             identity_skip (str, optional): Name of the identities to ignore.
+            col_label (str, optional): Column name containing individual animal names (labels).
         """
 
         self.year = year
         self.test_one_year_only = test_one_year_only
         self.identity_skip = identity_skip
         self.seed = seed
+        self.col_label = col_label
     
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -215,6 +221,7 @@ class TimeCutoffSplitAll(TimeAwareSplit):
             test_one_year_only: bool = True,
             seed: int = 666,
             identity_skip: str = 'unknown',
+            col_label: str = 'identity',
             ) -> None:
         """Initializes the class.
 
@@ -222,11 +229,13 @@ class TimeCutoffSplitAll(TimeAwareSplit):
             test_one_year_only (bool, optional): Whether the test set is `df['year'] == year` or `df['year'] >= year`.
             seed (int, optional): Initial seed for the LCG random generator.
             identity_skip (str, optional): Name of the identities to ignore.
+            col_label (str, optional): Column name containing individual animal names (labels).
         """
 
         self.test_one_year_only = test_one_year_only
         self.identity_skip = identity_skip
         self.seed = seed
+        self.col_label = col_label
     
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).

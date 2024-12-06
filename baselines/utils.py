@@ -106,30 +106,30 @@ def compute_predictions(
     else:
         return idx_true, idx_pred
 
-def predict(df, features, split_col='split'):
+def predict(df, features, col_label='identity', col_split='split'):
     y_pred = np.full(len(df), np.nan, dtype=object)
     similarity_pred = np.full(len(df), np.nan, dtype=object)
     for dataset_name in df['dataset'].unique():
-        idx_train = np.where((df['dataset'] == dataset_name) * (df[split_col] == 'train'))[0]
-        idx_test = np.where((df['dataset'] == dataset_name) * (df[split_col] == 'test'))[0]
+        idx_train = np.where((df['dataset'] == dataset_name) * (df[col_split] == 'train'))[0]
+        idx_test = np.where((df['dataset'] == dataset_name) * (df[col_split] == 'test'))[0]
 
         idx_true, idx_pred, similarity = compute_predictions(features[idx_test], features[idx_train], return_similarity=True)
         idx_true = idx_test[idx_true]
         idx_pred = idx_train[idx_pred]
 
-        y_pred[idx_true] = df['identity'].iloc[idx_pred[:,0]].values
+        y_pred[idx_true] = df[col_label].iloc[idx_pred[:,0]].values
         similarity_pred[idx_true] = similarity[:,0]
     return y_pred, similarity_pred
 
-def compute_baks_baus(df, y_pred, new_individual='', split_col='split'):
+def compute_baks_baus(df, y_pred, new_individual='', col_label='identity', col_split='split'):
     baks = {}
     baus = {}
-    y_true = df['identity'].to_numpy()
+    y_true = df[col_label].to_numpy()
     for dataset, df_dataset in df.groupby('dataset'):
-        identity_train = df_dataset['identity'][df_dataset[split_col] == 'train'].to_numpy()
-        identity_test = df_dataset['identity'][df_dataset[split_col] == 'test'].to_numpy()
+        identity_train = df_dataset[col_label][df_dataset[col_split] == 'train'].to_numpy()
+        identity_test = df_dataset[col_label][df_dataset[col_split] == 'test'].to_numpy()
         identity_test_only = list(set(identity_test) - set(identity_train))                
-        idx = df.index.get_indexer(df_dataset.index[df_dataset[split_col] == 'test'])
+        idx = df.index.get_indexer(df_dataset.index[df_dataset[col_split] == 'test'])
         baks[dataset] = metrics.BAKS(y_true[idx], y_pred[idx], identity_test_only)
         baus[dataset] = metrics.BAUS(y_true[idx], y_pred[idx], identity_test_only, new_individual)
     return baks, baus
