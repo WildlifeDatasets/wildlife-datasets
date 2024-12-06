@@ -69,7 +69,7 @@ class DatasetFactory:
             col_label (str, optional): Column name containing individual animal names (labels).
         """
         
-        if not self.saved_to_system_folder and not os.path.exists(root):
+        if not self.saved_to_system_folder and not root is None and not os.path.exists(root):
             raise Exception('root does not exist. You may have have mispelled it.')
         if self.outdated_dataset:
             print('This dataset is outdated. You may want to call a newer version such as %sv2.' % self.__class__.__name__)
