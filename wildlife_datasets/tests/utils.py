@@ -1,37 +1,41 @@
 import os
 import numpy as np
 import pandas as pd
+from wildlife_datasets.datasets import WildlifeDataset
+
+def create_dataset(df):
+    dataset = WildlifeDataset(df=df)
+    dataset.df = dataset.finalize_catalogue(dataset.df, check_files=False)
+    return dataset
 
 def load_datasets(dataset_names):
-    dfs = []
+    datasets = []
     for dataset_name in dataset_names:
         csv_name = dataset_name.__name__ + '.csv'
         csv_path = os.path.join('wildlife_datasets', 'tests', 'csv', csv_name)
+        df = pd.read_csv(csv_path, index_col=False)
+        datasets.append(create_dataset(df))
+    return datasets
 
-        df = pd.read_csv(csv_path)
-        df = df.drop('Unnamed: 0', axis=1)
-        dfs.append(df)
-    return dfs
-
-def add_datasets(dfs, skip_rows=100, ratio_unknown=0.2, ratio_years=0.2):
-    for i in range(len(dfs)):
+def add_datasets(datasets, skip_rows=100, ratio_unknown=0.2, ratio_years=0.2):
+    for i in range(len(datasets)):
         # Change indexing
-        df = dfs[i].copy()            
+        df = datasets[i].df.copy()
         if len(df) >= 2*skip_rows:
             df = df.iloc[skip_rows:]
-            dfs.append(df)
+            datasets.append(create_dataset(df))
         # Add unknown individuals
-        df = dfs[i].copy()
+        df = datasets[i].df.copy()
         n_unknown = np.round(len(df)*ratio_unknown).astype(int)
         idx = np.random.permutation(range(len(df)))[:n_unknown]
         df.loc[df.index[idx], 'identity'] = 'unknown'
-        dfs.append(df)
+        datasets.append(create_dataset(df))
         # Add new years
         if 'date' in df.columns:
-            df = dfs[i].copy()        
+            df = datasets[i].df.copy()
             n_years = np.round(len(df)*ratio_years).astype(int)
             df['date'] = pd.to_datetime(df['date']).apply(lambda x: x.date())
             df.loc[df.index[:n_years], 'date'] = df['date'].iloc[:n_years] + pd.offsets.DateOffset(years=10)
             df['date'] = pd.to_datetime(df['date'])
-            dfs.append(df)
-    return dfs
+            datasets.append(create_dataset(df))
+    return datasets

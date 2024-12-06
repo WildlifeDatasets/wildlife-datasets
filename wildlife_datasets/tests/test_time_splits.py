@@ -2,16 +2,15 @@ import unittest
 import numpy as np
 import pandas as pd
 from .utils import load_datasets, add_datasets
-from wildlife_datasets import datasets, splits
+from wildlife_datasets import splits
+from wildlife_datasets.datasets import IPanda50, MacaqueFaces
 
-dataset_names = [
-    datasets.IPanda50,
-    datasets.MacaqueFaces,
-]
+dataset_names = [IPanda50, MacaqueFaces]
 
 tol = 0.1
-dfs = load_datasets(dataset_names)
-dfs = add_datasets(dfs)
+datasets = load_datasets(dataset_names)
+datasets = add_datasets(datasets)
+dfs = [dataset.df for dataset in datasets]
 
 class TestTimeSplits(unittest.TestCase):
     def test_df(self):

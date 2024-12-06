@@ -1,12 +1,10 @@
 import unittest
 import numpy as np
 from .utils import add_datasets, load_datasets
-from wildlife_datasets import datasets, splits
+from wildlife_datasets import splits
+from wildlife_datasets.datasets import IPanda50, MacaqueFaces
 
-dataset_names = [
-    datasets.IPanda50,
-    datasets.MacaqueFaces,
-]
+dataset_names = [IPanda50, MacaqueFaces]
 n_orig_datasets = len(dataset_names)
 seed1 = 666
 seed2 = 12345
@@ -31,8 +29,9 @@ splitters2_date = [
     splits.RandomProportion(seed=seed2)
 ]
 tol = 0.1
-dfs = load_datasets(dataset_names)
-dfs = add_datasets(dfs)
+datasets = load_datasets(dataset_names)
+datasets = add_datasets(datasets)
+dfs = [dataset.df for dataset in datasets]
 
 class TestIdSplits(unittest.TestCase):
     def test_df(self):
