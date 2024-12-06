@@ -10,29 +10,29 @@ dataset_names = [IPanda50, MacaqueFaces]
 tol = 0.1
 datasets = load_datasets(dataset_names)
 datasets = add_datasets(datasets)
-dfs = [dataset.df for dataset in datasets]
 
 class TestTimeSplits(unittest.TestCase):
     def test_df(self):
-        self.assertEqual(len(dfs), 7)
+        self.assertEqual(len(datasets), 14)
     
     def test_unknown(self):
         n_unknown = 0
-        for df in dfs:
-            if sum(df['identity'] == 'unknown'):
+        for dataset in datasets:
+            if sum(dataset.df[dataset.col_label] == 'unknown'):
                 n_unknown += 1
-        self.assertEqual(n_unknown, 2)
+        self.assertEqual(n_unknown, 4)
 
     def test_date(self):
         n_date = 0
-        for df in dfs:
-            if 'date' in df.columns:
+        for dataset in datasets:
+            if 'date' in dataset.df.columns:
                 n_date += 1
-        self.assertEqual(n_date, 4)
+        self.assertEqual(n_date, 8)
     
     def test_seed(self):
-        splitter = splits.TimeProportionSplit()
-        for df in dfs:
+        for dataset in datasets:
+            splitter = splits.TimeProportionSplit(col_label=dataset.col_label)
+            df = dataset.df
             if 'date' in df.columns:
                 idx_train, idx_test = splitter.split(df)[0]
                 idx_train1, idx_test1 = splitter.resplit_random(df, idx_train, idx_test)
@@ -41,56 +41,56 @@ class TestTimeSplits(unittest.TestCase):
                 self.assertEqual(idx_test1.tolist(), idx_test2.tolist())
 
     def test_time_proportion(self):
-        splitter = splits.TimeProportionSplit()
-        for df in dfs:
+        for dataset in datasets:
+            splitter = splits.TimeProportionSplit(col_label=dataset.col_label)
+            df = dataset.df
             if 'date' not in df.columns:
-                splitter = splits.TimeProportionSplit()
                 self.assertRaises(Exception, splitter.split, df)
             else:
                 for idx_train, idx_test in splitter.split(df):
                     df_train = df.loc[idx_train]
                     df_test = df.loc[idx_test]
 
-                    split_type = splits.recognize_time_split(df_train, df_test)
+                    split_type = splits.recognize_time_split(df_train, df_test, col_label=dataset.col_label)
                     self.assertEqual(split_type, 'time-proportion')
 
     def test_time_cutoff(self):
-        for df in dfs:
+        for dataset in datasets:
+            df = dataset.df
             if 'date' not in df.columns:
-                splitter = splits.TimeCutoffSplit(0)
+                splitter = splits.TimeCutoffSplit(0, col_label=dataset.col_label)
                 self.assertRaises(Exception, splitter.split, df)
             else:
                 years = pd.to_datetime(df['date']).apply(lambda x: x.year)
-                splitter = splits.TimeCutoffSplit(max(years))
+                splitter = splits.TimeCutoffSplit(max(years), col_label=dataset.col_label)
                 for idx_train, idx_test in splitter.split(df):
                     df_train = df.loc[idx_train]
                     df_test = df.loc[idx_test]
 
-                    split_type = splits.recognize_time_split(df_train, df_test)
+                    split_type = splits.recognize_time_split(df_train, df_test, col_label=dataset.col_label)
                     self.assertEqual(split_type, 'time-cutoff')
 
     def test_time_cutoff_all(self):
-        for df in dfs:
+        for dataset in datasets:
+            df = dataset.df
+            splitter = splits.TimeCutoffSplitAll(col_label=dataset.col_label)
             if 'date' not in df.columns:
-                splitter = splits.TimeCutoffSplitAll(0)
                 self.assertRaises(Exception, splitter.split, df)
             else:
-                years = pd.to_datetime(df['date']).apply(lambda x: x.year)
-                splitter = splits.TimeCutoffSplitAll()
                 for idx_train, idx_test in splitter.split(df):
                     df_train = df.loc[idx_train]
                     df_test = df.loc[idx_test]
 
-                    split_type = splits.recognize_time_split(df_train, df_test)
+                    split_type = splits.recognize_time_split(df_train, df_test, col_label=dataset.col_label)
                     self.assertEqual(split_type, 'time-cutoff')
                     
     def test_resplit_random(self):
-        for df in dfs:
+        for dataset in datasets:
+            df = dataset.df
+            splitter = splits.TimeProportionSplit(col_label=dataset.col_label)
             if 'date' not in df.columns:
-                splitter = splits.TimeProportionSplit()
                 self.assertRaises(Exception, splitter.split, df)
             else:
-                splitter = splits.TimeProportionSplit()
                 for idx_train1, idx_test1 in splitter.split(df):
                     idx_train2, idx_test2 = splitter.resplit_random(df, idx_train1, idx_test1)
                     
@@ -102,21 +102,22 @@ class TestTimeSplits(unittest.TestCase):
                     df_test2 = df.loc[idx_test2]
 
                     self.assertEqual(np.sort(idx1).tolist(), np.sort(idx2).tolist())
-                    self.assertEqual(set(df_train1['identity']), set(df_train2['identity']))
-                    self.assertEqual(set(df_test1['identity']), set(df_test2['identity']))
-                    for id in set(df_train1['identity']):
-                        self.assertEqual(len(df_train1['identity']==id), len(df_train2['identity']==id))
-                    for id in set(df_test1['identity']):
-                        self.assertEqual(len(df_test1['identity']==id), len(df_test2['identity']==id))
+                    self.assertEqual(set(df_train1[dataset.col_label]), set(df_train2[dataset.col_label]))
+                    self.assertEqual(set(df_test1[dataset.col_label]), set(df_test2[dataset.col_label]))
+                    for id in set(df_train1[dataset.col_label]):
+                        self.assertEqual(len(df_train1[dataset.col_label]==id), len(df_train2[dataset.col_label]==id))
+                    for id in set(df_test1[dataset.col_label]):
+                        self.assertEqual(len(df_test1[dataset.col_label]==id), len(df_test2[dataset.col_label]==id))
 
     def test_resplit_features(self):
         n_features = 5
-        for df in dfs:
+        for dataset in datasets:
+            df = dataset.df
             if 'date' in df.columns:
                 years = pd.to_datetime(df['date']).apply(lambda x: x.year)
                 splitters = [
-                    splits.TimeProportionSplit(),
-                    splits.TimeCutoffSplit(max(years))
+                    splits.TimeProportionSplit(col_label=dataset.col_label),
+                    splits.TimeCutoffSplit(max(years), col_label=dataset.col_label)
                 ]                        
                 for splitter in splitters:
                     features = np.random.randn(len(df), n_features)
@@ -131,12 +132,12 @@ class TestTimeSplits(unittest.TestCase):
                         df_test2 = df.loc[idx_test2]
 
                         self.assertEqual(np.sort(idx1).tolist(), np.sort(idx2).tolist())
-                        self.assertEqual(set(df_train1['identity']), set(df_train2['identity']))
-                        self.assertEqual(set(df_test1['identity']), set(df_test2['identity']))
-                        for id in set(df_train1['identity']):
-                            self.assertEqual(len(df_train1['identity']==id), len(df_train2['identity']==id))
-                        for id in set(df_test1['identity']):
-                            self.assertEqual(len(df_test1['identity']==id), len(df_test2['identity']==id))
+                        self.assertEqual(set(df_train1[dataset.col_label]), set(df_train2[dataset.col_label]))
+                        self.assertEqual(set(df_test1[dataset.col_label]), set(df_test2[dataset.col_label]))
+                        for id in set(df_train1[dataset.col_label]):
+                            self.assertEqual(len(df_train1[dataset.col_label]==id), len(df_train2[dataset.col_label]==id))
+                        for id in set(df_test1[dataset.col_label]):
+                            self.assertEqual(len(df_test1[dataset.col_label]==id), len(df_test2[dataset.col_label]==id))
 
 
 if __name__ == '__main__':

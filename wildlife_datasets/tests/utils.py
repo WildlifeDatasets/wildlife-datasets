@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 from wildlife_datasets.datasets import WildlifeDataset
 
-def create_dataset(df):
-    dataset = WildlifeDataset(df=df)
+def create_dataset(df, **kwargs):
+    dataset = WildlifeDataset(df=df, **kwargs)
     dataset.df = dataset.finalize_catalogue(dataset.df, check_files=False)
     return dataset
 
@@ -38,4 +38,7 @@ def add_datasets(datasets, skip_rows=100, ratio_unknown=0.2, ratio_years=0.2):
             df.loc[df.index[:n_years], 'date'] = df['date'].iloc[:n_years] + pd.offsets.DateOffset(years=10)
             df['date'] = pd.to_datetime(df['date'])
             datasets.append(create_dataset(df))
+    for i in range(len(datasets)):
+        df = datasets[i].df.copy()
+        datasets.append(create_dataset(df, col_label='id', col_path='cesticka'))
     return datasets
