@@ -436,7 +436,11 @@ class DatasetFactory:
                 print('File name %s with identity %s was found multiple times.' % (image_name, str(old_identity)))
         return df
 
-    def finalize_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
+    def finalize_catalogue(
+            self,
+            df: pd.DataFrame,
+            check_files: bool = True
+            ) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
 
         Reorders the columns and removes constant columns.
@@ -445,6 +449,7 @@ class DatasetFactory:
 
         Args:
             df (pd.DataFrame): A full dataframe of the data.
+            check_files(bool, optional): Checks whether files exists.
 
         Returns:
             A full dataframe of the data, slightly modified.
@@ -457,10 +462,11 @@ class DatasetFactory:
         df = self.reorder_df(df)
         df = self.remove_constant_columns(df)
         self.check_unique_id(df)
-        self.check_files_exist(df[self.col_path])
-        self.check_files_names(df[self.col_path])
-        if 'segmentation' in df.columns:
-            self.check_files_exist(df['segmentation'])
+        if check_files:
+            self.check_files_exist(df[self.col_path])
+            self.check_files_names(df[self.col_path])
+            if 'segmentation' in df.columns:
+                self.check_files_exist(df['segmentation'])
         return df
 
     def rename_column(self, df, name_old, name_new):
