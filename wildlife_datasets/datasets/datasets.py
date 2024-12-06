@@ -455,8 +455,8 @@ class DatasetFactory:
             A full dataframe of the data, slightly modified.
         """
 
-        df = self.rename_column(df, 'path', self.col_path)
-        df = self.rename_column(df, 'identity', self.col_label)
+        self.rename_column(df, 'path', self.col_path)
+        self.rename_column(df, 'identity', self.col_label)
         self.check_required_columns(df)
         self.check_types_columns(df)
         df = self.reorder_df(df)
@@ -474,7 +474,7 @@ class DatasetFactory:
             if name_new in df.columns:
                 raise Exception(f'Column {name_old} already present in dataframe. Cannot rename {name_old} to it.')
             else:
-                return df.rename({name_old: name_new}, axis=1)
+                return df.rename({name_old: name_new}, axis=1, inplace=True)
 
     def check_required_columns(self, df: pd.DataFrame) -> None:
         """Check if all required columns are present.
