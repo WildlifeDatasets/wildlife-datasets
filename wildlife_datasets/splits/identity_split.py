@@ -41,7 +41,7 @@ class IdentitySplit(BalancedSplit):
         """
         
         df = df.copy()
-        df = df[df['identity'] != self.identity_skip]
+        df = df[df[self.col_label] != self.identity_skip]
         return df
     
     def general_split(
@@ -71,7 +71,7 @@ class IdentitySplit(BalancedSplit):
         lcg = self.initialize_lcg()
 
         # Compute how many samples go automatically to the training and testing sets
-        y_counts = df['identity'].value_counts()
+        y_counts = df[self.col_label].value_counts()
         n_train = sum([y_counts.loc[y] for y in individual_train])
         n_test = sum([y_counts.loc[y] for y in individual_test])
         
@@ -85,7 +85,7 @@ class IdentitySplit(BalancedSplit):
         idx_train = []
         idx_test = []        
         # Make a loop over all individuals
-        for individual, df_individual in df.groupby('identity'):
+        for individual, df_individual in df.groupby(self.col_label):
             if individual in individual_train and individual in individual_test:
                 # Check if the class does not belong to both sets
                 raise(Exception('Individual cannot be both in individual_train and individual_test.'))
@@ -124,6 +124,7 @@ class ClosedSetSplit(IdentitySplit):
             ratio_train: float,
             seed: int = 666,
             identity_skip: str = 'unknown',
+            col_label: str = 'identity',            
             ) -> None:
         """Initializes the class.
 
@@ -131,11 +132,13 @@ class ClosedSetSplit(IdentitySplit):
             ratio_train (float): *Approximate* size of the training set.
             seed (int, optional): Initial seed for the LCG random generator.
             identity_skip (str, optional): Name of the identities to ignore.
+            col_label (str, optional): Column name containing individual animal names (labels).
         """
 
         self.ratio_train = ratio_train
         self.identity_skip = identity_skip
         self.seed = seed
+        self.col_label = col_label
     
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -167,6 +170,7 @@ class OpenSetSplit(IdentitySplit):
             n_class_test: int = None,
             seed: int = 666,
             identity_skip: str = 'unknown',
+            col_label: str = 'identity',
             ) -> None:
         """Initializes the class.
 
@@ -181,6 +185,7 @@ class OpenSetSplit(IdentitySplit):
             n_class_test (int, optional): Number of individuals only in the testing set.
             seed (int, optional): Initial seed for the LCG random generator.
             identity_skip (str, optional): Name of the identities to ignore.
+            col_label (str, optional): Column name containing individual animal names (labels).
         """
 
         if ratio_class_test is None and n_class_test is None:
@@ -193,6 +198,7 @@ class OpenSetSplit(IdentitySplit):
         self.n_class_test = n_class_test
         self.identity_skip = identity_skip
         self.seed = seed
+        self.col_label = col_label
 
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -210,7 +216,7 @@ class OpenSetSplit(IdentitySplit):
         lcg = self.initialize_lcg()
 
         # Compute the counts and randomly permute them
-        y_counts = df['identity'].value_counts()
+        y_counts = df[self.col_label].value_counts()
         n_class = len(y_counts)
         idx = lcg.random_permutation(n_class)
         y_counts = y_counts.iloc[idx]
@@ -242,6 +248,7 @@ class DisjointSetSplit(IdentitySplit):
             n_class_test: int = None,
             seed: int = 666,
             identity_skip: str = 'unknown',
+            col_label: str = 'identity',
             ) -> None:
         """Initializes the class.
 
@@ -255,6 +262,7 @@ class DisjointSetSplit(IdentitySplit):
             n_class_test (int, optional): Number of individuals only in the testing set.
             seed (int, optional): Initial seed for the LCG random generator.
             identity_skip (str, optional): Name of the identities to ignore.
+            col_label (str, optional): Column name containing individual animal names (labels).            
         """
 
         if ratio_class_test is None and n_class_test is None:
@@ -267,6 +275,7 @@ class DisjointSetSplit(IdentitySplit):
         self.n_class_test = n_class_test
         self.identity_skip = identity_skip
         self.seed = seed
+        self.col_label = col_label
 
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -284,7 +293,7 @@ class DisjointSetSplit(IdentitySplit):
         lcg = self.initialize_lcg()
 
         # Compute the counts and randomly permute them
-        y_counts = df['identity'].value_counts()
+        y_counts = df[self.col_label].value_counts()
         n_class = len(y_counts)
         idx = lcg.random_permutation(n_class)
         y_counts = y_counts.iloc[idx]

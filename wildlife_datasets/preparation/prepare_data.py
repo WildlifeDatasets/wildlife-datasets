@@ -30,7 +30,7 @@ def resize_dataset(
     for i in tqdm(idx, mininterval=1, ncols=100):
         # Make image path unique across datasets
         row = dataset.metadata.iloc[i]
-        base, ext = os.path.splitext(row["path"])
+        base, ext = os.path.splitext(row[dataset.col_path])
         img_path = base + "_" + str(row["image_id"]) + ext
         img_path = img_path.replace('\\\\', '/')
         img_path = img_path.replace('\\', '/')
@@ -55,8 +55,8 @@ def resize_dataset(
         # Update dataframe
         df_new.append({
             'image_id': row['image_id'],
-            'identity': row['identity'],
-            'path': img_path,
+            dataset.col_label: row[dataset.col_label],
+            dataset.col_path: img_path,
             'species': species,
             'date': row.get('date', np.nan),
             'orientation': row.get('orientation', np.nan),
@@ -88,12 +88,12 @@ def get_every_k(
 
 def prepare_aau_zebrafish(root, new_root, transform=None, **kwargs):
     dataset = datasets.AAUZebraFish(root, img_load="bbox", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 20, 'identity')
+    idx = get_every_k(dataset, 20, dataset.col_label)
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_aerial_cattle_2017(root, new_root, transform=None, **kwargs):
     dataset = datasets.AerialCattle2017(root, img_load="full", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 20, 'identity')
+    idx = get_every_k(dataset, 20, dataset.col_label)
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_amvrakikos_turtles(root, new_root, transform=None, **kwargs):
@@ -112,7 +112,7 @@ def prepare_bird_individual_id(root, new_root, transform=None, segmented=True, *
     if segmented:
         root = root + "Segmented"
     dataset = datasets.BirdIndividualIDSegmented(root, img_load="crop_black", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 20, 'identity')
+    idx = get_every_k(dataset, 20, dataset.col_label)
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_cat_individual_images(root, new_root, transform=None, **kwargs):
@@ -122,7 +122,7 @@ def prepare_cat_individual_images(root, new_root, transform=None, **kwargs):
 def prepare_chicks4free_id(root, new_root, transform=None, **kwargs):
     dataset = datasets.Chicks4FreeID(root, img_load="full", transform=transform, remove_unknown=True)
     # Change the path from np.nan so that it is saved correctly
-    dataset.df['path'] = 'images/' + dataset.df['image_id'].astype('str') + '.jpg'
+    dataset.df[dataset.col_path] = 'images/' + dataset.df['image_id'].astype('str') + '.jpg'
     return resize_dataset(dataset, new_root, **kwargs)
 
 def prepare_cow_dataset(root, new_root, transform=None, **kwargs):
@@ -147,7 +147,7 @@ def prepare_dog_facenet(root, new_root, transform=None, **kwargs):
 
 def prepare_drosophila(root, new_root, transform=None, **kwargs):
     dataset = datasets.Drosophila(root, img_load="full", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 1000, 'identity')
+    idx = get_every_k(dataset, 1000, dataset.col_label)
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_friesian_cattle_2015(root, new_root, transform=None, **kwargs):
@@ -212,7 +212,7 @@ def prepare_open_cows_2020(root, new_root, transform=None, **kwargs):
 
 def prepare_polar_bear_vidid(root, new_root, transform=None, **kwargs):
     dataset = datasets.PolarBearVidID(root, img_load="full", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 100, 'identity')
+    idx = get_every_k(dataset, 100, dataset.col_label)
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_reunion_turtles(root, new_root, transform=None, **kwargs):
@@ -235,7 +235,7 @@ def prepare_sea_turtle_id_2022(root, new_root, transform=None, **kwargs):
 
 def prepare_smalst(root, new_root, transform=None, **kwargs):
     dataset = datasets.SMALST(root, img_load="bbox_mask", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 10, 'identity')
+    idx = get_every_k(dataset, 10, dataset.col_label)
     return resize_dataset(dataset, new_root, idx=idx, **kwargs)
 
 def prepare_southern_province_turtles(root, new_root, transform=None, **kwargs):

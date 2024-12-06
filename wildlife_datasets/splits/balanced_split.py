@@ -85,11 +85,11 @@ class BalancedSplit():
         lcg = self.initialize_lcg()
 
         # Determine how many images of each individual should be in the training set
-        identity_train_counts = df.loc[idx_train]['identity'].value_counts()
+        identity_train_counts = df.loc[idx_train][self.col_label].value_counts()
 
         # Loop over individuals and create a split for each
         idx_train_new = []
-        for identity, df_identity in tqdm(df.groupby('identity')):
+        for identity, df_identity in tqdm(df.groupby(self.col_label)):
             n_train = identity_train_counts.get(identity, 0)
             if len(df_identity) - n_train <= 1:
                 # All or all but one samples into the training set
