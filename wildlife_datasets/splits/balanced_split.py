@@ -138,4 +138,11 @@ class BalancedSplit():
         idx_test_new = list(set(df.index) - set(idx_train_new))
         return np.array(idx_train_new), np.array(idx_test_new)
 
+    def set_col_label(self, col_label: str) -> None:
+        """Sets col_label to desired value
 
+        Args:
+            col_label (str): Desired value for col_label.
+        """
+
+        self.col_label = col_label
