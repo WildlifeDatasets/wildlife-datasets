@@ -171,6 +171,7 @@ class OpenSetSplit(IdentitySplit):
             seed: int = 666,
             identity_skip: str = 'unknown',
             col_label: str = 'identity',
+            open_in_test: bool = True,
             ) -> None:
         """Initializes the class.
 
@@ -186,6 +187,7 @@ class OpenSetSplit(IdentitySplit):
             seed (int, optional): Initial seed for the LCG random generator.
             identity_skip (str, optional): Name of the identities to ignore.
             col_label (str, optional): Column name containing individual animal names (labels).
+            open_in_test (str, optional): Whether the unique identifies will be in test (default) or train set.
         """
 
         if ratio_class_test is None and n_class_test is None:
@@ -199,6 +201,7 @@ class OpenSetSplit(IdentitySplit):
         self.identity_skip = identity_skip
         self.seed = seed
         self.col_label = col_label
+        self.open_in_test = open_in_test
 
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -230,8 +233,12 @@ class OpenSetSplit(IdentitySplit):
             n_class_test = self.n_class_test
 
         # Specify individuals going purely into training and testing sets
-        individual_train = np.array([], dtype=object)
-        individual_test = np.array(y_counts.index[:n_class_test])
+        if self.open_in_test:
+            individual_train = np.array([], dtype=object)
+            individual_test = np.array(y_counts.index[:n_class_test])
+        else:
+            individual_train = np.array(y_counts.index[:n_class_test])
+            individual_test = np.array([], dtype=object)
         return [self.general_split(df, individual_train, individual_test)]
 
 
