@@ -90,186 +90,189 @@ def get_every_k(
     idx = dataset.df.index.get_indexer(idx)
     return np.sort(idx)
 
-def prepare_aau_zebrafish(root, new_root, transform=None, **kwargs):
+def convert_dataset(dataset, new_root, k=1, col_label=None, **kwargs):
+    if k > 1:
+        if col_label is not None:
+            idx = get_every_k(dataset, k, col_label)
+        else:
+            idx = get_every_k(dataset, k, dataset.col_label)        
+        return resize_dataset(dataset, new_root, idx=idx, **kwargs)
+    else:
+        return resize_dataset(dataset, new_root, **kwargs)
+
+def prepare_aau_zebrafish(root, new_root, k=20, transform=None, **kwargs):
     dataset = datasets.AAUZebraFish(root, img_load="bbox", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 20, dataset.col_label)
-    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_aerial_cattle_2017(root, new_root, transform=None, **kwargs):
+def prepare_aerial_cattle_2017(root, new_root, k=20, transform=None, **kwargs):
     dataset = datasets.AerialCattle2017(root, img_load="full", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 20, dataset.col_label)
-    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_amvrakikos_turtles(root, new_root, transform=None, **kwargs):
+def prepare_amvrakikos_turtles(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.AmvrakikosTurtles(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_atrw(root, new_root, transform=None, **kwargs):
+def prepare_atrw(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.ATRW(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_beluga_id(root, new_root, transform=None, **kwargs):
+def prepare_beluga_id(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.BelugaIDv2(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_bird_individual_id(root, new_root, transform=None, segmented=True, **kwargs):
+def prepare_bird_individual_id(root, new_root, k=20, transform=None, segmented=True, **kwargs):
     if segmented:
         root = root + "Segmented"
     dataset = datasets.BirdIndividualIDSegmented(root, img_load="crop_black", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 20, dataset.col_label)
-    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_cat_individual_images(root, new_root, transform=None, **kwargs):
+def prepare_cat_individual_images(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.CatIndividualImages(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_chicks4free_id(root, new_root, transform=None, **kwargs):
+def prepare_chicks4free_id(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.Chicks4FreeID(root, img_load="full", transform=transform, remove_unknown=True)
     # Change the path from np.nan so that it is saved correctly
     dataset.df[dataset.col_path] = 'images/' + dataset.df['image_id'].astype('str') + '.jpg'
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_cow_dataset(root, new_root, transform=None, **kwargs):
+def prepare_cow_dataset(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.CowDataset(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_cows2021(root, new_root, transform=None, **kwargs):
+def prepare_cows2021(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.Cows2021v2(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_ctai(root, new_root, transform=None, **kwargs):
+def prepare_ctai(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.CTai(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_czoo(root, new_root, transform=None, **kwargs):
+def prepare_czoo(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.CZoo(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_dog_facenet(root, new_root, transform=None, **kwargs):
+def prepare_dog_facenet(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.DogFaceNet(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_drosophila(root, new_root, transform=None, **kwargs):
+def prepare_drosophila(root, new_root, k=1000, transform=None, **kwargs):
     dataset = datasets.Drosophila(root, img_load="full", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 1000, dataset.col_label)
-    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_elpephants(root, new_root, transform=None, **kwargs):
+def prepare_elpephants(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.ELPephants(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_friesian_cattle_2015(root, new_root, transform=None, **kwargs):
+def prepare_friesian_cattle_2015(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.FriesianCattle2015v2(root, img_load="crop_black", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_friesian_cattle_2017(root, new_root, transform=None, **kwargs):
+def prepare_friesian_cattle_2017(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.FriesianCattle2017(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_giraffes(root, new_root, transform=None, **kwargs):
+def prepare_giraffes(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.Giraffes(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_giraffe_zebra_id(root, new_root, transform=None, **kwargs):
+def prepare_giraffe_zebra_id(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.GiraffeZebraID(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_happy_whale(root, new_root, transform=None, **kwargs):
+def prepare_happy_whale(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.HappyWhale(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_humpback_whale_id(root, new_root, transform=None, **kwargs):
+def prepare_humpback_whale_id(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.HumpbackWhaleID(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_hyena_id_2022(root, new_root, transform=None, **kwargs):
+def prepare_hyena_id_2022(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.HyenaID2022(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_ipanda_50(root, new_root, transform=None, **kwargs):
+def prepare_ipanda_50(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.IPanda50(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_leopard_id_2022(root, new_root, transform=None, **kwargs):
+def prepare_leopard_id_2022(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.LeopardID2022(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_macaque_faces(root, new_root, transform=None, **kwargs):
+def prepare_macaque_faces(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.MacaqueFaces(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_mpdd(root, new_root, transform=None, **kwargs):
+def prepare_mpdd(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.MPDD(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_multi_cam_cows_2024(root, new_root, transform=None, **kwargs):
+def prepare_multi_cam_cows_2024(root, new_root, k=20, transform=None, **kwargs):
     dataset = datasets.MultiCamCows2024(root, img_load="full", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 20, 'identity')
-    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_ndd20(root, new_root, transform=None, **kwargs):
+def prepare_ndd20(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.NDD20v2(root, img_load="bbox_mask", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_noaa_right_whale(root, new_root, transform=None, **kwargs):
+def prepare_noaa_right_whale(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.NOAARightWhale(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_nyala_data(root, new_root, transform=None, **kwargs):
+def prepare_nyala_data(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.NyalaData(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_open_cows_2020(root, new_root, transform=None, **kwargs):
+def prepare_open_cows_2020(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.OpenCows2020(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_polar_bear_vidid(root, new_root, transform=None, **kwargs):
+def prepare_polar_bear_vidid(root, new_root, k=100, transform=None, **kwargs):
     dataset = datasets.PolarBearVidID(root, img_load="full", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 100, dataset.col_label)
-    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_reunion_turtles(root, new_root, transform=None, **kwargs):
+def prepare_reunion_turtles(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.ReunionTurtles(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_seal_id(root, new_root, transform=None, segmented=True, **kwargs):
+def prepare_seal_id(root, new_root, k=1, transform=None, segmented=True, **kwargs):
     if segmented:
         root = root + "Segmented"
     dataset = datasets.SealIDSegmented(root, img_load="crop_black", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_sea_star_reid_2023(root, new_root, transform=None, **kwargs):
+def prepare_sea_star_reid_2023(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.SeaStarReID2023(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_sea_turtle_id_2022(root, new_root, transform=None, **kwargs):
+def prepare_sea_turtle_id_2022(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.SeaTurtleID2022(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_smalst(root, new_root, transform=None, **kwargs):
+def prepare_smalst(root, new_root, k=10, transform=None, **kwargs):
     dataset = datasets.SMALST(root, img_load="bbox_mask", transform=transform, remove_unknown=True)
-    idx = get_every_k(dataset, 10, dataset.col_label)
-    return resize_dataset(dataset, new_root, idx=idx, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_southern_province_turtles(root, new_root, transform=None, **kwargs):
+def prepare_southern_province_turtles(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.SouthernProvinceTurtles(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_stripe_spotter(root, new_root, transform=None, **kwargs):
+def prepare_stripe_spotter(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.StripeSpotter(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_whaleshark_id(root, new_root, transform=None, **kwargs):
+def prepare_whaleshark_id(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.WhaleSharkID(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_zakynthos_turtles(root, new_root, transform=None, **kwargs):
+def prepare_zakynthos_turtles(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.ZakynthosTurtles(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
-def prepare_zindi_turtle_recall(root, new_root, transform=None, **kwargs):
+def prepare_zindi_turtle_recall(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.ZindiTurtleRecall(root, img_load="full", transform=transform, remove_unknown=True)
-    return resize_dataset(dataset, new_root, **kwargs)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
 
 # LionData are missing
 prepare_functions = {
@@ -339,6 +342,7 @@ species_conversion = {
     'dog': 'dog',
     'drosophila': 'fly',
     'dusky_dolphin': 'dolphin',
+    'elephant': 'elephant',
     'false_killer_whale': 'whale',
     'fin_whale': 'whale',
     'frasiers_dolphin': 'dolphin',
