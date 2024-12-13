@@ -1,4 +1,4 @@
-This site contains the documentation for the [Wildlife datasets](https://github.com/WildlifeDatasets/wildlife-datasets) project. 
+This website contains the documentation for the [Wildlife datasets](https://github.com/WildlifeDatasets/wildlife-datasets) project. 
 
 The aim of the project is to provide comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
 
