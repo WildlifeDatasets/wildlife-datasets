@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from .. import datasets
-from typing import Optional, List
+from typing import Optional, Dict, List
 
 def resize_dataset(
         dataset: datasets.DatasetFactory,
@@ -11,6 +11,7 @@ def resize_dataset(
         idx: Optional[List[int]] = None,
         copy_files: bool = True,
         remove_str: List[str] = [],
+        replace_extensions: Dict[str, str] = {},
         ) -> pd.DataFrame:
     """Resizes dataset using `dataset.transform` into `new_root`.
 
@@ -20,6 +21,7 @@ def resize_dataset(
         idx (Optional[List[int]], optional): If specified, then indices to consider.
         copy_files (bool, optional): Whether files should be copied as well or only datatframe created.
         remove_str (List[str], optional): List of strings to be removed from file names.
+        replace_extensions (Dict[str, str], optional): Dictionary of extensions to be replaced.
 
     Returns:
         Description of the new dataset.
@@ -33,6 +35,8 @@ def resize_dataset(
         # Make image path unique across datasets
         row = dataset.metadata.iloc[i]
         base, ext = os.path.splitext(row[dataset.col_path])
+        if ext in replace_extensions:
+            ext = replace_extensions[ext]
         img_path = base + "_" + str(row["image_id"]) + ext
         img_path = img_path.replace('\\\\', '/')
         img_path = img_path.replace('\\', '/')
