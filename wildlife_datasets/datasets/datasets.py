@@ -81,6 +81,7 @@ class DatasetFactory:
         self.root = root
         self.col_path = col_path
         self.col_label = col_label
+        self.remove_columns = remove_columns
         if df is None:
             df = self.create_catalogue(**kwargs)
         else:
@@ -88,7 +89,6 @@ class DatasetFactory:
                 print('This dataset is not determined by dataframe. But you construct it so.')
         if remove_unknown:
             df = df[df[self.col_label] != self.unknown_name]
-        self.remove_columns = remove_columns
         self.df = df.reset_index(drop=True)
         self.metadata = self.df # Alias to df to unify with wildlife-tools
         self.transform = transform
