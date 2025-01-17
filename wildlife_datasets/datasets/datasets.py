@@ -1,4 +1,5 @@
 import os
+from copy import deepcopy
 import pandas as pd
 import numpy as np
 from typing import Optional, List, Union, Callable, Tuple
@@ -124,6 +125,24 @@ class DatasetFactory:
             return img, self.df[self.col_label].iloc[idx]
         else:
             return img
+
+    def get_subset(self, idx: Union[np.array[int], np.array[bool]]):
+        """Returns a subset of the class.
+
+        Args:
+            idx (Union[np.array[int], np.array[bool]]): Indices in the dataframe of the subset.
+
+        Returns:
+            The subset class.
+        """
+
+        dataset = deepcopy(self)
+        if len(self) == len(idx):
+            dataset.df = dataset.df[idx].reset_index(drop=True)
+        else:
+            dataset.df = dataset.df.loc[idx].reset_index(drop=True)
+        dataset.metadata = dataset.df
+        return dataset
 
     def get_image(self, idx: int) -> Image:
         """Load an image with iloc `idx`.
