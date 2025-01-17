@@ -22,6 +22,7 @@ class DatasetFactory:
       outdated_dataset (bool): Tracks whether dataset was replaced by a new version.
       determined_by_df (bool): Specifies whether dataset is completely determined by its dataframe.
       saved_to_system_folder (bool): Specifies whether dataset is saved to system (hidden) folders.
+      remove_columns (bool): Specifies whether constant columns are removed in `finalize_catalogue`.
       transform (Callable): Applied transform when loading the image.
       img_load (str): Applied transform when loading the image.
       labels_string (List[str]): List of labels in strings.
