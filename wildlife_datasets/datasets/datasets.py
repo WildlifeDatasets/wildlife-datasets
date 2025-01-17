@@ -10,7 +10,7 @@ import pycocotools.mask as mask_coco
 from .summary import summary
 from . import utils
 
-class DatasetFactory:
+class WildlifeDataset:
     """Base class for creating datasets.
 
     Attributes:    
@@ -777,5 +777,5 @@ class DatasetFactory:
         return fig
 
 # Alias for DatasetFactory
-class WildlifeDataset(DatasetFactory):    
+class DatasetFactory(WildlifeDataset):
     pass
