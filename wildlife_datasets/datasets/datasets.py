@@ -130,11 +130,11 @@ class DatasetFactory:
         else:
             return img
 
-    def get_subset(self, idx: Union[np.array[int], np.array[bool]]):
+    def get_subset(self, idx: Union[List[int], List[bool]]):
         """Returns a subset of the class.
 
         Args:
-            idx (Union[np.array[int], np.array[bool]]): Indices in the dataframe of the subset.
+            idx (Union[List[int], List[bool]]): Indices in the dataframe of the subset.
 
         Returns:
             The subset class.
