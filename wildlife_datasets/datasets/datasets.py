@@ -49,6 +49,7 @@ class DatasetFactory:
             transform: Optional[Callable] = None,
             img_load: str = "full",
             remove_unknown: bool = False,
+            remove_columns: bool = False,
             load_label: bool = False,
             col_path: str = "path",
             col_label: str = "identity",            
@@ -65,6 +66,7 @@ class DatasetFactory:
             transform (Optional[Callable], optional): Applied transform when loading the image.
             img_load (str, optional): Applied transform when loading the image.
             remove_unknown (bool, optional): Whether unknown identities should be removed.
+            remove_columns (bool, optional): Whether constant columns are removed in `finalize_catalogue`.
             load_label (bool, optional): Whether dataset[k] should return only image or also identity.
             col_path (str, optional): Column name containing image paths.
             col_label (str, optional): Column name containing individual animal names (labels).
@@ -85,6 +87,7 @@ class DatasetFactory:
                 print('This dataset is not determined by dataframe. But you construct it so.')
         if remove_unknown:
             df = df[df[self.col_label] != self.unknown_name]
+        self.remove_columns = remove_columns
         self.df = df.reset_index(drop=True)
         self.metadata = self.df # Alias to df to unify with wildlife-tools
         self.transform = transform
@@ -479,7 +482,8 @@ class DatasetFactory:
         self.check_required_columns(df)
         self.check_types_columns(df)
         df = self.reorder_df(df)
-        df = self.remove_constant_columns(df)
+        if self.remove_columns:
+            df = self.remove_constant_columns(df)
         self.check_unique_id(df)
         if check_files:
             self.check_files_exist(df[self.col_path])
