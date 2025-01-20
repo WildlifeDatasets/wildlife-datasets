@@ -254,6 +254,10 @@ def prepare_sea_turtle_id_2022(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.SeaTurtleID2022(root, img_load="bbox", transform=transform, remove_unknown=True)
     return convert_dataset(dataset, new_root, k=k, **kwargs)
 
+def prepare_sea_turtle_id_2022_animal_clef_2025(root, new_root, k=1, transform=None, **kwargs):
+    dataset = datasets.SeaTurtleID2022_AnimalCLEF2025(root, img_load="bbox", transform=transform, remove_unknown=True)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
+
 def prepare_smalst(root, new_root, k=10, transform=None, **kwargs):
     dataset = datasets.SMALST(root, img_load="bbox_mask", transform=transform, remove_unknown=True)
     return convert_dataset(dataset, new_root, k=k, **kwargs)
@@ -316,6 +320,7 @@ prepare_functions = {
     'SealID': prepare_seal_id,
     'SeaStarReID2023': prepare_sea_star_reid_2023,
     'SeaTurtleID2022': prepare_sea_turtle_id_2022,
+    'SeaTurtleID2022_AnimalCLEF2025': prepare_sea_turtle_id_2022_animal_clef_2025,
     'SMALST': prepare_smalst,
     'SouthernProvinceTurtles': prepare_southern_province_turtles,
     'StripeSpotter': prepare_stripe_spotter,
