@@ -34,7 +34,7 @@ from .polar_bear_vid_id import PolarBearVidID
 from .reunion_turtles import ReunionTurtles
 from .seal_id import SealID, SealIDSegmented
 from .sea_star_reid import SeaStarReID2023
-from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
+from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads, SeaTurtleID2022_AnimalCLEF2025
 from .smalst import SMALST
 from .southern_province_turtles import SouthernProvinceTurtles
 from .stripe_spotter import StripeSpotter

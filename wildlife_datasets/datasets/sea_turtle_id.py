@@ -88,3 +88,29 @@ class SeaTurtleIDHeads(DatasetFactory):
         # Finalize the dataframe
         df.rename({'id': 'image_id'}, axis=1, inplace=True)
         return self.finalize_catalogue(df)
+
+class SeaTurtleID2022_AnimalCLEF2025(DatasetFactory):
+    summary = summary['SeaTurtleID2022_AnimalCLEF2025']
+
+    @classmethod
+    def _download(cls):
+        raise Exception('This dataset is currently available only as part of the AnimalCLEF2025 competition.')
+
+    @classmethod
+    def _extract(cls):
+        pass
+    
+    def create_catalogue(self) -> pd.DataFrame:
+        data = pd.read_csv(os.path.join(self.root, 'annotations.csv'))
+        data['image_name'] = data['path'].apply(lambda x: x.split('/')[-1])
+        bbox = pd.read_csv(os.path.join(self.root, 'bbox.csv'))
+        data = pd.merge(data, bbox, on='image_name')        
+
+        df = pd.DataFrame({
+            'image_id': range(len(data)),
+            'path': data['path'],
+            'identity': data['identity'],
+            'date': data['date'],
+            'bbox': data[['bbox_x', 'bbox_y', 'bbox_width', 'bbox_height']].values.tolist()
+        })
+        return self.finalize_catalogue(df)
