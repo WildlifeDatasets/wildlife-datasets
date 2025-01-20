@@ -23,6 +23,7 @@ class WildlifeDataset:
       determined_by_df (bool): Specifies whether dataset is completely determined by its dataframe.
       saved_to_system_folder (bool): Specifies whether dataset is saved to system (hidden) folders.
       remove_columns (bool): Specifies whether constant columns are removed in `finalize_catalogue`.
+      check_files (bool): Specifies whether files should be checks for existence in `finalize_catalogue`.
       transform (Callable): Applied transform when loading the image.
       img_load (str): Applied transform when loading the image.
       labels_string (List[str]): List of labels in strings.
@@ -51,6 +52,7 @@ class WildlifeDataset:
             img_load: str = "full",
             remove_unknown: bool = False,
             remove_columns: bool = False,
+            check_files: bool = True,
             load_label: bool = False,
             col_path: str = "path",
             col_label: str = "identity",            
@@ -68,6 +70,7 @@ class WildlifeDataset:
             img_load (str, optional): Applied transform when loading the image.
             remove_unknown (bool, optional): Whether unknown identities should be removed.
             remove_columns (bool, optional): Whether constant columns are removed in `finalize_catalogue`.
+            check_files (bool, optional): Whether files should be checks for existence in `finalize_catalogue`.
             load_label (bool, optional): Whether dataset[k] should return only image or also identity.
             col_path (str, optional): Column name containing image paths.
             col_label (str, optional): Column name containing individual animal names (labels).
@@ -82,6 +85,7 @@ class WildlifeDataset:
         self.col_path = col_path
         self.col_label = col_label
         self.remove_columns = remove_columns
+        self.check_files = check_files
         if df is None:
             df = self.create_catalogue(**kwargs)
         else:
@@ -462,7 +466,6 @@ class WildlifeDataset:
     def finalize_catalogue(
             self,
             df: pd.DataFrame,
-            check_files: bool = True
             ) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
 
@@ -472,7 +475,6 @@ class WildlifeDataset:
 
         Args:
             df (pd.DataFrame): A full dataframe of the data.
-            check_files(bool, optional): Checks whether files exists.
 
         Returns:
             A full dataframe of the data, slightly modified.
@@ -486,7 +488,7 @@ class WildlifeDataset:
         if self.remove_columns:
             df = self.remove_constant_columns(df)
         self.check_unique_id(df)
-        if check_files:
+        if self.check_files:
             self.check_files_exist(df[self.col_path])
             self.check_files_names(df[self.col_path])
             if 'segmentation' in df.columns:
