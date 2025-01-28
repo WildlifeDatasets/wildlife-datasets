@@ -3,9 +3,9 @@ import numpy as np
 import pandas as pd
 from wildlife_datasets.datasets import WildlifeDataset
 
-def create_dataset(df, **kwargs):
-    dataset = WildlifeDataset(df=df, **kwargs)
-    dataset.df = dataset.finalize_catalogue(dataset.df, check_files=False)
+def create_dataset(df, check_files=False, **kwargs):
+    dataset = WildlifeDataset(df=df, check_files=check_files, **kwargs)
+    dataset.df = dataset.finalize_catalogue(dataset.df)
     return dataset
 
 def load_datasets(dataset_names):
