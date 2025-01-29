@@ -258,6 +258,9 @@ class WildlifeDataset:
         # Crop black background around images
         elif self.img_load == "crop_black":
             img = utils.crop_black(img)
+        # Crop white background around images
+        elif self.img_load == "crop_white":
+            img = utils.crop_white(img)
         else:
             raise ValueError(f"Invalid img_load argument: {self.img_load}")
 

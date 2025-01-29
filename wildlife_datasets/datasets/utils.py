@@ -7,7 +7,7 @@ import urllib.request
 from tqdm import tqdm
 import shutil
 from contextlib import contextmanager
-from PIL import Image
+from PIL import Image, ImageOps
 import cv2
 
 def load_image(path: str, max_size: int = None) -> Image:
@@ -47,6 +47,26 @@ def crop_black(img: Image) -> Image:
     """
     
     y_nonzero, x_nonzero, _ = np.nonzero(img)
+    return img.crop(
+        (
+            np.min(x_nonzero),
+            np.min(y_nonzero),
+            np.max(x_nonzero),
+            np.max(y_nonzero),
+        )
+    )
+
+def crop_white(img: Image) -> Image:
+    """Crops white borders from an image.    
+
+    Args:
+        img (Image): Image to be cropped.
+
+    Returns:
+        Cropped image.
+    """
+    
+    y_nonzero, x_nonzero, _ = np.nonzero(ImageOps.invert(img))
     return img.crop(
         (
             np.min(x_nonzero),
