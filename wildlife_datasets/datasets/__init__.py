@@ -32,6 +32,7 @@ from .noaa_right_whale import NOAARightWhale
 from .nyala_data import NyalaData
 from .open_cows import OpenCows2020
 from .polar_bear_vid_id import PolarBearVidID
+from .prim_face import PrimFace
 from .reunion_turtles import ReunionTurtles
 from .seal_id import SealID, SealIDSegmented
 from .sea_star_reid import SeaStarReID2023
@@ -80,6 +81,7 @@ names_all = [
     NyalaData,
     OpenCows2020,
     PolarBearVidID,
+    PrimFace,
     ReunionTurtles,
     SealID, SealIDSegmented,
     SeaStarReID2023,
@@ -160,6 +162,7 @@ names_primates = [
     CTai,
     CZoo,
     MacaqueFaces,
+    PrimFace,
 ]
 
 names_turtles = [

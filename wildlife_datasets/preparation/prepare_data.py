@@ -236,6 +236,10 @@ def prepare_polar_bear_vidid(root, new_root, k=100, transform=None, **kwargs):
     dataset = datasets.PolarBearVidID(root, img_load="full", transform=transform, remove_unknown=True)
     return convert_dataset(dataset, new_root, k=k, **kwargs)
 
+def prepare_prim_face(root, new_root, k=1, transform=None, **kwargs):
+    dataset = datasets.PrimFace(root, img_load="crop_white", transform=transform, remove_unknown=True)
+    return convert_dataset(dataset, new_root, k=k, **kwargs)
+
 def prepare_reunion_turtles(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.ReunionTurtles(root, img_load="full", transform=transform, remove_unknown=True)
     return convert_dataset(dataset, new_root, k=k, **kwargs)
@@ -316,6 +320,7 @@ prepare_functions = {
     'NyalaData': prepare_nyala_data,
     'OpenCows2020': prepare_open_cows_2020,
     'PolarBearVidID': prepare_polar_bear_vidid,
+    'PrimFace': prepare_prim_face,    
     'ReunionTurtles': prepare_reunion_turtles,
     'SealID': prepare_seal_id,
     'SeaStarReID2023': prepare_sea_star_reid_2023,
@@ -365,6 +370,7 @@ species_conversion = {
     'Green': 'sea turtle',
     'Hawksbill': 'sea turtle',
     'humpback_whale': 'whale',
+    'japanese monkey': 'macaque',
     'killer_whale': 'whale',
     'leopard': 'leopard',
     'loggerhead turtle': 'sea turtle',
@@ -379,6 +385,7 @@ species_conversion = {
     'right whale': 'whale',
     'ringed seal': 'seal',
     'rhesus macaque': 'macaque',
+    'rhesus monkey': 'macaque',
     'rough_toothed_dolphin': 'dolphin',
     'sea turtle': 'sea turtle',
     'sei_whale': 'whale',
