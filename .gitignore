@@ -1,7 +1,7 @@
 data/
-baselines/features
-baselines/clusters*
-baselines/summary*
+baselines/WildlifeReID-10k/features
+baselines/WildlifeReID-10k/clusters*
+baselines/WildlifeReID-10k/summary*
 venv/
 venv*
 venv_gpu/
