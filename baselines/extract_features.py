@@ -4,7 +4,6 @@ import torchvision.transforms as T
 from timm import create_model
 from wildlife_datasets import datasets
 from wildlife_tools.features import DeepFeatures
-from wildlife_tools.data import WildlifeDataset
 
 device = 'cuda'
 root = '/data/wildlife_datasets/data/WildlifeReID10k'
@@ -22,7 +21,9 @@ transform = T.Compose([
     T.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
 ])
 for name, df_dataset in d.df.groupby('dataset'):
-    dataset = WildlifeDataset(metadata=df_dataset, root=d.root, transform=transform)
+    dataset = datasets.WildlifeDataset(df=df_dataset, root=d.root, transform=transform, load_label=True)
     features = extractor(dataset)
+    if not isinstance(features, np.ndarray):
+        features = np.array([f[0] for f in features])    
     np.save(os.path.join(root_output, f'features_{name}.npy'), features)
     np.save(os.path.join(root_output, f'names_{name}.npy'), dataset.metadata['path'])
