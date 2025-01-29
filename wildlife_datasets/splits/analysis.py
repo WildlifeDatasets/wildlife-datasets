@@ -20,7 +20,7 @@ def recognize_time_split(df_train, df_test, col_label='identity'):
     ids_joint = ids_train.intersection(ids_test)
 
     time_split = 'time-unaware'
-    if 'date' in df_train.columns:
+    if 'date' in df_train.columns and 'date' in df_test.columns and sum(df_train['date'].isnull()) == 0 and sum(df_test['date'].isnull()) == 0:
         if max(df_train['date']) <= min(df_test['date']):
             time_split = 'time-cutoff'                
         else:
