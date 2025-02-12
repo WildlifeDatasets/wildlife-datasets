@@ -1,5 +1,5 @@
 data/
-baselines/WildlifeReID-10k/features
+baselines/WildlifeReID-10k/features*
 baselines/WildlifeReID-10k/clusters*
 baselines/WildlifeReID-10k/summary*
 venv/
