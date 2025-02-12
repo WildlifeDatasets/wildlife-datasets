@@ -17,6 +17,17 @@ class BalancedSplit():
     `TimeAwareSplit` has children `TimeProportionSplit` and `TimeCutoffSplit`.
     """
 
+    def __init__(
+            self,
+            seed: int = 666,
+            identity_skip: str = 'unknown',
+            col_label: str = 'identity',            
+            ) -> None:
+        
+        self.seed = seed
+        self.identity_skip = identity_skip
+        self.col_label = col_label
+
     def initialize_lcg(self) -> Lcg:
         """Returns the random number generator.
 

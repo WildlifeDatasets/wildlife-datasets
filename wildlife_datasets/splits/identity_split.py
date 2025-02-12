@@ -8,8 +8,8 @@ class FullSplit(BalancedSplit):
     """Simplest split returning the whole dataset.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -122,9 +122,7 @@ class ClosedSetSplit(IdentitySplit):
     def __init__(
             self,
             ratio_train: float,
-            seed: int = 666,
-            identity_skip: str = 'unknown',
-            col_label: str = 'identity',            
+            **kwargs
             ) -> None:
         """Initializes the class.
 
@@ -136,9 +134,7 @@ class ClosedSetSplit(IdentitySplit):
         """
 
         self.ratio_train = ratio_train
-        self.identity_skip = identity_skip
-        self.seed = seed
-        self.col_label = col_label
+        super().__init__(**kwargs)
     
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -168,10 +164,8 @@ class OpenSetSplit(IdentitySplit):
             ratio_train: float,
             ratio_class_test: float = None,
             n_class_test: int = None,
-            seed: int = 666,
-            identity_skip: str = 'unknown',
-            col_label: str = 'identity',
             open_in_test: bool = True,
+            **kwargs
             ) -> None:
         """Initializes the class.
 
@@ -198,10 +192,8 @@ class OpenSetSplit(IdentitySplit):
         self.ratio_train = ratio_train
         self.ratio_class_test = ratio_class_test
         self.n_class_test = n_class_test
-        self.identity_skip = identity_skip
-        self.seed = seed
-        self.col_label = col_label
         self.open_in_test = open_in_test
+        super().__init__(**kwargs)
 
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -253,9 +245,7 @@ class DisjointSetSplit(IdentitySplit):
             self,
             ratio_class_test: float = None,
             n_class_test: int = None,
-            seed: int = 666,
-            identity_skip: str = 'unknown',
-            col_label: str = 'identity',
+            **kwargs
             ) -> None:
         """Initializes the class.
 
@@ -280,9 +270,7 @@ class DisjointSetSplit(IdentitySplit):
         self.ratio_train = 0 # Arbitrary value
         self.ratio_class_test = ratio_class_test
         self.n_class_test = n_class_test
-        self.identity_skip = identity_skip
-        self.seed = seed
-        self.col_label = col_label
+        super().__init__(**kwargs)
 
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).

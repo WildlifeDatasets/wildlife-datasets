@@ -108,9 +108,7 @@ class TimeProportionSplit(TimeAwareSplit):
     def __init__(
             self,
             ratio: float = 0.5,
-            seed: int = 666,
-            identity_skip: str = 'unknown',
-            col_label: str = 'identity',
+            **kwargs
             ):
         """Initializes the class.
 
@@ -122,9 +120,7 @@ class TimeProportionSplit(TimeAwareSplit):
         """
 
         self.ratio = ratio
-        self.identity_skip = identity_skip
-        self.seed = seed
-        self.col_label = col_label
+        super().__init__(**kwargs)
 
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -169,9 +165,7 @@ class TimeCutoffSplit(TimeAwareSplit):
             self,
             year: int,
             test_one_year_only: bool = True,
-            seed: int = 666,
-            identity_skip: str = 'unknown',
-            col_label: str = 'identity',
+            **kwargs
             ) -> None:
         """Initializes the class.
 
@@ -185,9 +179,7 @@ class TimeCutoffSplit(TimeAwareSplit):
 
         self.year = year
         self.test_one_year_only = test_one_year_only
-        self.identity_skip = identity_skip
-        self.seed = seed
-        self.col_label = col_label
+        super().__init__(**kwargs)
     
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
@@ -219,9 +211,7 @@ class TimeCutoffSplitAll(TimeAwareSplit):
     def __init__(
             self,
             test_one_year_only: bool = True,
-            seed: int = 666,
-            identity_skip: str = 'unknown',
-            col_label: str = 'identity',
+            **kwargs
             ) -> None:
         """Initializes the class.
 
@@ -233,9 +223,7 @@ class TimeCutoffSplitAll(TimeAwareSplit):
         """
 
         self.test_one_year_only = test_one_year_only
-        self.identity_skip = identity_skip
-        self.seed = seed
-        self.col_label = col_label
+        super().__init__(**kwargs)
     
     def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
