@@ -38,63 +38,6 @@ class TimeAwareSplit(BalancedSplit):
         df['year'] = df['date'].apply(lambda x: x.year).to_numpy()            
         return df
 
-    def resplit_random(
-            self,
-            df: pd.DataFrame,
-            idx_train: np.ndarray,
-            idx_test: np.ndarray,
-            year_max: int = np.inf
-            ) -> Tuple[np.ndarray, np.ndarray]:
-        """Creates a random re-split of an already existing split.
-
-        The re-split mimics the split as the training set contains
-        the same number of samples for EACH individual.
-        The same goes for the testing set.
-        The re-split samples may be drawn only from `df['year'] <= year_max`.
-
-        Args:
-            df (pd.DataFrame): A dataframe of the data. It must contain columns `identity` and `date`.
-            idx_train (np.ndarray): Labels of the training set.
-            idx_test (np.ndarray): Labels of the testing set.
-            year_max (int, optional): Considers only entries with `df['year'] <= year_max`.
-
-        Returns:
-            List of labels of the training and testing sets.
-        """
-
-        df = self.modify_df(df)
-
-        # Initialize the random number generator
-        lcg = self.initialize_lcg()
-        
-        # Compute the number of samples for each individual in the training set
-        counts_train = {}
-        for name, df_name in df.loc[idx_train].groupby(self.col_label):
-            counts_train[name] = len(df_name)
-        # Compute the number of samples for each individual in the testing set
-        counts_test = {}
-        for name, df_name in df.loc[idx_test].groupby(self.col_label):
-            counts_test[name] = len(df_name)
-
-        idx_train_new = []
-        idx_test_new = []
-        # Loop over all individuals
-        for name, df_name in df.groupby(self.col_label):
-            # Extract the number of individuals in the training and testing sets
-            n_train = counts_train.get(name, 0)
-            n_test = counts_test.get(name, 0)
-            if n_train+n_test > 0:
-                # Get randomly permuted indices of the corresponding identity
-                df_name = df_name[df_name['year'] <= year_max]
-                if len(df_name) < n_train+n_test:
-                    raise(Exception('The set is too small.'))
-                # Get the correct number of indices in both sets
-                idx_permutation = lcg.random_permutation(n_train+n_test)
-                idx_permutation = np.array(idx_permutation)
-                idx_train_new += list(df_name.index[idx_permutation[:n_train]])
-                idx_test_new += list(df_name.index[idx_permutation[n_train:n_train+n_test]])
-        return np.array(idx_train_new), np.array(idx_test_new)
-
 
 class TimeProportionSplit(TimeAwareSplit):
     """Time-proportion non-random splitting method into training and testing sets.

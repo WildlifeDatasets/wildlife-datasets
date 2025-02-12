@@ -27,22 +27,6 @@ class FullSplit(BalancedSplit):
 class IdentitySplit(BalancedSplit):
     """Base class for `ClosedSetSplit`, `OpenSetSplit` and `DisjointSetSplit`.
     """
-
-    def modify_df(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Prepares dataframe for splits.
-
-        Removes identities specified in `self.identity_skip` (usually unknown identities).
-
-        Args:
-            df (pd.DataFrame): A dataframe of the data. It must contain columns `identity` and `date`.
-
-        Returns:
-            Modified dataframe of the data.
-        """
-        
-        df = df.copy()
-        df = df[df[self.col_label] != self.identity_skip]
-        return df
     
     def general_split(
             self,
