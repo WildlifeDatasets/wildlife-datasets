@@ -2,7 +2,8 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from typing import Optional, List, Tuple
+from sklearn.metrics.pairwise import cosine_similarity
+from typing import Optional, List, Tuple, Callable
 from wildlife_datasets import datasets, metrics
 from wildlife_tools.similarity import CosineSimilarity
 
@@ -58,9 +59,9 @@ def compute_predictions(
         features_query: np.ndarray,
         features_database: np.ndarray,
         ignore: Optional[List[List[int]]] = None,
+        matcher: Callable = cosine_similarity,
         k: int = 4,
-        batch_size: int = 1000,
-        return_similarity: bool = False,
+        return_score: bool = False
         ) -> Tuple[np.ndarray, np.ndarray]:
     """Computes a closest match in the database for each vector in the query set.
 
@@ -69,40 +70,35 @@ def compute_predictions(
         features_database (np.ndarray): Database features of size n_database*n_feature
         ignore (Optional[List[List[int]]], optional): `ignore[i]` is a list of indices
             in the database ignores for i-th query.
+        matcher (Callable, optional): function computing similarity.
         k (int, optional): Returned number of predictions.
-        batch_size (int, optional): Size of the computation batch.
-        return_similarity (bool, optional): Whether similarity scores are returned.
+        return_score (bool, optional): Whether the similalarity is returned.
 
     Returns:
         Vector of size (n_query,) and array of size (n_query,k). The latter are indices
-            in the database for the closest matches (with ignored `ignore` indices)
+            in the database for the closest matches (with ignored `ignore` indices).
+            If `return_score`, it also returns an array of size (n_query,k) of scores.
     """
 
     # Create batch chunks
     n_query = len(features_query)
-    n_chunks = int(np.ceil(n_query / batch_size))
-    chunks = np.array_split(range(n_query), n_chunks)
     # If ignore is not provided, initialize as empty
     if ignore is None:
         ignore = [[] for _ in range(n_query)]
     
-    matcher = CosineSimilarity()
     idx_true = np.array(range(n_query))
     idx_pred = np.zeros((n_query, k), dtype=np.int32)
-    similarity_pred = np.zeros((n_query, k))
-    for chunk in chunks:
-        # Compute the cosine similarity between the query chunk and the database
-        similarity = matcher(query=features_query[chunk], database=features_database)['cosine']
-        # Set -infinity for ignored indices
-        for i in range(len(chunk)):
-            similarity[i, ignore[chunk[i]]] = -np.inf
-        # Find the closest matches (k highest values)
-        idx_pred[chunk,:] = (-similarity).argsort(axis=-1)[:, :k]
-        if return_similarity:
-            for i in range(len(chunk)):
-                similarity_pred[chunk[i],:] = similarity[i, idx_pred[chunk[i],:]]
-    if return_similarity:        
-        return idx_true, idx_pred, similarity_pred
+    scores = np.zeros((n_query, k))
+    # Compute the cosine similarity between the query and the database
+    similarity = matcher(features_query, features_database)
+    # Set -infinity for ignored indices
+    for i in range(len(ignore)):
+        similarity[i, ignore[i]] = -np.inf
+    # Find the closest matches (k highest values)
+    idx_pred = (-similarity).argsort(axis=-1)[:, :k]
+    if return_score:
+        scores = np.take_along_axis(similarity, idx_pred, axis=-1)
+        return idx_true, idx_pred, scores
     else:
         return idx_true, idx_pred
 
