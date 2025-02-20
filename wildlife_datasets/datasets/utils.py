@@ -218,3 +218,17 @@ def get_split(x, data_train, data_test):
         return 'test'
     else:
         return np.nan
+
+def get_image_date(path, shorten=True):
+    if not os.path.exists(path):
+        return np.nan
+    exif = Image.open(path).getexif()
+    if exif is not None:
+        date = exif.get(36867)
+        if date is None: 
+            date = exif.get(306)
+            if date is not None:
+                if len(date) >= 10 and shorten:
+                    date = date[:10].replace(':', '-')
+                return date
+    return np.nan

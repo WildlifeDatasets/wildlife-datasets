@@ -21,12 +21,15 @@ class SeaStarReID2023(DatasetFactory):
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
         species = folders[1].str[:4].replace({'Anau': 'Anthenea australiae', 'Asru': 'Asteria rubens'})
+        path = data['path'] + os.path.sep + data['file']
+        date = [utils.get_image_date(os.path.join(self.root, p)) for p in path]
 
         # Finalize the dataframe
         df = pd.DataFrame({
             'image_id': utils.create_id(data['file']),
-            'path': data['path'] + os.path.sep + data['file'],
+            'path': path,
             'identity': folders[1],
-            'species': species
+            'species': species,
+            'date': date
         })
         return self.finalize_catalogue(df)

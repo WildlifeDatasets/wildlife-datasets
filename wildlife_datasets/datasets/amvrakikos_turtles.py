@@ -26,13 +26,15 @@ class AmvrakikosTurtles(DatasetFactory):
         columns_bbox = ['bbox_x', 'bbox_y', 'bbox_width', 'bbox_height']
         bbox = data[columns_bbox].to_numpy()
         bbox = pd.Series(list(bbox))
+        path = 'images' + os.path.sep + data['image_name']
+        date = [utils.get_image_date(os.path.join(self.root, p)) for p in path]
 
         # Finalize the dataframe
         df = pd.DataFrame({
             'image_id': range(len(data)),
-            'path': 'images' + os.path.sep + data['image_name'],
+            'path': path,
             'identity': data['image_name'].apply(lambda x: x.split('_')[0]).astype(int),
-            'year': data['image_name'].apply(lambda x: x.split('_')[1]).astype(int),
+            'date': date,
             'orientation': data['image_name'].apply(lambda x: x.split('_')[2]),
             'bbox': bbox,
         })

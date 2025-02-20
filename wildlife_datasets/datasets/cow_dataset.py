@@ -26,11 +26,14 @@ class CowDataset(DatasetFactory):
         # Find all images in root
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
+        path = data['path'] + os.path.sep + data['file']
+        date = [utils.get_image_date(os.path.join(self.root, p)) for p in path]
 
         # Finalize the dataframe
         df = pd.DataFrame({
             'image_id': utils.create_id(data['file']),
-            'path': data['path'] + os.path.sep + data['file'],
+            'path': path,
             'identity': folders[1].str.strip('cow_').astype(int),
+            'date': date,
         })
         return self.finalize_catalogue(df)
