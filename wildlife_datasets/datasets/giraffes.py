@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
@@ -37,5 +38,13 @@ class Giraffes(DatasetFactory):
             'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
             'identity': folders[n_folders],
+            'date': data['file'].apply(lambda x: self.extract_date(x))
         })
         return self.finalize_catalogue(df)
+    
+    def extract_date(self, x):
+        date = x.split('_')[1]
+        if date == 'None':
+            return np.nan
+        else:
+            return f'{date[:4]}-{date[4:6]}-{date[6:]}'

@@ -53,12 +53,14 @@ class BirdIndividualID(DatasetFactory):
         split = folders[1].replace({'Test_datasets': 'test', 'Test': 'test', 'Train': 'train', 'Val': 'val'})
         identity = folders[2]
         species = folders[0]
+        date = data['file'].apply(lambda x: self.extract_date(x))
 
         # Finalize the dataframe
         df1 = pd.DataFrame({    
             'image_id': utils.create_id(split + data['file']),
             'path': self.prefix1 + os.path.sep + self.prefix2 + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': identity,
+            'date': date,
             'species': species,
             'original_split': split,
         })
@@ -67,18 +69,40 @@ class BirdIndividualID(DatasetFactory):
         path = os.path.join(self.root, self.prefix1, 'New_birds')
         data = utils.find_images(path)
         species = data['path']
+        date = data['file'].apply(lambda x: self.extract_date(x))
 
         # Finalize the dataframe
         df2 = pd.DataFrame({    
             'image_id': utils.create_id(data['file']),
             'path': self.prefix1 + os.path.sep + 'New_birds' + os.path.sep + data['path'] + os.path.sep + data['file'],
             'identity': self.unknown_name,
+            'date': date,
             'species': species,
             'original_split': np.nan,
         })
         df = pd.concat([df1, df2])
         return self.finalize_catalogue(df)
 
+    def extract_date(self, x):
+        x = x.replace(' ', '_')
+        date = x.split('_')[-2]
+        if date == '2018':
+            date = f'2018-{x.split("_")[-3]}-{x.split("_")[-4]}'
+        elif date == '1':
+            date = x.split('_')[-3]
+            date = f'20{date[4:]}-{date[2:4]}-{date[:2]}'
+        elif date == 'very':
+            date = x.split('_')[-4]
+            date = f'20{date[4:]}-{date[2:4]}-{date[:2]}'
+        elif date == 'feeder' or date == 'feederB':
+            date = f'2018-{x.split("_")[-5]}-{x.split("_")[-4]}'
+        elif len(date) == 6 and date != 'feeder':
+            date = f'20{date[4:]}-{date[2:4]}-{date[:2]}'
+        elif len(date) == 8:
+            date = x.split('_')[-3]            
+        elif len(date) != 10:
+            date = np.nan
+        return date
 
 class BirdIndividualIDSegmented(BirdIndividualID):
     prefix1 = 'Cropped_pictures'
