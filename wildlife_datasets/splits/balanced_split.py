@@ -209,11 +209,11 @@ class BalancedSplit():
 
                 # Distribute the remaining indices
                 n_train_remaining = n_train - len(idx_train_identity)
-                idx_remaining = np.array(list(set(df_identity.index) - set(idx_train_identity)))
+                idx_remaining = self.setdiff(df_identity.index, idx_train_identity)
                 idx_remaining = lcg.random_shuffle(idx_remaining)
                 idx_train_identity += list(idx_remaining[:n_train_remaining])
             idx_train_new += list(idx_train_identity)
-        idx_test_new = list(set(df.index) - set(idx_train_new))
+        idx_test_new = self.setdiff(df.index, idx_train_new)
         return np.array(idx_train_new), np.array(idx_test_new)
 
     def set_col_label(self, col_label: str) -> None:
@@ -224,3 +224,8 @@ class BalancedSplit():
         """
 
         self.col_label = col_label
+
+    def setdiff(self, a, b):
+        a = np.array(a)
+        b = np.array(b)
+        return pd.unique(a[~np.in1d(a,b)])
