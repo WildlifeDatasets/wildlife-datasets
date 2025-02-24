@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-from .. import datasets
+from .. import datasets, splits
 from typing import Optional, Dict, List
 
 def resize_dataset(
@@ -104,190 +104,416 @@ def convert_dataset(dataset, new_root, k=1, col_label=None, **kwargs):
     else:
         return resize_dataset(dataset, new_root, **kwargs)
 
-def prepare_aau_zebrafish(root, new_root, k=20, transform=None, **kwargs):
+def add_split_column(df, splitter):
+    idx_train, idx_test = splitter.split(df)[0]
+    df.loc[idx_train, 'split'] = 'train'
+    df.loc[idx_test, 'split'] = 'test'
+    return df
+
+def prepare_aau_zebrafish(root, new_root, k=20, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.AAUZebraFish(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_aerial_cattle_2017(root, new_root, k=20, transform=None, **kwargs):
+def prepare_aerial_cattle_2017(root, new_root, k=20, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.AerialCattle2017(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_amvrakikos_turtles(root, new_root, k=1, transform=None, **kwargs):
+def prepare_amvrakikos_turtles(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.AmvrakikosTurtles(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_atrw(root, new_root, k=1, transform=None, **kwargs):
+def prepare_atrw(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.ATRW(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_beluga_id(root, new_root, k=1, transform=None, **kwargs):
+def prepare_beluga_id(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.BelugaIDv2(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_bird_individual_id(root, new_root, k=20, transform=None, segmented=True, **kwargs):
+def prepare_bird_individual_id(root, new_root, k=20, transform=None, add_split=False, splitter=None, segmented=True, **kwargs):
     if segmented:
         root = root + "Segmented"
     dataset = datasets.BirdIndividualIDSegmented(root, img_load="crop_black", transform=transform, remove_unknown=True)
     dataset = dataset.get_subset(~dataset.df['date'].isnull())
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_cat_individual_images(root, new_root, k=1, transform=None, **kwargs):
+def prepare_cat_individual_images(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.CatIndividualImages(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_chicks4free_id(root, new_root, k=1, transform=None, **kwargs):
+def prepare_chicks4free_id(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.Chicks4FreeID(root, img_load="full", transform=transform, remove_unknown=True)
     # Change the path from np.nan so that it is saved correctly
     dataset.df[dataset.col_path] = 'images/' + dataset.df['image_id'].astype('str') + '.jpg'
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_cow_dataset(root, new_root, k=1, transform=None, **kwargs):
+def prepare_cow_dataset(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.CowDataset(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.TimeProportionOpenSetSplit(0.7, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_cows2021(root, new_root, k=1, transform=None, **kwargs):
+def prepare_cows2021(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.Cows2021v2(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_ctai(root, new_root, k=1, transform=None, **kwargs):
+def prepare_ctai(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.CTai(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_czoo(root, new_root, k=1, transform=None, **kwargs):
+def prepare_czoo(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.CZoo(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_dog_facenet(root, new_root, k=1, transform=None, **kwargs):
+def prepare_dog_facenet(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.DogFaceNet(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_drosophila(root, new_root, k=1000, transform=None, **kwargs):
+def prepare_drosophila(root, new_root, k=1000, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.Drosophila(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_elpephants(root, new_root, k=1, transform=None, **kwargs):
+def prepare_elpephants(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.ELPephants(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_friesian_cattle_2015(root, new_root, k=1, transform=None, **kwargs):
+def prepare_friesian_cattle_2015(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.FriesianCattle2015v2(root, img_load="crop_black", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_friesian_cattle_2017(root, new_root, k=1, transform=None, **kwargs):
+def prepare_friesian_cattle_2017(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.FriesianCattle2017(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_giraffes(root, new_root, k=1, transform=None, **kwargs):
+def prepare_giraffes(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.Giraffes(root, img_load="full", transform=transform, remove_unknown=True)
     dataset = dataset.get_subset(~dataset.df['date'].isnull())
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_giraffe_zebra_id(root, new_root, k=1, transform=None, **kwargs):
+def prepare_giraffe_zebra_id(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.GiraffeZebraID(root, img_load="bbox", transform=transform, remove_unknown=True)
     dataset = dataset.get_subset(~dataset.df['date'].isnull())
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.TimeProportionOpenSetSplit(0.7, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_happy_whale(root, new_root, k=1, transform=None, **kwargs):
+def prepare_happy_whale(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.HappyWhale(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_humpback_whale_id(root, new_root, k=1, transform=None, **kwargs):
+def prepare_humpback_whale_id(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.HumpbackWhaleID(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_hyena_id_2022(root, new_root, k=1, transform=None, **kwargs):
+def prepare_hyena_id_2022(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.HyenaID2022(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_ipanda_50(root, new_root, k=1, transform=None, **kwargs):
+def prepare_ipanda_50(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.IPanda50(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_leopard_id_2022(root, new_root, k=1, transform=None, **kwargs):
+def prepare_leopard_id_2022(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.LeopardID2022(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_macaque_faces(root, new_root, k=1, transform=None, **kwargs):
+def prepare_macaque_faces(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.MacaqueFaces(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_mpdd(root, new_root, k=1, transform=None, **kwargs):
+def prepare_mpdd(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.MPDD(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_multi_cam_cows_2024(root, new_root, k=20, transform=None, **kwargs):
+def prepare_multi_cam_cows_2024(root, new_root, k=20, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.MultiCamCows2024(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_ndd20(root, new_root, k=1, transform=None, **kwargs):
+def prepare_ndd20(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.NDD20v2(root, img_load="bbox_mask", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_noaa_right_whale(root, new_root, k=1, transform=None, **kwargs):
+def prepare_noaa_right_whale(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.NOAARightWhale(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_nyala_data(root, new_root, k=1, transform=None, **kwargs):
+def prepare_nyala_data(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.NyalaData(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_open_cows_2020(root, new_root, k=1, transform=None, **kwargs):
+def prepare_open_cows_2020(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.OpenCows2020(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_polar_bear_vidid(root, new_root, k=100, transform=None, **kwargs):
+def prepare_polar_bear_vidid(root, new_root, k=100, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.PolarBearVidID(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_prim_face(root, new_root, k=1, transform=None, **kwargs):
+def prepare_prim_face(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.PrimFace(root, img_load="crop_white", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_reunion_turtles(root, new_root, k=1, transform=None, **kwargs):
+def prepare_reunion_turtles(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.ReunionTurtles(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_seal_id(root, new_root, k=1, transform=None, segmented=True, **kwargs):
+def prepare_seal_id(root, new_root, k=1, transform=None, add_split=False, splitter=None, segmented=True, **kwargs):
     if segmented:
         root = root + "Segmented"
     dataset = datasets.SealIDSegmented(root, img_load="crop_black", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_sea_star_reid_2023(root, new_root, k=1, transform=None, **kwargs):
+def prepare_sea_star_reid_2023(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.SeaStarReID2023(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_sea_turtle_id_2022(root, new_root, k=1, transform=None, **kwargs):
+def prepare_sea_turtle_id_2022(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.SeaTurtleID2022(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_sea_turtle_id_2022_animal_clef_2025(root, new_root, k=1, transform=None, **kwargs):
+def prepare_sea_turtle_id_2022_animal_clef_2025(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.SeaTurtleID2022_AnimalCLEF2025(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_smalst(root, new_root, k=10, transform=None, **kwargs):
+def prepare_smalst(root, new_root, k=10, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.SMALST(root, img_load="bbox_mask", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_southern_province_turtles(root, new_root, k=1, transform=None, **kwargs):
+def prepare_southern_province_turtles(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.SouthernProvinceTurtles(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_stripe_spotter(root, new_root, k=1, transform=None, **kwargs):
+def prepare_stripe_spotter(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.StripeSpotter(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_whaleshark_id(root, new_root, k=1, transform=None, **kwargs):
+def prepare_whaleshark_id(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.WhaleSharkID(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_zakynthos_turtles(root, new_root, k=1, transform=None, **kwargs):
+def prepare_zakynthos_turtles(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.ZakynthosTurtles(root, img_load="bbox", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
-def prepare_zindi_turtle_recall(root, new_root, k=1, transform=None, **kwargs):
+def prepare_zindi_turtle_recall(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.ZindiTurtleRecall(root, img_load="full", transform=transform, remove_unknown=True)
-    return convert_dataset(dataset, new_root, k=k, **kwargs)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        return add_split_column(df, splitter)
+    return df
 
 # LionData are missing
 prepare_functions = {
@@ -342,6 +568,7 @@ species_conversion = {
     'Asteria rubens': 'sea star',
     'bottlenose_dolphin': 'dolphin',
     'beluga': 'whale',
+    'beluga_whale': 'whale',
     'blue_whale': 'whale',
     'BND': 'dolphin',
     'Friesian cattle': 'cow',
@@ -372,6 +599,7 @@ species_conversion = {
     'green turtle': 'sea turtle',
     'Green': 'sea turtle',
     'Hawksbill': 'sea turtle',
+    'hyena': 'hyena',
     'humpback_whale': 'whale',
     'japanese monkey': 'macaque',
     'killer_whale': 'whale',
@@ -389,6 +617,7 @@ species_conversion = {
     'ringed seal': 'seal',
     'rhesus macaque': 'macaque',
     'rhesus monkey': 'macaque',
+    'rhincodon_typus': 'whaleshark',
     'rough_toothed_dolphin': 'dolphin',
     'sea turtle': 'sea turtle',
     'sei_whale': 'whale',
