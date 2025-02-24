@@ -492,6 +492,8 @@ class WildlifeDataset:
             A full dataframe of the data, slightly modified.
         """
 
+        if self.update_wrong_labels:
+            df = self.fix_labels(df)
         self.rename_column(df, 'path', self.col_path)
         self.rename_column(df, 'identity', self.col_label)
         self.check_required_columns(df)
