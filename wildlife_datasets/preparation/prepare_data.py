@@ -128,6 +128,7 @@ def prepare_bird_individual_id(root, new_root, k=20, transform=None, segmented=T
     if segmented:
         root = root + "Segmented"
     dataset = datasets.BirdIndividualIDSegmented(root, img_load="crop_black", transform=transform, remove_unknown=True)
+    dataset = dataset.get_subset(~dataset.df['date'].isnull())
     return convert_dataset(dataset, new_root, k=k, **kwargs)
 
 def prepare_cat_individual_images(root, new_root, k=1, transform=None, **kwargs):
@@ -178,10 +179,12 @@ def prepare_friesian_cattle_2017(root, new_root, k=1, transform=None, **kwargs):
 
 def prepare_giraffes(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.Giraffes(root, img_load="full", transform=transform, remove_unknown=True)
+    dataset = dataset.get_subset(~dataset.df['date'].isnull())
     return convert_dataset(dataset, new_root, k=k, **kwargs)
 
 def prepare_giraffe_zebra_id(root, new_root, k=1, transform=None, **kwargs):
     dataset = datasets.GiraffeZebraID(root, img_load="bbox", transform=transform, remove_unknown=True)
+    dataset = dataset.get_subset(~dataset.df['date'].isnull())
     return convert_dataset(dataset, new_root, k=k, **kwargs)
 
 def prepare_happy_whale(root, new_root, k=1, transform=None, **kwargs):
