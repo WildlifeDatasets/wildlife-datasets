@@ -50,6 +50,7 @@ class BelugaIDv2(BelugaID):
             'image_id': range(len(data_train), len(data_train)+len(data_test)),
             'identity': data_test['original_whale_id'].apply(lambda x: id_conversion.get(x, 'unknown')),
             'date': data_test['timestamp'],
+            'species': 'beluga_whale',
             'orientation': data_test['viewpoint'].replace({'top': 'up'}),
             'original_split': 'test'
         })
