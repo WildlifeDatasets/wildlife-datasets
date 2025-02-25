@@ -2,7 +2,7 @@ from .datasets import DatasetFactory, WildlifeDataset
 from .aau_zebrafish import AAUZebraFish
 from .aerial_cattle import AerialCattle2017
 from .amvrakikos_turtles import AmvrakikosTurtles
-from .animal_clef import AnimalCLEF2025
+from .animal_clef import AnimalCLEF2025, AnimalCLEF2025_LynxID2025, AnimalCLEF2025_SeaTurtleID2022
 from .atrw import ATRW
 from .beluga_id import BelugaID, BelugaIDv2
 from .bird_individual_id import BirdIndividualID, BirdIndividualIDSegmented
@@ -36,7 +36,7 @@ from .prim_face import PrimFace
 from .reunion_turtles import ReunionTurtles
 from .seal_id import SealID, SealIDSegmented
 from .sea_star_reid import SeaStarReID2023
-from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads, SeaTurtleID2022_AnimalCLEF2025
+from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
 from .smalst import SMALST
 from .southern_province_turtles import SouthernProvinceTurtles
 from .stripe_spotter import StripeSpotter
