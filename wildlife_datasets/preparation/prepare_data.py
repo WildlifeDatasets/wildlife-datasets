@@ -1,4 +1,5 @@
 import os
+from copy import deepcopy
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -409,7 +410,11 @@ def prepare_polar_bear_vidid(root, new_root, k=100, transform=None, add_split=Fa
     return df
 
 def prepare_prim_face(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
-    dataset = datasets.PrimFace(root, img_load="crop_white", transform=transform, remove_unknown=True)
+    kwargs = deepcopy(kwargs)
+    remove_str = kwargs.pop('remove_str', [])
+    remove_str.append(' ')
+    kwargs['remove_str'] = remove_str
+    dataset = datasets.PrimFace(root, img_load="crop_white", transform=transform, remove_unknown=True)    
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
