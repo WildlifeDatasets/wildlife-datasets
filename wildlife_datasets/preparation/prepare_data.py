@@ -55,10 +55,13 @@ def resize_dataset(
         if 'species' in row:
             species = row['species']
         else:
-            species = dataset.summary['animals']
-            if len(species) != 1:
-                raise Exception('There should be only one species')
-            species = list(species)[0]
+            if hasattr(dataset, 'summary'):
+                species = dataset.summary['animals']
+                if len(species) != 1:
+                    raise Exception('There should be only one species')
+                species = list(species)[0]
+            else:
+                species = np.nan
 
         # Update dataframe
         df_new.append({
@@ -453,7 +456,7 @@ def prepare_sea_turtle_id_2022(root, new_root, k=1, transform=None, add_split=Fa
     return df
 
 def prepare_sea_turtle_id_2022_animal_clef_2025(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
-    dataset = datasets.SeaTurtleID2022_AnimalCLEF2025(root, img_load="bbox", transform=transform, remove_unknown=True)
+    dataset = datasets.AnimalCLEF2025_SeaTurtleID2022(root, img_load="bbox", transform=transform, remove_unknown=True)
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
