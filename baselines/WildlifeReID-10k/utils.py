@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import Optional, List, Tuple, Callable
-from wildlife_datasets import datasets, metrics
+from wildlife_datasets import datasets, metrics, splits
 from wildlife_tools.similarity import CosineSimilarity
 
 license_conversion = {
@@ -159,3 +159,35 @@ def make_radar_plot(df, color, title=None, use_col='metric', figsize=(9, 9), fon
     
     if title:
         plt.title(title, fontsize=20, x = 0.5, y = 1.1)
+
+def mean(x, idx=None):
+    if idx is None:
+        return np.mean(list(x.values()))
+    else:
+        return np.mean([x[i] for i in idx])
+
+class SplitterByFeatures:
+    def __init__(self, path_features, original_splitter=None, path_names_check=None, **kwargs):
+        self.path_features = path_features
+        if original_splitter is None:
+            original_splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+        self.original_splitter = original_splitter
+        self.path_names_check = path_names_check
+        self.kwargs = kwargs        
+
+    def split(self, df):
+        df = df.reset_index(drop=True)
+        if self.path_names_check is not None:
+            features_names = np.load(self.path_names_check, allow_pickle=True)
+            if not np.array_equal(df['path'], features_names):
+                if not np.array_equal(df['path'], ['/'.join(x.split('/')[2:]) for x in features_names]):
+                    if not np.array_equal(df['path'].apply(lambda x: '/'.join(x.split('/')[2:])), features_names):
+                        raise Exception('Features were computed for different indices')
+
+        features = np.load(self.path_features)
+        for i in range(len(features)):
+            features[i] /= np.linalg.norm(features[i])
+        
+        idx_train0, _ = self.original_splitter.split(df)[0]
+        idx_train, idx_test = self.original_splitter.resplit_by_features(df, features, idx_train0, **self.kwargs)
+        return [(idx_train, idx_test)]
