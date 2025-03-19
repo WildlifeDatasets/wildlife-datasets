@@ -7,22 +7,18 @@ from .datasets import WildlifeDataset
 from .summary import summary
 
 class AnimalCLEF2025(WildlifeDataset):    
-    # TODO: add summary
-    # TODO: add download
-    #summary = summary['AnimalCLEF2025']
-    #archive = 'amvrakikosturtles.zip'
+    summary = summary['AnimalCLEF2025']
+    archive = 'animal-clef-2025.zip'
 
     @classmethod
     def _download(cls):
-        raise NotImplementedError
-        command = f"datasets download -d wildlifedatasets/amvrakikosturtles --force"
+        command = f"competitions download -c animal-clef-2025 --force"
         exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#amvrakikosturtles'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#animalclef2025'''
         utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
 
     @classmethod
     def _extract(cls):
-        raise NotImplementedError
         utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
