@@ -61,7 +61,7 @@ When a dataset is already downloaded, it can be loaded
 d = datasets.MacaqueFaces('data/MacaqueFaces')
 ```
 
-Since this a subclass of the `DatasetFactory` parent class, it inherits all the methods and attributes listed in its [documentation](./reference_datasets.md). Its main component is the [pandas dataframe](./dataframe.md) of all samples
+Since this a subclass of the `WildlifeDataset` parent class, it inherits all the methods and attributes listed in its [documentation](./reference_datasets.md). Its main component is the [pandas dataframe](./dataframe.md) of all samples
 
 ```python exec="true" source="above" result="console" session="run"
 d.df

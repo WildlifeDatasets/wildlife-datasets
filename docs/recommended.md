@@ -69,8 +69,9 @@ print_list_red(datasets.names_wild) # markdown-exec: hide
 ![](images/grid_NOAARightWhale.png)
 ![](images/grid_NyalaData.png)
 ![](images/grid_ReunionTurtles.png)
-![](images/grid_SealID.png)
-![](images/grid_SeaTurtleID.png)
+![](images/grid_SealIDSegmented.png)
+![](images/grid_SeaTurtleIDHeads.png)
+![](images/grid_SouthernProvinceTurtles.png)
 ![](images/grid_StripeSpotter.png)
 ![](images/grid_WhaleSharkID.png)
 ![](images/grid_ZakynthosTurtles.png)
@@ -113,6 +114,7 @@ print_list_red(datasets.names_cows) # markdown-exec: hide
 ![](images/grid_Cows2021.png)
 ![](images/grid_FriesianCattle2015.png)
 ![](images/grid_FriesianCattle2017.png)
+![](images/grid_MultiCamCows2024.png)
 ![](images/grid_OpenCows2020.png)
 
 ### Dogs
@@ -156,6 +158,7 @@ print_list_red(datasets.names_primates) # markdown-exec: hide
 ![](images/grid_CTai.png)
 ![](images/grid_CZoo.png)
 ![](images/grid_MacaqueFaces.png)
+![](images/grid_PrimFace.png)
 
 ### Whales, dolphins and sharks
 

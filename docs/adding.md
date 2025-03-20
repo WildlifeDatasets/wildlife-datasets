@@ -1,12 +1,12 @@
 # How to add new datasets
 
-Adding new datasets is relatively easy. It is sufficient to create a subclass of `DatasetFactory` with the `create_catalogue` method. A simple example is
+Adding new datasets is relatively easy. It is sufficient to create a subclass of `WildlifeDataset` with the `create_catalogue` method. A simple example is
 
 ```python exec="true" source="above" session="run1"
 import pandas as pd
 from wildlife_datasets import datasets
 
-class Test(datasets.DatasetFactory):
+class Test(datasets.WildlifeDataset):
     def create_catalogue(self) -> pd.DataFrame:
         df = pd.DataFrame({
             'image_id': [1, 2, 3, 4],
@@ -27,7 +27,7 @@ The dataframe `df` must satisfy [some requirements](./dataframe.md).
 
 !!! info
 
-    Instead of returning `df` it is better to return `self.finalize_catalogue(df)`. This function will perform [multiple checks](./reference_datasets.md/#datasets.datasets.DatasetFactory.finalize_catalogue) to verify the created dataframe. However, in this case, this check would fail because the specified file paths do not exist.
+    Instead of returning `df` it is better to return `self.finalize_catalogue(df)`. This function will perform [multiple checks](./reference_datasets.md/#datasets.datasets.WildlifeDataset.finalize_catalogue) to verify the created dataframe. However, in this case, this check would fail because the specified file paths do not exist.
 
 To incorporate the new dataset into the list of all available datasets, the [init script](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/__init__.py) must be appropriately modified.
 
@@ -40,7 +40,7 @@ The metadata can be added by saving them in a csv file (such as [mysummary.csv](
 import pandas as pd
 from wildlife_datasets import datasets
 
-class Test(datasets.DatasetFactory):
+class Test(datasets.WildlifeDataset):
     summary = datasets.Summary('docs/csv/mysummary.csv')['Test']
 
     def create_catalogue(self) -> pd.DataFrame:
@@ -67,7 +67,7 @@ Adding the possibility to download is achieved by adding two class methods. Exam
 import pandas as pd
 from wildlife_datasets import datasets
 
-class Test(datasets.DatasetFactory):
+class Test(datasets.WildlifeDataset):
     summary = datasets.Summary('docs/csv/mysummary.csv')['Test']
 
     @classmethod
@@ -89,8 +89,8 @@ class Test(datasets.DatasetFactory):
 
 ## Optional: integrating into package
 
-New datasets may be integrated into the core package by pull requests on the [Github repo](https://github.com/WildlifeDatasets/wildlife-datasets). In such a case, the dataset should be freely downloadable and both download script and metadata should be provided. The fuctions should be included in the following files:
+New datasets may be integrated into the core package by pull requests on the [Github repo](https://github.com/WildlifeDatasets/wildlife-datasets). In such a case, the dataset should be freely downloadable and both download script and metadata should be provided. The functions should be included in the following files:
 
-  - `DatasetFactory` definition in [datasets.py](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/datasets.py).
+  - `WildlifeDataset` definition in [datasets.py](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/datasets.py).
   - Metadata as an extension to the existing [summary.csv](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/wildlife_datasets/datasets).
 

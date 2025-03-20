@@ -16,8 +16,8 @@ There is a special value for `identity` which describes an unknown individual. I
 ```python exec="true" source="above" result="console"
 from wildlife_datasets import datasets
 
-datasets.DatasetFactory.unknown_name
-print(datasets.DatasetFactory.unknown_name) # markdown-exec: hide
+datasets.WildlifeDataset.unknown_name
+print(datasets.WildlifeDataset.unknown_name) # markdown-exec: hide
 ```
 
 When a dataset contains unknown inidividuals, there identities should be changed to the default value.

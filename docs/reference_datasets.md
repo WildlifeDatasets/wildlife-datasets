@@ -2,9 +2,9 @@
 
 This file describes methods associated with dataset creation and metadata.
 
-## DatasetFactory
+## WildlifeDataset
 
-::: datasets.datasets.DatasetFactory
+::: datasets.datasets.WildlifeDataset
     options:
       heading_level: 3      
 
