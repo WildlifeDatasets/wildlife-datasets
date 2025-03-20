@@ -112,9 +112,7 @@ class ClosedSetSplit(IdentitySplit):
 
         Args:
             ratio_train (float): *Approximate* size of the training set.
-            seed (int, optional): Initial seed for the LCG random generator.
-            identity_skip (str, optional): Name of the identities to ignore.
-            col_label (str, optional): Column name containing individual animal names (labels).
+            **kwargs (type, optional): See kwargs `seed`, `identity_skip` and `col_label` of the parent class.
         """
 
         self.ratio_train = ratio_train
@@ -162,10 +160,8 @@ class OpenSetSplit(IdentitySplit):
             ratio_train (float): *Approximate* size of the training set.
             ratio_class_test (float, optional): *Approximate* ratio of samples of individuals only in the testing set.
             n_class_test (int, optional): Number of individuals only in the testing set.
-            seed (int, optional): Initial seed for the LCG random generator.
-            identity_skip (str, optional): Name of the identities to ignore.
-            col_label (str, optional): Column name containing individual animal names (labels).
             open_in_test (str, optional): Whether the unique identifies will be in test (default) or train set.
+            **kwargs (type, optional): See kwargs `seed`, `identity_skip` and `col_label` of the parent class.
         """
 
         if ratio_class_test is None and n_class_test is None:
@@ -241,9 +237,7 @@ class DisjointSetSplit(IdentitySplit):
         Args:
             ratio_class_test (float, optional): *Approximate* ratio of samples of individuals only in the testing set.
             n_class_test (int, optional): Number of individuals only in the testing set.
-            seed (int, optional): Initial seed for the LCG random generator.
-            identity_skip (str, optional): Name of the identities to ignore.
-            col_label (str, optional): Column name containing individual animal names (labels).            
+            **kwargs (type, optional): See kwargs `seed`, `identity_skip` and `col_label` of the parent class.
         """
 
         if ratio_class_test is None and n_class_test is None:

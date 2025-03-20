@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from typing import List
-from ..datasets import DatasetFactory
+from ..datasets import WildlifeDataset
 
 
 def get_dataset_folder(root_dataset: str, class_dataset: type) -> str:
@@ -9,7 +9,7 @@ def get_dataset_folder(root_dataset: str, class_dataset: type) -> str:
 
     Args:
         root_dataset (str): Path where all datasets are stored.
-        class_dataset (type): Type of DatasetFactory.
+        class_dataset (type): Type of WildlifeDataset.
 
     Returns:
         Path to the stored data.
@@ -22,7 +22,7 @@ def get_dataframe_path(root_dataframe: str, class_dataset: type) -> str:
 
     Args:
         root_dataframe (str): Path where all dataframes are stored.
-        class_dataset (type): Type of DatasetFactory.
+        class_dataset (type): Type of WildlifeDataset.
 
     Returns:
         Path to the dataframe.
@@ -35,11 +35,11 @@ def load_datasets(
         root_dataset: str,
         root_dataframe: str,
         **kwargs
-        ) -> List[DatasetFactory]:
+        ) -> List[WildlifeDataset]:
     """Loads multiple datasets as described in `load_dataset`.
 
     Args:
-        class_datasets (List[type]): List of types of DatasetFactory to download.
+        class_datasets (List[type]): List of types of WildlifeDataset to download.
         root_dataset (str): Path where all datasets are stored.
         root_dataframe (str): Path where all dataframes are stored.
 
@@ -55,14 +55,14 @@ def load_dataset(
         root_dataframe: str,
         overwrite: bool = False,
         **kwargs
-        ) -> DatasetFactory:
+        ) -> WildlifeDataset:
     """Loads dataset from a pickled dataframe or creates it.
 
     If the dataframe is already saved in a pkl file, it loads it.
     Otherwise, it creates the dataframe and saves it in a pkl file.
 
     Args:
-        class_dataset (type): Type of DatasetFactory to load.
+        class_dataset (type): Type of WildlifeDataset to load.
         root_dataset (str): Path where all datasets are stored.
         root_dataframe (str): Path where all dataframes are stored.
         overwrite (bool, optional): Whether the pickled dataframe should be overwritten.

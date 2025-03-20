@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os
 from copy import deepcopy
 import pandas as pd
@@ -66,7 +67,7 @@ class WildlifeDataset:
         Args:
             root (Optional[str], optional): Root directory for the data.
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
-            matadata (Optional[pd.DataFrame], optional): Alias for df.
+            metadata (Optional[pd.DataFrame], optional): Alias for df.
             update_wrong_labels (bool, optional): Whether `fix_labels` should be called.
             transform (Optional[Callable], optional): Applied transform when loading the image.
             img_load (str, optional): Applied transform when loading the image.
@@ -143,7 +144,7 @@ class WildlifeDataset:
         else:
             return img
 
-    def get_subset(self, idx: Union[List[int], List[bool]]):
+    def get_subset(self, idx: Union[List[int], List[bool]]) -> WildlifeDataset:
         """Returns a subset of the class.
 
         Args:

@@ -7,7 +7,7 @@ from .. import datasets, splits
 from typing import Optional, Dict, List
 
 def resize_dataset(
-        dataset: datasets.DatasetFactory,
+        dataset: datasets.WildlifeDataset,
         new_root: str,
         idx: Optional[List[int]] = None,
         copy_files: bool = True,
@@ -17,7 +17,7 @@ def resize_dataset(
     """Resizes dataset using `dataset.transform` into `new_root`.
 
     Args:
-        dataset (datasets.DatasetFactory): Dataset to be resized.
+        dataset (datasets.WildlifeDataset): Dataset to be resized.
         new_root (str): Root to store new images.
         idx (Optional[List[int]], optional): If specified, then indices to consider.
         copy_files (bool, optional): Whether files should be copied as well or only datatframe created.
@@ -76,14 +76,14 @@ def resize_dataset(
     return pd.DataFrame(df_new)
 
 def get_every_k(
-        dataset: datasets.DatasetFactory,
+        dataset: datasets.WildlifeDataset,
         k: int,
         groupby_cols: str | List[str],
         ) -> List[int]:
     """Gets indices of every k-th image based on columns in `groupby_cols`.
 
     Args:
-        dataset (datasets.DatasetFactory): Dataset to be resized.
+        dataset (datasets.WildlifeDataset): Dataset to be resized.
         k (int): Number of images to skip.
         groupby_cols (str | List[str]): For which groups the indices will be computed.
 

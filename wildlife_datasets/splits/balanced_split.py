@@ -81,7 +81,6 @@ class BalancedSplit():
             df (pd.DataFrame): A dataframe of the data. It must contain columns `identity` and `date`.
             idx_train (np.ndarray): Labels of the training set.
             idx_test (np.ndarray): Labels of the testing set.
-            year_max (int, optional): Considers only entries with `df['year'] <= year_max`.
 
         Returns:
             List of labels of the training and testing sets.

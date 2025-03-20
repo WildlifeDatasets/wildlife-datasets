@@ -57,9 +57,7 @@ class TimeProportionSplit(TimeAwareSplit):
 
         Args:
             ratio (float, optional): The fraction of dates going to the training set.
-            seed (int, optional): Initial seed for the LCG random generator.
-            identity_skip (str, optional): Name of the identities to ignore.
-            col_label (str, optional): Column name containing individual animal names (labels).            
+            **kwargs (type, optional): See kwargs `seed`, `identity_skip` and `col_label` of the parent class.
         """
 
         self.ratio = ratio
@@ -228,9 +226,7 @@ class TimeCutoffSplit(TimeAwareSplit):
         Args:
             year (int): Splitting year.
             test_one_year_only (bool, optional): Whether the test set is `df['year'] == year` or `df['year'] >= year`.
-            seed (int, optional): Initial seed for the LCG random generator.            
-            identity_skip (str, optional): Name of the identities to ignore.
-            col_label (str, optional): Column name containing individual animal names (labels).
+            **kwargs (type, optional): See kwargs `seed`, `identity_skip` and `col_label` of the parent class.
         """
 
         self.year = year
@@ -273,9 +269,7 @@ class TimeCutoffSplitAll(TimeAwareSplit):
 
         Args:
             test_one_year_only (bool, optional): Whether the test set is `df['year'] == year` or `df['year'] >= year`.
-            seed (int, optional): Initial seed for the LCG random generator.
-            identity_skip (str, optional): Name of the identities to ignore.
-            col_label (str, optional): Column name containing individual animal names (labels).
+            **kwargs (type, optional): See kwargs `seed`, `identity_skip` and `col_label` of the parent class.
         """
 
         self.test_one_year_only = test_one_year_only
