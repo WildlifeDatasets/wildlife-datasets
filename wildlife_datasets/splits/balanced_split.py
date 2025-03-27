@@ -21,12 +21,14 @@ class BalancedSplit():
             self,
             seed: int = 666,
             identity_skip: str = 'unknown',
-            col_label: str = 'identity',            
+            col_label: str = 'identity',
+            disable_tqdm: bool = True,            
             ) -> None:
         
         self.seed = seed
         self.identity_skip = identity_skip
         self.col_label = col_label
+        self.disable_tqdm = disable_tqdm
 
     def modify_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """Prepares dataframe for splits.
@@ -179,7 +181,7 @@ class BalancedSplit():
         df = self.modify_df(df)
         df['cluster'] = np.nan
 
-        for _, df_identity in tqdm(df.groupby(self.col_label)):
+        for _, df_identity in tqdm(df.groupby(self.col_label), disable=self.disable_tqdm):
             f = features[df.index.get_indexer(df_identity.index)]
             # Run DBScan with increasing eps until there are no clusters bigger than n_max_cluster 
             clusters_saved = None
@@ -246,7 +248,7 @@ class BalancedSplit():
 
         # Loop over individuals and create a split for each
         idx_train_new = []
-        for identity, df_identity in tqdm(df.groupby(self.col_label)):
+        for identity, df_identity in tqdm(df.groupby(self.col_label), disable=self.disable_tqdm):
             n_train = identity_train_counts.get(identity, 0)
             if len(df_identity) - n_train <= 1:
                 # All or all but one samples into the training set
