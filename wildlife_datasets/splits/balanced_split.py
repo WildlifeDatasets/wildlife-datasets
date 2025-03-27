@@ -122,19 +122,100 @@ class BalancedSplit():
             df: pd.DataFrame,
             features: np.ndarray,
             idx_train: np.ndarray,
+            save_clusters_prefix: Optional[str] = None,
+            **kwargs,
+            ) -> Tuple[np.ndarray, np.ndarray]:
+        """Creates a random re-split of an already existing split.
+
+        The re-split is based on similarity of features.
+        It runs DBSCAN as described in `compute_clusters` and
+        performs the clustering as described in `resplit_by_clusters`.
+        
+        Args:
+            df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
+            features (np.ndarray): An array of features with the same length as `df`.
+            idx_train (np.ndarray): Labels of the training set.
+            save_clusters_prefix (Optional[bool], optional): File name prefix for saving clusters.
+            **kwargs (type, optional): See kwargs in `compute_clusters`.
+
+        Returns:
+            List of labels of the training and testing sets.
+        """        
+        
+        clusters = self.compute_clusters(df, features, **kwargs)
+        if save_clusters_prefix is not None:
+            np.save(f'{save_clusters_prefix}.npy', clusters)
+        return self.resplit_by_clusters(df, clusters, idx_train)
+
+    def compute_clusters(
+            self,
+            df: pd.DataFrame,
+            features: np.ndarray,
             n_max_cluster: int = 5,
             eps_min: float = 0.01,
             eps_max: float = 0.50,
             eps_step: float = 0.01,
             min_samples: int = 2,
-            save_clusters_prefix: Optional[str] = None,
+            ) -> np.ndarray:
+
+        """Computes clusters for a random re-split of an already existing split.
+
+        It runs DBSCAN with increasing eps (cluster radius) until
+        the clusters are smaller than `n_max_cluster`.
+        
+        Args:
+            df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
+            features (np.ndarray): An array of features with the same length as `df`.
+            n_max_cluster (int, optional): Maximal size of cluster before `eps` stops increasing.
+            eps_min (float, optional): Lower bound for epsilon.
+            eps_max (float, optional): Upper bound for epsilon.
+            eps_step (float, optional): Step for epsilon.
+            min_samples (int, optional): Minimal cluster size.
+
+        Returns:
+            List of clusters.
+        """
+
+        df = self.modify_df(df)
+        df['cluster'] = np.nan
+
+        for _, df_identity in tqdm(df.groupby(self.col_label)):
+            f = features[df.index.get_indexer(df_identity.index)]
+            # Run DBScan with increasing eps until there are no clusters bigger than n_max_cluster 
+            clusters_saved = None
+            for eps in np.arange(eps_min, eps_max+eps_step, eps_step):
+                clustering = DBSCAN(eps=eps, min_samples=min_samples)
+                clustering.fit(f)
+                clusters = pd.Series(clustering.labels_)
+                clusters_counts = clusters.value_counts(sort=True)
+                # Check if the largest clusters (without outliers) is not too big
+                if clusters_counts.index[0] == -1:
+                    clustering_failed = len(clusters_counts) > 1 and clusters_counts.iloc[1] > n_max_cluster
+                else:
+                    clustering_failed = len(clusters_counts) == 1 or clusters_counts.iloc[0] > n_max_cluster
+                # If the largest cluster is not too big, save clustering nad continue
+                if not clustering_failed:
+                    clusters_saved = clusters
+                else:
+                    break
+            
+            # Save the clusters
+            if clusters_saved is not None:
+                clusters_saved[clusters_saved == -1] = np.nan
+                df.loc[df_identity.index, 'cluster'] = clusters_saved.to_numpy()
+
+        return df['cluster'].to_numpy()
+
+    def resplit_by_clusters(
+            self,
+            df: pd.DataFrame,
+            clusters: np.ndarray,
+            idx_train: np.ndarray,
             ) -> Tuple[np.ndarray, np.ndarray]:
         
         """Creates a random re-split of an already existing split.
 
-        The re-split is based on similarity of features.
-        It runs DBSCAN with increasing eps (cluster radius) until
-        the clusters are smaller than `n_max_cluster`.
+        The re-split is based on clusters which collect similar images.
         Then it puts of similar images into the training set.
         The rest is randomly split into training and testing sets.
         The re-split mimics the split as the training set contains
@@ -143,20 +224,19 @@ class BalancedSplit():
         
         Args:
             df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
-            features (np.ndarray): An array of features with the same length as `df`.
+            clusters (np.ndarray): An array of clusters with the same length as `df`.
             idx_train (np.ndarray): Labels of the training set.
-            n_max_cluster (int, optional): Maximal size of cluster before `eps` stops increasing.
-            eps_min (float, optional): Lower bound for epsilon.
-            eps_max (float, optional): Upper bound for epsilon.
-            eps_step (float, optional): Step for epsilon.
-            min_samples (int, optional): Minimal cluster size.
-            save_clusters_prefix (Optional[bool], optional): File name prefix for saving clusters.
 
         Returns:
             List of labels of the training and testing sets.
         """
         
         df = self.modify_df(df)
+
+        # Replace clusters appearing just ones with np.nan
+        clusters_unique, clusters_count = np.unique(clusters, return_counts=True)
+        clusters[np.isin(clusters, clusters_unique[clusters_count == 1])] = np.nan
+        df['cluster'] = clusters
 
         # Initialize the random number generator
         lcg = self.initialize_lcg()
@@ -174,37 +254,12 @@ class BalancedSplit():
                 idx_remaining = lcg.random_shuffle(idx_remaining)
                 idx_train_identity = idx_remaining[:n_train]
             else:
-                f = features[df.index.get_indexer(df_identity.index)]
-                # Run DBScan with increasing eps until there are no clusters bigger than n_max_cluster 
-                clusters_saved = None
-                for eps in np.arange(eps_min, eps_max+eps_step, eps_step):
-                    clustering = DBSCAN(eps=eps, min_samples=min_samples)
-                    clustering.fit(f)
-                    clusters = pd.Series(clustering.labels_)
-                    clusters_counts = clusters.value_counts(sort=True)
-                    # Check if the largest clusters (without outliers) is not too big
-                    if clusters_counts.index[0] == -1:
-                        clustering_failed = len(clusters_counts) > 1 and clusters_counts.iloc[1] > n_max_cluster
-                    else:
-                        clustering_failed = len(clusters_counts) == 1 or clusters_counts.iloc[0] > n_max_cluster
-                    # If the largest cluster is not too big, save clustering nad continue
-                    if not clustering_failed:
-                        clusters_saved = clusters
-                    else:
-                        break
-                
-                # Save the clusters
-                if save_clusters_prefix is not None:
-                    df_save = pd.DataFrame({'cluster': clusters_saved.to_numpy()}, index=df_identity.index)
-                    df_save.to_csv(f'{save_clusters_prefix}_{identity}.csv')
-                
                 # Add all the clusters into the training set
                 idx_train_identity = []
-                if clusters_saved is not None:
-                    for cluster, df_cluster in pd.DataFrame({'cluster': clusters_saved}).groupby('cluster'):
-                        # Check if the training set is not too big
-                        if cluster != -1 and len(idx_train_identity) + len(df_cluster) <= n_train:
-                            idx_train_identity += list(df_identity.index[df_cluster.index])
+                for _, df_cluster in df_identity.groupby('cluster'):
+                    # Check if the training set is not too big
+                    if len(idx_train_identity) + len(df_cluster) <= n_train:
+                        idx_train_identity += list(df_cluster.index)
 
                 # Distribute the remaining indices
                 n_train_remaining = n_train - len(idx_train_identity)
