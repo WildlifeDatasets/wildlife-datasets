@@ -12,11 +12,11 @@ model_name = 'mega'
 if model_name == 'dino':
     img_size = 518
     root_output = 'features_dino'
-    model = create_model('hf-hub:timm/vit_large_patch14_dinov2.lvd142m', pretrained=True)
+    model = create_model('hf-hub:timm/vit_large_patch14_dinov2.lvd142m', num_classes=0, pretrained=True)
 elif model_name == 'mega':
     img_size = 384
     root_output = 'features_mega'
-    model = create_model('hf-hub:BVRA/MegaDescriptor-L-384', pretrained=True)
+    model = create_model('hf-hub:BVRA/MegaDescriptor-L-384', num_classes=0, pretrained=True)
 elif model_name == 'miew':
     img_size = 518
     root_output = 'features_miew'
@@ -27,8 +27,7 @@ os.makedirs(root_output, exist_ok=True)
 
 extractor = DeepFeatures(model, device=device, batch_size=32)
 transform = T.Compose([
-    T.Resize(size=img_size),
-    T.CenterCrop(size=[img_size, img_size]),
+    T.Resize(size=(img_size, img_size)),
     T.ToTensor(),
     T.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
 ])
