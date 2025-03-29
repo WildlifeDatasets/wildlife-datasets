@@ -166,28 +166,92 @@ def mean(x, idx=None):
     else:
         return np.mean([x[i] for i in idx])
 
+def greedy_similarity_clustering(
+        similarity_matrix: np.ndarray,
+        similarity_threshold: float
+        ) -> List:
+    """Performs greedy clustering by adding edges with similarity above a threshold.
+
+    Args:
+        similarity_matrix (np.ndarray): 2D array where similarity_matrix[i][j] represents 
+                           the similarity between nodes i and j
+        similarity_threshold (float): Only add edges with similarity >= this threshold
+
+    Returns:
+        List of clusters, each cluster is a list of node indices
+    """
+
+    n = len(similarity_matrix)
+    
+    # Create edge list: (i, j, sim)
+    edges = [
+        (i, j, similarity_matrix[i][j])
+        for i in range(n)
+        for j in range(i+1, n)
+    ]
+    
+    # Sort edges by descending similarity
+    edges.sort(key=lambda x: x[2], reverse=True)
+    
+    # Union-Find structure for clustering
+    parent = list(range(n))
+    
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+    
+    def union(x, y):
+        parent[find(x)] = find(y)
+    
+    # Add edges if they pass threshold
+    for u, v, sim in edges:
+        if sim < similarity_threshold:
+            break  # Stop if similarity below threshold
+        if find(u) != find(v):
+            union(u, v)
+
+    # Build clusters
+    clusters_dict = {}
+    for i in range(n):
+        root = find(i)
+        clusters_dict.setdefault(root, []).append(i)
+    
+    clusters = list(clusters_dict.values())
+    return clusters
+
 class SplitterByFeatures:
-    def __init__(self, path_features, original_splitter=None, path_names_check=None, **kwargs):
+    def __init__(self, path_features, original_splitter, thr, file_name=None):
         self.path_features = path_features
-        if original_splitter is None:
-            original_splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
         self.original_splitter = original_splitter
-        self.path_names_check = path_names_check
-        self.kwargs = kwargs        
+        self.thr = thr
+        self.file_name = file_name
 
     def split(self, df):
         df = df.reset_index(drop=True)
-        if self.path_names_check is not None:
-            features_names = np.load(self.path_names_check, allow_pickle=True)
-            if not np.array_equal(df['path'], features_names):
-                if not np.array_equal(df['path'], ['/'.join(x.split('/')[2:]) for x in features_names]):
-                    if not np.array_equal(df['path'].apply(lambda x: '/'.join(x.split('/')[2:])), features_names):
-                        raise Exception('Features were computed for different indices')
-
-        features = np.load(self.path_features)
-        for i in range(len(features)):
-            features[i] /= np.linalg.norm(features[i])
+        clusters = self.get_clusters(df)
+        assert len(df) == len(clusters)
         
+        if self.file_name is not None:
+            np.save(self.file_name, clusters)
+
         idx_train0, _ = self.original_splitter.split(df)[0]
-        idx_train, idx_test = self.original_splitter.resplit_by_features(df, features, idx_train0, **self.kwargs)
+        idx_train, idx_test = self.original_splitter.resplit_by_clusters(df, clusters, idx_train0)
         return [(idx_train, idx_test)]
+    
+    def get_clusters(self, df):
+        df = df.reset_index(drop=True)
+        features = np.load(self.path_features)
+        
+        df['cluster'] = np.nan
+        for _, df_identity in df.groupby('identity'):
+            features_subset = features[df_identity.index]
+            sim = cosine_similarity(features_subset, features_subset)
+            np.fill_diagonal(sim, -np.inf)
+
+            clusters = greedy_similarity_clustering(sim, self.thr)
+            for cluster_id, cluster in enumerate(clusters):
+                if len(cluster) > 1:
+                    df.loc[df_identity.index[cluster], 'cluster'] = cluster_id
+        return df['cluster'].to_numpy()
