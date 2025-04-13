@@ -160,6 +160,70 @@ def make_radar_plot(df, color, title=None, use_col='metric', figsize=(9, 9), fon
     if title:
         plt.title(title, fontsize=20, x = 0.5, y = 1.1)
 
+def make_radar_plot2(df, color, cols, title=None, figsize=(9, 9), fontsize=16, rotation=4.0, line_width=2, s=0.7, file_name=None):
+    pi = np.pi
+    categories = df.index
+    N = len(categories)
+    col0 = cols[0]
+
+    # Set the angles for each axis on the radar plot
+    angles = [n / float(N) * 2 * pi for n in range(N)]
+    angles += angles[:1]
+
+    # Initialize the radar chart
+    plt.figure(figsize=figsize)
+    ax = plt.subplot(1, 1, 1, polar=True)
+
+    # Rotate the radar chart to start at the top
+    ax.set_theta_offset(pi / 2)
+    ax.set_theta_direction(-1)
+
+    # Set category labels on the radar chart
+    plt.xticks(angles[:-1], categories, color='black', size=fontsize)
+    ax.tick_params(axis='x', rotation=rotation)
+
+    # Set y-label positions and limits
+    ax.set_rlabel_position(0)
+    plt.yticks([])  # Remove default y-ticks
+    plt.ylim(0, 1)
+    ax.spines['polar'].set_visible(False)
+    col_main_values = [s] * N  # Set 'megadescriptor-L-384' values to 90% of the radius
+    col_main_values += col_main_values[:1]  # Repeat the first value for closure
+
+    # Plot 'megadescriptor-L-384' as the fixed reference line
+    ax.plot(angles, col_main_values, color=color[col0], linewidth=line_width, linestyle='dotted', label=cols[0])
+    ax.fill(angles, col_main_values, color=color[col0], alpha=0.1)
+
+    # Display exact values of 'megadescriptor-L-384' near the plot
+    for i, angle in enumerate(angles[:-1]):
+        value_text = f"{df[col0].values[i]:.1f}"  # Format the number to 2 decimal places
+        ax.text(angle, s - 0.1, value_text, horizontalalignment='center', size=fontsize - 3, color='black')
+
+    # Plot relative values for 'avg-local' and 'avg-all'
+    for col in cols[1:]:
+        # Calculate relative values for each dataset relative to 'megadescriptor-L-384'
+        relative_values = (df[col].values / df[col0].values) * s  # Scale relative to 90% of col_main
+        relative_values = np.clip(relative_values, 0, 1)  # Ensure values stay within [0, 1]
+        relative_values = list(relative_values) + [relative_values[0]]  # Repeat the first value for closure
+
+        # Plot the radar chart for the column
+        ax.plot(angles, relative_values, color=color[col], linewidth=line_width, linestyle='solid', label=col)
+        ax.fill(angles, relative_values, color=color[col], alpha=0.05)
+
+        # Display exact values near the data points
+        for i, angle in enumerate(angles[:-1]):
+            value_text = f"{df[col].values[i]:.1f}"  # Format the number to 2 decimal places
+
+            if i in [2, ]:
+                ax.text(angle, relative_values[i] - 0.12, value_text, horizontalalignment='center', size=fontsize - 3, color='black')
+            else:
+                ax.text(angle, relative_values[i] + 0.07, value_text, horizontalalignment='center', size=fontsize - 3, color='black')
+
+
+    leg = ax.legend(loc='upper right', prop={'size': 12}, bbox_to_anchor=(1.13, 1.05), bbox_transform=ax.transAxes)
+    if file_name is not None:
+        plt.savefig(file_name)
+        
 def mean(x, idx=None):
     if idx is None:
         return np.mean(list(x.values()))
@@ -229,7 +293,6 @@ class SplitterByFeatures:
         self.file_name = file_name
 
     def split(self, df):
-        df = df.reset_index(drop=True)
         clusters = self.get_clusters(df)
         assert len(df) == len(clusters)
         
