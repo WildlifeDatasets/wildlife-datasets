@@ -119,7 +119,7 @@ def prepare_aau_zebrafish(root, new_root, k=20, transform=None, add_split=False,
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -128,7 +128,7 @@ def prepare_aerial_cattle_2017(root, new_root, k=20, transform=None, add_split=F
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -137,7 +137,7 @@ def prepare_amvrakikos_turtles(root, new_root, k=1, transform=None, add_split=Fa
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -146,7 +146,7 @@ def prepare_atrw(root, new_root, k=1, transform=None, add_split=False, splitter=
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -155,7 +155,7 @@ def prepare_beluga_id(root, new_root, k=1, transform=None, add_split=False, spli
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -167,7 +167,7 @@ def prepare_bird_individual_id(root, new_root, k=20, transform=None, add_split=F
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -176,7 +176,7 @@ def prepare_cat_individual_images(root, new_root, k=1, transform=None, add_split
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -187,7 +187,7 @@ def prepare_chicks4free_id(root, new_root, k=1, transform=None, add_split=False,
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -196,7 +196,7 @@ def prepare_cow_dataset(root, new_root, k=1, transform=None, add_split=False, sp
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.TimeProportionOpenSetSplit(0.7, 0.1, seed=666)
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -205,7 +205,7 @@ def prepare_cows2021(root, new_root, k=1, transform=None, add_split=False, split
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -214,7 +214,7 @@ def prepare_ctai(root, new_root, k=1, transform=None, add_split=False, splitter=
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -223,7 +223,7 @@ def prepare_czoo(root, new_root, k=1, transform=None, add_split=False, splitter=
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -232,7 +232,7 @@ def prepare_dog_facenet(root, new_root, k=1, transform=None, add_split=False, sp
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -241,7 +241,7 @@ def prepare_drosophila(root, new_root, k=1000, transform=None, add_split=False, 
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -250,7 +250,7 @@ def prepare_elpephants(root, new_root, k=1, transform=None, add_split=False, spl
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -259,7 +259,7 @@ def prepare_friesian_cattle_2015(root, new_root, k=1, transform=None, add_split=
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -268,7 +268,7 @@ def prepare_friesian_cattle_2017(root, new_root, k=1, transform=None, add_split=
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -278,7 +278,7 @@ def prepare_giraffes(root, new_root, k=1, transform=None, add_split=False, split
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -288,7 +288,7 @@ def prepare_giraffe_zebra_id(root, new_root, k=1, transform=None, add_split=Fals
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.TimeProportionOpenSetSplit(0.7, 0.1, seed=666)
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -297,7 +297,7 @@ def prepare_happy_whale(root, new_root, k=1, transform=None, add_split=False, sp
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -306,7 +306,7 @@ def prepare_humpback_whale_id(root, new_root, k=1, transform=None, add_split=Fal
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -315,7 +315,7 @@ def prepare_hyena_id_2022(root, new_root, k=1, transform=None, add_split=False, 
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -324,7 +324,7 @@ def prepare_ipanda_50(root, new_root, k=1, transform=None, add_split=False, spli
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -333,7 +333,7 @@ def prepare_leopard_id_2022(root, new_root, k=1, transform=None, add_split=False
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -342,7 +342,7 @@ def prepare_macaque_faces(root, new_root, k=1, transform=None, add_split=False, 
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -351,7 +351,7 @@ def prepare_mpdd(root, new_root, k=1, transform=None, add_split=False, splitter=
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -360,7 +360,7 @@ def prepare_multi_cam_cows_2024(root, new_root, k=20, transform=None, add_split=
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -369,7 +369,7 @@ def prepare_ndd20(root, new_root, k=1, transform=None, add_split=False, splitter
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -378,7 +378,7 @@ def prepare_noaa_right_whale(root, new_root, k=1, transform=None, add_split=Fals
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -387,7 +387,7 @@ def prepare_nyala_data(root, new_root, k=1, transform=None, add_split=False, spl
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -396,7 +396,7 @@ def prepare_open_cows_2020(root, new_root, k=1, transform=None, add_split=False,
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -405,7 +405,7 @@ def prepare_polar_bear_vidid(root, new_root, k=100, transform=None, add_split=Fa
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -418,7 +418,7 @@ def prepare_prim_face(root, new_root, k=1, transform=None, add_split=False, spli
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -427,7 +427,7 @@ def prepare_reunion_turtles(root, new_root, k=1, transform=None, add_split=False
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -438,7 +438,7 @@ def prepare_seal_id(root, new_root, k=1, transform=None, add_split=False, splitt
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -447,7 +447,7 @@ def prepare_sea_star_reid_2023(root, new_root, k=1, transform=None, add_split=Fa
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -456,7 +456,7 @@ def prepare_sea_turtle_id_2022(root, new_root, k=1, transform=None, add_split=Fa
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.TimeProportionOpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -465,7 +465,7 @@ def prepare_sea_turtle_id_2022_animal_clef_2025(root, new_root, k=1, transform=N
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -474,7 +474,7 @@ def prepare_smalst(root, new_root, k=10, transform=None, add_split=False, splitt
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -483,7 +483,7 @@ def prepare_southern_province_turtles(root, new_root, k=1, transform=None, add_s
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -492,7 +492,7 @@ def prepare_stripe_spotter(root, new_root, k=1, transform=None, add_split=False,
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -501,7 +501,7 @@ def prepare_whaleshark_id(root, new_root, k=1, transform=None, add_split=False, 
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -510,7 +510,7 @@ def prepare_zakynthos_turtles(root, new_root, k=1, transform=None, add_split=Fal
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
@@ -519,7 +519,7 @@ def prepare_zindi_turtle_recall(root, new_root, k=1, transform=None, add_split=F
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
     if add_split:
         if splitter is None:
-            splitter = splits.OpenSetSplit(0.8, 0.1, seed=666)
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
         return add_split_column(df, splitter)
     return df
 
