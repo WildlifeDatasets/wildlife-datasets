@@ -48,7 +48,6 @@ class WildlifeDataset:
             self, 
             root: Optional[str] = None,
             df: Optional[pd.DataFrame] = None,
-            metadata: Optional[pd.DataFrame] = None,
             update_wrong_labels: bool = True,
             transform: Optional[Callable] = None,
             img_load: str = "full",
@@ -67,7 +66,6 @@ class WildlifeDataset:
         Args:
             root (Optional[str], optional): Root directory for the data.
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
-            metadata (Optional[pd.DataFrame], optional): Alias for df.
             update_wrong_labels (bool, optional): Whether `fix_labels` should be called.
             transform (Optional[Callable], optional): Applied transform when loading the image.
             img_load (str, optional): Applied transform when loading the image.
@@ -89,12 +87,6 @@ class WildlifeDataset:
         self.col_label = col_label
         self.remove_columns = remove_columns
         self.check_files = check_files
-        # Move metadata to df as it is alias
-        if metadata is not None:
-            if df is not None:
-                raise Exception('Provide either df or metadata but not both.')
-            else:
-                df = metadata
         # If df is not provided, create it
         if df is None:
             df = self.create_catalogue(**kwargs)
@@ -104,7 +96,6 @@ class WildlifeDataset:
         if remove_unknown:
             df = df[df[self.col_label] != self.unknown_name]
         self.df = df.reset_index(drop=True)
-        self.metadata = self.df # Alias to df to unify with wildlife-tools
         self.transform = transform
         self.img_load = img_load
         if self.img_load == "auto":
@@ -124,6 +115,14 @@ class WildlifeDataset:
     def num_classes(self):
         return self.df[self.col_label].nunique()
 
+    @property
+    def metadata(self):
+        return self.df
+        
+    @metadata.setter
+    def metadata(self, value):
+        self.df = value	
+        
     def __len__(self):
         return len(self.df)
 
@@ -159,7 +158,6 @@ class WildlifeDataset:
             dataset.df = dataset.df[idx].reset_index(drop=True)
         else:
             dataset.df = dataset.df.loc[idx].reset_index(drop=True)
-        dataset.metadata = dataset.df
         return dataset
 
     def get_image(self, idx: int) -> Image:
