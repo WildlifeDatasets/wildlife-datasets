@@ -21,7 +21,16 @@ class SeaTurtleID2022(DatasetFactory):
     def _extract(cls):
         utils.extract_archive(cls.archive, delete=True)
 
-    def create_catalogue(self) -> pd.DataFrame:
+    def create_catalogue(self, category_name='head') -> pd.DataFrame:
+        """Creates dataframe for SeaTurtleID2022.
+
+        Args:
+            category_name (str, optional): Choose one from ['turtle', 'flipper', 'head'].
+
+        Returns:
+            Created dataframe.
+        """
+
         # Load annotations JSON file
         path_json = os.path.join('turtles-data', 'data', 'annotations.json')
         with open(os.path.join(self.root, path_json)) as file:
@@ -29,6 +38,14 @@ class SeaTurtleID2022(DatasetFactory):
         path_csv = os.path.join('turtles-data', 'data', 'metadata_splits.csv')
         with open(os.path.join(self.root, path_csv)) as file:
             df_images = pd.read_csv(file)
+        # Extract categories
+        categories = {}
+        for category in data['categories']:
+            categories[category['name']] = category['id']
+        if category_name not in categories:
+            #printfor category in categories.keys()
+            raise Exception(f'Category {category_name} not allowed. Choose one from {categories.keys()}.')
+        category_id = categories[category_name]
 
         # Extract data from the JSON file
         create_dict = lambda i: {
@@ -38,7 +55,7 @@ class SeaTurtleID2022(DatasetFactory):
             'segmentation': i['segmentation'],
             'orientation': i['attributes']['orientation'] if 'orientation' in i['attributes'] else np.nan
         }
-        df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations'] if i['category_id'] == 3])
+        df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations'] if i['category_id'] == category_id])
         idx_bbox = ~df_annotation['bbox'].isnull()
         df_annotation.loc[idx_bbox,'bbox'] = df_annotation.loc[idx_bbox,'bbox'].apply(lambda x: eval(x) if isinstance(x, str) else x)
         df_images.rename({'id': 'image_id'}, axis=1, inplace=True)
@@ -50,6 +67,7 @@ class SeaTurtleID2022(DatasetFactory):
         df.rename({'split_closed': 'original_split'}, axis=1, inplace=True)
         df['date'] = df['date'].apply(lambda x: x[:4] + '-' + x[5:7] + '-' + x[8:10])
 
+        df['image_id'] = range(1, len(df)+1)
         return self.finalize_catalogue(df)
 
 class SeaTurtleIDHeads(DatasetFactory):
