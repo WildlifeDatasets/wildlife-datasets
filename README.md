@@ -35,7 +35,7 @@
 
 The aim of the project is to provide comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
 
-- overview of 42 publicly available wildlife re-identification datasets.
+- overview of 44 publicly available wildlife re-identification datasets.
 - utilities to mass download and convert them into a unified format and fix some wrong labels.
 - default splits for several machine learning tasks including the ability create additional splits.
 
@@ -43,8 +43,8 @@ An introductory example is provided in a [Jupyter notebook](notebooks/introducti
 
 ## Changelog
 
+[14/04/2025] Added AnimalCLEF2025, WildlifeReID-10k (unifications of multiple datasets), MultiCamCows2024 (cows) and PrimFace (primates).  
 [31/10/2024] Added AmvrakikosTurtles, ReunionTurtles, SouthernProvinceTurtles, ZakynthosTurtles (sea turtles), ELPephants (elephants) and Chicks4FreeID (chickens).  
-[13/06/2024] Added WildlifeReID-10k (unification of multiple datasets).  
 [09/05/2024] Added CatIndividualImages (cats), CowDataset (cows) and DogFaceNet (dogs).  
 [28/02/2024] Added MPDD (dogs), PolarBearVidID (polar bears) and SeaStarReID2023 (sea stars).  
 [04/01/2024] Received **Best paper award** at WACV 2024.
@@ -119,7 +119,7 @@ For additional functionality including mass loading, datasets splitting or evalu
 
 ## Citation
 
-If you like our package, please cite our [paper](https://openaccess.thecvf.com/content/WACV2024/html/Cermak_WildlifeDatasets_An_Open-Source_Toolkit_for_Animal_Re-Identification_WACV_2024_paper.html). You may be also interested in our [SeaTurtleID](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleidheads) dataset published in another [paper](https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html).
+If you like our package, please cite our [paper](https://openaccess.thecvf.com/content/WACV2024/html/Cermak_WildlifeDatasets_An_Open-Source_Toolkit_for_Animal_Re-Identification_WACV_2024_paper.html). You may be also interested in our [SeaTurtleID2022](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid2022) dataset published in another [paper](https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html).
 
 ```
 @InProceedings{Cermak_2024_WACV,
