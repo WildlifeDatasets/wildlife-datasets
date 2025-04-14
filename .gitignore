@@ -1,13 +1,9 @@
 data/
-baselines/WildlifeReID-10k/features*
-baselines/WildlifeReID-10k/results*
-baselines/WildlifeReID-10k/clusters*
-baselines/WildlifeReID-10k/summary*
-venv/
-venv*
-venv_gpu/
-venv_test/
-venv_docs/
+baselines/AnimalCLEF2025/results*/
+baselines/WildlifeReID-10k/features*/
+baselines/WildlifeReID-10k/results*/
+baselines/WildlifeReID-10k/clusters*/
+venv*/
 
 __pycache__/
 .ipynb_checkpoints/
