@@ -41,6 +41,8 @@ The aim of the project is to provide comprehensive overview of datasets for wild
 
 An introductory example is provided in a [Jupyter notebook](notebooks/introduction.ipynb). The package provides a natural synergy with [Wildlife tools](https://github.com/WildlifeDatasets/wildlife-tools), which provides our [MegaDescriptor](https://huggingface.co/BVRA/MegaDescriptor-L-384) model and tools for training neural networks. 
 
+Do you know about any animal re-identification dataset which is not included? Post it to the [discussion forum](https://github.com/WildlifeDatasets/wildlife-datasets/discussions/6) please.
+
 ## Changelog
 
 [14/04/2025] Added AnimalCLEF2025, WildlifeReID-10k (unifications of multiple datasets), MultiCamCows2024 (cows) and PrimFace (primates).  
