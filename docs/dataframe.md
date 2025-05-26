@@ -5,11 +5,11 @@ Each dataset is represented by a pandas dataframe. Each row corresponds to one e
 
 The following three columns must be part of all dataframes.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | `int` or `str` | Unique id of the entry. |
+| Column   | Type | Description |
+|----------|------|-------------|
+| image_id | `int` or `str` | Unique id of the entry. |
 | identity | `int` or `str` | Identity (or label) of the depicted individual animal. |
-| path | `str` | Relative path to the image. |
+| path     | `str` | Relative path to the image. |
 
 There is a special value for `identity` which describes an unknown individual. Its default value for unknown animals is
 

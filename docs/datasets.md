@@ -40,6 +40,13 @@ The images were acquired using regular digital cameras or smartphones. The resol
 
 ![](images/grid_CatIndividualImages.png)
 
+## [CzechLynx](https://www.kaggle.com/datasets/picekl/czechlynx/)
+
+The CzechLynx dataset includes real camera-trap photographs and synthetic samples of the Eurasian lynx (Lynx lynx), organized around three computer-vision tasks: individual identification, pose estimation, and instance segmentation. It spans more than 15 years and covers two regions in Central Europe (Southwest Bohemia and the Western Carpathians).
+CzechLynx includes more than 30k camera trap images annotated with segmentation masks, identity labels, and 20-point skeletons and covers 219 unique individuals across 15 years of systematic monitoring in two geographically distinct regions: Southwest Bohemia and the Western Carpathians. To increase the data variability, we create a complementary synthetic set with more than 100k photorealistic images generated via a Unity-based pipeline and diffusion-driven text-to-texture modeling, covering diverse environments, poses, and coat-pattern variations. To allow testing generalization across spatial and temporal domains, we define three tailored evaluation protocols/splits: (i) geo-aware, (ii) time-aware open-set, and (iii) time-aware closed-set. 
+
+![](images/grid_CzechLynx.png)
+
 ## [Chicks4FreeID](https://huggingface.co/datasets/dariakern/Chicks4FreeID)
 
 The Chicks4FreeID dataset contains top-down view images of individually segmented and annotated chickens (with roosters and ducks also possibly present and labeled as such). 11 different coops with 54 individuals were visited for manual data collection. Each of the 677 images depicts at least one chicken. The identities of the 50 chickens, 2 roosters and 2 ducks were annotated for a total of 1270 animal instances. Annotation additionally contains visibility ratings of "best", "good", and "bad" for each animal instance.
