@@ -13,9 +13,6 @@ class CzechLynx(DatasetFactory):
 
     @classmethod
     def _download(cls):
-        if os.path.exists(cls.archive):
-            print(f"{cls.archive} already exists. Skipping download.")
-            return
         command = f"datasets download -d picekl/czechlynx --force"
         exception_text = '''Kaggle must be setup.
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#czechlynx'''
@@ -43,7 +40,7 @@ class CzechLynx(DatasetFactory):
         Returns:
             pd.DataFrame: A dataframe including the following columns:
 
-                - id (str): Unique identifier for each row.
+                - image_id (str): Unique identifier for each row.
                 - identity (str): Identity of the depicted individual animal.
                                   If unknown, standardized to the framework’s unknown label.
                 - path (str): Relative path to the image file.
@@ -74,12 +71,13 @@ class CzechLynx(DatasetFactory):
         # Add required columns
         df['image_id'] = df.index.astype(str)
         df['identity'] = df['unique_name']
-        df['capture_date'] = df['date']
+        idx = ~df['date'].isnull()
+        df.loc[idx, 'date'] = df.loc[idx, 'date'].apply(lambda x: str(x)[6:10] + '-' + str(x)[3:5] + '-' + str(x)[:2])
         df.drop(columns=['unique_name'], inplace=True)
 
         # Keep only selected split column, rename it
-        df['split'] = df[split]
-        df.drop(columns=['date','unique_name', 'split-geo_aware', 'split-time_open', 'split-time_closed'],
+        df['original_split'] = df[split]
+        df.drop(columns=['unique_name', 'split-geo_aware', 'split-time_open', 'split-time_closed'],
                 errors='ignore', inplace=True)
 
         return self.finalize_catalogue(df)
