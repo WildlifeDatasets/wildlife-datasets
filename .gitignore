@@ -5,6 +5,7 @@ baselines/WildlifeReID-10k/results*/
 baselines/WildlifeReID-10k/clusters*/
 venv*/
 
+.vscode/
 __pycache__/
 .ipynb_checkpoints/
 *.out
