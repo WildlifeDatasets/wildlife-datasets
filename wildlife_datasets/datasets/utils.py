@@ -232,3 +232,10 @@ def get_image_date(path, shorten=True):
                     date = date[:10].replace(':', '-')
                 return date
     return np.nan
+
+def yolo_to_pascalvoc(x_c, y_c, w, h, W, H):
+    x_min = int((x_c - w / 2) * W)
+    y_min = int((y_c - h / 2) * H)
+    x_max = int((x_c + w / 2) * W)
+    y_max = int((y_c + h / 2) * H)
+    return x_min, y_min, x_max, y_max

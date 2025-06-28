@@ -6,6 +6,7 @@ from .animal_clef import AnimalCLEF2025, AnimalCLEF2025_LynxID2025, AnimalCLEF20
 from .atrw import ATRW
 from .beluga_id import BelugaID, BelugaIDv2
 from .bird_individual_id import BirdIndividualID, BirdIndividualIDSegmented
+from .bristol_gorillas_2020 import BristolGorillas2020
 from .cat_individual_images import CatIndividualImages
 from .ctai import CTai
 from .czoo import CZoo
@@ -54,6 +55,7 @@ names_all = [
     ATRW,
     BelugaIDv2,
     BirdIndividualID, BirdIndividualIDSegmented,
+    BristolGorillas2020,
     CatIndividualImages,
     CTai,
     CZoo,
@@ -159,6 +161,7 @@ names_giraffes = [
 ]
 
 names_primates = [
+    BristolGorillas2020,
     CTai,
     CZoo,
     MacaqueFaces,
