@@ -765,7 +765,7 @@ class WildlifeDataset:
                         im = im.transpose(Image.Transpose.ROTATE_90)
 
                     # Rescale the image
-                    im.thumbnail((img_w,img_h))
+                    im = im.resize((img_w,img_h))
                     row_h = max(row_h, im.size[1])
 
                     # Place the image on the grid
