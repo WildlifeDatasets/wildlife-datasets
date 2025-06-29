@@ -13,6 +13,7 @@ from .czoo import CZoo
 from .chicks4free_id import Chicks4FreeID
 from .cow_dataset import CowDataset
 from .cows import Cows2021, Cows2021v2
+from .czechlynx import CzechLynx
 from .dog_face_net import DogFaceNet
 from .drosophila import Drosophila
 from .elpephants import ELPephants
@@ -62,6 +63,7 @@ names_all = [
     Chicks4FreeID,
     CowDataset,
     Cows2021v2,
+    CzechLynx,
     DogFaceNet,
     Drosophila,
     ELPephants,
@@ -99,6 +101,7 @@ names_all = [
 names_wild = [
     AmvrakikosTurtles,
     BelugaIDv2,
+    CzechLynx,
     ELPephants,
     GiraffeZebraID,
     HappyWhale,
