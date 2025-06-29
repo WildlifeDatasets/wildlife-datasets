@@ -34,37 +34,23 @@ BirdIndividualID is a collection of three separate bird datasets: sociable weave
 
 ![](images/grid_BirdIndividualIDSegmented.png)
 
+## [BristolGorillas2020](https://data.bris.ac.uk/data/dataset/jf0859kboy8k2ufv60dqeb2t8) <a href="https://arxiv.org/abs/2012.04689" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+This MP4 video and JPG image dataset of a troop of 7 western lowland gorillas (Gorilla gorilla gorilla) filmed at Bristol Zoo Gardens contains around 5k+ facial bounding box and individual gorilla identity annotations. A basic YOLOv3-powered application is able to perform facial identifications at 92% mAP when utilising single frames on the still image data. Tracking-by-detection-association and identity voting across short tracklets in videos yields an improved robust performance at 97% mAP.
+
+![](images/grid_BristolGorillas2020.png)
+
 ## [CatIndividualImages](https://www.kaggle.com/datasets/timost1234/cat-individuals)
 
 The images were acquired using regular digital cameras or smartphones. The resolutions of the images ranged between 195 x 261 and 4608 x 3453 pixels. Most images of cats were acquired at public animal shelters (Taipei City Animal Protection Office, Taipei, Taiwan; and New Taipei City Government Animal Protection and Health Inspection Office, New Taipei, Taiwan) and private animal shelters in Taipei. The remaining images were collected from social media.
 
 ![](images/grid_CatIndividualImages.png)
 
-## [CzechLynx](https://www.kaggle.com/datasets/picekl/czechlynx/) <a href="https://arxiv.org/abs/2506.04931" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
-
-
-The CzechLynx dataset includes real camera-trap photographs and synthetic samples of the Eurasian lynx (Lynx lynx), organized around three computer-vision tasks: individual identification, pose estimation, and instance segmentation. It spans more than 15 years and covers two regions in Central Europe (Southwest Bohemia and the Western Carpathians).
-CzechLynx includes more than 30k camera trap images annotated with segmentation masks, identity labels, and 20-point skeletons and covers 219 unique individuals across 15 years of systematic monitoring in two geographically distinct regions: Southwest Bohemia and the Western Carpathians. To increase the data variability, we create a complementary synthetic set with more than 100k photorealistic images generated via a Unity-based pipeline and diffusion-driven text-to-texture modeling, covering diverse environments, poses, and coat-pattern variations. To allow testing generalization across spatial and temporal domains, we define three tailored evaluation protocols/splits: (i) geo-aware, (ii) time-aware open-set, and (iii) time-aware closed-set. 
-
-![](images/grid_CzechLynx.png)
-
-## [Chicks4FreeID](https://huggingface.co/datasets/dariakern/Chicks4FreeID)
+## [Chicks4FreeID](https://huggingface.co/datasets/dariakern/Chicks4FreeID) <a href="https://www.mdpi.com/2076-2615/15/1/1" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
 
 The Chicks4FreeID dataset contains top-down view images of individually segmented and annotated chickens (with roosters and ducks also possibly present and labeled as such). 11 different coops with 54 individuals were visited for manual data collection. Each of the 677 images depicts at least one chicken. The identities of the 50 chickens, 2 roosters and 2 ducks were annotated for a total of 1270 animal instances. Annotation additionally contains visibility ratings of "best", "good", and "bad" for each animal instance.
 
 ![](images/grid_Chicks4FreeID.png)
-
-## [CTai](https://github.com/cvjena/chimpanzee_faces) <a href="https://link.springer.com/chapter/10.1007/978-3-319-45886-1_5" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
-
-CTai and CZoo datasets contain cropped chimpanzee faces. CZoo originates from a collaboration of the authors with animal researchers in Leipzig. Provided images are of high quality, are well exposed, and are taken without strong blurring artifacts. The images are complemented by biologically meaningful keypoints (centers of eyes, mouth, and earlobes) together with information about age and gender. CTai consists of recordings of chimpanzees living in the Taï National Park in Côte d'Ivoire. The image quality differs heavily and the annotation quality of additional information is not as high as for CZoo. CTai contains typos in six individuals (such as Woodstiock instead of the correct Woodstock), which we corrected. The unknown individuals were labelled as *Adult*, which we fixed as well.
-
-![](images/grid_CTai.png)
-
-## [CZoo](https://github.com/cvjena/chimpanzee_faces) <a href="https://link.springer.com/chapter/10.1007/978-3-319-45886-1_5" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
-
-See the description in [CTai](#ctai).
-
-![](images/grid_CZoo.png)
 
 ## [CowDataset](https://figshare.com/articles/dataset/data_set_zip/16879780)
 
@@ -77,6 +63,25 @@ The dataset does not contain any description.
 See the description in [AerialCattle2017](#aerialcattle2017).
 
 ![](images/grid_Cows2021.png)
+
+## [CzechLynx](https://www.kaggle.com/datasets/picekl/czechlynx/) <a href="https://arxiv.org/abs/2506.04931" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+The CzechLynx dataset includes real camera-trap photographs and synthetic samples of the Eurasian lynx (Lynx lynx), organized around three computer-vision tasks: individual identification, pose estimation, and instance segmentation. It spans more than 15 years and covers two regions in Central Europe (Southwest Bohemia and the Western Carpathians).
+CzechLynx includes more than 30k camera trap images annotated with segmentation masks, identity labels, and 20-point skeletons and covers 219 unique individuals across 15 years of systematic monitoring in two geographically distinct regions: Southwest Bohemia and the Western Carpathians. To increase the data variability, we create a complementary synthetic set with more than 100k photorealistic images generated via a Unity-based pipeline and diffusion-driven text-to-texture modeling, covering diverse environments, poses, and coat-pattern variations. To allow testing generalization across spatial and temporal domains, we define three tailored evaluation protocols/splits: (i) geo-aware, (ii) time-aware open-set, and (iii) time-aware closed-set. 
+
+![](images/grid_CzechLynx.png)
+
+## [CTai](https://github.com/cvjena/chimpanzee_faces) <a href="https://link.springer.com/chapter/10.1007/978-3-319-45886-1_5" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+CTai and CZoo datasets contain cropped chimpanzee faces. CZoo originates from a collaboration of the authors with animal researchers in Leipzig. Provided images are of high quality, are well exposed, and are taken without strong blurring artifacts. The images are complemented by biologically meaningful keypoints (centers of eyes, mouth, and earlobes) together with information about age and gender. CTai consists of recordings of chimpanzees living in the Taï National Park in Côte d'Ivoire. The image quality differs heavily and the annotation quality of additional information is not as high as for CZoo. CTai contains typos in six individuals (such as Woodstiock instead of the correct Woodstock), which we corrected. The unknown individuals were labelled as *Adult*, which we fixed as well.
+
+![](images/grid_CTai.png)
+
+## [CZoo](https://github.com/cvjena/chimpanzee_faces) <a href="https://link.springer.com/chapter/10.1007/978-3-319-45886-1_5" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+See the description in [CTai](#ctai).
+
+![](images/grid_CZoo.png)
 
 ## [DogFaceNet](https://github.com/GuillaumeMougeot/DogFaceNet) <a href="https://link.springer.com/chapter/10.1007/978-3-030-29894-4_34" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
