@@ -45,7 +45,7 @@ Do you know about any animal re-identification dataset which is not included? Po
 
 ## Changelog
 
-[01/07/2025] Added BristolGorillas2020 (primates) and CzechLynx (lynxes).
+[01/07/2025] Added BristolGorillas2020 (primates) and CzechLynx (lynxes).  
 [14/04/2025] Added AnimalCLEF2025, WildlifeReID-10k (unifications of multiple datasets), MultiCamCows2024 (cows) and PrimFace (primates).  
 [31/10/2024] Added AmvrakikosTurtles, ReunionTurtles, SouthernProvinceTurtles, ZakynthosTurtles (sea turtles), ELPephants (elephants) and Chicks4FreeID (chickens).  
 [09/05/2024] Added CatIndividualImages (cats), CowDataset (cows) and DogFaceNet (dogs).  
