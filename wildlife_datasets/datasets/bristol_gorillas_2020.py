@@ -32,19 +32,19 @@ class BristolGorillas2020(DatasetFactory):
             raise Exception(exception_text)
     
     def create_catalogue(self) -> pd.DataFrame:
-        # Find all images in root
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
+        n_folders = max(folders.columns)
 
         # Restrict to correct images
-        idx = folders[1] != 'videos'
+        idx = folders[n_folders-2] != 'videos'
         data = data[idx]
         folders = folders[idx]
 
         # Create the dataframe
         df1 = pd.DataFrame({
             'path': data['path'] + os.path.sep + data['file'],
-            'original_split': folders[1],
+            'original_split': folders[n_folders-2],
         })
         
         # Add bounding boxes (either load them or create and save them)
