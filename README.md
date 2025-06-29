@@ -35,16 +35,17 @@
 
 The aim of the project is to provide comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
 
-- overview of 44 publicly available wildlife re-identification datasets.
+- overview of 46 publicly available wildlife re-identification datasets.
 - utilities to mass download and convert them into a unified format and fix some wrong labels.
 - default splits for several machine learning tasks including the ability create additional splits.
 
-An introductory example is provided in a [Jupyter notebook](notebooks/introduction.ipynb). The package provides a natural synergy with [Wildlife tools](https://github.com/WildlifeDatasets/wildlife-tools), which provides our [MegaDescriptor](https://huggingface.co/BVRA/MegaDescriptor-L-384) model and tools for training neural networks. 
+An introductory example is provided in a [Jupyter notebook](notebooks/introduction.ipynb). The package provides a natural synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools), which provides our [MegaDescriptor](https://huggingface.co/BVRA/MegaDescriptor-L-384) model and tools for training neural networks. 
 
 Do you know about any animal re-identification dataset which is not included? Post it to the [discussion forum](https://github.com/WildlifeDatasets/wildlife-datasets/discussions/6) please.
 
 ## Changelog
 
+[01/07/2025] Added BristolGorillas2020 (primates) and CzechLynx (lynxes).
 [14/04/2025] Added AnimalCLEF2025, WildlifeReID-10k (unifications of multiple datasets), MultiCamCows2024 (cows) and PrimFace (primates).  
 [31/10/2024] Added AmvrakikosTurtles, ReunionTurtles, SouthernProvinceTurtles, ZakynthosTurtles (sea turtles), ELPephants (elephants) and Chicks4FreeID (chickens).  
 [09/05/2024] Added CatIndividualImages (cats), CowDataset (cows) and DogFaceNet (dogs).  
@@ -118,6 +119,10 @@ d.plot_grid()
 ## Additional functionality
 
 For additional functionality including mass loading, datasets splitting or evaluation metrics we refer to the [documentation](https://wildlifedatasets.github.io/wildlife-datasets/) or the [notebooks](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/notebooks).
+
+## Additional datasets
+
+For a list of additional datasets not included in WidlifeDatasets, see [this webpage](https://github.com/DariaKern/IndividualAnimalRe-IDDatasets).
 
 ## Citation
 
