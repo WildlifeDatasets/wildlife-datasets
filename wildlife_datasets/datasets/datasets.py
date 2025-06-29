@@ -681,6 +681,7 @@ class WildlifeDataset:
             offset: float = 10,
             img_min: float = 100,
             rotate: bool = True,
+            keep_aspect_ratios: bool = True,
             header_cols: Optional[List[str]] = None,
             idx: Optional[Union[List[bool],List[int]]] = None,
             background_color: Tuple[int] = (0, 0, 0),
@@ -694,6 +695,7 @@ class WildlifeDataset:
             offset (float, optional): The offset between images.
             img_min (float, optional): The minimal size of the plotted images.
             rotate (bool, optional): Rotates the images to have the same orientation.
+            keep_aspect_ratios (bool, optional): Whether aspect ratios are kept for images.
             header_cols (Optional[List[str]], optional): List of headers for each column.
             idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
             background_color (Tuple[int], optional): Background color of the grid.
@@ -765,7 +767,12 @@ class WildlifeDataset:
                         im = im.transpose(Image.Transpose.ROTATE_90)
 
                     # Rescale the image
-                    im = im.resize((img_w,img_h))
+                    if keep_aspect_ratios:
+                        w, h = im.size
+                        c = min(img_w / w, img_h / h)
+                        im = im.resize((int(c*w), int(c*h)))
+                    else:
+                        im = im.resize((img_w,img_h))
                     row_h = max(row_h, im.size[1])
 
                     # Place the image on the grid
