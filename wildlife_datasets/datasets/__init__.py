@@ -7,6 +7,7 @@ from .atrw import ATRW
 from .beluga_id import BelugaID, BelugaIDv2
 from .bird_individual_id import BirdIndividualID, BirdIndividualIDSegmented
 from .bristol_gorillas_2020 import BristolGorillas2020
+from .cattle_muzzle import CattleMuzzle
 from .cat_individual_images import CatIndividualImages
 from .cobra_re_identification_youngstock import CoBRAReIdentificationYoungstock
 from .ctai import CTai
@@ -58,6 +59,7 @@ names_all = [
     BelugaIDv2,
     BirdIndividualID, BirdIndividualIDSegmented,
     BristolGorillas2020,
+    CattleMuzzle,
     CatIndividualImages,
     Chicks4FreeID,
     CoBRAReIdentificationYoungstock,
@@ -146,6 +148,7 @@ names_small = [
 
 names_cows = [
     AerialCattle2017,
+    CattleMuzzle,
     CoBRAReIdentificationYoungstock,
     CowDataset,
     Cows2021v2,
