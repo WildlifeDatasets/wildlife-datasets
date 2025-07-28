@@ -8,6 +8,7 @@ from .beluga_id import BelugaID, BelugaIDv2
 from .bird_individual_id import BirdIndividualID, BirdIndividualIDSegmented
 from .bristol_gorillas_2020 import BristolGorillas2020
 from .cat_individual_images import CatIndividualImages
+from .cobra_re_identification_youngstock import CoBRAReIdentificationYoungstock
 from .ctai import CTai
 from .czoo import CZoo
 from .chicks4free_id import Chicks4FreeID
@@ -59,6 +60,7 @@ names_all = [
     BristolGorillas2020,
     CatIndividualImages,
     Chicks4FreeID,
+    CoBRAReIdentificationYoungstock,
     CowDataset,
     Cows2021v2,
     CzechLynx,
@@ -123,6 +125,7 @@ names_wild = [
 names_small = [
     AerialCattle2017,
     BelugaIDv2,
+    CoBRAReIdentificationYoungstock,
     CTai,
     CZoo,
     DogFaceNet,
@@ -143,6 +146,7 @@ names_small = [
 
 names_cows = [
     AerialCattle2017,
+    CoBRAReIdentificationYoungstock,
     CowDataset,
     Cows2021v2,
     FriesianCattle2015v2,
