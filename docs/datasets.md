@@ -52,6 +52,12 @@ The Chicks4FreeID dataset contains top-down view images of individually segmente
 
 ![](images/grid_Chicks4FreeID.png)
 
+## [CoBRAReIdentificationYoungstock](https://zenodo.org/records/15018518) <a href="https://www.mdpi.com/1424-8220/25/10/2971" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+The data was collected at a commercial Belgian dairy farm between December 2021 and October 2023 in pen housing eight heifers aged 8 to 12 months. During the experimental period, six groups of animals were monitored, resulting in a total of 48 animals. Video footage was collected continuously during day and night with a roof-mounted 4MP camera (Hikvision Europe, Hoofddorp, The Netherlands, model DS-2CD2643G2-IZS) at 2 fps. For this study, only daylight video recordings were retained. Of the 48 monitored animals, 29 were purebred red Holstein-Friesian and 19 were purebred Holstein-Friesian.
+
+![](images/grid_CoBRAReIdentificationYoungstock.png)
+
 ## [CowDataset](https://figshare.com/articles/dataset/data_set_zip/16879780)
 
 The dataset does not contain any description.

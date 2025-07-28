@@ -17,6 +17,7 @@ data = [
     (CTai, 'auto', False),
     (CZoo, 'auto', False),
     (Chicks4FreeID, 'auto', True),
+    (CoBRAReIdentificationYoungstock, 'auto', False),
     (CowDataset, 'auto', False),
     (Cows2021v2, 'auto', False),
     (DogFaceNet, 'auto', False),
