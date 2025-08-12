@@ -45,6 +45,7 @@ from .smalst import SMALST
 from .southern_province_turtles import SouthernProvinceTurtles
 from .stripe_spotter import StripeSpotter
 from .wildlife_reid_10k import WildlifeReID10k
+from .wild_raptor_id import WildRaptorID
 from .whaleshark_id import WhaleSharkID
 from .zakynthos_turtles import ZakynthosTurtles
 from .zindi_turtle_recall import ZindiTurtleRecall
@@ -97,6 +98,7 @@ names_all = [
     SMALST,
     SouthernProvinceTurtles,
     StripeSpotter,
+    WildRaptorID,
     WhaleSharkID,
     ZakynthosTurtles,
     ZindiTurtleRecall,
@@ -120,6 +122,7 @@ names_wild = [
     SeaTurtleID2022,
     SouthernProvinceTurtles,
     StripeSpotter,
+    WildRaptorID,
     WhaleSharkID,
     ZakynthosTurtles,
 ]
