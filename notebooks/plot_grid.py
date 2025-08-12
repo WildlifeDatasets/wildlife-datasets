@@ -29,6 +29,7 @@ data = [
     (GiraffeZebraID, 'auto', False),
     (Giraffes, 'auto', False),
     (HappyWhale, 'auto', False),
+    (HolsteinCattleRecognition, 'auto', False),
     (HumpbackWhaleID, 'auto', False),
     (HyenaID2022, 'auto', False),
     (IPanda50, 'auto', False),

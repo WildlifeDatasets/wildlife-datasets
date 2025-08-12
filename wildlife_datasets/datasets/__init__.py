@@ -23,6 +23,7 @@ from .friesian_cattle import FriesianCattle2015, FriesianCattle2015v2, FriesianC
 from .giraffe_zebra_id import GiraffeZebraID
 from .giraffes import Giraffes
 from .happy_whale import HappyWhale
+from .holstein_cattle_recognition import HolsteinCattleRecognition
 from .humpback_whale_id import HumpbackWhaleID
 from .hyena_id import HyenaID2022
 from .ipanda import IPanda50
@@ -77,6 +78,7 @@ names_all = [
     GiraffeZebraID,
     Giraffes,
     HappyWhale,
+    HolsteinCattleRecognition,
     HumpbackWhaleID,
     HyenaID2022,
     IPanda50,
@@ -137,6 +139,7 @@ names_small = [
     ELPephants,
     FriesianCattle2015v2,
     FriesianCattle2017,
+    HolsteinCattleRecognition,
     IPanda50,
     MacaqueFaces,
     MPDD,
@@ -157,6 +160,7 @@ names_cows = [
     Cows2021v2,
     FriesianCattle2015v2,
     FriesianCattle2017,
+    HolsteinCattleRecognition,
     MultiCamCows2024,
     OpenCows2020,
 ]
