@@ -50,6 +50,7 @@ data = [
     (SMALST, 'auto', False),
     (SouthernProvinceTurtles, 'auto', False),
     (StripeSpotter, 'auto', False),
+    (WildRaptorID, 'auto', False),
     (WhaleSharkID, 'auto', False),
     (ZakynthosTurtles, 'auto', False),
     (ZindiTurtleRecall, 'auto', True),
