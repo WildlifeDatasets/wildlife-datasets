@@ -14,6 +14,7 @@ data = [
     (BirdIndividualIDSegmented, 'auto', True),
     (BristolGorillas2020, 'auto', False),
     (CatIndividualImages, 'auto', False),
+    (CattleMuzzle, 'auto', False),
     (CTai, 'auto', False),
     (CZoo, 'auto', False),
     (Chicks4FreeID, 'auto', True),

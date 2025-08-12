@@ -5,8 +5,7 @@ from .datasets import DatasetFactory
 from .summary import summary
 
 class CattleMuzzle(DatasetFactory):
-    # TODO: finish
-    #summary = summary['CattleMuzzle']
+    summary = summary['CattleMuzzle']
     url = 'https://cloud.une.edu.au/index.php/s/eMwaHAPK08dCDru/download'
     archive = 'Cattle Identification (supplementary material).zip'
 
