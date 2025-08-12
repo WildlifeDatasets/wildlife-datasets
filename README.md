@@ -35,7 +35,7 @@
 
 The aim of the project is to provide comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
 
-- overview of 46 publicly available wildlife re-identification datasets.
+- overview of 50 publicly available wildlife re-identification datasets and 2 metadatasets.
 - utilities to mass download and convert them into a unified format and fix some wrong labels.
 - default splits for several machine learning tasks including the ability create additional splits.
 
@@ -45,7 +45,7 @@ Do you know about any animal re-identification dataset which is not included? Po
 
 ## Changelog
 
-[01/07/2025] Added BristolGorillas2020 (primates) and CzechLynx (lynxes).  
+[12/08/2025] Reached **50 datasets** by adding BristolGorillas2020 (primates), CattleMuzzle, CoBRAReIdentificationYoungstock, HolsteinCattleRecognition (cows), CzechLynx (lynxes) and WildRaptorID (eagles).  
 [14/04/2025] Added AnimalCLEF2025, WildlifeReID-10k (unifications of multiple datasets), MultiCamCows2024 (cows) and PrimFace (primates).  
 [31/10/2024] Added AmvrakikosTurtles, ReunionTurtles, SouthernProvinceTurtles, ZakynthosTurtles (sea turtles), ELPephants (elephants) and Chicks4FreeID (chickens).  
 [09/05/2024] Added CatIndividualImages (cats), CowDataset (cows) and DogFaceNet (dogs).  
