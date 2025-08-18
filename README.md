@@ -45,7 +45,7 @@ Do you know about any animal re-identification dataset which is not included? Po
 
 ## Changelog
 
-[12/08/2025] Reached **50 datasets** by adding BristolGorillas2020 (primates), CattleMuzzle, CoBRAReIdentificationYoungstock, HolsteinCattleRecognition (cows), CzechLynx (lynxes) and WildRaptorID (eagles).  
+[18/08/2025] Reached **50 datasets** by adding BristolGorillas2020 (primates), CattleMuzzle, CoBRAReIdentificationYoungstock, HolsteinCattleRecognition (cows), CzechLynx (lynxes) and WildRaptorID (eagles).  
 [14/04/2025] Added AnimalCLEF2025, WildlifeReID-10k (unifications of multiple datasets), MultiCamCows2024 (cows) and PrimFace (primates).  
 [31/10/2024] Added AmvrakikosTurtles, ReunionTurtles, SouthernProvinceTurtles, ZakynthosTurtles (sea turtles), ELPephants (elephants) and Chicks4FreeID (chickens).  
 [09/05/2024] Added CatIndividualImages (cats), CowDataset (cows) and DogFaceNet (dogs).  
@@ -54,9 +54,8 @@ Do you know about any animal re-identification dataset which is not included? Po
 
 ## Summary of datasets
 
-An overview of the provided datasets is available in the [documentation](https://wildlifedatasets.github.io/wildlife-datasets/datasets/), while the more numerical summary is located in a [Jupyter notebook](notebooks/dataset_descriptions.ipynb). Due to its size, it may be necessary to view it via [nbviewer](https://nbviewer.org/github/WildlifeDatasets/wildlife-datasets/blob/main/notebooks/dataset_descriptions.ipynb).
+An overview of the provided datasets is available in the [documentation](https://wildlifedatasets.github.io/wildlife-datasets/datasets/). We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and additional information such as source, number of poses, inclusion of timestamps, whether the animals were captured in the wild and whether the dataset contain multiple species.
 
-We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and additional information such as source, number of poses, inclusion of timestamps, whether the animals were captured in the wild and whether the dataset contain multiple species.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/Datasets_Summary_inverted.png">
