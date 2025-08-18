@@ -35,8 +35,19 @@ class WildRaptorID(DatasetFactory):
         # Remove the duplicates
         data = data.drop_duplicates(subset=cols)
 
+        # Add date
+        file = data['file'].apply(lambda x: os.path.splitext(x)[0][1:-1])
+        date = file.apply(lambda x: x.split('_')[0])
+        date = date.apply(lambda x: f'{x[:4]}-{x[4:6]}-{x[6:8]} {x[8:10]}:{x[10:12]}')
+        data['date'] = date
+
+        # Add video        
+        for i, (_, df_group) in enumerate(data.groupby(['identity', 'date'])):
+            data.loc[df_group.index, 'video'] = i
+        data['video'] = data['video'].astype(int)
+        
         # Finalize the dataframe
-        data['image_id'] = utils.create_id(data['identity'].astype(str) + data['file'].astype(str))
+        data['image_id'] = data['identity'] + '_' + file
         data['path'] = data['path'] + os.path.sep + data['file']
         data = data.drop(['file', 'file_size'], axis=1)
         return self.finalize_catalogue(data)
