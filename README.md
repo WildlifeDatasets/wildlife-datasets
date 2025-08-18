@@ -56,6 +56,15 @@ Do you know about any animal re-identification dataset which is not included? Po
 
 An overview of the provided datasets is available in the [documentation](https://wildlifedatasets.github.io/wildlife-datasets/datasets/). We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and additional information such as source, number of poses, inclusion of timestamps, whether the animals were captured in the wild and whether the dataset contain multiple species.
 
+### MetaDatasets
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/MetaDatasets_Summary_inverted.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/MetaDatasets_Summary.png">
+  <img alt="Dataset summary" src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/MetaDatasets_Summary.png">
+</picture>
+
+### Datasets
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/Datasets_Summary_inverted.png">
