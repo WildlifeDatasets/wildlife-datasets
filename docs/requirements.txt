@@ -75,6 +75,6 @@ tzdata==2024.2
 urllib3==2.2.3
 watchdog==5.0.3
 webencodings==0.5.1
-wildlife-datasets==1.0.6
+wildlife-datasets==1.0.7
 xxhash==3.5.0
 yarl==1.17.1
