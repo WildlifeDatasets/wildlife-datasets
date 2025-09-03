@@ -42,6 +42,10 @@ class SeaTurtleID2022(DatasetFactory):
         categories = {}
         for category in data['categories']:
             categories[category['name']] = category['id']
+        if category_name == 'flipper':
+            orientation_col = 'location'
+        else:
+            orientation_col = 'orientation'
         if category_name not in categories:
             #printfor category in categories.keys()
             raise Exception(f'Category {category_name} not allowed. Choose one from {categories.keys()}.')
@@ -53,7 +57,7 @@ class SeaTurtleID2022(DatasetFactory):
             'bbox': i['bbox'],
             'image_id': i['image_id'],
             'segmentation': i['segmentation'],
-            'orientation': i['attributes']['orientation'] if 'orientation' in i['attributes'] else np.nan
+            'orientation': i['attributes'][orientation_col] if orientation_col in i['attributes'] else np.nan
         }
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations'] if i['category_id'] == category_id])
         idx_bbox = ~df_annotation['bbox'].isnull()
