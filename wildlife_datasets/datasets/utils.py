@@ -90,6 +90,7 @@ def find_images(
         Dataframe of relative paths of the images.
     """
 
+    # TODO: does not handle heic (CatIndividualImages) and webp images (ReunionTurtles)
     data = [] 
     for path, directories, files in os.walk(root):
         for file in files:
