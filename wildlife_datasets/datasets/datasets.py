@@ -368,7 +368,8 @@ class WildlifeDataset:
             cls_parent = cls.__bases__[0]            
         return cls.__name__
 
-    def _download(self):
+    @classmethod
+    def _download(cls):
         """Downloads the dataset. Needs to be implemented by subclasses.
 
         Raises:
@@ -377,7 +378,8 @@ class WildlifeDataset:
 
         raise NotImplementedError('Needs to be implemented by subclasses.')
 
-    def _extract(self):
+    @classmethod
+    def _extract(cls):
         """Extracts the dataset. Needs to be implemented by subclasses.
 
         Raises:
