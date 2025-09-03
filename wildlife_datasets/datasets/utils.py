@@ -7,7 +7,7 @@ import urllib.request
 from tqdm import tqdm
 import shutil
 from contextlib import contextmanager
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, UnidentifiedImageError
 import cv2
 
 def load_image(path: str, max_size: int = None) -> Image:
@@ -240,8 +240,10 @@ def get_split(x, data_train, data_test):
         return np.nan
 
 def get_image_date(path, shorten=True):
-    if not os.path.exists(path):
-        return np.nan
+    try:
+        exif = Image.open(path).getexif()
+    except (FileNotFoundError, UnidentifiedImageError):
+        return -1
     exif = Image.open(path).getexif()
     if exif is not None:
         date = exif.get(36867)
