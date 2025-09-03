@@ -97,6 +97,25 @@ def find_images(
                 data.append({'path': os.path.relpath(path, start=root), 'file': file})
     return pd.DataFrame(data)
 
+def find_file_types(
+        root: str
+        ) -> pd.DataFrame:
+    """Finds all counted file extensions in lowercase in folder and subfolders.
+
+    Args:
+        root (str): The root folder where to look for data.
+
+    Returns:
+        Dataframe of counts of the extensions.
+    """
+
+    data = [] 
+    for path, directories, files in os.walk(root):
+        for file in files:
+            extension = os.path.splitext(file.lower())[1]
+            data.append({'extension': extension})
+    return pd.DataFrame(data).value_counts()
+
 def create_id(string_col: pd.Series) -> pd.Series:
     """Creates unique ids from string based on MD5 hash.
 
