@@ -20,7 +20,7 @@ datasets.WildlifeDataset.unknown_name
 print(datasets.WildlifeDataset.unknown_name) # markdown-exec: hide
 ```
 
-When a dataset contains unknown inidividuals, there identities should be changed to the default value.
+When a dataset contains unknown inidividuals, the identity entry should be changed to the default value described above.
 
 
 ## Optional columns
