@@ -33,11 +33,11 @@
 
 ## Wildlife Re-Identification (Re-ID) Datasets
 
-The aim of the project is to provide comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
+The aim of the project is to provide a comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
 
 - overview of 50 publicly available wildlife re-identification datasets and 2 metadatasets.
 - utilities to mass download and convert them into a unified format and fix some wrong labels.
-- default splits for several machine learning tasks including the ability create additional splits.
+- default splits for several machine learning tasks including the ability to create additional splits.
 
 An introductory example is provided in a [Jupyter notebook](notebooks/introduction.ipynb). The package provides a natural synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools), which provides our [MegaDescriptor](https://huggingface.co/BVRA/MegaDescriptor-L-384) model and tools for training neural networks. 
 
@@ -54,7 +54,7 @@ Do you know about any animal re-identification dataset which is not included? Po
 
 ## Summary of datasets
 
-An overview of the provided datasets is available in the [documentation](https://wildlifedatasets.github.io/wildlife-datasets/datasets/). We include basic characteristics such as publication years, number of images, number of individuals, dataset time span (difference between the last and first image taken) and additional information such as source, number of poses, inclusion of timestamps, whether the animals were captured in the wild and whether the dataset contain multiple species.
+An overview of the provided datasets is available in the [documentation](https://wildlifedatasets.github.io/wildlife-datasets/datasets/). We include basic characteristics such as publication years, number of images, number of individuals, dataset time spans (difference between the last and first image taken) and additional information such as source, number of poses, inclusion of timestamps, whether the animals were captured in the wild and whether the dataset contains multiple species.
 
 ### MetaDatasets
 
@@ -119,7 +119,7 @@ dataset.summary
 This particular dataset already contains cropped images of faces. Other datasets may contain uncropped images with bounding boxes or even segmentation masks.
 
 ```
-d.plot_grid()
+dataset.plot_grid()
 ```
 
 ![](https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/MacaqueFaces_Grid.png)
