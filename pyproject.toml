@@ -55,6 +55,3 @@ packages = [
   "wildlife_datasets.preparation",  
   "wildlife_datasets.splits",  
 ]
-
-[tool.setuptools.package-data]
-wildlife_datasets = ["datasets/summary.csv"]
