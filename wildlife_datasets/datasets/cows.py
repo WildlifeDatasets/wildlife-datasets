@@ -3,11 +3,32 @@ import datetime
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Non-Commercial Government Licence for public sector information',
+    'licenses_url': 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/',
+    'url': 'https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7',
+    'publication_url': 'https://arxiv.org/abs/2105.01938',
+    'cite': 'gao2021towards',
+    'animals': {'cow'},
+    'animals_simple': 'cows',
+    'real_animals': True,
+    'year': 2021,
+    'reported_n_total': 13784,
+    'reported_n_individuals': 181,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': True,
+    'from_video': True,
+    'cropped': True,
+    'span': '1 month',
+    'size': 18881,
+}
 
 class Cows2021(DatasetFactory):
     outdated_dataset = True
-    summary = summary['Cows2021']
+    summary = summary
     url = 'https://data.bris.ac.uk/datasets/tar/4vnrca7qw1642qlwxjadp87h7.zip'
     archive = '4vnrca7qw1642qlwxjadp87h7.zip'
 

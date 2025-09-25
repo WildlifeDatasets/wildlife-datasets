@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': None,
+    'licenses_url': None,
+    'url': 'https://cloud.une.edu.au/index.php/s/eMwaHAPK08dCDru',
+    'publication_url': 'https://www.mdpi.com/2073-4395/11/11/2365',
+    'cite': 'shojaeipour2021automated',
+    'animals': {'cow'},
+    'animals_simple': 'cows',
+    'real_animals': True,
+    'year': 2021,
+    'reported_n_total': 2900,
+    'reported_n_individuals': 300,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': True,
+    'from_video': True,
+    'cropped': True,
+    'span': 'short',
+    'size': 17600,
+}
 
 class CattleMuzzle(DatasetFactory):
-    summary = summary['CattleMuzzle']
+    summary = summary
     url = 'https://cloud.une.edu.au/index.php/s/eMwaHAPK08dCDru/download'
     archive = 'Cattle Identification (supplementary material).zip'
 

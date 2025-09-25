@@ -40,25 +40,22 @@ The following columns may be present in the dataframe. Besides these columns, it
 
 ## Metadata
 
-Besides the dataframe, each dataset also contains some metadata. The metadata are saved in a separate csv file, which currently contains the following information. All entries are optional.
+Besides the dataframe, each dataset also contains some metadata. All entries are optional.
 
 | Column | Description |
 |--------|-------------|
-| name | Name of the dataset. |
 | licenses | License file for the dataset. |
 | licenses_url | URL for the license file. |
 | url | URL for the dataset. |
 | cite | Citation in Google Scholar type of the paper. |
-| animals | List of all animal species in the dataset. |
-| animals_simple | List of all animal species in the dataset. |
-| real_animals | Determines whether the dataset contains real animals. |
+| animals | List of all animal scientific names in the dataset. |
+| animals_simple | List of all animal common names in the dataset. |
+| real_animals | Determines whether the images are of real animals as opposed to computer generated image. |
 | year | Publication year of the dataset. |
 | reported_n_total | The reported number of total animals. |
-| reported_n_identified | The reported number of identified animals. |
-| reported_n_photos | The reported number of photos. |
 | eported_n_individuals | The reported number of individuals. |
-| wild | Determines whether the photos were taken in the wild. |
-| clear_photos | Determines whether the photos are clear. |
+| wild | Determines whether the environment that it was photographed in is wild. |
+| clear_photos | Determines whether the database is quality-controlled such that image quality is consistent across all images. |
 | pose | Determines whether the photos have one orientation (single), two orientation such as left and right flanks (double) or more (multiple). |
 | unique_pattern | Determines whether the animals have unique features (fur patern, fin shape) for recognition. |
 | from_video | Determines whether the dataset was created from photos or videos. |

@@ -3,10 +3,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Other',
+    'licenses_url': 'https://inf-cv.uni-jena.de/home/research/datasets/elpephants/',
+    'url': 'https://inf-cv.uni-jena.de/home/research/datasets/elpephants/',
+    'publication_url': 'https://openaccess.thecvf.com/content_ICCVW_2019/html/CVWC/Korschens_ELPephants_A_Fine-Grained_Dataset_for_Elephant_Re-Identification_ICCVW_2019_paper.html',
+    'cite': 'korschens2019elpephants',
+    'animals': {'elephant'},
+    'animals_simple': 'elephants',
+    'real_animals': True,
+    'year': 2019,
+    'reported_n_total': 2078,
+    'reported_n_individuals': 276,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'multiple',
+    'unique_pattern': False,
+    'from_video': False,
+    'cropped': False,
+    'span': '14 years',
+    'size': 625,
+}
 
 class ELPephants(DatasetFactory):
-    summary = summary['ELPephants']
+    summary = summary
     archive = 'ELPephant (elephant ID system).zip'
 
     @classmethod

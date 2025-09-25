@@ -4,10 +4,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import WildlifeDataset
-from .summary import summary
+
+summary = {
+    'licenses': 'Other',
+    'licenses_url': 'https://www.kaggle.com/competitions/animal-clef-2025',
+    'url': 'https://www.kaggle.com/competitions/animal-clef-2025',
+    'publication_url': None,
+    'cite': 'adam2025overview',
+    'animals': {'loggerhead turtle', 'salamander', 'lynx'},
+    'animals_simple': 'multiple',
+    'real_animals': True,
+    'year': 2025,
+    'reported_n_total': 15209,
+    'reported_n_individuals': 1102,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'multiple',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': True,
+    'span': 'very long',
+    'size': 1930,
+}
 
 class AnimalCLEF2025(WildlifeDataset):    
-    summary = summary['AnimalCLEF2025']
+    summary = summary
     archive = 'animal-clef-2025.zip'
 
     @classmethod

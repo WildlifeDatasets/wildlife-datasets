@@ -4,10 +4,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': None,
+    'licenses_url': None,
+    'url': 'https://github.com/AndreCFerreira/Bird_individualID',
+    'publication_url': 'https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13436',
+    'cite': 'ferreira2020deep',
+    'animals': {'sociable weaver', 'zebra finch', 'great tit'},
+    'animals_simple': 'birds',
+    'real_animals': True,
+    'year': 2019,
+    'reported_n_total': 50643,
+    'reported_n_individuals': 50,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': False,
+    'from_video': False,
+    'cropped': False,
+    'span': '15 days',
+    'size': 70656,
+}
 
 class BirdIndividualID(DatasetFactory):
-    summary = summary['BirdIndividualID']
+    summary = summary
     prefix1 = 'Original_pictures'
     prefix2 = 'IndividualID'
     url = 'https://drive.google.com/uc?id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA'

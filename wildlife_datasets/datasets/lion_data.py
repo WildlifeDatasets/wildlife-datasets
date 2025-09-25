@@ -3,10 +3,31 @@ import shutil
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': None,
+    'licenses_url': None,
+    'url': 'https://github.com/tvanzyl/wildlife_reidentification',
+    'publication_url': 'https://ieeexplore.ieee.org/abstract/document/9311574',
+    'cite': 'dlamini2020automated',
+    'animals': {'lion'},
+    'animals_simple': 'lions',
+    'real_animals': True,
+    'year': 2020,
+    'reported_n_total': 750,
+    'reported_n_individuals': 98,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'multiple',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': True,
+    'span': 'unknown',
+    'size': 495,
+}
 
 class LionData(DatasetFactory):
-    summary = summary['LionData']
+    summary = summary
     url = 'https://github.com/tvanzyl/wildlife_reidentification/archive/refs/heads/main.zip'
     archive = 'main.zip'
 

@@ -4,10 +4,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Other',
+    'licenses_url': 'https://github.com/cvjena/chimpanzee_faces/blob/master/README.md',
+    'url': 'https://github.com/cvjena/chimpanzee_faces',
+    'publication_url': 'https://link.springer.com/chapter/10.1007/978-3-319-45886-1_5',
+    'cite': 'freytag2016chimpanzee',
+    'animals': {'chimpanzee'},
+    'animals_simple': 'chimpanzees',
+    'real_animals': True,
+    'year': 2016,
+    'reported_n_total': 2109,
+    'reported_n_individuals': 24,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': False,
+    'from_video': False,
+    'cropped': True,
+    'span': 'unknown',
+    'size': 634,
+}
 
 class CZoo(DatasetFactory):
-    summary = summary['CZoo']
+    summary = summary
     url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
     archive = 'master.zip'
 

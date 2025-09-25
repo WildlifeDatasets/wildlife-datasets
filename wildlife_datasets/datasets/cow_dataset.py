@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Attribution 4.0 International (CC BY 4.0)',
+    'licenses_url': 'https://creativecommons.org/licenses/by/4.0/',
+    'url': 'https://figshare.com/articles/dataset/data_set_zip/16879780',
+    'publication_url': None,
+    'cite': 'cowdataset',
+    'animals': {'cow'},
+    'animals_simple': 'cows',
+    'real_animals': True,
+    'year': 2021,
+    'reported_n_total': 1485,
+    'reported_n_individuals': 13,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'double',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': False,
+    'span': 'short',
+    'size': 4150,
+}
 
 class CowDataset(DatasetFactory):
-    summary = summary['CowDataset']
+    summary = summary
     url = 'https://figshare.com/ndownloader/files/31210192'
     archive = 'cow-dataset.zip'
 

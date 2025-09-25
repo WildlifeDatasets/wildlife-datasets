@@ -4,10 +4,31 @@ import pandas as pd
 from PIL import Image
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Other',
+    'licenses_url': 'https://visiome.neuroinf.jp/primface/',
+    'url': 'https://visiome.neuroinf.jp/primface/',
+    'publication_url': None,
+    'cite': 'primface',
+    'animals': {'rhesus monkey', 'japanese monkey', 'chimpanzee'},
+    'animals_simple': 'monkeys',
+    'real_animals': True,
+    'year': 2012,
+    'reported_n_total': 1282,
+    'reported_n_individuals': 68,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': False,
+    'from_video': False,
+    'cropped': True,
+    'span': 'short',
+    'size': 3700,
+}
 
 class PrimFace(DatasetFactory):
-    summary = summary['PrimFace']
+    summary = summary
     downloads = [
         ('https://visiome.neuroinf.jp/database/file/1508/j01.zip', 'j01.zip'),
         ('https://visiome.neuroinf.jp/database/file/1518/j02.zip', 'j02.zip'),

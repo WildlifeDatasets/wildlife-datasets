@@ -8,7 +8,6 @@ import json
 from PIL import Image
 import matplotlib.pyplot as plt
 import pycocotools.mask as mask_coco
-from .summary import summary
 from . import utils
 
 class WildlifeDataset:

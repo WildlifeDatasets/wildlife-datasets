@@ -34,14 +34,19 @@ To incorporate the new dataset into the list of all available datasets, the [ini
 
 ## Optional: including metadata
 
-The metadata can be added by saving them in a csv file (such as [mysummary.csv](./csv/mysummary.csv)). Their full description is in a [separate file](./dataframe.md#metadata). Then they can be loaded into the class definition as a class attribute. 
+The metadata can be added by adding a dictionary as a class attribute. Its description is in a [separate file](./dataframe.md#metadata).
 
 ```python exec="true" source="above" session="run2"
 import pandas as pd
 from wildlife_datasets import datasets
 
+summary = {
+    'reported_n_total': 4,
+    'reported_n_individuals': 2,
+}
+
 class Test(datasets.WildlifeDataset):
-    summary = datasets.Summary('docs/csv/mysummary.csv')['Test']
+    summary = summary
 
     def create_catalogue(self) -> pd.DataFrame:
         df = pd.DataFrame({
@@ -68,8 +73,6 @@ import pandas as pd
 from wildlife_datasets import datasets
 
 class Test(datasets.WildlifeDataset):
-    summary = datasets.Summary('docs/csv/mysummary.csv')['Test']
-
     @classmethod
     def _download(cls):
         pass
@@ -89,8 +92,5 @@ class Test(datasets.WildlifeDataset):
 
 ## Optional: integrating into package
 
-New datasets may be integrated into the core package by pull requests on the [Github repo](https://github.com/WildlifeDatasets/wildlife-datasets). In such a case, the dataset should be freely downloadable and both download script and metadata should be provided. The functions should be included in the following files:
-
-  - `WildlifeDataset` definition in [datasets.py](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/datasets.py).
-  - Metadata as an extension to the existing [summary.csv](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/wildlife_datasets/datasets).
-
+New datasets may be integrated into the core package by pull requests on the [Github repo](https://github.com/WildlifeDatasets/wildlife-datasets). In such a case, the dataset should be freely downloadable and both download script and metadata should be provided. The added dataset should be placed into [this folder](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets).
+  

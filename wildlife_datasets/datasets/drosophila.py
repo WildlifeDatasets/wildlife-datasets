@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Other',
+    'licenses_url': 'https://borealisdata.ca/dataset.xhtml?persistentId=doi:10.5683/SP2/JP4WDF&version=1.3&selectTab=termsTab',
+    'url': 'https://github.com/j-schneider/fly_eye',
+    'publication_url': 'https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205043',
+    'cite': 'schneider2018can',
+    'animals': {'drosophila'},
+    'animals_simple': 'flies',
+    'real_animals': True,
+    'year': 2018,
+    'reported_n_total': 2592000,
+    'reported_n_individuals': 60,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': True,
+    'from_video': True,
+    'cropped': True,
+    'span': '3 days',
+    'size': 74856,
+}
 
 class Drosophila(DatasetFactory):
-    summary = summary['Drosophila']
+    summary = summary
     downloads = [
         ('https://dataverse.scholarsportal.info/api/access/datafile/71066', 'week1_Day1_train_01to05.zip'),
         ('https://dataverse.scholarsportal.info/api/access/datafile/71067', 'week1_Day1_train_06to10.zip'),

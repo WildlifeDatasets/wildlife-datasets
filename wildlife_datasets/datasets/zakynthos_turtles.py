@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Other',
+    'licenses_url': 'https://www.kaggle.com/datasets/wildlifedatasets/zakynthosturtles',
+    'url': 'https://www.kaggle.com/datasets/wildlifedatasets/zakynthosturtles',
+    'publication_url': 'https://www.biorxiv.org/content/10.1101/2024.09.13.612839',
+    'cite': 'adam2024exploiting',
+    'animals': {'loggerhead turtle'},
+    'animals_simple': 'sea turtles',
+    'real_animals': True,
+    'year': 2024,
+    'reported_n_total': 160,
+    'reported_n_individuals': 40,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'double',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': False,
+    'span': '2.5 years',
+    'size': 826,
+}
 
 class ZakynthosTurtles(DatasetFactory):    
-    summary = summary['ZakynthosTurtles']
+    summary = summary
     archive = 'zakynthosturtles.zip'
 
     @classmethod

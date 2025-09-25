@@ -4,10 +4,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': None,
+    'licenses_url': None,
+    'url': 'https://github.com/tvanzyl/wildlife_reidentification',
+    'publication_url': 'https://ieeexplore.ieee.org/abstract/document/9311574',
+    'cite': 'dlamini2020automated',
+    'animals': {'nyala'},
+    'animals_simple': 'nyalas',
+    'real_animals': True,
+    'year': 2020,
+    'reported_n_total': 1934,
+    'reported_n_individuals': 274,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'double',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': False,
+    'span': 'unknown',
+    'size': 495,
+}
 
 class NyalaData(DatasetFactory):
-    summary = summary['NyalaData']
+    summary = summary
     url = 'https://github.com/tvanzyl/wildlife_reidentification/archive/refs/heads/main.zip'
     archive = 'main.zip'
 

@@ -3,10 +3,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)',
+    'licenses_url': 'https://creativecommons.org/licenses/by-sa/4.0/',
+    'url': 'https://zindi.africa/competitions/turtle-recall-conservation-challenge',
+    'publication_url': None,
+    'cite': 'zinditurtles',
+    'animals': {'sea turtle'},
+    'animals_simple': 'sea turtles',
+    'real_animals': True,
+    'year': 2022,
+    'reported_n_total': None,
+    'reported_n_individuals': None,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'double',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': True,
+    'span': 'unknown',
+    'size': 6482,
+}
 
 class ZindiTurtleRecall(DatasetFactory):
-    summary = summary['ZindiTurtleRecall']
+    summary = summary
 
     @classmethod
     def _download(cls):

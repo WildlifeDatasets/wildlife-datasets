@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Non-Commercial Government Licence for public sector information',
+    'licenses_url': 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/',
+    'url': 'https://data.bris.ac.uk/data/dataset/jf0859kboy8k2ufv60dqeb2t8',
+    'publication_url': 'https://arxiv.org/abs/2012.04689',
+    'cite': 'brookes2020dataset',
+    'animals': {'gorilla'},
+    'animals_simple': 'gorillas',
+    'real_animals': True,
+    'year': 2020,
+    'reported_n_total': 5428,
+    'reported_n_individuals': 7,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': False,
+    'from_video': True,
+    'cropped': False,
+    'span': 'short',
+    'size': 15600,
+}
 
 class BristolGorillas2020(DatasetFactory):
-    summary = summary['BristolGorillas2020']
+    summary = summary
     url = 'https://data.bris.ac.uk/datasets/tar/jf0859kboy8k2ufv60dqeb2t8.zip'
     archive = 'jf0859kboy8k2ufv60dqeb2t8.zip'
 

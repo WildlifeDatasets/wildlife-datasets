@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Attribution 4.0 International (CC BY 4.0)',
+    'licenses_url': 'https://creativecommons.org/licenses/by/4.0/',
+    'url': 'https://www.kaggle.com/datasets/aalborguniversity/aau-zebrafish-reid',
+    'publication_url': 'https://openaccess.thecvf.com/content_WACVW_2020/html/w2/Haurum_Re-Identification_of_Zebrafish_using_Metric_Learning_WACVW_2020_paper.html',
+    'cite': 'bruslund2020re',
+    'animals': {'zebrafish'},
+    'animals_simple': 'fish',
+    'real_animals': True,
+    'year': 2020,
+    'reported_n_total': 6672,
+    'reported_n_individuals': 6,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'double',
+    'unique_pattern': False,
+    'from_video': True,
+    'cropped': False,
+    'span': '1 day',
+    'size': 12093,
+}
 
 class AAUZebraFish(DatasetFactory):
-    summary = summary['AAUZebraFish']
+    summary = summary
     archive = 'aau-zebrafish-reid.zip'
 
     @classmethod

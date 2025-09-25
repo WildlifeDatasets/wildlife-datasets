@@ -4,11 +4,32 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)',
+    'licenses_url': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+    'url': 'https://doi.org/10.25405/data.ncl.c.4982342',
+    'publication_url': 'https://arxiv.org/abs/2005.13359',
+    'cite': 'trotter2020ndd20',
+    'animals': {'Northumberland dolphin'},
+    'animals_simple': 'doplhins',
+    'real_animals': True,
+    'year': 2020,
+    'reported_n_total': None,
+    'reported_n_individuals': 82,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'multiple',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': False,
+    'span': '7 years',
+    'size': 2441,
+}
 
 class NDD20(DatasetFactory):
     outdated_dataset = True
-    summary = summary['NDD20']
+    summary = summary
     url = 'https://data.ncl.ac.uk/ndownloader/files/22774175'
     archive = 'NDD20.zip'
 

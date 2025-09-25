@@ -3,10 +3,31 @@ import shutil
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Attribution 4.0 International (CC BY 4.0)',
+    'licenses_url': 'https://creativecommons.org/licenses/by/4.0/',
+    'url': 'https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53',
+    'publication_url': 'https://www.mdpi.com/1424-8220/22/19/7602',
+    'cite': 'nepovinnykh2022sealid',
+    'animals': {'ringed seal'},
+    'animals_simple': 'seals',
+    'real_animals': True,
+    'year': 2022,
+    'reported_n_total': 2080,
+    'reported_n_individuals': 57,
+    'wild': True,
+    'clear_photos': False,
+    'pose': 'multiple',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': False,
+    'span': '10 years',
+    'size': 1816,
+}
 
 class SealID(DatasetFactory):
-    summary = summary['SealID']
+    summary = summary
     prefix = 'source_'
     archive = '22b5191e-f24b-4457-93d3-95797c900fc0_ui65zipk.zip'
     

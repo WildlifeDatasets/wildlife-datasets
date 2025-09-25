@@ -3,10 +3,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': None,
+    'licenses_url': None,
+    'url': 'ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021',
+    'publication_url': 'https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13577',
+    'cite': 'miele2021revisiting',
+    'animals': {'giraffe'},
+    'animals_simple': 'giraffes',
+    'real_animals': True,
+    'year': 2021,
+    'reported_n_total': None,
+    'reported_n_individuals': None,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'double',
+    'unique_pattern': True,
+    'from_video': True,
+    'cropped': True,
+    'span': 'unknown',
+    'size': 1719,
+}
 
 class Giraffes(DatasetFactory):
-    summary = summary['Giraffes']
+    summary = summary
 
     @classmethod
     def _download(cls):

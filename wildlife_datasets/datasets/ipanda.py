@@ -5,10 +5,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': None,
+    'licenses_url': None,
+    'url': 'https://github.com/iPandaDateset/iPanda-50',
+    'publication_url': 'https://ieeexplore.ieee.org/abstract/document/9347819',
+    'cite': 'wang2021giant',
+    'animals': {'great panda'},
+    'animals_simple': 'pandas',
+    'real_animals': True,
+    'year': 2021,
+    'reported_n_total': 6874,
+    'reported_n_individuals': 50,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'multiple',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': True,
+    'span': 'unknown',
+    'size': 929,
+}
 
 class IPanda50(DatasetFactory):
-    summary = summary['IPanda50']
+    summary = summary
     downloads = [
         ('https://drive.google.com/uc?id=1nkh-g6a8JvWy-XsMaZqrN2AXoPlaXuFg', 'iPanda50-images.zip'),
         ('https://drive.google.com/uc?id=1gVREtFWkNec4xwqOyKkpuIQIyWU_Y_Ob', 'iPanda50-split.zip'),

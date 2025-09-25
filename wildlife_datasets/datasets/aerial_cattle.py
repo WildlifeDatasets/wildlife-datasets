@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Non-Commercial Government Licence for public sector information',
+    'licenses_url': 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/',
+    'url': 'https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh',
+    'publication_url': 'https://openaccess.thecvf.com/content_ICCV_2017_workshops/w41/html/Andrew_Visual_Localisation_and_ICCV_2017_paper.html',
+    'cite': 'andrew2017visual',
+    'animals': {'Friesian cattle'},
+    'animals_simple': 'cows',
+    'real_animals': True,
+    'year': 2017,
+    'reported_n_total': 46340,
+    'reported_n_individuals': 23,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': True,
+    'from_video': True,
+    'cropped': True,
+    'span': '1 day',
+    'size': 724,
+}
 
 class AerialCattle2017(DatasetFactory):
-    summary = summary['AerialCattle2017']
+    summary = summary
     url = 'https://data.bris.ac.uk/datasets/tar/3owflku95bxsx24643cybxu3qh.zip'
     archive = '3owflku95bxsx24643cybxu3qh.zip'
 

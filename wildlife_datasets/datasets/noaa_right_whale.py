@@ -3,10 +3,31 @@ import shutil
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Other',
+    'licenses_url': 'https://www.kaggle.com/c/noaa-right-whale-recognition/rules#data',
+    'url': 'https://www.kaggle.com/c/noaa-right-whale-recognition',
+    'publication_url': None,
+    'cite': 'rightwhale',
+    'animals': {'right whale'},
+    'animals_simple': 'whales',
+    'real_animals': True,
+    'year': 2015,
+    'reported_n_total': None,
+    'reported_n_individuals': None,
+    'wild': True,
+    'clear_photos': False,
+    'pose': 'single',
+    'unique_pattern': False,
+    'from_video': False,
+    'cropped': False,
+    'span': '10 years',
+    'size': 9790,
+}
 
 class NOAARightWhale(DatasetFactory):
-    summary = summary['NOAARightWhale']
+    summary = summary
     archive = 'noaa-right-whale-recognition.zip'
 
     @classmethod

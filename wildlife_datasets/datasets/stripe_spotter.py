@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Attribution-ShareAlike 3.0 Unported',
+    'licenses_url': 'https://creativecommons.org/licenses/by-sa/3.0/',
+    'url': 'https://code.google.com/archive/p/stripespotter/downloads',
+    'publication_url': 'https://dl.acm.org/doi/abs/10.1145/1991996.1992002',
+    'cite': 'lahiri2011biometric',
+    'animals': {'zebra'},
+    'animals_simple': 'zebras',
+    'real_animals': True,
+    'year': 2011,
+    'reported_n_total': None,
+    'reported_n_individuals': None,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'double',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': False,
+    'span': '7 days',
+    'size': 229,
+}
 
 class StripeSpotter(DatasetFactory):
-    summary = summary['StripeSpotter']
+    summary = summary
 
     @classmethod
     def _download(cls):

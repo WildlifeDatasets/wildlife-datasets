@@ -4,10 +4,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'MIT License',
+    'licenses_url': 'https://github.com/silviazuffi/smalst/blob/master/LICENSE.txt',
+    'url': 'https://github.com/silviazuffi/smalst',
+    'publication_url': 'https://openaccess.thecvf.com/content_ICCV_2019/html/Zuffi_Three-D_Safari_Learning_to_Estimate_Zebra_Pose_Shape_and_Texture_ICCV_2019_paper.html',
+    'cite': 'zuffi2019three',
+    'animals': {'zebra'},
+    'animals_simple': 'zebras',
+    'real_animals': False,
+    'year': 2019,
+    'reported_n_total': 12850,
+    'reported_n_individuals': 10,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'multiple',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': False,
+    'span': 'artificial',
+    'size': 11978,
+}
 
 class SMALST(DatasetFactory):
-    summary = summary['SMALST']
+    summary = summary
     url = 'https://drive.google.com/uc?id=1yVy4--M4CNfE5x9wUr1QBmAXEcWb6PWF'
     archive = 'zebra_training_set.zip'
 

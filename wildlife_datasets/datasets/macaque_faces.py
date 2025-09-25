@@ -3,10 +3,31 @@ import datetime
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Other',
+    'licenses_url': 'https://github.com/clwitham/MacaqueFaces/blob/master/license.md',
+    'url': 'https://github.com/clwitham/MacaqueFaces',
+    'publication_url': 'https://www.sciencedirect.com/science/article/pii/S0165027017302637',
+    'cite': 'witham2018automated',
+    'animals': {'rhesus macaque'},
+    'animals_simple': 'macaques',
+    'real_animals': True,
+    'year': 2018,
+    'reported_n_total': 6460,
+    'reported_n_individuals': 34,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': False,
+    'from_video': True,
+    'cropped': True,
+    'span': '1.4 years',
+    'size': 12,
+}
 
 class MacaqueFaces(DatasetFactory):
-    summary = summary['MacaqueFaces']
+    summary = summary
     
     @classmethod
     def _download(cls):

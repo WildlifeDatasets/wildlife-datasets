@@ -3,11 +3,54 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary_2015 = {
+    'licenses': 'Non-Commercial Government Licence for public sector information',
+    'licenses_url': 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/',
+    'url': 'https://data.bris.ac.uk/data/dataset/wurzq71kfm561ljahbwjhx9n3',
+    'publication_url': 'https://ieeexplore.ieee.org/abstract/document/7532404',
+    'cite': 'andrew2016automatic',
+    'animals': {'Friesian cattle'},
+    'animals_simple': 'cows',
+    'real_animals': True,
+    'year': 2016,
+    'reported_n_total': 377,
+    'reported_n_individuals': 40,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': True,
+    'from_video': True,
+    'cropped': True,
+    'span': '1 day',
+    'size': 76,
+}
+
+summary_2017 = {
+    'licenses': 'Non-Commercial Government Licence for public sector information',
+    'licenses_url': 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/',
+    'url': 'https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r',
+    'publication_url': 'https://openaccess.thecvf.com/content_ICCV_2017_workshops/w41/html/Andrew_Visual_Localisation_and_ICCV_2017_paper.html',
+    'cite': 'andrew2017visual',
+    'animals': {'Friesian cattle'},
+    'animals_simple': 'cows',
+    'real_animals': True,
+    'year': 2017,
+    'reported_n_total': 940,
+    'reported_n_individuals': 89,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': True,
+    'from_video': True,
+    'cropped': True,
+    'span': '1 day',
+    'size': 343,
+}
 
 class FriesianCattle2015(DatasetFactory):
     outdated_dataset = True
-    summary = summary['FriesianCattle2015']
+    summary = summary_2015
     url = 'https://data.bris.ac.uk/datasets/wurzq71kfm561ljahbwjhx9n3/wurzq71kfm561ljahbwjhx9n3.zip'
     archive = 'wurzq71kfm561ljahbwjhx9n3.zip'
 
@@ -51,7 +94,7 @@ class FriesianCattle2015v2(FriesianCattle2015):
 
 
 class FriesianCattle2017(DatasetFactory):
-    summary = summary['FriesianCattle2017']
+    summary = summary_2017
     url = 'https://data.bris.ac.uk/datasets/2yizcfbkuv4352pzc32n54371r/2yizcfbkuv4352pzc32n54371r.zip'
     archive = '2yizcfbkuv4352pzc32n54371r.zip'
 

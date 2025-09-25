@@ -3,10 +3,31 @@ import json
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Attribution-NonCommercial-ShareAlike 4.0 International',
+    'licenses_url': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+    'url': 'https://lila.science/datasets/atrw',
+    'publication_url': 'https://arxiv.org/abs/1906.05586',
+    'cite': 'li2019atrw',
+    'animals': {'amur tiger'},
+    'animals_simple': 'tigers',
+    'real_animals': True,
+    'year': 2019,
+    'reported_n_total': 9496,
+    'reported_n_individuals': 92,
+    'wild': False,
+    'clear_photos': False,
+    'pose': 'double',
+    'unique_pattern': True,
+    'from_video': True,
+    'cropped': False,
+    'span': 'short',
+    'size': 1760,
+}
 
 class ATRW(DatasetFactory):
-    summary = summary['ATRW']
+    summary = summary
     url = 'https://github.com/cvwc2019/ATRWEvalScript/archive/refs/heads/main.zip'
     archive = 'main.zip'
     downloads = [

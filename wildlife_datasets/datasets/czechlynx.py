@@ -4,11 +4,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
 
+summary = {
+    'licenses': 'Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)',
+    'licenses_url': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+    'url': 'https://www.kaggle.com/datasets/picekl/czechlynx/',
+    'publication_url': 'https://arxiv.org/abs/2506.04931',
+    'cite': 'picek2025czechlynx',
+    'animals': {'lynx'},
+    'animals_simple': 'cats',
+    'real_animals': True,
+    'year': 2025,
+    'reported_n_total': 37440,
+    'reported_n_individuals': 219,
+    'wild': True,
+    'clear_photos': False,
+    'pose': 'multiple',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': True,
+    'span': '15 years',
+    'size': 13000,
+}
 
 class CzechLynx(DatasetFactory):
-    summary = summary['CzechLynx']
+    summary = summary
     archive = 'czechlynx.zip'
 
     @classmethod

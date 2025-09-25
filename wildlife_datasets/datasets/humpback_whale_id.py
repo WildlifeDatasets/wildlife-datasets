@@ -3,10 +3,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Other',
+    'licenses_url': 'https://www.kaggle.com/competitions/humpback-whale-identification/rules#7.-competition-data.',
+    'url': 'https://www.kaggle.com/competitions/humpback-whale-identification',
+    'publication_url': None,
+    'cite': 'humpbackwhale',
+    'animals': {'whale'},
+    'animals_simple': 'whales',
+    'real_animals': True,
+    'year': 2019,
+    'reported_n_total': None,
+    'reported_n_individuals': None,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': True,
+    'span': 'very long',
+    'size': 5911,
+}
 
 class HumpbackWhaleID(DatasetFactory):
-    summary = summary['HumpbackWhaleID']
+    summary = summary
     archive = 'humpback-whale-identification.zip'
 
     @classmethod

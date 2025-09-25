@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
 
 class DatasetFactoryWildMe(DatasetFactory):
     def create_catalogue_wildme(self, prefix: str, year: int) -> pd.DataFrame:

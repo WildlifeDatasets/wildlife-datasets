@@ -3,10 +3,31 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Other',
+    'licenses_url': 'https://www.kaggle.com/competitions/happy-whale-and-dolphin/rules/#7.-competition-data.',
+    'url': 'https://www.kaggle.com/competitions/happy-whale-and-dolphin',
+    'publication_url': 'https://link.springer.com/article/10.1007/s42991-021-00180-9',
+    'cite': 'cheeseman2021advanced',
+    'animals': {'dolphin', 'whale'},
+    'animals_simple': 'dolphins+whales',
+    'real_animals': True,
+    'year': 2022,
+    'reported_n_total': None,
+    'reported_n_individuals': None,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'multiple',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': False,
+    'span': 'very long',
+    'size': 61912,
+}
 
 class HappyWhale(DatasetFactory):
-    summary = summary['HappyWhale']
+    summary = summary
     archive = 'happy-whale-and-dolphin.zip'
 
     @classmethod

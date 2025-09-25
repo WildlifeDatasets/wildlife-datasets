@@ -3,10 +3,31 @@ import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
 from .utils import find_images
-from .summary import summary
+
+summary = {
+    'licenses': 'CC0 1.0 Universal',
+    'licenses_url': 'https://creativecommons.org/publicdomain/zero/1.0/',
+    'url': 'https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/O1ZBSA',
+    'publication_url': 'https://link.springer.com/chapter/10.1007/978-3-030-29891-3_10',
+    'cite': 'bhole2019computer',
+    'animals': {'cow'},
+    'animals_simple': 'cows',
+    'real_animals': True,
+    'year': 2021,
+    'reported_n_total': 1237,
+    'reported_n_individuals': 136,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': False,
+    'span': 'short',
+    'size': 500,
+}
 
 class HolsteinCattleRecognition(DatasetFactory):
-    summary = summary['HolsteinCattleRecognition']
+    summary = summary
     url = 'https://dataverse.nl/api/access/dataset/:persistentId/?persistentId=doi:10.34894/O1ZBSA'
     archive = 'dataset.zip'
 

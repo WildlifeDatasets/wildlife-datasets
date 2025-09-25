@@ -4,10 +4,53 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary_2022 = {
+    'licenses': 'Other',
+    'licenses_url': 'https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid2022',
+    'url': 'https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid2022',
+    'publication_url': 'https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html',
+    'cite': 'adam2024seaturtleid2022',
+    'animals': {'loggerhead turtle'},
+    'animals_simple': 'sea turtles',
+    'real_animals': True,
+    'year': 2022,
+    'reported_n_total': 8729,
+    'reported_n_individuals': 438,
+    'wild': True,
+    'clear_photos': False,
+    'pose': 'multiple',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': False,
+    'span': '12 years',
+    'size': 2000,
+}
+
+summary_heads = {
+    'licenses': 'Other',
+    'licenses_url': 'https://www.kaggle.com/datasets/wildlifedatasets/seaturtleidheads',
+    'url': 'https://www.kaggle.com/datasets/wildlifedatasets/seaturtleidheads',
+    'publication_url': 'https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html',
+    'cite': 'adam2024seaturtleid2022',
+    'animals': {'loggerhead turtle'},
+    'animals_simple': 'sea turtles',
+    'real_animals': True,
+    'year': 2022,
+    'reported_n_total': 7582,
+    'reported_n_individuals': 400,
+    'wild': True,
+    'clear_photos': False,
+    'pose': 'multiple',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': True,
+    'span': '9 years',
+    'size': 425,
+}
 
 class SeaTurtleID2022(DatasetFactory):
-    summary = summary['SeaTurtleID2022']
+    summary = summary_2022
     archive = 'seaturtleid2022.zip'
 
     @classmethod
@@ -75,7 +118,7 @@ class SeaTurtleID2022(DatasetFactory):
         return self.finalize_catalogue(df)
 
 class SeaTurtleIDHeads(DatasetFactory):
-    summary = summary['SeaTurtleIDHeads']
+    summary = summary_heads
     archive = 'seaturtleidheads.zip'
 
     @classmethod

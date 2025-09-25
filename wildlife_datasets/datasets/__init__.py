@@ -50,7 +50,6 @@ from .wild_raptor_id import WildRaptorID
 from .whaleshark_id import WhaleSharkID
 from .zakynthos_turtles import ZakynthosTurtles
 from .zindi_turtle_recall import ZindiTurtleRecall
-from .summary import Summary
 from .utils import get_image, load_image
 
 names_all = [

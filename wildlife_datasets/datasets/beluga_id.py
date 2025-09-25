@@ -2,11 +2,32 @@ import os
 import pandas as pd
 from . import utils
 from .datasets_wildme import DatasetFactoryWildMe
-from .summary import summary
+
+summary = {
+    'licenses': 'Community Data License Agreement – Permissive',
+    'licenses_url': 'https://cdla.dev/permissive-1-0/',
+    'url': 'https://lila.science/datasets/beluga-id-2022/',
+    'publication_url': None,
+    'cite': 'belugaid',
+    'animals': {'beluga whale'},
+    'animals_simple': 'whales',
+    'real_animals': True,
+    'year': 2022,
+    'reported_n_total': 5902,
+    'reported_n_individuals': 788,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': False,
+    'from_video': False,
+    'cropped': True,
+    'span': '2.1 years',
+    'size': 590,
+}
 
 class BelugaID(DatasetFactoryWildMe):
     outdated_dataset = True
-    summary = summary['BelugaID']
+    summary = summary
     downloads = [
         ('https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/beluga.coco.tar.gz', 'beluga.coco.tar.gz'),
         ('https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/beluga-id-test.zip', 'beluga-id-test.zip'),

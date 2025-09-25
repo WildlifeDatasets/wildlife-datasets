@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Attribution 4.0 International (CC BY 4.0)',
+    'licenses_url': 'https://creativecommons.org/licenses/by/4.0/',
+    'url': 'https://zenodo.org/records/16731160',
+    'publication_url': 'https://www.sciencedirect.com/science/article/pii/S1574954125003887',
+    'cite': 'guo2025individual',
+    'animals': {'eagle'},
+    'animals_simple': 'eagles',
+    'real_animals': True,
+    'year': 2025,
+    'reported_n_total': 14817,
+    'reported_n_individuals': 47,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'double',
+    'unique_pattern': False,
+    'from_video': True,
+    'cropped': True,
+    'span': '1 month',
+    'size': 2600,
+}
 
 class WildRaptorID(DatasetFactory):
-    summary = summary['WildRaptorID']
+    summary = summary
     url = 'https://zenodo.org/records/16731160/files/wild_raptor_id.zip?download=1'
     archive = 'wild_raptor_id.zip'
 

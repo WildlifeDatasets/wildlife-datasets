@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Non-Commercial Government Licence for public sector information',
+    'licenses_url': 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/',
+    'url': 'https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17',
+    'publication_url': 'https://www.sciencedirect.com/science/article/pii/S0168169921001514',
+    'cite': 'andrew2021visual',
+    'animals': {'cow'},
+    'animals_simple': 'cows',
+    'real_animals': True,
+    'year': 2020,
+    'reported_n_total': 4736,
+    'reported_n_individuals': 46,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'double',
+    'unique_pattern': True,
+    'from_video': True,
+    'cropped': True,
+    'span': 'short',
+    'size': 2272,
+}
 
 class OpenCows2020(DatasetFactory):
-    summary = summary['OpenCows2020']
+    summary = summary
     url = 'https://data.bris.ac.uk/datasets/tar/10m32xl88x2b61zlkkgz3fml17.zip'
     archive = '10m32xl88x2b61zlkkgz3fml17.zip'
 

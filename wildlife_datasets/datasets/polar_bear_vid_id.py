@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Creative Commons Attribution 4.0 International',
+    'licenses_url': 'https://creativecommons.org/licenses/by/4.0/legalcode',
+    'url': 'https://zenodo.org/records/7564529',
+    'publication_url': 'https://www.mdpi.com/2076-2615/13/5/801',
+    'cite': 'zuerl2023polarbearvidid',
+    'animals': {'polar bear'},
+    'animals_simple': 'polar bears',
+    'real_animals': True,
+    'year': 2023,
+    'reported_n_total': 138363,
+    'reported_n_individuals': 13,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'multiple',
+    'unique_pattern': False,
+    'from_video': True,
+    'cropped': True,
+    'span': 'short',
+    'size': 1501,
+}
 
 class PolarBearVidID(DatasetFactory):
-    summary = summary['PolarBearVidID']
+    summary = summary
     url = 'https://zenodo.org/records/7564529/files/PolarBearVidID.zip?download=1'
     archive = 'PolarBearVidID.zip'
 

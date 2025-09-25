@@ -2,10 +2,31 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .summary import summary
+
+summary = {
+    'licenses': 'Non-Commercial Government Licence for public sector information',
+    'licenses_url': 'https://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/version/2/',
+    'url': 'https://data.bris.ac.uk/data/dataset/2inu67jru7a6821kkgehxg3cv2',
+    'publication_url': 'https://arxiv.org/abs/2410.12695',
+    'cite': 'yu2024multicamcows2024',
+    'animals': {'Friesian cattle'},
+    'animals_simple': 'cows',
+    'real_animals': True,
+    'year': 2024,
+    'reported_n_total': 101329,
+    'reported_n_individuals': 90,
+    'wild': False,
+    'clear_photos': True,
+    'pose': 'single',
+    'unique_pattern': True,
+    'from_video': True,
+    'cropped': True,
+    'span': '7 days',
+    'size': 36500,
+}
 
 class MultiCamCows2024(DatasetFactory):
-    summary = summary['MultiCamCows2024']
+    summary = summary
     url = 'https://data.bris.ac.uk/datasets/tar/2inu67jru7a6821kkgehxg3cv2.zip'
     archive = '2inu67jru7a6821kkgehxg3cv2.zip'
 
