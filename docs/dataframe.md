@@ -20,7 +20,7 @@ datasets.WildlifeDataset.unknown_name
 print(datasets.WildlifeDataset.unknown_name) # markdown-exec: hide
 ```
 
-When a dataset contains unknown inidividuals, there identities should be changed to the default value.
+When a dataset contains unknown inidividuals, the identity entry should be changed to the default value described above.
 
 
 ## Optional columns
@@ -32,7 +32,7 @@ The following columns may be present in the dataframe. Besides these columns, it
 | bbox | `List[float]` | Bounding box in the form [x, y, w, h]. Therefore, the topleft corner has coordinates [x, y], while the bottomright corner has coordinates [x+w, y+h]. |
 | date | special | Timestamp of the photo. The preferred format is `%Y-%m-%d %H:%M:%S` from the `datetime` package but it is sufficient to be amenable to `pd.to_datetime(x)`. |
 | keypoints | `List[float]` | Keypoints coordinates in the image such as eyes or joints. |
-| position | `str` | Position from each the photo was taken. The usual values are left and right. |
+| position | `str` | Position from which each photo was taken. The usual values are left and right. |
 | segmentation | `List[float]` or special | Segmentation mask in the form [x1, y1, x2, y2, ...]. Additional format are possible such as file path to a mask image, or `pytorch` RLE. |
 | species | `str` or `List[str]` | The depicted species for datasets with multiple species. |
 | video | `int` | The index of a video. |
