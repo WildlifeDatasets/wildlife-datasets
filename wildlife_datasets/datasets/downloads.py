@@ -1,4 +1,5 @@
 import os
+import shutil
 from . import utils
 
 def check_attribute(obj, attr):
@@ -6,16 +7,32 @@ def check_attribute(obj, attr):
         raise Exception(f'Object {obj} must have attribute {attr}.')
 
 class DownloadURL:
-    @classmethod
-    def _download(cls):
-        check_attribute(cls, 'url')
-        check_attribute(cls, 'archive')
-        utils.download_url(cls.url, cls.archive)
+    url = None
+    archive = None
+    downloads = []
+    rmtree = None
 
     @classmethod
-    def _extract(cls):
-        check_attribute(cls, 'archive')
-        utils.extract_archive(cls.archive, delete=True)
+    def _download(cls):
+        if cls.url:
+            if cls.archive:
+                utils.download_url(cls.url, cls.archive)
+            else:
+                raise ValueError('When cls.url is specified, cls.archive must also be specified')
+        for url, archive in cls.downloads:
+            utils.download_url(url, archive)        
+
+    @classmethod
+    def _extract(cls, exts = ['.zip', '.tar', '.tar.gz', '.tgz', '.tar.bz2', '.rar', '.7z']):
+        if cls.archive:
+            if any(cls.archive.endswith(ext) for ext in exts):
+                utils.extract_archive(cls.archive, delete=True)
+        for _, archive in cls.downloads:
+            if any(archive.endswith(ext) for ext in exts):
+                archive_name = archive.split('.')[0]
+                utils.extract_archive(archive, extract_path=archive_name, delete=True)
+        if cls.rmtree:
+            shutil.rmtree(cls.rmtree)
 
 class DownloadKaggle:
     @classmethod

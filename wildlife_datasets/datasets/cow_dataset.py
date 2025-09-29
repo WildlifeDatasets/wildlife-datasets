@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Attribution 4.0 International (CC BY 4.0)',
@@ -25,18 +26,14 @@ summary = {
     'size': 4150,
 }
 
-class CowDataset(DatasetFactory):
+class CowDataset(DownloadURL, DatasetFactory):
     summary = summary
     url = 'https://figshare.com/ndownloader/files/31210192'
     archive = 'cow-dataset.zip'
 
     @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
     def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
+        super()._extract()
         # Rename the folder with non-ASCII characters
         dirs = [x for x in os.listdir() if os.path.isdir(x)]
         if len(dirs) != 1:

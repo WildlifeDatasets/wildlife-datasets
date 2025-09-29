@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Attribution 4.0 International (CC BY 4.0)',
@@ -25,18 +26,14 @@ summary = {
     'size': 29.6,
 }
 
-class MPDD(DatasetFactory):
+class MPDD(DownloadURL, DatasetFactory):
     summary = summary
     url = 'https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/v5j6m8dzhv-1.zip'
     archive = 'MPDD.zip'
     
     @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
     def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
+        super()._extract()
         utils.extract_archive(os.path.join('Multi-pose dog dataset', 'MPDD.zip'), delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:

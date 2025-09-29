@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
-from .utils import find_images
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'CC0 1.0 Universal',
@@ -26,20 +26,16 @@ summary = {
     'size': 500,
 }
 
-class HolsteinCattleRecognition(DatasetFactory):
+class HolsteinCattleRecognition(DownloadURL, DatasetFactory):
     summary = summary
     url = 'https://dataverse.nl/api/access/dataset/:persistentId/?persistentId=doi:10.34894/O1ZBSA'
     archive = 'dataset.zip'
 
     @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
     def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
+        super()._extract()
         # Extract all archives in the original archive
-        zip_files = find_images('.', img_extensions='zip')
+        zip_files = utils.find_images('.', img_extensions='zip')
         for _, zip_file in zip_files.iterrows():
             file_name = os.path.join(zip_file['path'], zip_file['file'])
             utils.extract_archive(file_name, delete=True)
