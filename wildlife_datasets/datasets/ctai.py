@@ -1,9 +1,8 @@
 import os
-import shutil
 import numpy as np
 import pandas as pd
-from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Other',
@@ -27,19 +26,11 @@ summary = {
     'size': 634,
 }
 
-class CTai(DatasetFactory):
+class CTai(DownloadURL, DatasetFactory):
     summary = summary
     url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
     archive = 'master.zip'
-
-    @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
-        shutil.rmtree('chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CZoo')
+    rmtree = 'chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CZoo'
 
     def create_catalogue(self) -> pd.DataFrame:            
         # Load information about the dataset

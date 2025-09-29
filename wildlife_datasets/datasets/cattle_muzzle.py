@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': None,
@@ -25,19 +26,11 @@ summary = {
     'size': 17600,
 }
 
-class CattleMuzzle(DatasetFactory):
+class CattleMuzzle(DownloadURL, DatasetFactory):
     summary = summary
     url = 'https://cloud.une.edu.au/index.php/s/eMwaHAPK08dCDru/download'
     archive = 'Cattle Identification (supplementary material).zip'
 
-    @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
-    
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
         data = utils.find_images(self.root)

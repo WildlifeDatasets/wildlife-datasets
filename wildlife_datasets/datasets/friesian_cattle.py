@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary_2015 = {
     'licenses': 'Non-Commercial Government Licence for public sector information',
@@ -48,19 +49,11 @@ summary_2017 = {
     'size': 343,
 }
 
-class FriesianCattle2015(DatasetFactory):
+class FriesianCattle2015(DownloadURL, DatasetFactory):
     outdated_dataset = True
     summary = summary_2015
     url = 'https://data.bris.ac.uk/datasets/wurzq71kfm561ljahbwjhx9n3/wurzq71kfm561ljahbwjhx9n3.zip'
     archive = 'wurzq71kfm561ljahbwjhx9n3.zip'
-
-    @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
@@ -93,18 +86,10 @@ class FriesianCattle2015v2(FriesianCattle2015):
         return self.fix_labels_remove_identity(df, identities_to_remove)
 
 
-class FriesianCattle2017(DatasetFactory):
+class FriesianCattle2017(DownloadURL, DatasetFactory):
     summary = summary_2017
     url = 'https://data.bris.ac.uk/datasets/2yizcfbkuv4352pzc32n54371r/2yizcfbkuv4352pzc32n54371r.zip'
     archive = '2yizcfbkuv4352pzc32n54371r.zip'
-
-    @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root

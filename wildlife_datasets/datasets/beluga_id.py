@@ -1,7 +1,7 @@
 import os
 import pandas as pd
-from . import utils
 from .datasets_wildme import DatasetFactoryWildMe
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Community Data License Agreement – Permissive',
@@ -25,24 +25,13 @@ summary = {
     'size': 590,
 }
 
-class BelugaID(DatasetFactoryWildMe):
+class BelugaID(DownloadURL, DatasetFactoryWildMe):
     outdated_dataset = True
     summary = summary
     downloads = [
         ('https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/beluga.coco.tar.gz', 'beluga.coco.tar.gz'),
         ('https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/beluga-id-test.zip', 'beluga-id-test.zip'),
     ]
-
-    @classmethod
-    def _download(cls):
-        for url, archive in cls.downloads:
-            utils.download_url(url, archive)
-
-    @classmethod
-    def _extract(cls):
-        for url, archive in cls.downloads:
-            archive_name = archive.split('.')[0]
-            utils.extract_archive(archive, archive_name, delete=True)
     
     def create_catalogue(self) -> pd.DataFrame:
         return self.create_catalogue_wildme(os.path.join('beluga', 'beluga'), 2022)

@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Non-Commercial Government Licence for public sector information',
@@ -25,18 +26,10 @@ summary = {
     'size': 2272,
 }
 
-class OpenCows2020(DatasetFactory):
+class OpenCows2020(DownloadURL, DatasetFactory):
     summary = summary
     url = 'https://data.bris.ac.uk/datasets/tar/10m32xl88x2b61zlkkgz3fml17.zip'
     archive = '10m32xl88x2b61zlkkgz3fml17.zip'
-
-    @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root

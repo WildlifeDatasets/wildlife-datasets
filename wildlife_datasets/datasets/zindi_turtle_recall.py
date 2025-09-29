@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)',
@@ -26,24 +27,15 @@ summary = {
     'size': 6482,
 }
 
-class ZindiTurtleRecall(DatasetFactory):
+class ZindiTurtleRecall(DownloadURL, DatasetFactory):
     summary = summary
-
-    @classmethod
-    def _download(cls):
-        downloads = [
-            ('https://storage.googleapis.com/dm-turtle-recall/train.csv', 'train.csv'),
-            ('https://storage.googleapis.com/dm-turtle-recall/extra_images.csv', 'extra_images.csv'),
-            ('https://storage.googleapis.com/dm-turtle-recall/test.csv', 'test.csv'),
-            ('https://storage.googleapis.com/dm-turtle-recall/images.tar', 'images.tar'),
-        ]
-        for url, file in downloads:
-            utils.download_url(url, file)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive('images.tar', 'images', delete=True)
-
+    downloads = [
+        ('https://storage.googleapis.com/dm-turtle-recall/train.csv', 'train.csv'),
+        ('https://storage.googleapis.com/dm-turtle-recall/extra_images.csv', 'extra_images.csv'),
+        ('https://storage.googleapis.com/dm-turtle-recall/test.csv', 'test.csv'),
+        ('https://storage.googleapis.com/dm-turtle-recall/images.tar', 'images.tar'),
+    ]
+    
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the training images
         data_train = pd.read_csv(os.path.join(self.root, 'train.csv'))

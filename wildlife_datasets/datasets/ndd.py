@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)',
@@ -27,19 +28,11 @@ summary = {
     'size': 2441,
 }
 
-class NDD20(DatasetFactory):
+class NDD20(DownloadURL, DatasetFactory):
     outdated_dataset = True
     summary = summary
     url = 'https://data.ncl.ac.uk/ndownloader/files/22774175'
     archive = 'NDD20.zip'
-
-    @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)    
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the above-water dataset

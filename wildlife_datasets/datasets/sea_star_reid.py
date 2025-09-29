@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Community Data License Agreement – Permissive, Version 1.0',
@@ -25,18 +26,10 @@ summary = {
     'size': 1689,
 }
 
-class SeaStarReID2023(DatasetFactory):
+class SeaStarReID2023(DownloadURL, DatasetFactory):
     summary = summary
     url = 'https://storage.googleapis.com/public-datasets-lila/sea-star-re-id/sea-star-re-id.zip'
     archive = 'sea-star-re-id.zip'
-    
-    @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         data = utils.find_images(self.root)

@@ -1,9 +1,9 @@
 import os
-import shutil
 import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': None,
@@ -27,19 +27,11 @@ summary = {
     'size': 495,
 }
 
-class NyalaData(DatasetFactory):
+class NyalaData(DownloadURL, DatasetFactory):
     summary = summary
     url = 'https://github.com/tvanzyl/wildlife_reidentification/archive/refs/heads/main.zip'
     archive = 'main.zip'
-
-    @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
-        shutil.rmtree('wildlife_reidentification-main/Lion_Data_Zero')
+    rmtree = 'wildlife_reidentification-main/Lion_Data_Zero'
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root

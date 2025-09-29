@@ -4,6 +4,7 @@ import pandas as pd
 from PIL import Image
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Other',
@@ -27,7 +28,7 @@ summary = {
     'size': 3700,
 }
 
-class PrimFace(DatasetFactory):
+class PrimFace(DownloadURL, DatasetFactory):
     summary = summary
     downloads = [
         ('https://visiome.neuroinf.jp/database/file/1508/j01.zip', 'j01.zip'),
@@ -99,16 +100,6 @@ class PrimFace(DatasetFactory):
         ('https://visiome.neuroinf.jp/database/file/1699/c10.zip', 'c10.zip'),
         ('https://visiome.neuroinf.jp/database/file/1701/c11.zip', 'c11.zip'),
     ]
-
-    @classmethod
-    def _download(cls):
-        for url, archive in cls.downloads:
-            utils.download_url(url, archive)
-
-    @classmethod
-    def _extract(cls):
-        for url, archive in cls.downloads:
-            utils.extract_archive(archive, extract_path=os.path.splitext(archive)[0], delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root

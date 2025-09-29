@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Other',
@@ -25,7 +26,7 @@ summary = {
     'size': 74856,
 }
 
-class Drosophila(DatasetFactory):
+class Drosophila(DownloadURL, DatasetFactory):
     summary = summary
     downloads = [
         ('https://dataverse.scholarsportal.info/api/access/datafile/71066', 'week1_Day1_train_01to05.zip'),
@@ -74,16 +75,6 @@ class Drosophila(DatasetFactory):
         ('https://dataverse.scholarsportal.info/api/access/datafile/71132', 'week3_Day3_13to16.zip'),
         ('https://dataverse.scholarsportal.info/api/access/datafile/71133', 'week3_Day3_17to20.zip'),
     ]
-
-    @classmethod
-    def _download(cls):
-        for url, archive in cls.downloads:
-            utils.download_url(url, archive)
-
-    @classmethod
-    def _extract(cls):
-        for url, archive in cls.downloads:
-            utils.extract_archive(archive, extract_path=os.path.splitext(archive)[0], delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root

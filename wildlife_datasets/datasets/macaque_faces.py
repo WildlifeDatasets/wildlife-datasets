@@ -1,8 +1,8 @@
 import os
 import datetime
 import pandas as pd
-from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Other',
@@ -26,22 +26,13 @@ summary = {
     'size': 12,
 }
 
-class MacaqueFaces(DatasetFactory):
+class MacaqueFaces(DownloadURL, DatasetFactory):
     summary = summary
+    downloads = [
+        ('https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces.zip', 'MacaqueFaces.zip'),
+        ('https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces_ImageInfo.csv', 'MacaqueFaces_ImageInfo.csv'),
+    ]
     
-    @classmethod
-    def _download(cls):
-        downloads = [
-            ('https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces.zip', 'MacaqueFaces.zip'),
-            ('https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces_ImageInfo.csv', 'MacaqueFaces_ImageInfo.csv'),
-        ]
-        for url, file in downloads:
-            utils.download_url(url, file)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive('MacaqueFaces.zip', delete=True)
-
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset
         data = pd.read_csv(os.path.join(self.root, 'MacaqueFaces_ImageInfo.csv'))

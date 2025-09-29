@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Attribution 4.0 International (CC BY 4.0)',
@@ -25,18 +26,10 @@ summary = {
     'size': 2600,
 }
 
-class WildRaptorID(DatasetFactory):
+class WildRaptorID(DownloadURL, DatasetFactory):
     summary = summary
     url = 'https://zenodo.org/records/16731160/files/wild_raptor_id.zip?download=1'
     archive = 'wild_raptor_id.zip'
-
-    @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         data = utils.find_images(self.root)

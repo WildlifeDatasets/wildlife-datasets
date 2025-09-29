@@ -3,6 +3,7 @@ import datetime
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadURL
 
 summary = {
     'licenses': 'Non-Commercial Government Licence for public sector information',
@@ -26,20 +27,12 @@ summary = {
     'size': 18881,
 }
 
-class Cows2021(DatasetFactory):
+class Cows2021(DownloadURL, DatasetFactory):
     outdated_dataset = True
     summary = summary
     url = 'https://data.bris.ac.uk/datasets/tar/4vnrca7qw1642qlwxjadp87h7.zip'
     archive = '4vnrca7qw1642qlwxjadp87h7.zip'
 
-    @classmethod
-    def _download(cls):
-        utils.download_url(cls.url, cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
-    
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
         data = utils.find_images(self.root)
