@@ -1,9 +1,7 @@
 import os
-import json
-import numpy as np
 import pandas as pd
-from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadKaggle
 
 summary = {
     'licenses': 'Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)',
@@ -27,20 +25,11 @@ summary = {
     'size': 13000,
 }
 
-class CzechLynx(DatasetFactory):
+class CzechLynx(DownloadKaggle, DatasetFactory):
     summary = summary
+    kaggle_url = 'picekl/czechlynx'
+    kaggle_type = 'datasets'
     archive = 'czechlynx.zip'
-
-    @classmethod
-    def _download(cls):
-        command = f"datasets download -d picekl/czechlynx --force"
-        exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#czechlynx'''
-        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self, split: str = 'split-geo_aware') -> pd.DataFrame:
         """

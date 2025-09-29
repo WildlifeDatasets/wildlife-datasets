@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadKaggle
 
 summary = {
     'licenses': 'Other',
@@ -26,26 +27,11 @@ summary = {
     'size': 61912,
 }
 
-class HappyWhale(DatasetFactory):
+class HappyWhale(DownloadKaggle, DatasetFactory):
     summary = summary
+    kaggle_url = 'happy-whale-and-dolphin'
+    kaggle_type = 'competitions'
     archive = 'happy-whale-and-dolphin.zip'
-
-    @classmethod
-    def _download(cls):
-        command = f"competitions download -c happy-whale-and-dolphin --force"
-        exception_text = '''Kaggle terms must be agreed with.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#happywhale'''
-        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        try:
-            utils.extract_archive(cls.archive, delete=True)
-        except:
-            exception_text = '''Extracting failed.
-                Either the download was not completed or the Kaggle terms were not agreed with.
-                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#happywhale'''
-            raise Exception(exception_text)
     
     def create_catalogue(self) -> pd.DataFrame:
         # Load the training data

@@ -2,8 +2,8 @@ import os
 import json
 import numpy as np
 import pandas as pd
-from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadKaggle
 
 summary_2022 = {
     'licenses': 'Other',
@@ -49,20 +49,11 @@ summary_heads = {
     'size': 425,
 }
 
-class SeaTurtleID2022(DatasetFactory):
+class SeaTurtleID2022(DownloadKaggle, DatasetFactory):
     summary = summary_2022
+    kaggle_url = 'wildlifedatasets/seaturtleid2022'
+    kaggle_type = 'datasets'
     archive = 'seaturtleid2022.zip'
-
-    @classmethod
-    def _download(cls):
-        command = f"datasets download -d wildlifedatasets/seaturtleid2022 --force"
-        exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid2022'''
-        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self, category_name='head') -> pd.DataFrame:
         """Creates dataframe for SeaTurtleID2022.
@@ -117,20 +108,11 @@ class SeaTurtleID2022(DatasetFactory):
         df['image_id'] = range(1, len(df)+1)
         return self.finalize_catalogue(df)
 
-class SeaTurtleIDHeads(DatasetFactory):
+class SeaTurtleIDHeads(DownloadKaggle, DatasetFactory):
     summary = summary_heads
+    kaggle_url = 'wildlifedatasets/seaturtleidheads'
+    kaggle_type = 'datasets'
     archive = 'seaturtleidheads.zip'
-
-    @classmethod
-    def _download(cls):
-        command = f"datasets download -d wildlifedatasets/seaturtleidheads --force"
-        exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#seaturtleid'''
-        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load annotations JSON file

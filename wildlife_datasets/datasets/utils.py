@@ -216,14 +216,6 @@ def data_directory(dir):
     finally:
         os.chdir(current_dir)
 
-def kaggle_download(command, exception_text='', required_file=None):
-    try:
-        os.system(f"kaggle {command}")
-    except:
-        raise Exception(exception_text)
-    if required_file is not None and not os.path.exists(required_file):
-        raise Exception(exception_text)
-
 def gdown_download(url, archive, exception_text=''):
     import gdown
     gdown.download(url, archive, quiet=False)

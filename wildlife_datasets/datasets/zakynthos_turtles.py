@@ -1,7 +1,7 @@
 import os
 import pandas as pd
-from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadKaggle
 
 summary = {
     'licenses': 'Other',
@@ -25,20 +25,11 @@ summary = {
     'size': 826,
 }
 
-class ZakynthosTurtles(DatasetFactory):    
+class ZakynthosTurtles(DownloadKaggle, DatasetFactory):    
     summary = summary
+    kaggle_url = 'wildlifedatasets/zakynthosturtles'
+    kaggle_type = 'datasets'
     archive = 'zakynthosturtles.zip'
-
-    @classmethod
-    def _download(cls):
-        command = f"datasets download -d wildlifedatasets/zakynthosturtles --force"
-        exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#zakynthosturtles'''
-        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'annotations.csv'))

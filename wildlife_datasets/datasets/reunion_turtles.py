@@ -1,8 +1,8 @@
 import os
 import numpy as np
 import pandas as pd
-from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadKaggle
 
 summary = {
     'licenses': 'Other',
@@ -26,20 +26,11 @@ summary = {
     'size': 32,
 }
 
-class ReunionTurtles(DatasetFactory):    
+class ReunionTurtles(DownloadKaggle, DatasetFactory):
     summary = summary
+    kaggle_url = 'wildlifedatasets/reunionturtles'
+    kaggle_type = 'datasets'
     archive = 'reunionturtles.zip'
-
-    @classmethod
-    def _download(cls):
-        command = f"datasets download -d wildlifedatasets/reunionturtles --force"
-        exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#reunionturtles'''
-        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'data.csv'))

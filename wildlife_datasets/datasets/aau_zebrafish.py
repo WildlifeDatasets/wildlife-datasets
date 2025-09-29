@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadKaggle
 
 summary = {
     'licenses': 'Attribution 4.0 International (CC BY 4.0)',
@@ -25,21 +26,12 @@ summary = {
     'size': 12093,
 }
 
-class AAUZebraFish(DatasetFactory):
+class AAUZebraFish(DownloadKaggle, DatasetFactory):
     summary = summary
+    kaggle_url = 'aalborguniversity/aau-zebrafish-reid'
+    kaggle_type = 'datasets'
     archive = 'aau-zebrafish-reid.zip'
 
-    @classmethod
-    def _download(cls):
-        command = f"datasets download -d aalborguniversity/aau-zebrafish-reid"
-        exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#aauzebrafish'''
-        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
-        
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'annotations.csv'), sep=';')
 

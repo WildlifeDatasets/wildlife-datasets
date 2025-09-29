@@ -3,6 +3,7 @@ import shutil
 import pandas as pd
 from . import utils
 from .datasets import DatasetFactory
+from .downloads import DownloadKaggle
 
 summary = {
     'licenses': 'Other',
@@ -26,21 +27,16 @@ summary = {
     'size': 9790,
 }
 
-class NOAARightWhale(DatasetFactory):
+class NOAARightWhale(DownloadKaggle, DatasetFactory):
     summary = summary
+    kaggle_url = 'noaa-right-whale-recognition'
+    kaggle_type = 'competitions'
     archive = 'noaa-right-whale-recognition.zip'
 
     @classmethod
-    def _download(cls):
-        command = f"competitions download -c noaa-right-whale-recognition --force"
-        exception_text = '''Kaggle terms must be agreed with.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#noaarightwhale'''
-        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
-
-    @classmethod
     def _extract(cls):
+        super()._extract()
         try:
-            utils.extract_archive(cls.archive, delete=True)
             utils.extract_archive('imgs.zip', delete=True)
             # Move misplaced image
             shutil.move('w_7489.jpg', 'imgs')

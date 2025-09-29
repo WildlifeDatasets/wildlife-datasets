@@ -361,10 +361,10 @@ class WildlifeDataset:
             Name of the dataset.
         """
 
-        cls_parent = cls.__bases__[0]
+        cls_parent = cls.__bases__[-1]
         while cls_parent != object and cls_parent.outdated_dataset:
             cls = cls_parent
-            cls_parent = cls.__bases__[0]            
+            cls_parent = cls.__bases__[-1]
         return cls.__name__
 
     @classmethod

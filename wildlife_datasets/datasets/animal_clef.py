@@ -2,8 +2,8 @@ import os
 import json
 import numpy as np
 import pandas as pd
-from . import utils
 from .datasets import WildlifeDataset
+from .downloads import DownloadKaggle
 
 summary = {
     'licenses': 'Other',
@@ -27,20 +27,11 @@ summary = {
     'size': 1930,
 }
 
-class AnimalCLEF2025(WildlifeDataset):    
+class AnimalCLEF2025(DownloadKaggle, WildlifeDataset):    
     summary = summary
+    kaggle_url = 'animal-clef-2025'
+    kaggle_type = 'competitions'
     archive = 'animal-clef-2025.zip'
-
-    @classmethod
-    def _download(cls):
-        command = f"competitions download -c animal-clef-2025 --force"
-        exception_text = '''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#animalclef2025'''
-        utils.kaggle_download(command, exception_text=exception_text, required_file=cls.archive)
-
-    @classmethod
-    def _extract(cls):
-        utils.extract_archive(cls.archive, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
         metadata = pd.read_csv(os.path.join(self.root, 'metadata.csv'))
