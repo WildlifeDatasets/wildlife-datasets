@@ -333,7 +333,7 @@ class WildlifeDataset:
             with utils.data_directory(root):
                 cls._download(**kwargs)
             open(mark_file_name, 'a').close()
-            if hasattr(cls, 'summary') and 'licenses_url' in cls.summary:
+            if hasattr(cls, 'summary') and 'licenses_url' in cls.summary and isinstance(cls.summary, str):
                 with open(os.path.join(root, cls.license_file_name), 'w') as file:
                     file.write(cls.summary['licenses_url'])
         
