@@ -30,7 +30,6 @@ class ReunionTurtles(DownloadKaggle, DatasetFactory):
     summary = summary
     kaggle_url = 'wildlifedatasets/reunionturtles'
     kaggle_type = 'datasets'
-    archive = 'reunionturtles.zip'
 
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'data.csv'))

@@ -30,7 +30,6 @@ class CatIndividualImages(DownloadKaggle, DatasetFactory):
     summary = summary
     kaggle_url = 'timost1234/cat-individuals'
     kaggle_type = 'datasets'
-    archive = 'cat-individuals.zip'
     
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root

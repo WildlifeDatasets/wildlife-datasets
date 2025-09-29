@@ -30,7 +30,6 @@ class AmvrakikosTurtles(DownloadKaggle, DatasetFactory):
     summary = summary
     kaggle_url = 'wildlifedatasets/amvrakikosturtles'
     kaggle_type = 'datasets'
-    archive = 'amvrakikosturtles.zip'
 
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'annotations.csv'))

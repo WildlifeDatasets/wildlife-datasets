@@ -29,7 +29,6 @@ class WildlifeReID10k(DownloadKaggle, DatasetFactory):
     summary = summary
     kaggle_url = 'wildlifedatasets/wildlifereid-10k'
     kaggle_type = 'datasets'
-    archive = 'wildlifereid-10k.zip'
 
     def create_catalogue(self) -> pd.DataFrame:
         df = pd.read_csv(os.path.join(self.root, 'metadata.csv'), low_memory=False)

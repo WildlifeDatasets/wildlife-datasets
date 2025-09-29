@@ -31,7 +31,6 @@ class HappyWhale(DownloadKaggle, DatasetFactory):
     summary = summary
     kaggle_url = 'happy-whale-and-dolphin'
     kaggle_type = 'competitions'
-    archive = 'happy-whale-and-dolphin.zip'
     
     def create_catalogue(self) -> pd.DataFrame:
         # Load the training data

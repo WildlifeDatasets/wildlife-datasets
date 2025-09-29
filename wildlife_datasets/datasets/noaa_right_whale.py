@@ -31,7 +31,6 @@ class NOAARightWhale(DownloadKaggle, DatasetFactory):
     summary = summary
     kaggle_url = 'noaa-right-whale-recognition'
     kaggle_type = 'competitions'
-    archive = 'noaa-right-whale-recognition.zip'
 
     @classmethod
     def _extract(cls):

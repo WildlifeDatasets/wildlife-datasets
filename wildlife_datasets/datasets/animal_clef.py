@@ -31,7 +31,6 @@ class AnimalCLEF2025(DownloadKaggle, WildlifeDataset):
     summary = summary
     kaggle_url = 'animal-clef-2025'
     kaggle_type = 'competitions'
-    archive = 'animal-clef-2025.zip'
 
     def create_catalogue(self) -> pd.DataFrame:
         metadata = pd.read_csv(os.path.join(self.root, 'metadata.csv'))

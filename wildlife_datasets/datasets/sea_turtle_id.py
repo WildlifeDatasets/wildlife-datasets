@@ -53,7 +53,6 @@ class SeaTurtleID2022(DownloadKaggle, DatasetFactory):
     summary = summary_2022
     kaggle_url = 'wildlifedatasets/seaturtleid2022'
     kaggle_type = 'datasets'
-    archive = 'seaturtleid2022.zip'
 
     def create_catalogue(self, category_name='head') -> pd.DataFrame:
         """Creates dataframe for SeaTurtleID2022.
@@ -112,7 +111,6 @@ class SeaTurtleIDHeads(DownloadKaggle, DatasetFactory):
     summary = summary_heads
     kaggle_url = 'wildlifedatasets/seaturtleidheads'
     kaggle_type = 'datasets'
-    archive = 'seaturtleidheads.zip'
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load annotations JSON file

@@ -26,10 +26,9 @@ summary = {
 }
 
 class SouthernProvinceTurtles(DownloadKaggle, DatasetFactory):
-    archive = 'southernprovinceturtles.zip'
+    summary = summary
     kaggle_url = 'wildlifedatasets/southernprovinceturtles'
     kaggle_type = 'datasets'
-    summary = summary
 
     def create_catalogue(self) -> pd.DataFrame:
         file_name = os.path.join(self.root, 'annotations.csv')

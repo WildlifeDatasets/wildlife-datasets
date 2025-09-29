@@ -30,7 +30,6 @@ class AAUZebraFish(DownloadKaggle, DatasetFactory):
     summary = summary
     kaggle_url = 'aalborguniversity/aau-zebrafish-reid'
     kaggle_type = 'datasets'
-    archive = 'aau-zebrafish-reid.zip'
 
     def create_catalogue(self) -> pd.DataFrame:
         data = pd.read_csv(os.path.join(self.root, 'annotations.csv'), sep=';')

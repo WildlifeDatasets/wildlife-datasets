@@ -40,8 +40,6 @@ class DownloadKaggle:
     def _download(cls):
         check_attribute(cls, 'kaggle_url')
         check_attribute(cls, 'kaggle_type')
-        check_attribute(cls, 'archive')
-        check_attribute(cls, 'display_name')
         display_name = cls.display_name().lower()
         if cls.kaggle_type == 'datasets':
             command = f'datasets download -d {cls.kaggle_url} --force'
@@ -55,20 +53,23 @@ class DownloadKaggle:
             os.system(f"kaggle {command}")
         except:
             raise Exception(exception_text)
-        if not os.path.exists(cls.archive):
+        if not os.path.exists(cls.archive_name()):
             raise Exception(exception_text)
 
     @classmethod
     def _extract(cls):
-        check_attribute(cls, 'archive')
         display_name = cls.display_name().lower()
         try:
-            utils.extract_archive(cls.archive, delete=True)
+            utils.extract_archive(cls.archive_name(), delete=True)
         except:
             exception_text = f'''Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
                 Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#{display_name}'''
             raise Exception(exception_text)
+    
+    @classmethod
+    def archive_name(cls):
+        return cls.kaggle_url.split('/')[-1] + '.zip'
         
 class DownloadHuggingFace:
     determined_by_df = False

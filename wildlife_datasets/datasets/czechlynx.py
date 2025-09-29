@@ -29,7 +29,6 @@ class CzechLynx(DownloadKaggle, DatasetFactory):
     summary = summary
     kaggle_url = 'picekl/czechlynx'
     kaggle_type = 'datasets'
-    archive = 'czechlynx.zip'
 
     def create_catalogue(self, split: str = 'split-geo_aware') -> pd.DataFrame:
         """

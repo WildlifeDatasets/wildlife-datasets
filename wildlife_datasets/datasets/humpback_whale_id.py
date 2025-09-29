@@ -31,7 +31,6 @@ class HumpbackWhaleID(DownloadKaggle, DatasetFactory):
     summary = summary
     kaggle_url = 'humpback-whale-identification'
     kaggle_type = 'competitions'
-    archive = 'humpback-whale-identification.zip'
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load the training data
