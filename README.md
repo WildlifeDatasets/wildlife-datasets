@@ -80,6 +80,9 @@ The installation of the package is simple by
 pip install wildlife-datasets
 ```
 
+## Adding new datasets
+
+WildlifeDatasets are meant as a community effort to provide an easy access to wildlife re-identification datasets. New datasets may be easily added as described in the [documentation](https://wildlifedatasets.github.io/wildlife-datasets/adding/).
 
 ## Basic functionality
 
