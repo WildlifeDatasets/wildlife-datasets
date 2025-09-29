@@ -284,4 +284,4 @@ class BalancedSplit():
     def setdiff(self, a, b):
         a = np.array(a)
         b = np.array(b)
-        return pd.unique(a[~np.in1d(a,b)])
+        return pd.unique(a[~np.isin(a,b)])
