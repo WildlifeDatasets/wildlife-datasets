@@ -12,6 +12,7 @@ class DownloadURL:
     archive = None
     downloads = []
     rmtree = None
+    extract_add_folder = True
 
     @classmethod
     def _download(cls):
@@ -30,8 +31,11 @@ class DownloadURL:
                 utils.extract_archive(cls.archive, delete=True)
         for _, archive in cls.downloads:
             if any(archive.endswith(ext) for ext in exts):
-                archive_name = archive.split('.')[0]
-                utils.extract_archive(archive, extract_path=archive_name, delete=True)
+                if cls.extract_add_folder:
+                    archive_name = archive.split('.')[0]
+                    utils.extract_archive(archive, extract_path=archive_name, delete=True)
+                else:
+                    utils.extract_archive(archive, delete=True)
         if cls.rmtree:
             shutil.rmtree(cls.rmtree)
 
