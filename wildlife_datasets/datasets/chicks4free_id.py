@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from .datasets import DatasetFactory
+from .downloads import DownloadHuggingFace
 from datasets import load_dataset
 
 summary = {
@@ -25,19 +26,13 @@ summary = {
     'size': 1401,
 }
 
-class Chicks4FreeID(DatasetFactory):
+class Chicks4FreeID(DownloadHuggingFace, DatasetFactory):
     summary = summary
     hf_url = 'dariakern/Chicks4FreeID'
-    determined_by_df = False
-    saved_to_system_folder = True
 
     @classmethod
     def _download(cls, hf_option = 'chicken-re-id-all-visibility'):
-        load_dataset(cls.hf_url, hf_option)
-
-    @classmethod
-    def _extract(cls, **kwargs):
-        pass
+        super()._download(hf_option)
 
     def create_catalogue(self, hf_option = 'chicken-re-id-all-visibility') -> pd.DataFrame:
         dataset = load_dataset(self.hf_url, hf_option)

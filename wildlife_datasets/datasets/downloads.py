@@ -1,5 +1,6 @@
 import os
 import shutil
+from datasets import load_dataset
 from . import utils
 
 def check_attribute(obj, attr):
@@ -68,3 +69,16 @@ class DownloadKaggle:
                 Either the download was not completed or the Kaggle terms were not agreed with.
                 Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#{display_name}'''
             raise Exception(exception_text)
+        
+class DownloadHuggingFace:
+    determined_by_df = False
+    saved_to_system_folder = True
+
+    @classmethod
+    def _download(cls, *args, **kwargs):
+        check_attribute(cls, 'hf_url')
+        load_dataset(cls.hf_url, *args, **kwargs)
+
+    @classmethod
+    def _extract(cls, **kwargs):
+        pass
