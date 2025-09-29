@@ -1,4 +1,5 @@
 from .datasets import DatasetFactory, WildlifeDataset
+from .downloads import DownloadHuggingFace, DownloadKaggle, DownloadURL
 from .aau_zebrafish import AAUZebraFish
 from .aerial_cattle import AerialCattle2017
 from .amvrakikos_turtles import AmvrakikosTurtles
