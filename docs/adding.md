@@ -80,7 +80,7 @@ https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid2022
 It is sufficient to provided `kaggle_url` and `kaggle_type` as in the two examples below. The loaded class `DownloadKaggle` will add all the required functions for downloads and it is sufficient to write the `create_catalogue` function mentioned above.
 
 ```python
-from wildlife_datasets.datasets import WildlifeDataset, DownloadKaggle
+from wildlife_datasets.datasets import DownloadKaggle, WildlifeDataset
 
 class AnimalCLEF2025(DownloadKaggle, WildlifeDataset):    
     kaggle_url = 'animal-clef-2025'
@@ -96,11 +96,13 @@ class SeaTurtleID2022(DownloadKaggle, WildlifeDataset):
 Datasets may be stored at a private server. When there is a single file to download and extract, it is stored in the `url` and `archive` attributes. The latter is usually the last part of the former. Whenever multiple files need to be downloaded, they are saved in the `downloads` attribute as the examples below show.
 
 ```python
-class CTai(DownloadURL, DatasetFactory):
+from wildlife_datasets.datasets import DownloadURL, WildlifeDataset
+
+class CTai(DownloadURL, WildlifeDataset):
     url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
     archive = 'master.zip'
 
-class MacaqueFaces(DownloadURL, DatasetFactory):
+class MacaqueFaces(DownloadURL, WildlifeDataset):
     downloads = [
         ('https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces.zip', 'MacaqueFaces.zip'),
         ('https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces_ImageInfo.csv', 'MacaqueFaces_ImageInfo.csv'),
@@ -112,7 +114,9 @@ class MacaqueFaces(DownloadURL, DatasetFactory):
 When the dataset is saved to [HuggingFace](https://huggingface.co/), it is sufficient to provide the `hf_url` attribute. However, due to different way of storing the images for these datasets, it may be necessary to overwrite the method `get_image` as showed, for example, in [this file](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/chicks4free_id.py).
 
 ```python
-class Chicks4FreeID(DownloadHuggingFace, DatasetFactory):
+from wildlife_datasets.datasets import DownloadHuggingFace, WildlifeDataset
+
+class Chicks4FreeID(DownloadHuggingFace, WildlifeDataset):
     hf_url = 'dariakern/Chicks4FreeID'
 ```
 

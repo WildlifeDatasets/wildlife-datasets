@@ -32,7 +32,7 @@ class MacaqueFaces(DownloadURL, DatasetFactory):
         ('https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces.zip', 'MacaqueFaces.zip'),
         ('https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces_ImageInfo.csv', 'MacaqueFaces_ImageInfo.csv'),
     ]
-    extract_add_folder = False # Not needed, only for backward compatibility
+    extract_add_folder = False
     
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset
