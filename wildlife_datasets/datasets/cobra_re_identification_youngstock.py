@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 732,
 }
 
-class CoBRAReIdentificationYoungstock(DownloadURL, DatasetFactory):
+class CoBRAReIdentificationYoungstock(DownloadURL, WildlifeDataset):
     summary = summary
     url = 'https://zenodo.org/records/15018518/files/re_identification_youngstock.zip?download=1'
     archive = 're_identification_youngstock.zip'

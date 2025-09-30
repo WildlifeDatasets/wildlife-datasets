@@ -2,7 +2,7 @@ import os
 import datetime
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -27,7 +27,7 @@ summary = {
     'size': 18881,
 }
 
-class Cows2021(DownloadURL, DatasetFactory):
+class Cows2021(DownloadURL, WildlifeDataset):
     outdated_dataset = True
     summary = summary
     url = 'https://data.bris.ac.uk/datasets/tar/4vnrca7qw1642qlwxjadp87h7.zip'

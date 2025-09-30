@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 634,
 }
 
-class CZoo(DownloadURL, DatasetFactory):
+class CZoo(DownloadURL, WildlifeDataset):
     summary = summary
     url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
     archive = 'master.zip'

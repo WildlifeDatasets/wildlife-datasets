@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 11000,
 }
 
-class CatIndividualImages(DownloadKaggle, DatasetFactory):
+class CatIndividualImages(DownloadKaggle, WildlifeDataset):
     summary = summary
     kaggle_url = 'timost1234/cat-individuals'
     kaggle_type = 'datasets'

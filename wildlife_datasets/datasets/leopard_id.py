@@ -1,5 +1,5 @@
 import pandas as pd
-from .datasets_wildme import DatasetFactoryWildMe
+from .datasets_wildme import WildlifeDatasetWildMe
 from .downloads import DownloadURL
 
 summary = {
@@ -24,7 +24,7 @@ summary = {
     'size': 8565,
 }
 
-class LeopardID2022(DownloadURL, DatasetFactoryWildMe):
+class LeopardID2022(DownloadURL, WildlifeDatasetWildMe):
     summary = summary
     url = 'https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/leopard.coco.tar.gz'
     archive = 'leopard.coco.tar.gz'

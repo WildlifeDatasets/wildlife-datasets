@@ -2,7 +2,7 @@ import os
 import shutil
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
 
 summary = {
@@ -27,7 +27,7 @@ summary = {
     'size': 9790,
 }
 
-class NOAARightWhale(DownloadKaggle, DatasetFactory):
+class NOAARightWhale(DownloadKaggle, WildlifeDataset):
     summary = summary
     kaggle_url = 'noaa-right-whale-recognition'
     kaggle_type = 'competitions'

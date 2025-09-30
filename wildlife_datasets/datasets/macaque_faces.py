@@ -1,7 +1,7 @@
 import os
 import datetime
 import pandas as pd
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 12,
 }
 
-class MacaqueFaces(DownloadURL, DatasetFactory):
+class MacaqueFaces(DownloadURL, WildlifeDataset):
     summary = summary
     downloads = [
         ('https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces.zip', 'MacaqueFaces.zip'),

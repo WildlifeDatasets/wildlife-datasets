@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 12093,
 }
 
-class AAUZebraFish(DownloadKaggle, DatasetFactory):
+class AAUZebraFish(DownloadKaggle, WildlifeDataset):
     summary = summary
     kaggle_url = 'aalborguniversity/aau-zebrafish-reid'
     kaggle_type = 'datasets'

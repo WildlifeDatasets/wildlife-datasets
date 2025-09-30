@@ -3,7 +3,7 @@ import json
 import numpy as np
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -28,7 +28,7 @@ summary = {
     'size': 2441,
 }
 
-class NDD20(DownloadURL, DatasetFactory):
+class NDD20(DownloadURL, WildlifeDataset):
     outdated_dataset = True
     summary = summary
     url = 'https://data.ncl.ac.uk/ndownloader/files/22774175'

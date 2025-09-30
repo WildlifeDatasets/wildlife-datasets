@@ -799,6 +799,6 @@ class WildlifeDataset:
                 plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
         return fig
 
-# Alias for DatasetFactory
+# Alias for WildlifeDataset
 class DatasetFactory(WildlifeDataset):
     pass

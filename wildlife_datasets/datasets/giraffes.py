@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 
 summary = {
     'licenses': None,
@@ -26,7 +26,7 @@ summary = {
     'size': 1719,
 }
 
-class Giraffes(DatasetFactory):
+class Giraffes(WildlifeDataset):
     summary = summary
 
     @classmethod

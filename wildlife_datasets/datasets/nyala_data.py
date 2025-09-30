@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -27,7 +27,7 @@ summary = {
     'size': 495,
 }
 
-class NyalaData(DownloadURL, DatasetFactory):
+class NyalaData(DownloadURL, WildlifeDataset):
     summary = summary
     url = 'https://github.com/tvanzyl/wildlife_reidentification/archive/refs/heads/main.zip'
     archive = 'main.zip'

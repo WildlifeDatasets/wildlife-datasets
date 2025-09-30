@@ -1,5 +1,5 @@
 import pandas as pd
-from .datasets_wildme import DatasetFactoryWildMe
+from .datasets_wildme import WildlifeDatasetWildMe
 from .downloads import DownloadURL
 
 summary = {
@@ -24,7 +24,7 @@ summary = {
     'size': 3441,
 }
 
-class HyenaID2022(DownloadURL, DatasetFactoryWildMe):
+class HyenaID2022(DownloadURL, WildlifeDatasetWildMe):
     summary = summary
     url = 'https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/hyena.coco.tar.gz'
     archive = 'hyena.coco.tar.gz'

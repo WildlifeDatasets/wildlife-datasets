@@ -1,8 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
-from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -27,7 +26,7 @@ summary = {
     'size': 6482,
 }
 
-class ZindiTurtleRecall(DownloadURL, DatasetFactory):
+class ZindiTurtleRecall(DownloadURL, WildlifeDataset):
     summary = summary
     downloads = [
         ('https://storage.googleapis.com/dm-turtle-recall/train.csv', 'train.csv'),

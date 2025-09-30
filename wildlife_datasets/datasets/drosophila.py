@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 74856,
 }
 
-class Drosophila(DownloadURL, DatasetFactory):
+class Drosophila(DownloadURL, WildlifeDataset):
     summary = summary
     downloads = [
         ('https://dataverse.scholarsportal.info/api/access/datafile/71066', 'week1_Day1_train_01to05.zip'),

@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 2272,
 }
 
-class OpenCows2020(DownloadURL, DatasetFactory):
+class OpenCows2020(DownloadURL, WildlifeDataset):
     summary = summary
     url = 'https://data.bris.ac.uk/datasets/tar/10m32xl88x2b61zlkkgz3fml17.zip'
     archive = '10m32xl88x2b61zlkkgz3fml17.zip'

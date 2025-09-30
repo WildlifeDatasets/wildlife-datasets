@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 
 summary = {
     'licenses': 'Other',
@@ -26,7 +26,7 @@ summary = {
     'size': 625,
 }
 
-class ELPephants(DatasetFactory):
+class ELPephants(WildlifeDataset):
     summary = summary
     archive = 'ELPephant (elephant ID system).zip'
 

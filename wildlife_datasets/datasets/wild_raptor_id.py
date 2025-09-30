@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 2600,
 }
 
-class WildRaptorID(DownloadURL, DatasetFactory):
+class WildRaptorID(DownloadURL, WildlifeDataset):
     summary = summary
     url = 'https://zenodo.org/records/16731160/files/wild_raptor_id.zip?download=1'
     archive = 'wild_raptor_id.zip'

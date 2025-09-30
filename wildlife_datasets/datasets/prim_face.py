@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -28,7 +28,7 @@ summary = {
     'size': 3700,
 }
 
-class PrimFace(DownloadURL, DatasetFactory):
+class PrimFace(DownloadURL, WildlifeDataset):
     summary = summary
     downloads = [
         ('https://visiome.neuroinf.jp/database/file/1508/j01.zip', 'j01.zip'),

@@ -3,9 +3,9 @@ import json
 import numpy as np
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 
-class DatasetFactoryWildMe(DatasetFactory):
+class WildlifeDatasetWildMe(WildlifeDataset):
     def create_catalogue_wildme(self, prefix: str, year: int) -> pd.DataFrame:
         # Get paths for annotation JSON file and for folder with images
         path_json = os.path.join(prefix + '.coco', 'annotations', 'instances_train' + str(year) + '.json')

@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 
 summary = {
     'licenses': 'Attribution-ShareAlike 3.0 Unported',
@@ -25,7 +25,7 @@ summary = {
     'size': 229,
 }
 
-class StripeSpotter(DatasetFactory):
+class StripeSpotter(WildlifeDataset):
     summary = summary
 
     @classmethod

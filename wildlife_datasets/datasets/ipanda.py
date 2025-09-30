@@ -4,7 +4,7 @@ import string
 import numpy as np
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 
 summary = {
     'licenses': None,
@@ -28,7 +28,7 @@ summary = {
     'size': 929,
 }
 
-class IPanda50(DatasetFactory):
+class IPanda50(WildlifeDataset):
     summary = summary
     downloads = [
         ('https://drive.google.com/uc?id=1nkh-g6a8JvWy-XsMaZqrN2AXoPlaXuFg', 'iPanda50-images.zip'),

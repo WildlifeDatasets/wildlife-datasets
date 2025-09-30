@@ -1,9 +1,8 @@
 import os
 import shutil
-import numpy as np
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 
 summary = {
     'licenses': 'MIT License',
@@ -27,7 +26,7 @@ summary = {
     'size': 11978,
 }
 
-class SMALST(DatasetFactory):
+class SMALST(WildlifeDataset):
     summary = summary
     url = 'https://drive.google.com/uc?id=1yVy4--M4CNfE5x9wUr1QBmAXEcWb6PWF'
     archive = 'zebra_training_set.zip'

@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadHuggingFace
 from datasets import load_dataset
 
@@ -26,7 +26,7 @@ summary = {
     'size': 1401,
 }
 
-class Chicks4FreeID(DownloadHuggingFace, DatasetFactory):
+class Chicks4FreeID(DownloadHuggingFace, WildlifeDataset):
     summary = summary
     hf_url = 'dariakern/Chicks4FreeID'
 

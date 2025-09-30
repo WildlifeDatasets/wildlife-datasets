@@ -2,7 +2,7 @@ import os
 import json
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 
 summary = {
     'licenses': 'Attribution-NonCommercial-ShareAlike 4.0 International',
@@ -26,7 +26,7 @@ summary = {
     'size': 1760,
 }
 
-class ATRW(DatasetFactory):
+class ATRW(WildlifeDataset):
     summary = summary
     url = 'https://github.com/cvwc2019/ATRWEvalScript/archive/refs/heads/main.zip'
     archive = 'main.zip'

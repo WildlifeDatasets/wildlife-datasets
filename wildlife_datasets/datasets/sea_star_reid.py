@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 1689,
 }
 
-class SeaStarReID2023(DownloadURL, DatasetFactory):
+class SeaStarReID2023(DownloadURL, WildlifeDataset):
     summary = summary
     url = 'https://storage.googleapis.com/public-datasets-lila/sea-star-re-id/sea-star-re-id.zip'
     archive = 'sea-star-re-id.zip'

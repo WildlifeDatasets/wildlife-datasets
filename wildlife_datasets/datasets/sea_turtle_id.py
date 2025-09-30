@@ -2,7 +2,7 @@ import os
 import json
 import numpy as np
 import pandas as pd
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
 
 summary_2022 = {
@@ -49,7 +49,7 @@ summary_heads = {
     'size': 425,
 }
 
-class SeaTurtleID2022(DownloadKaggle, DatasetFactory):
+class SeaTurtleID2022(DownloadKaggle, WildlifeDataset):
     summary = summary_2022
     kaggle_url = 'wildlifedatasets/seaturtleid2022'
     kaggle_type = 'datasets'
@@ -107,7 +107,7 @@ class SeaTurtleID2022(DownloadKaggle, DatasetFactory):
         df['image_id'] = range(1, len(df)+1)
         return self.finalize_catalogue(df)
 
-class SeaTurtleIDHeads(DownloadKaggle, DatasetFactory):
+class SeaTurtleIDHeads(DownloadKaggle, WildlifeDataset):
     summary = summary_heads
     kaggle_url = 'wildlifedatasets/seaturtleidheads'
     kaggle_type = 'datasets'

@@ -2,7 +2,7 @@ import os
 import shutil
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 
 summary = {
     'licenses': 'Attribution 4.0 International (CC BY 4.0)',
@@ -26,7 +26,7 @@ summary = {
     'size': 1816,
 }
 
-class SealID(DatasetFactory):
+class SealID(WildlifeDataset):
     summary = summary
     prefix = 'source_'
     archive = '22b5191e-f24b-4457-93d3-95797c900fc0_ui65zipk.zip'

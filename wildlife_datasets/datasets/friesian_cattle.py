@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary_2015 = {
@@ -49,7 +49,7 @@ summary_2017 = {
     'size': 343,
 }
 
-class FriesianCattle2015(DownloadURL, DatasetFactory):
+class FriesianCattle2015(DownloadURL, WildlifeDataset):
     outdated_dataset = True
     summary = summary_2015
     url = 'https://data.bris.ac.uk/datasets/wurzq71kfm561ljahbwjhx9n3/wurzq71kfm561ljahbwjhx9n3.zip'
@@ -86,7 +86,7 @@ class FriesianCattle2015v2(FriesianCattle2015):
         return self.fix_labels_remove_identity(df, identities_to_remove)
 
 
-class FriesianCattle2017(DownloadURL, DatasetFactory):
+class FriesianCattle2017(DownloadURL, WildlifeDataset):
     summary = summary_2017
     url = 'https://data.bris.ac.uk/datasets/2yizcfbkuv4352pzc32n54371r/2yizcfbkuv4352pzc32n54371r.zip'
     archive = '2yizcfbkuv4352pzc32n54371r.zip'

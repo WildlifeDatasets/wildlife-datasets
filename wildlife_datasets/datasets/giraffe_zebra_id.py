@@ -1,5 +1,5 @@
 import pandas as pd
-from .datasets_wildme import DatasetFactoryWildMe
+from .datasets_wildme import WildlifeDatasetWildMe
 from .downloads import DownloadURL
 
 summary = {
@@ -24,7 +24,7 @@ summary = {
     'size': 10433,
 }
 
-class GiraffeZebraID(DownloadURL, DatasetFactoryWildMe):
+class GiraffeZebraID(DownloadURL, WildlifeDatasetWildMe):
     summary = summary
     url = 'https://lilawildlife.blob.core.windows.net/lila-wildlife/wild-me/gzgc.coco.tar.gz'
     archive = 'gzgc.coco.tar.gz'

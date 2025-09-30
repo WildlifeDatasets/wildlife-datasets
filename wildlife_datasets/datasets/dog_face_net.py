@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 76,
 }
 
-class DogFaceNet(DownloadURL, DatasetFactory):
+class DogFaceNet(DownloadURL, WildlifeDataset):
     summary = summary
     url = 'https://github.com/GuillaumeMougeot/DogFaceNet/releases/download/dataset/DogFaceNet_Dataset_224_1.zip'
     archive = 'DogFaceNet_Dataset_224_1.zip'

@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 32,
 }
 
-class ReunionTurtles(DownloadKaggle, DatasetFactory):
+class ReunionTurtles(DownloadKaggle, WildlifeDataset):
     summary = summary
     kaggle_url = 'wildlifedatasets/reunionturtles'
     kaggle_type = 'datasets'

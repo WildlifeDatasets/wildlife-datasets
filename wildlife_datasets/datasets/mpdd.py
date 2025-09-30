@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 29.6,
 }
 
-class MPDD(DownloadURL, DatasetFactory):
+class MPDD(DownloadURL, WildlifeDataset):
     summary = summary
     url = 'https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/v5j6m8dzhv-1.zip'
     archive = 'MPDD.zip'

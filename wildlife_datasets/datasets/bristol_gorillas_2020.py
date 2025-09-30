@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 
 summary = {
     'licenses': 'Non-Commercial Government Licence for public sector information',
@@ -25,7 +25,7 @@ summary = {
     'size': 15600,
 }
 
-class BristolGorillas2020(DatasetFactory):
+class BristolGorillas2020(WildlifeDataset):
     summary = summary
     url = 'https://data.bris.ac.uk/datasets/tar/jf0859kboy8k2ufv60dqeb2t8.zip'
     archive = 'jf0859kboy8k2ufv60dqeb2t8.zip'

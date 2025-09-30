@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 17600,
 }
 
-class CattleMuzzle(DownloadURL, DatasetFactory):
+class CattleMuzzle(DownloadURL, WildlifeDataset):
     summary = summary
     url = 'https://cloud.une.edu.au/index.php/s/eMwaHAPK08dCDru/download'
     archive = 'Cattle Identification (supplementary material).zip'

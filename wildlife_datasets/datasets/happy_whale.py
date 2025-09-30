@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
 
 summary = {
@@ -27,7 +27,7 @@ summary = {
     'size': 61912,
 }
 
-class HappyWhale(DownloadKaggle, DatasetFactory):
+class HappyWhale(DownloadKaggle, WildlifeDataset):
     summary = summary
     kaggle_url = 'happy-whale-and-dolphin'
     kaggle_type = 'competitions'

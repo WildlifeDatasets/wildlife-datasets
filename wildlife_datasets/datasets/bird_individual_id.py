@@ -3,7 +3,7 @@ import shutil
 import numpy as np
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 
 summary = {
     'licenses': None,
@@ -27,7 +27,7 @@ summary = {
     'size': 70656,
 }
 
-class BirdIndividualID(DatasetFactory):
+class BirdIndividualID(WildlifeDataset):
     summary = summary
     prefix1 = 'Original_pictures'
     prefix2 = 'IndividualID'

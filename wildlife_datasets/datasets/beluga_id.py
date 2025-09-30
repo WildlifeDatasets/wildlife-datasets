@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from .datasets_wildme import DatasetFactoryWildMe
+from .datasets_wildme import WildlifeDatasetWildMe
 from .downloads import DownloadURL
 
 summary = {
@@ -25,7 +25,7 @@ summary = {
     'size': 590,
 }
 
-class BelugaID(DownloadURL, DatasetFactoryWildMe):
+class BelugaID(DownloadURL, WildlifeDatasetWildMe):
     outdated_dataset = True
     summary = summary
     downloads = [

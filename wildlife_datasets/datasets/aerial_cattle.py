@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from . import utils
-from .datasets import DatasetFactory
+from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
@@ -26,7 +26,7 @@ summary = {
     'size': 724,
 }
 
-class AerialCattle2017(DownloadURL, DatasetFactory):
+class AerialCattle2017(DownloadURL, WildlifeDataset):
     summary = summary
     url = 'https://data.bris.ac.uk/datasets/tar/3owflku95bxsx24643cybxu3qh.zip'
     archive = '3owflku95bxsx24643cybxu3qh.zip'
