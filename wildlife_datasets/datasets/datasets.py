@@ -17,7 +17,7 @@ class WildlifeDataset:
       df (pd.DataFrame): A full dataframe of the data.
       summary (dict): Summary of the dataset.
       root (str): Root directory for the data.
-      update_wrong_labels(bool): Whether `fix_labels` should be called.
+      update_wrong_labels (bool): Whether `fix_labels` should be called.
       unknown_name (str): Name of the unknown class.
       outdated_dataset (bool): Tracks whether dataset was replaced by a new version.
       determined_by_df (bool): Specifies whether dataset is completely determined by its dataframe.
@@ -27,6 +27,8 @@ class WildlifeDataset:
       transform (Callable): Applied transform when loading the image.
       img_load (str): Applied transform when loading the image.
       labels_string (List[str]): List of labels in strings.
+      load_label (bool): Whether dataset[k] should return only image or also identity.
+      factorize_label (bool): Whether labels are returned factorized (intergers) or original (possibly strings).
       col_path (str): Column name containing image paths.
       col_label (str): Column name containing individual animal names (labels).
     """
@@ -54,6 +56,7 @@ class WildlifeDataset:
             remove_columns: bool = False,
             check_files: bool = True,
             load_label: bool = False,
+            factorize_label: bool = False,
             col_path: str = "path",
             col_label: str = "identity",            
             **kwargs) -> None:
@@ -72,6 +75,7 @@ class WildlifeDataset:
             remove_columns (bool, optional): Whether constant columns are removed in `finalize_catalogue`.
             check_files (bool, optional): Whether files should be checks for existence in `finalize_catalogue`.
             load_label (bool, optional): Whether dataset[k] should return only image or also identity.
+            factorize_label (bool, optional): Whether labels are returned factorized (intergers) or original (possibly strings).
             col_path (str, optional): Column name containing image paths.
             col_label (str, optional): Column name containing individual animal names (labels).
         """
@@ -105,6 +109,8 @@ class WildlifeDataset:
             else:
                 self.img_load = "full"
         self.load_label = load_label
+        self.factorize_label = factorize_label
+        self.labels, self.labels_map = pd.factorize(self.df[self.col_label].to_numpy())
 
     @property
     def labels_string(self):
@@ -137,7 +143,9 @@ class WildlifeDataset:
 
         img = self.get_image(idx)
         img = self.apply_segmentation(img, idx)
-        if self.load_label:
+        if self.load_label and self.factorize_label:
+            return img, self.labels[idx]
+        elif self.load_label:
             return img, self.df[self.col_label].iloc[idx]
         else:
             return img
