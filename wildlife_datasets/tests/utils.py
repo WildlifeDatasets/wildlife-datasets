@@ -40,5 +40,5 @@ def add_datasets(datasets, skip_rows=100, ratio_unknown=0.2, ratio_years=0.2):
             datasets.append(create_dataset(df))
     for i in range(len(datasets)):
         df = datasets[i].df.copy()
-        datasets.append(create_dataset(df, col_label='id', col_path='cesticka'))
+        datasets.append(create_dataset(df, col_label='identity', col_path='path'))
     return datasets
