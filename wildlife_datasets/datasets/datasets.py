@@ -1,4 +1,5 @@
 from __future__ import annotations
+from contextlib import contextmanager
 import os
 from copy import deepcopy
 import pandas as pd
@@ -127,7 +128,18 @@ class WildlifeDataset:
     @metadata.setter
     def metadata(self, value):
         self.df = value	
-        
+
+    @contextmanager
+    def temporary_attrs(self, **kwargs):
+        old_values = {k: getattr(self, k) for k in kwargs}
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+        try:
+            yield
+        finally:
+            for k, v in old_values.items():
+                setattr(self, k, v)
+
     def __len__(self):
         return len(self.df)
 
@@ -694,6 +706,7 @@ class WildlifeDataset:
             header_cols: Optional[List[str]] = None,
             idx: Optional[Union[List[bool],List[int]]] = None,
             background_color: Tuple[int] = (0, 0, 0),
+            keep_transform: bool = False,
             **kwargs
             ) -> None:
         """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
@@ -708,6 +721,7 @@ class WildlifeDataset:
             header_cols (Optional[List[str]], optional): List of headers for each column.
             idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
             background_color (Tuple[int], optional): Background color of the grid.
+            keep_transform (bool, optional): Whether `self.transform` is applied.
         """
 
         if len(self.df) == 0:
@@ -731,10 +745,12 @@ class WildlifeDataset:
         for k in idx:
             if k >= 0:
                 # Load the image with index k
-                if self.load_label:
-                    im, _ = self[k]
+                if keep_transform:
+                    with self.temporary_attrs(load_label=False):
+                        im = self[k]
                 else:
-                    im = self[k]
+                    with self.temporary_attrs(load_label=False, transform=None):
+                        im = self[k]
                 ims.append(im)
                 ratios.append(im.size[0] / im.size[1])
             else:
