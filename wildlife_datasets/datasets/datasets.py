@@ -111,7 +111,7 @@ class WildlifeDataset:
                 self.img_load = "full"
         self.load_label = load_label
         self.factorize_label = factorize_label
-        self.labels, self.labels_map = pd.factorize(self.df[self.col_label].to_numpy())
+        self.compute_attributes()
 
     @property
     def labels_string(self):
@@ -162,6 +162,9 @@ class WildlifeDataset:
         else:
             return img
 
+    def compute_attributes(self) -> None:
+        self.labels, self.labels_map = pd.factorize(self.df[self.col_label].to_numpy())
+
     def get_subset(self, idx: Union[List[int], List[bool]]) -> WildlifeDataset:
         """Returns a subset of the class.
 
@@ -177,6 +180,7 @@ class WildlifeDataset:
             dataset.df = dataset.df[idx].reset_index(drop=True)
         else:
             dataset.df = dataset.df.loc[idx].reset_index(drop=True)
+        dataset.compute_attributes()
         return dataset
 
     def get_image(self, idx: int) -> Image:
