@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-<img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/datasets-logo.png" alt="Wildlife datasets" width="300">
+<img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/datasets-logo.png" alt="WildlifeDatasets" width="300">
 </p>
 
 <div align="center">
@@ -38,6 +38,7 @@ The aim of the project is to provide a comprehensive overview of datasets for wi
 - overview of 50 publicly available wildlife re-identification datasets and 2 metadatasets.
 - utilities to mass download and convert them into a unified format and fix some wrong labels.
 - default splits for several machine learning tasks including the ability to create additional splits.
+- synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools) used for training ML models.
 
 An introductory example is provided in a [Jupyter notebook](notebooks/introduction.ipynb). The package provides a natural synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools), which provides our [MegaDescriptor](https://huggingface.co/BVRA/MegaDescriptor-L-384) model and tools for training neural networks. 
 
