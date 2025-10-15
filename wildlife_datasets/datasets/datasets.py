@@ -496,9 +496,9 @@ class WildlifeDataset:
         return df
 
     def finalize_catalogue(
-            self,
-            df: pd.DataFrame,
-            ) -> pd.DataFrame:
+        self,
+        df: pd.DataFrame = None,
+    ) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
 
         Reorders the columns and removes constant columns.
@@ -511,7 +511,8 @@ class WildlifeDataset:
         Returns:
             A full dataframe of the data, slightly modified.
         """
-
+        if df == None:
+            df = self.df
         if self.update_wrong_labels:
             df = self.fix_labels(df)
         self.rename_column(df, 'path', self.col_path)
@@ -529,25 +530,26 @@ class WildlifeDataset:
                 self.check_files_exist(df['segmentation'])
         return df
 
-    def rename_column(self, df, name_old, name_new):
+    def rename_column(self, df: pd.DataFrame, name_old, name_new):
         if name_old != name_new:
             if name_new in df.columns:
                 raise Exception(f'Column {name_old} already present in dataframe. Cannot rename {name_old} to it.')
             else:
                 return df.rename({name_old: name_new}, axis=1, inplace=True)
 
-    def check_required_columns(self, df: pd.DataFrame) -> None:
+    def check_required_columns(self, df: pd.DataFrame = None) -> None:
         """Check if all required columns are present.
 
         Args:
             df (pd.DataFrame): A full dataframe of the data.
         """
-
-        for col_name in ['image_id', self.col_label, self.col_path]:
+        if df == None:
+            df = self.df
+        for col_name in ["image_id", self.col_label, self.col_path]:
             if col_name not in df.columns:
                 raise(Exception('Column %s must be in the dataframe columns.' % col_name))
 
-    def check_types_columns(self, df: pd.DataFrame) -> None:
+    def check_types_columns(self, df: pd.DataFrame = None) -> None:
         """Checks if columns are in correct formats.
 
         The format are specified in `requirements`, which is list
@@ -558,7 +560,8 @@ class WildlifeDataset:
         Args:
             df (pd.DataFrame): A full dataframe of the data.
         """
-
+        if df == None:
+            df = self.df
         requirements = [
             ('image_id', ['int', 'str']),
             (self.col_label, ['int', 'str']),
@@ -646,7 +649,7 @@ class WildlifeDataset:
         df = df.sort_values('image_id').reset_index(drop=True)
         return df.reindex(columns=col_names)
 
-    def remove_constant_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+    def remove_constant_columns(self, df: pd.DataFrame = None) -> pd.DataFrame:
         """Removes columns with a single unique value.
 
         Args:
@@ -654,46 +657,95 @@ class WildlifeDataset:
 
         Returns:
             A full dataframe of the data, slightly modified.
-        """ 
-
+        """
+        if df == None:
+            df = self.df
         for df_name in list(df.columns):
-            if df[df_name].astype('str').nunique() == 1:
+            if df[df_name].astype("str").nunique() == 1:
                 df = df.drop([df_name], axis=1)
         return df
 
-    def check_unique_id(self, df: pd.DataFrame) -> None:
+    def check_unique_id(self, df: pd.DataFrame = None) -> None:
         """Checks if values in the id column are unique.
 
         Args:
             df (pd.DataFrame): A full dataframe of the data.
         """
+        if df == None:
+            df = self.df
+        if len(df["image_id"].unique()) != len(df):
+            raise (Exception("Image ID not unique."))
 
-        if len(df['image_id'].unique()) != len(df):
-            raise(Exception('Image ID not unique.'))
-
-    def check_files_exist(self, col: pd.Series) -> None:
+    def check_files_exist(self, col: pd.Series | str = col_path) -> None:
         """Checks if paths in a given column exist.
 
         Args:
             col (pd.Series): A column of a dataframe.
         """
-
+        if type(col) == str:
+            if self.df.columns.isin([col]).any():
+                col = self.df[col]
+            else:
+                raise (Exception("Requested column is not in dataframe."))
+        bad_paths = []
         for path in col:
-            if type(path) == str and not os.path.exists(os.path.join(self.root, path)):
-                raise(Exception('Path does not exist:' + os.path.join(self.root, path)))
+            if type(path) == str and not os.path.exists(
+                os.path.join(self.root, path)
+            ):
+                bad_paths.append(path)
 
-    def check_files_names(self, col: pd.Series) -> None:
-        """Checks if paths contain .
+        if len(bad_paths) > 0:
+            print(
+                "The following bad paths were identified. All are relative to:"
+            )
+            print(self.root)
+            print("")
+            print("|||||")
+            print("vvvvv")
+            for idx, path in enumerate(bad_paths):
+                print(str(idx) + ": " + path)
+            print("^^^^^")
+            print("|||||")
+            raise (
+                Exception(
+                    "Some files not found. See above printouts for additional information."
+                )
+            )
+        print("All file paths exist.")
+
+    def check_files_names(self, col: pd.Series | str = col_path) -> None:
+        """Checks if paths contain characters which may cause issues.
 
         Args:
             col (pd.Series): A column of a dataframe.
         """
 
+        if type(col) == str:
+            if self.df.columns.isin([col]).any():
+                col = self.df[col]
+            else:
+                raise (Exception("Requested column is not in dataframe."))
+        bad_names = []
         for path in col:
             try:
                 path.encode("iso-8859-1")
             except UnicodeEncodeError:
-                raise(Exception('Characters in path may cause problems. Please use only ISO-8859-1 characters: ' + os.path.join(path)))
+                bad_names.append(path)
+
+        if len(bad_names) > 0:
+            print("The following bad names were identified.")
+            print("")
+            print("|||||")
+            print("vvvvv")
+            for idx, path in enumerate(bad_names):
+                print(str(idx) + ": " + path)
+            print("^^^^^")
+            print("|||||")
+            raise (
+                Exception(
+                    "Characters in path may cause problems. Please use only ISO-8859-1 characters. See print out above for offending files."
+                )
+            )
 
     def plot_grid(
             self,
