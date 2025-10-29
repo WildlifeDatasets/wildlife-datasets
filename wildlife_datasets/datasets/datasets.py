@@ -440,6 +440,7 @@ class WildlifeDataset:
         Returns:
             A full dataframe of the data.
         """
+
         for old_identity, new_identity in replace_identity:
             df[col] = df[col].replace({old_identity: new_identity})
         return df
@@ -460,6 +461,7 @@ class WildlifeDataset:
         Returns:
             A full dataframe of the data.
         """
+
         idx_remove = [identity in identities_to_remove for identity in df[col]]
         return df[~np.array(idx_remove)]
 
@@ -482,6 +484,7 @@ class WildlifeDataset:
         Returns:
             A full dataframe of the data.
         """
+
         for image_name, old_identity, new_identity in replace_identity:
             n_replaced = 0
             for index, df_row in df.iterrows():
@@ -496,9 +499,9 @@ class WildlifeDataset:
         return df
 
     def finalize_catalogue(
-        self,
-        df: pd.DataFrame = None,
-    ) -> pd.DataFrame:
+            self,
+            df: pd.DataFrame = None,
+            ) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
 
         Reorders the columns and removes constant columns.
@@ -506,12 +509,13 @@ class WildlifeDataset:
         Checks if ids are unique and if all files exist.
 
         Args:
-            df (pd.DataFrame): A full dataframe of the data.
+            df (pd.DataFrame, optional): A full dataframe of the data.
 
         Returns:
             A full dataframe of the data, slightly modified.
         """
-        if df == None:
+
+        if df is None:
             df = self.df
         if self.update_wrong_labels:
             df = self.fix_labels(df)
@@ -541,13 +545,14 @@ class WildlifeDataset:
         """Check if all required columns are present.
 
         Args:
-            df (pd.DataFrame): A full dataframe of the data.
+            df (pd.DataFrame, optional): A full dataframe of the data.
         """
-        if df == None:
+
+        if df is None:
             df = self.df
         for col_name in ["image_id", self.col_label, self.col_path]:
             if col_name not in df.columns:
-                raise(Exception('Column %s must be in the dataframe columns.' % col_name))
+                raise Exception('Column %s must be in the dataframe columns.' % col_name)
 
     def check_types_columns(self, df: pd.DataFrame = None) -> None:
         """Checks if columns are in correct formats.
@@ -558,9 +563,10 @@ class WildlifeDataset:
         must be at least one of the formats.
 
         Args:
-            df (pd.DataFrame): A full dataframe of the data.
+            df (pd.DataFrame, optional): A full dataframe of the data.
         """
-        if df == None:
+
+        if df is None:
             df = self.df
         requirements = [
             ('image_id', ['int', 'str']),
@@ -621,7 +627,7 @@ class WildlifeDataset:
                 return None
             except:
                 pass
-        raise(Exception('Column %s has wrong type. Allowed types = %s' % (col_name, str(allowed_types))))
+        raise Exception('Column %s has wrong type. Allowed types = %s' % (col_name, str(allowed_types)))
 
     def reorder_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders rows and columns in the dataframe.
@@ -653,12 +659,13 @@ class WildlifeDataset:
         """Removes columns with a single unique value.
 
         Args:
-            df (pd.DataFrame): A full dataframe of the data.
+            df (pd.DataFrame, optional): A full dataframe of the data.
 
         Returns:
             A full dataframe of the data, slightly modified.
         """
-        if df == None:
+
+        if df is None:
             df = self.df
         for df_name in list(df.columns):
             if df[df_name].astype("str").nunique() == 1:
@@ -669,12 +676,13 @@ class WildlifeDataset:
         """Checks if values in the id column are unique.
 
         Args:
-            df (pd.DataFrame): A full dataframe of the data.
+            df (pd.DataFrame, optional): A full dataframe of the data.
         """
-        if df == None:
+
+        if df is None:
             df = self.df
         if len(df["image_id"].unique()) != len(df):
-            raise (Exception("Image ID not unique."))
+            raise Exception("Image ID not unique.")
 
     def check_files_exist(self, col: pd.Series | str = col_path) -> None:
         """Checks if paths in a given column exist.
@@ -682,11 +690,12 @@ class WildlifeDataset:
         Args:
             col (pd.Series): A column of a dataframe.
         """
+        
         if type(col) == str:
             if self.df.columns.isin([col]).any():
                 col = self.df[col]
             else:
-                raise (Exception("Requested column is not in dataframe."))
+                raise Exception("Requested column is not in dataframe.")
         bad_paths = []
         for path in col:
             if type(path) == str and not os.path.exists(
@@ -724,7 +733,7 @@ class WildlifeDataset:
             if self.df.columns.isin([col]).any():
                 col = self.df[col]
             else:
-                raise (Exception("Requested column is not in dataframe."))
+                raise Exception("Requested column is not in dataframe.")
         bad_names = []
         for path in col:
             try:
@@ -824,7 +833,7 @@ class WildlifeDataset:
         if header_cols is not None:
             offset_h = 30
             if len(header_cols) != n_cols:
-                raise(Exception("Length of header_cols must be the same as n_cols."))
+                raise Exception("Length of header_cols must be the same as n_cols.")
         else:
             offset_h = 0
 
