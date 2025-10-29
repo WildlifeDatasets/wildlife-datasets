@@ -693,10 +693,10 @@ class WildlifeDataset:
 
         bad_paths = []
         for path in col:
-            if type(path) == str and not os.path.exists(os.path.join(self.root, path)):
+            if isinstance(path, str) and not os.path.exists(os.path.join(self.root, path)):
                 bad_paths.append(path)
         if len(bad_paths) > 0:
-            print("The following bad paths were identified.")                
+            print("The following non-existing images were identified.")                
             for path in bad_paths:
                 print(path)
             raise Exception('Some files not found')
@@ -710,12 +710,14 @@ class WildlifeDataset:
 
         bad_names = []
         for path in col:
+            if not isinstance(path, str):
+                continue
             try:
                 path.encode("iso-8859-1")
             except UnicodeEncodeError:
                 bad_names.append(path)
         if len(bad_names) > 0:
-            print("The following bad names were identified.")
+            print("The following not ISO-8859-1 file names were identified.")
             for path in bad_names:
                 print(path)
             raise Exception("Non ISO-8859-1 characters in path may cause problems. Please change them.")
