@@ -40,12 +40,14 @@ class Chicks4FreeID(DownloadHuggingFace, WildlifeDataset):
         self.n_train = dataset['train'].num_rows
         self.n_test = dataset['test'].num_rows
         self.dataset = dataset
-        return pd.DataFrame({
+        df = pd.DataFrame({
             'image_id': range(self.n_train+self.n_test),
             'identity': dataset['train']['identity'] + dataset['test']['identity'],
             'path': np.nan,
             'split_original': self.n_train*['train'] + self.n_test*['test']
         })
+
+        return self.finalize_catalogue(df)
 
     def get_image(self, idx):
         if idx < self.n_train:
