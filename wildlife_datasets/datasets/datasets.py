@@ -684,13 +684,17 @@ class WildlifeDataset:
         if len(df["image_id"].unique()) != len(df):
             raise Exception("Image ID not unique.")
 
-    def check_files_exist(self, col: pd.Series) -> None:
+    def check_files_exist(self, col: pd.Series | str = None) -> None:
         """Checks if paths in a given column exist.
 
         Args:
-            col (pd.Series): A column of a dataframe.
+            col (pd.Series | str, optional): A column of a dataframe.
         """
 
+        if col is None:
+            col = self.df[self.col_path]
+        elif isinstance(col, str):
+            col = self.df[col]
         bad_paths = []
         for path in col:
             if isinstance(path, str) and not os.path.exists(os.path.join(self.root, path)):
@@ -701,13 +705,17 @@ class WildlifeDataset:
                 print(path)
             raise Exception('Some files not found')
 
-    def check_files_names(self, col: pd.Series) -> None:
+    def check_files_names(self, col: pd.Series | str = None) -> None:
         """Checks if paths contain characters which may cause issues.
 
         Args:
-            col (pd.Series): A column of a dataframe.
+            col (pd.Series | str, optional): A column of a dataframe.
         """
 
+        if col is None:
+            col = self.df[self.col_path]
+        elif isinstance(col, str):
+            col = self.df[col]
         bad_names = []
         for path in col:
             if not isinstance(path, str):
