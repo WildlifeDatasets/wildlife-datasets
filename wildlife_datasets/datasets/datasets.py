@@ -684,77 +684,41 @@ class WildlifeDataset:
         if len(df["image_id"].unique()) != len(df):
             raise Exception("Image ID not unique.")
 
-    def check_files_exist(self, col: pd.Series | str = col_path) -> None:
+    def check_files_exist(self, col: pd.Series) -> None:
         """Checks if paths in a given column exist.
 
         Args:
             col (pd.Series): A column of a dataframe.
         """
-        
-        if type(col) == str:
-            if self.df.columns.isin([col]).any():
-                col = self.df[col]
-            else:
-                raise Exception("Requested column is not in dataframe.")
+
         bad_paths = []
         for path in col:
-            if type(path) == str and not os.path.exists(
-                os.path.join(self.root, path)
-            ):
+            if type(path) == str and not os.path.exists(os.path.join(self.root, path)):
                 bad_paths.append(path)
-
         if len(bad_paths) > 0:
-            print(
-                "The following bad paths were identified. All are relative to:"
-            )
-            print(self.root)
-            print("")
-            print("|||||")
-            print("vvvvv")
-            for idx, path in enumerate(bad_paths):
-                print(str(idx) + ": " + path)
-            print("^^^^^")
-            print("|||||")
-            raise (
-                Exception(
-                    "Some files not found. See above printouts for additional information."
-                )
-            )
-        print("All file paths exist.")
+            print("The following bad paths were identified.")                
+            for path in bad_paths:
+                print(path)
+            raise Exception('Some files not found')
 
-    def check_files_names(self, col: pd.Series | str = col_path) -> None:
+    def check_files_names(self, col: pd.Series) -> None:
         """Checks if paths contain characters which may cause issues.
 
         Args:
             col (pd.Series): A column of a dataframe.
         """
 
-        if type(col) == str:
-            if self.df.columns.isin([col]).any():
-                col = self.df[col]
-            else:
-                raise Exception("Requested column is not in dataframe.")
         bad_names = []
         for path in col:
             try:
                 path.encode("iso-8859-1")
             except UnicodeEncodeError:
                 bad_names.append(path)
-
         if len(bad_names) > 0:
             print("The following bad names were identified.")
-            print("")
-            print("|||||")
-            print("vvvvv")
-            for idx, path in enumerate(bad_names):
-                print(str(idx) + ": " + path)
-            print("^^^^^")
-            print("|||||")
-            raise (
-                Exception(
-                    "Characters in path may cause problems. Please use only ISO-8859-1 characters. See print out above for offending files."
-                )
-            )
+            for path in bad_names:
+                print(path)
+            raise Exception("Non ISO-8859-1 characters in path may cause problems. Please change them.")
 
     def plot_grid(
             self,
