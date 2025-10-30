@@ -440,6 +440,7 @@ class WildlifeDataset:
         Returns:
             A full dataframe of the data.
         """
+
         for old_identity, new_identity in replace_identity:
             df[col] = df[col].replace({old_identity: new_identity})
         return df
@@ -460,6 +461,7 @@ class WildlifeDataset:
         Returns:
             A full dataframe of the data.
         """
+
         idx_remove = [identity in identities_to_remove for identity in df[col]]
         return df[~np.array(idx_remove)]
 
@@ -482,6 +484,7 @@ class WildlifeDataset:
         Returns:
             A full dataframe of the data.
         """
+
         for image_name, old_identity, new_identity in replace_identity:
             n_replaced = 0
             for index, df_row in df.iterrows():
@@ -497,7 +500,7 @@ class WildlifeDataset:
 
     def finalize_catalogue(
             self,
-            df: pd.DataFrame,
+            df: pd.DataFrame = None,
             ) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
 
@@ -506,12 +509,14 @@ class WildlifeDataset:
         Checks if ids are unique and if all files exist.
 
         Args:
-            df (pd.DataFrame): A full dataframe of the data.
+            df (pd.DataFrame, optional): A full dataframe of the data.
 
         Returns:
             A full dataframe of the data, slightly modified.
         """
 
+        if df is None:
+            df = self.df
         if self.update_wrong_labels:
             df = self.fix_labels(df)
         self.rename_column(df, 'path', self.col_path)
@@ -529,25 +534,27 @@ class WildlifeDataset:
                 self.check_files_exist(df['segmentation'])
         return df
 
-    def rename_column(self, df, name_old, name_new):
+    def rename_column(self, df: pd.DataFrame, name_old, name_new):
         if name_old != name_new:
             if name_new in df.columns:
                 raise Exception(f'Column {name_old} already present in dataframe. Cannot rename {name_old} to it.')
             else:
                 return df.rename({name_old: name_new}, axis=1, inplace=True)
 
-    def check_required_columns(self, df: pd.DataFrame) -> None:
+    def check_required_columns(self, df: pd.DataFrame = None) -> None:
         """Check if all required columns are present.
 
         Args:
-            df (pd.DataFrame): A full dataframe of the data.
+            df (pd.DataFrame, optional): A full dataframe of the data.
         """
 
-        for col_name in ['image_id', self.col_label, self.col_path]:
+        if df is None:
+            df = self.df
+        for col_name in ["image_id", self.col_label, self.col_path]:
             if col_name not in df.columns:
-                raise(Exception('Column %s must be in the dataframe columns.' % col_name))
+                raise Exception('Column %s must be in the dataframe columns.' % col_name)
 
-    def check_types_columns(self, df: pd.DataFrame) -> None:
+    def check_types_columns(self, df: pd.DataFrame = None) -> None:
         """Checks if columns are in correct formats.
 
         The format are specified in `requirements`, which is list
@@ -556,9 +563,11 @@ class WildlifeDataset:
         must be at least one of the formats.
 
         Args:
-            df (pd.DataFrame): A full dataframe of the data.
+            df (pd.DataFrame, optional): A full dataframe of the data.
         """
 
+        if df is None:
+            df = self.df
         requirements = [
             ('image_id', ['int', 'str']),
             (self.col_label, ['int', 'str']),
@@ -618,7 +627,7 @@ class WildlifeDataset:
                 return None
             except:
                 pass
-        raise(Exception('Column %s has wrong type. Allowed types = %s' % (col_name, str(allowed_types))))
+        raise Exception('Column %s has wrong type. Allowed types = %s' % (col_name, str(allowed_types)))
 
     def reorder_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders rows and columns in the dataframe.
@@ -646,54 +655,80 @@ class WildlifeDataset:
         df = df.sort_values('image_id').reset_index(drop=True)
         return df.reindex(columns=col_names)
 
-    def remove_constant_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+    def remove_constant_columns(self, df: pd.DataFrame = None) -> pd.DataFrame:
         """Removes columns with a single unique value.
 
         Args:
-            df (pd.DataFrame): A full dataframe of the data.
+            df (pd.DataFrame, optional): A full dataframe of the data.
 
         Returns:
             A full dataframe of the data, slightly modified.
-        """ 
+        """
 
+        if df is None:
+            df = self.df
         for df_name in list(df.columns):
-            if df[df_name].astype('str').nunique() == 1:
+            if df[df_name].astype("str").nunique() == 1:
                 df = df.drop([df_name], axis=1)
         return df
 
-    def check_unique_id(self, df: pd.DataFrame) -> None:
+    def check_unique_id(self, df: pd.DataFrame = None) -> None:
         """Checks if values in the id column are unique.
 
         Args:
-            df (pd.DataFrame): A full dataframe of the data.
+            df (pd.DataFrame, optional): A full dataframe of the data.
         """
 
-        if len(df['image_id'].unique()) != len(df):
-            raise(Exception('Image ID not unique.'))
+        if df is None:
+            df = self.df
+        if len(df["image_id"].unique()) != len(df):
+            raise Exception("Image ID not unique.")
 
-    def check_files_exist(self, col: pd.Series) -> None:
+    def check_files_exist(self, col: pd.Series | str = None) -> None:
         """Checks if paths in a given column exist.
 
         Args:
-            col (pd.Series): A column of a dataframe.
+            col (pd.Series | str, optional): A column of a dataframe.
         """
 
+        if col is None:
+            col = self.df[self.col_path]
+        elif isinstance(col, str):
+            col = self.df[col]
+        bad_paths = []
         for path in col:
-            if type(path) == str and not os.path.exists(os.path.join(self.root, path)):
-                raise(Exception('Path does not exist:' + os.path.join(self.root, path)))
+            if isinstance(path, str) and not os.path.exists(os.path.join(self.root, path)):
+                bad_paths.append(path)
+        if len(bad_paths) > 0:
+            print("The following non-existing images were identified.")                
+            for path in bad_paths:
+                print(path)
+            raise Exception('Some files not found')
 
-    def check_files_names(self, col: pd.Series) -> None:
-        """Checks if paths contain .
+    def check_files_names(self, col: pd.Series | str = None) -> None:
+        """Checks if paths contain characters which may cause issues.
 
         Args:
-            col (pd.Series): A column of a dataframe.
+            col (pd.Series | str, optional): A column of a dataframe.
         """
 
+        if col is None:
+            col = self.df[self.col_path]
+        elif isinstance(col, str):
+            col = self.df[col]
+        bad_names = []
         for path in col:
+            if not isinstance(path, str):
+                continue
             try:
                 path.encode("iso-8859-1")
             except UnicodeEncodeError:
-                raise(Exception('Characters in path may cause problems. Please use only ISO-8859-1 characters: ' + os.path.join(path)))
+                bad_names.append(path)
+        if len(bad_names) > 0:
+            print("The following not ISO-8859-1 file names were identified.")
+            for path in bad_names:
+                print(path)
+            raise Exception("Non ISO-8859-1 characters in path may cause problems. Please change them.")
 
     def plot_grid(
             self,
@@ -772,7 +807,7 @@ class WildlifeDataset:
         if header_cols is not None:
             offset_h = 30
             if len(header_cols) != n_cols:
-                raise(Exception("Length of header_cols must be the same as n_cols."))
+                raise Exception("Length of header_cols must be the same as n_cols.")
         else:
             offset_h = 0
 
