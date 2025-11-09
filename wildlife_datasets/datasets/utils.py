@@ -234,7 +234,7 @@ def get_split(x, data_train, data_test):
 def get_image_date(path, shorten=True):
     try:
         exif = Image.open(path).getexif()
-    except (FileNotFoundError, UnidentifiedImageError):
+    except Exception:
         return -1
     exif = Image.open(path).getexif()
     if exif is not None:
