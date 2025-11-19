@@ -122,6 +122,10 @@ class WildlifeDataset:
         return self.df[self.col_label].nunique()
 
     @property
+    def identities(self):
+        return self.df[self.col_label].unique()
+    
+    @property
     def metadata(self):
         return self.df
         
