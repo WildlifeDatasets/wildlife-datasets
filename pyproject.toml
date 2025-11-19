@@ -38,6 +38,7 @@ dependencies=[
           'datasets',
           'gdown',
           'kaggle',
+          'pyinaturalist',
 ]
 
 [project.urls]
