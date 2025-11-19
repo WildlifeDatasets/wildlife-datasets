@@ -1,3 +1,5 @@
+import io
+import requests
 import os
 import pandas as pd
 import numpy as np
@@ -253,3 +255,25 @@ def yolo_to_pascalvoc(x_c, y_c, w, h, W, H):
     x_max = int((x_c + w / 2) * W)
     y_max = int((y_c + h / 2) * H)
     return x_min, y_min, x_max, y_max
+
+def download_image(url, headers=None, file_name=None):
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        img = Image.open(io.BytesIO(response.content))
+        if file_name is not None:
+            img.save(file_name)
+        return img
+    elif response.status_code == 404:
+        print(f"Image not found (404). Skipping... {url}")
+    else:
+        print(
+            f"Failed to download image with status code {response.status_code}. {url}"
+        )
+        try:
+            message = response.content.decode("utf-8")
+            message = message.split("<Details>")[1]
+            message = message.split("</Details>")[0]
+            print(message)
+        except Exception:
+            pass
+    return None

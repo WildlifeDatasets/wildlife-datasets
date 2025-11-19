@@ -1,13 +1,10 @@
 import os
-import io
 import json 
 import time
 import shutil
-import requests 
 import datetime
 from typing import List, Optional, Tuple
 
-from PIL import Image
 from datasets import load_dataset
 import pandas as pd
 from pyinaturalist import get_observations
@@ -17,28 +14,6 @@ from . import utils
 def check_attribute(obj, attr):
     if not hasattr(obj, attr):
         raise Exception(f'Object {obj} must have attribute {attr}.')
-
-def download_image(url, headers=None, file_name=None):
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        img = Image.open(io.BytesIO(response.content))
-        if file_name is not None:
-            img.save(file_name)
-        return img
-    elif response.status_code == 404:
-        print(f"Image not found (404). Skipping... {url}")
-    else:
-        print(
-            f"Failed to download image with status code {response.status_code}. {url}"
-        )
-        try:
-            message = response.content.decode("utf-8")
-            message = message.split("<Details>")[1]
-            message = message.split("</Details>")[0]
-            print(message)
-        except Exception:
-            pass
-    return None
 
 
 def json_serial(obj):
@@ -200,7 +175,7 @@ class DownloadINaturalist:
 
                     # Skip already downloaded images
                     if not os.path.exists(file_name_image):
-                        img = download_image(url, file_name=file_name_image)
+                        img = utils.download_image(url, file_name=file_name_image)
                         if not img:
                             print(f'{url}: image download failed')
                             continue
