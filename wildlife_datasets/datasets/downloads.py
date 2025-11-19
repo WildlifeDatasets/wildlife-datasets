@@ -1,12 +1,11 @@
 import os
 import io
 import json 
-import csv 
 import time
 import shutil
 import requests 
 import datetime
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 from PIL import Image
 from datasets import load_dataset
@@ -19,7 +18,7 @@ def check_attribute(obj, attr):
     if not hasattr(obj, attr):
         raise Exception(f'Object {obj} must have attribute {attr}.')
 
-def get_image(url, headers=None, file_name=None):
+def download_image(url, headers=None, file_name=None):
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         img = Image.open(io.BytesIO(response.content))
@@ -137,34 +136,31 @@ class DownloadINaturalist:
 
     - root: directory where images/metadata/csv are stored
     - username: iNaturalist username (optional)
-    - project_id/project_slug: iNaturalist project identifier (optional)
+    - project_id: iNaturalist project identifier (optional)
     - target_species_guess: if set, only observations with this species_guess
       are downloaded; if None, all species are accepted.
     """
 
     username: Optional[str] = None
-    project_id: Optional[int] = None
-    project_slug: Optional[str] = None
+    project_id: Optional[int | str] = None
 
-    per_page: int = 5
+    per_page: int = 10
     delay: float = 1.0  # seconds between API pages
-    target_species_guess: Optional[str] = None
+    target_species_guess: Optional[List[str]] = None
 
     # Only a subset of metadata to keep things small
     metadata_fields: Optional[Tuple[str, ...]] = None
-    # Common image extensions
-    valid_exts = {".jpg", ".jpeg", ".png", ".tif", ".tiff"}
 
     @classmethod
-    def _download(cls, skip_existing=False):
-        if cls.username is None and cls.project_id is None and cls.project_slug is None:
-            raise ValueError(
-                "Provide at least one of username, project_id, or project_slug."
-            )
+    def _download(cls, force=None):
+        if cls.username is None and cls.project_id is None:
+            raise ValueError("Provide at least one of username or project_id.")
 
         page = 1
         csv_records = []
 
+        os.makedirs("images", exist_ok=True)
+        os.makedirs("metadata", exist_ok=True)
         while True:
             # Build query parameters depending on what is configured
             params = {
@@ -175,8 +171,6 @@ class DownloadINaturalist:
                 params["user_login"] = cls.username
             if cls.project_id is not None:
                 params["project_id"] = cls.project_id
-            if cls.project_slug is not None:
-                params["project_slug"] = cls.project_slug
 
             observations = get_observations(**params)
 
@@ -184,15 +178,11 @@ class DownloadINaturalist:
                 break
 
             for obs in observations["results"]:
-                if (
-                    cls.target_species_guess
-                    and obs.get("species_guess", "") != cls.target_species_guess
-                ):
-                    continue
-                individual_id = str(obs.get("id"))
-                individual_dir = individual_id
-                os.makedirs(individual_dir, exist_ok=True)
-
+                if cls.target_species_guess is not None:
+                    if obs.get("species_guess", "") not in cls.target_species_guess:
+                        continue
+                
+                individual_id = obs.get("id")
                 for photo in obs.get("photos", []):
                     photo_id = photo["id"]
                     url_split = photo["url"].split("/")
@@ -205,16 +195,14 @@ class DownloadINaturalist:
 
                     url = "/".join(url_split[:-1]) + "/original" + ext
 
-                    base_stem = f"{obs['id']}_{photo_id}"
-                    file_name = os.path.join(individual_dir, base_stem + ext)
+                    file_name_image = f"images/{individual_id}_{photo_id}{ext}"
+                    file_name_metadata = f"metadata/{individual_id}_{photo_id}.json"
 
                     # Skip already downloaded images
-                    image_exists = os.path.exists(file_name)
-                    if image_exists and skip_existing:
-                        pass
-                    else:
-                        img = get_image(url, file_name=file_name)
+                    if not os.path.exists(file_name_image):
+                        img = download_image(url, file_name=file_name_image)
                         if not img:
+                            print(f'{url}: image download failed')
                             continue
 
                     if cls.metadata_fields is None:
@@ -227,51 +215,38 @@ class DownloadINaturalist:
                         }
 
                     metadata = {
-                        "observation_id": obs.get("id"),
+                        "observation_id": individual_id,
                         "photo_id": photo_id,
                         "photo_url": url,
-                        "file_name": file_name,
+                        "file_name": file_name_image,
                         **selected_metadata,
                     }
 
-                    # JSON metadata per image; always rewrite
-                    metadata_filename = os.path.join(
-                        individual_dir, base_stem + "_metadata.json"
-                    )
-                    with open(metadata_filename, "w") as f:
+                    with open(file_name_metadata, "w") as f:
                         json.dump(metadata, f, indent=4, default=json_serial)
 
-                    # Collect for CSV
                     csv_records.append(metadata)
 
             page += 1
             time.sleep(cls.delay)
 
-            if csv_records:
-                csv_path = "downloaded_images.csv"
-                fieldnames = list(csv_records[0].keys())
-
-                with open(csv_path, "w", newline="") as csvfile:
-                    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                    writer.writeheader()
-                    writer.writerows(csv_records)
+        pd.DataFrame(csv_records).to_csv("metadata.csv", index=False)
 
     @classmethod
     def _extract(cls, *args, **kwargs):
         pass
 
     @classmethod
-    def update_data(cls, root: str, force: bool = False, **kwargs) -> None:
+    def download(cls, root: str, force: bool = False, **kwargs) -> None:
         """
         Convenience wrapper for ``cls._download`` that updates the dataset.
 
         Previously downloaded images are skipped to avoid unnecessary transfers,
         while metadata is still checked and refreshed as needed.
         """
-        skip_existing = not force
-        dataset_name = cls.__name__
-        print("DATASET %s: UPDATING STARTED." % dataset_name)
 
         with utils.data_directory(root):
-            cls._download(skip_existing=skip_existing, **kwargs)
-
+            cls._download(force=force, **kwargs)
+        if hasattr(cls, 'summary') and 'licenses_url' in cls.summary and isinstance(cls.summary, str):
+            with open(os.path.join(root, cls.license_file_name), 'w') as file:
+                file.write(cls.summary['licenses_url'])
