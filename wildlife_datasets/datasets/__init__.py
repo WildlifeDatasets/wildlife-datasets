@@ -1,5 +1,5 @@
 from .datasets import DatasetFactory, WildlifeDataset
-from .downloads import DownloadHuggingFace, DownloadKaggle, DownloadURL
+from .downloads import DownloadHuggingFace, DownloadKaggle, DownloadURL, DownloadINaturalist
 from .aau_zebrafish import AAUZebraFish
 from .aerial_cattle import AerialCattle2017
 from .amvrakikos_turtles import AmvrakikosTurtles
@@ -51,6 +51,7 @@ from .wild_raptor_id import WildRaptorID
 from .whaleshark_id import WhaleSharkID
 from .zakynthos_turtles import ZakynthosTurtles
 from .zindi_turtle_recall import ZindiTurtleRecall
+from .turtles_of_smsrc import TurtlesOfSMSRC 
 from .utils import get_image, load_image
 
 names_all = [
@@ -104,6 +105,7 @@ names_all = [
     WhaleSharkID,
     ZakynthosTurtles,
     ZindiTurtleRecall,
+    TurtlesOfSMSRC,
 ]
 
 names_wild = [
@@ -192,6 +194,7 @@ names_turtles = [
     SouthernProvinceTurtles,
     ZakynthosTurtles,
     ZindiTurtleRecall,
+    TurtlesOfSMSRC,
 ]
 
 names_whales = [
