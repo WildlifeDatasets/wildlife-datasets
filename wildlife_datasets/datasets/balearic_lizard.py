@@ -17,7 +17,7 @@ summary = {
     'year': 2025,
     'reported_n_total': 4619,
     'reported_n_individuals': 1009,
-    'wild': True,
+    'wild': False,
     'clear_photos': True,
     'pose': 'single',
     'unique_pattern': True,
@@ -28,13 +28,13 @@ summary = {
 
 
 class BalearicLizard(DownloadKaggle, WildlifeDataset):
-    """MegaDescriptor BalearicLizard dataset prepared for WildlifeDatasets."""
-
     summary = summary
     kaggle_url = 'roberalcaraz/baleariclizard'
     kaggle_type = 'datasets'
+    root_prefix = 'images'
+    convert_to_png = False
 
-    def create_catalogue(self, metadata_filename: str = 'metadata.csv') -> pd.DataFrame:
+    def create_catalogue(self, metadata_filename: str = 'curt_metadata.csv') -> pd.DataFrame:
         """Create the catalogue DataFrame expected by WildlifeDatasets and MegaDescriptor.
 
         The default `metadata_filename` matches the request in the MegaDescriptor
@@ -48,14 +48,23 @@ class BalearicLizard(DownloadKaggle, WildlifeDataset):
             pd.DataFrame: A dataframe including the following columns:
 
                 - image_id (str): Unique identifier for each row.
-                - id (str): Identity of the depicted individual animal.
+                - identity (str): Identity of the depicted individual animal.
                                   If unknown, standardized to the framework’s unknown label.
                 - path (str): Relative path to the image file.
                 - date (datetime): Observation date. Converted to `datetime`.
         """
 
         # Load metadata
-        metadata_path = os.path.join(self.root, 'curt_metadata.csv')
+        metadata_path = os.path.join(self.root, metadata_filename)
         df = pd.read_csv(metadata_path)
-        
+        df = df.rename({'id': 'identity'}, axis=1)
+        df['image_id'] = range(len(df))
+        df['path'] = self.root_prefix + os.path.sep + df['path'].str[12:] # Strip data/images/
+        if self.convert_to_png:
+            df['path'] = df['path'].apply(lambda x: os.path.splitext(x)[0] + '.png')
+
         return self.finalize_catalogue(df)
+
+class BalearicLizardSegmented(BalearicLizard):
+    root_prefix = 'images-segmented'
+    convert_to_png = True
