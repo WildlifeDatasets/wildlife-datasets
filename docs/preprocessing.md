@@ -18,6 +18,7 @@ Some of the datasets require special treatment or the download of extraction wor
 | [AerialCattle2017](https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh) | <a href="https://openaccess.thecvf.com/content_ICCV_2017_workshops/w41/html/Andrew_Visual_Localisation_and_ICCV_2017_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | | |
 | [AmvrakikosTurtles](https://www.kaggle.com/datasets/wildlifedatasets/amvrakikosturtles) | <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Kaggle required | |
 | [ATRW](https://lila.science/datasets/atrw) | <a href="https://arxiv.org/abs/1906.05586" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | | |
+| [BalearicLizard](https://www.kaggle.com/datasets/roberalcaraz/baleariclizard) | | Kaggle required | |
 | [BelugaID](https://lila.science/datasets/beluga-id-2022/) | | | |
 | [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID) | <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13436" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Manual download | Few images removed |
 | [BristolGorillas2020](https://data.bris.ac.uk/data/dataset/jf0859kboy8k2ufv60dqeb2t8) | <a href="https://arxiv.org/abs/2012.04689" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Only linux: downloading | |
@@ -80,6 +81,10 @@ Some datasets are stored on Kaggle. To use our automatic download method, follow
 [Kaggle requirements](#kaggle) need to be satisfied.
 
 ### AnimalCLEF2025
+
+[Kaggle requirements](#kaggle) need to be satisfied.
+
+### BalearicLizard
 
 [Kaggle requirements](#kaggle) need to be satisfied.
 

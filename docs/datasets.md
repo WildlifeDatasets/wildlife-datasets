@@ -39,6 +39,12 @@ The ATRW (Amur Tiger Re-identification in the Wild) dataset was collected with t
 
 ![](images/grid_ATRW.png)
 
+### [BalearicLizard](https://www.kaggle.com/datasets/roberalcaraz/baleariclizard)
+
+BalearicLizard is a curated, long-term photographic dataset of the Balearic wall lizard (Podarcis lilfordi) created to support non-invasive individual re-identification, long-term ecological monitoring (capture–recapture), and computer-vision benchmarking on small-bodied reptiles. It contains 4,619 high-resolution ventral/pectoral photographs from 1,009 individually identified lizards, collected over 15 years during a systematic monitoring program (October 2010 to October2024) on Illot d’en Curt (a small islet off the southern coast of Mallorca, Balearic Islands, Spain). Each capture provides both the original oriented field photograph and a segmented crop focusing on the pectoral/anterior ventral scale pattern, which is the biometric region used for identification.
+
+![](images/grid_BalearicLizard.png)
+
 ### [BelugaID](https://lila.science/datasets/beluga-id-2022/)
 
 The high-quality datasets BelugaID, HyenaID2022 and LeopardID2022 were published by WildMe. They contain labelled images of beluga whales, heynas and leopards. BelugaID represents a collaborative effort based on the data collection and population modeling efforts conducted in the Cook Inlet off the cost of Alaska from 2016-2019. HyenaID2022 and LeopardID2022 represent a collaborative effort based on the data collection and population modeling efforts conducted by the Botswana Predator Conservation Trust. BelugaID contains pre-cropped high-quality images taken mostly from the top. On the other hand, HyenaID2022 and LeopardID2022 contain both day-time and night-time photos with largely various quality. In some photos, it is even difficult to spot the corresponding animal. The latter two datasets are annotated with viewpoints and bounding boxes.
