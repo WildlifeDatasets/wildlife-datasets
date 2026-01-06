@@ -5,7 +5,7 @@ import pandas as pd
 from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
 
-summary = {
+summary_2025 = {
     'licenses': 'Other',
     'licenses_url': 'https://www.kaggle.com/competitions/animal-clef-2025',
     'url': 'https://www.kaggle.com/competitions/animal-clef-2025',
@@ -28,7 +28,7 @@ summary = {
 }
 
 class AnimalCLEF2025(DownloadKaggle, WildlifeDataset):    
-    summary = summary
+    summary = summary_2025
     kaggle_url = 'animal-clef-2025'
     kaggle_type = 'competitions'
 
