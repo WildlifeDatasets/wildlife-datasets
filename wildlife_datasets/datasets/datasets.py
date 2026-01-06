@@ -786,7 +786,7 @@ class WildlifeDataset:
         ratios = []
         ims = []
         for k in idx:
-            if k >= 0:
+            if k is not None and k >= 0:
                 # Load the image with index k
                 if keep_transform:
                     with self.temporary_attrs(load_label=False):
