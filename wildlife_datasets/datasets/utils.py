@@ -238,15 +238,19 @@ def get_image_date(path, shorten=True):
         exif = Image.open(path).getexif()
     except Exception:
         return -1
-    exif = Image.open(path).getexif()
-    if exif is not None:
-        date = exif.get(36867)
-        if date is None: 
-            date = exif.get(306)
-            if date is not None:
-                if len(date) >= 10 and shorten:
-                    date = date[:10].replace(':', '-')
-                return date
+    
+    def clean_date(d):
+        if isinstance(d, bytes):
+            d = d.decode(errors="ignore")
+        if len(d) >= 10 and shorten:
+            d = d[:10].replace(':', '-')
+        return d
+
+    if exif:
+        for tag in (36867, 36868, 306):
+            date = exif.get(tag)
+            if date:
+                return clean_date(date)
     return np.nan
 
 def yolo_to_pascalvoc(x_c, y_c, w, h, W, H):
