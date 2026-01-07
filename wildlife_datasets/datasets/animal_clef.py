@@ -1,9 +1,59 @@
 import os
+import re
 import json
 import numpy as np
 import pandas as pd
-from .datasets import WildlifeDataset
-from .downloads import DownloadKaggle
+from .datasets import WildlifeDataset, utils
+from .downloads import DownloadKaggle, DownloadURL
+
+# TODO: finish
+summary_2026 = {
+
+}
+
+class AnimalCLEF2026(DownloadKaggle, WildlifeDataset):    
+    summary = summary_2026
+    kaggle_url = 'animal-clef-2026'
+    kaggle_type = 'competitions'
+
+    def create_catalogue(self) -> pd.DataFrame:
+        metadata = pd.read_csv(os.path.join(self.root, 'metadata.csv'))
+        return self.finalize_catalogue(metadata)
+
+class AnimalCLEF2026_TexasHornedLizards(DownloadURL, WildlifeDataset):
+    url = 'https://repository.tcu.edu/bitstreams/f30a1884-8958-4da2-80c6-d3405819b751/download'
+    archive = '7. THL images - Original.zip'
+
+    def create_catalogue(self):
+        data = utils.find_images(self.root)
+
+        file_name = os.path.join(self.root, 'individuals.csv')
+        if os.path.exists(file_name):
+            individuals = pd.read_csv(file_name)
+            individuals = individuals.replace(r'\s+', '', regex=True)
+        else:
+            individuals = None
+        
+        df = pd.DataFrame({
+            'image_id': range(len(data)),
+            'path': data['path'] + os.path.sep + data['file'],
+            'identity': data['file'].apply(lambda x: find_individual(x, individuals=individuals))
+        })
+        return self.finalize_catalogue(df)
+
+def find_individual(x, individuals=None):
+    if individuals is None:
+        return 'unknown'
+
+    x = re.sub(r'\s+', '', x)
+    matches = individuals.isin([x])
+    row_idx = matches.any(axis=1)
+    row_idx = np.where(row_idx)[0]
+
+    if len(row_idx) != 1:
+        return 'unknown'
+        
+    return str(row_idx[0])
 
 summary_2025 = {
     'licenses': 'Other',

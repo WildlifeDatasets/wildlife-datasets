@@ -3,6 +3,7 @@ from .downloads import DownloadHuggingFace, DownloadKaggle, DownloadURL, Downloa
 from .aau_zebrafish import AAUZebraFish
 from .aerial_cattle import AerialCattle2017
 from .amvrakikos_turtles import AmvrakikosTurtles
+from .animal_clef import AnimalCLEF2026, AnimalCLEF2026_TexasHornedLizards
 from .animal_clef import AnimalCLEF2025, AnimalCLEF2025_LynxID2025, AnimalCLEF2025_SalamanderID2025, AnimalCLEF2025_SeaTurtleID2022
 from .atrw import ATRW
 from .beluga_id import BelugaID, BelugaIDv2
