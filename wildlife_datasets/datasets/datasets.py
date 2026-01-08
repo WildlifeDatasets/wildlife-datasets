@@ -415,6 +415,9 @@ class WildlifeDataset:
 
         raise NotImplementedError('Needs to be implemented by subclasses.')
 
+    def set_transform(self, transform):
+        self.transform = transform
+    
     def create_catalogue(self):
         """Creates the dataframe.
 
