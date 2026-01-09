@@ -243,6 +243,9 @@ class WildlifeDataset:
                 # Convert uncompressed RLE to compressed RLE
                 h, w = segmentation['size']
                 segmentation = mask_coco.frPyObjects(segmentation, h, w)
+            elif isinstance(segmentation, dict) and isinstance(segmentation.get('counts'), str):
+                # Already a compressed COCO RLE mask – nothing to convert
+                pass
             elif isinstance(segmentation, str):
                 # Load image mask and convert it to compressed RLE
                 segmentation = np.asfortranarray(utils.load_image(os.path.join(self.root, segmentation)))
