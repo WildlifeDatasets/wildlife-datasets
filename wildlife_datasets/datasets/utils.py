@@ -1,6 +1,7 @@
 import io
 import requests
 import os
+import ast
 import pandas as pd
 import numpy as np
 from typing import Tuple, List
@@ -281,3 +282,11 @@ def download_image(url, headers=None, file_name=None):
         except Exception:
             pass
     return None
+
+def parse_bbox_mask(x):
+    if not isinstance(x, str):
+        return x
+    try:
+        return ast.literal_eval(x)
+    except (ValueError, SyntaxError):
+        raise ValueError(f"Invalid bbox or mask value: {x}")

@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
+from .utils import parse_bbox_mask
 
 summary_2022 = {
     'licenses': 'Other',
@@ -94,7 +95,7 @@ class SeaTurtleID2022(DownloadKaggle, WildlifeDataset):
         }
         df_annotation = pd.DataFrame([create_dict(i) for i in data['annotations'] if i['category_id'] == category_id])
         idx_bbox = ~df_annotation['bbox'].isnull()
-        df_annotation.loc[idx_bbox,'bbox'] = df_annotation.loc[idx_bbox,'bbox'].apply(lambda x: eval(x) if isinstance(x, str) else x)
+        df_annotation.loc[idx_bbox,'bbox'] = df_annotation.loc[idx_bbox,'bbox'].apply(parse_bbox_mask)
         df_images.rename({'id': 'image_id'}, axis=1, inplace=True)
 
         # Merge the information from the JSON file
