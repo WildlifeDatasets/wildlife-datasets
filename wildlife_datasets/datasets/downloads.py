@@ -212,7 +212,7 @@ class DownloadINaturalist:
         pass
 
     @classmethod
-    def download(cls, root: str, force: bool = False, **kwargs) -> None:
+    def download(cls, root: str, force: bool = True, **kwargs) -> None:
         """
         Convenience wrapper for ``cls._download`` that updates the dataset.
 
