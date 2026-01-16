@@ -42,7 +42,7 @@ class TurtlesOfSMSRC(DownloadINaturalist, WildlifeDataset):
     def load_segmentation(self, df):
         cols = ['bbox_x', 'bbox_y', 'bbox_w', 'bbox_h']
         segmentation = pd.read_csv(f'{self.root}/segmentation.csv')
-        df = pd.merge(df, segmentation, on='image_id', how='outer')
+        df = pd.merge(df, segmentation, on='image_id', how='left')
         df['bbox'] = list(df[cols].to_numpy())
         df = df.drop(cols, axis=1)
         df = df.reset_index(drop=True)
