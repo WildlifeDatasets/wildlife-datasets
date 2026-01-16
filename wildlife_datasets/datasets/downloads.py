@@ -212,16 +212,22 @@ class DownloadINaturalist:
         pass
 
     @classmethod
-    def download(cls, root: str, force: bool = True, **kwargs) -> None:
-        """
-        Convenience wrapper for ``cls._download`` that updates the dataset.
+    def get_data(
+            cls,
+            root: str,
+            force: bool = True,
+            **kwargs
+            ) -> None:
+        """Downloads and extracts the data. Wrapper around `cls._download` and `cls._extract.`
 
-        Previously downloaded images are skipped to avoid unnecessary transfers,
-        while metadata is still checked and refreshed as needed.
+        Args:
+            root (str): Where the data should be stored.
+            force (bool, optional): It the root exists, whether it should be overwritten.
         """
 
-        with utils.data_directory(root):
-            cls._download(force=force, **kwargs)
-        if hasattr(cls, 'summary') and 'licenses_url' in cls.summary and isinstance(cls.summary, str):
-            with open(os.path.join(root, cls.license_file_name), 'w') as file:
-                file.write(cls.summary['licenses_url'])
+        dataset_name = cls.__name__        
+        print('DATASET %s: DOWNLOADING STARTED.' % dataset_name)
+        cls.download(root, force=force, **kwargs)
+        print('DATASET %s: EXTRACTING STARTED.' % dataset_name)
+        cls.extract(root,  **kwargs)
+        print('DATASET %s: FINISHED.\n' % dataset_name)
