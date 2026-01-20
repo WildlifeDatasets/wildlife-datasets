@@ -77,9 +77,7 @@ model_name = "hf-hub:BVRA/MegaDescriptor-L-384"
 backbone = timm.create_model(model_name, num_classes=0, pretrained=True)
 ```
 
-TODO: two link missing
-
-The class `MacaqueFaces` may then be used for example for [feature extraction](???):
+The class `MacaqueFaces` may then be used for example for [feature extraction](https://wildlifedatasets.github.io/wildlife-tools/inference/):
 
 ```python
 import numpy as np
@@ -103,7 +101,7 @@ predictions = classifier(similarity)
 accuracy = np.mean(dataset_query.labels_string == predictions)
 ```
 
-or for [model finetuning](???):
+or for [model finetuning](https://wildlifedatasets.github.io/wildlife-tools/training/):
 
 ```python
 import itertools
