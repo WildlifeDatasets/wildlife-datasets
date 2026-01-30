@@ -1,11 +1,14 @@
 ## Overview of MetaDatasets
 
-### [AnimalCLEF2025](https://www.kaggle.com/competitions/animal-clef-2025)
-
+### [AnimalCLEF2025](https://www.kaggle.com/competitions/animal-clef-2025) <a href="https://ceur-ws.org/Vol-4038/paper_231.pdf" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
 AnamalCLEF2025 was designed as a re-identification competition attracting over 200 participants. For testing, the authors have curated a dataset consisting of never-seen data of three species: (i)🐢 loggerhead sea turtles (Zakynthos, Greece), (ii) 🦎 salamanders (Czech Republic), and (iii) 🐆 Eurasian lynxes (Czech Republic). 
 
 ![](images/grid_AnimalCLEF2025.png)
+
+### [AnimalCLEF2026](https://www.kaggle.com/competitions/animal-clef-2026)
+
+AnimalCLEF2026 is a continuation of the AnimalCLEF2025 competition with a clustering task and an enhanced dataset.
 
 ### [WildlifeReID10k](https://www.kaggle.com/datasets/wildlifedatasets/wildlifereid-10k) <a href="https://openaccess.thecvf.com/content/CVPR2025W/FGVC/html/Adam_WildlifeReID-10k_Wildlife_re-identification_dataset_with_10k_individual_animals_CVPRW_2025_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
@@ -39,7 +42,7 @@ The ATRW (Amur Tiger Re-identification in the Wild) dataset was collected with t
 
 ![](images/grid_ATRW.png)
 
-### [BalearicLizard](https://www.kaggle.com/datasets/roberalcaraz/baleariclizard)
+### [BalearicLizard](https://www.kaggle.com/datasets/roberalcaraz/baleariclizard) <a href="https://sciety.org/articles/activity/10.21203/rs.3.rs-7302183/v1" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
 BalearicLizard is a curated, long-term photographic dataset of the Balearic wall lizard (Podarcis lilfordi) created to support non-invasive individual re-identification, long-term ecological monitoring (capture–recapture), and computer-vision benchmarking on small-bodied reptiles. It contains 4,619 high-resolution ventral/pectoral photographs from 1,009 individually identified lizards, collected over 15 years during a systematic monitoring program (October 2010 to October2024) on Illot d’en Curt (a small islet off the southern coast of Mallorca, Balearic Islands, Spain). Each capture provides both the original oriented field photograph and a segmented crop focusing on the pectoral/anterior ventral scale pattern, which is the biometric region used for identification.
 
@@ -299,6 +302,12 @@ SouthernProvinceTurtles is a collection of green sea turtles photos from two dif
 StripeSpotter is the first published dataset. For seven consecutive days, the authors made a semi-random circuit through the 90,000 acre nature conservancy Ol'Pejeta Conservancy in Laikipia, which contains several hundred wild Plains zebras, and fewer than 20 endangered Grevy's zebras. Two people were stationed on top of the vehicle to take pictures with cheap digital cameras while the driver circled around individual groups of zebras, so as to capture both flanks of the animal. We collected as many pictures as possible of each flank of an animal in different positions in its natural walking gait. A professionally trained field assistant identified the images based on a database of prior sightings stretching back almost ten years. All but a few zebras were reliably identified. 
 
 ![](images/grid_StripeSpotter.png)
+
+### [TurtlesOfSMSRC](https://www.inaturalist.org/projects/turtles-of-smsrc)
+
+The Sharjah Marine Science Research Centre (SMSRC) has created a participatory research project aimed at documenting the occurrence, distribution, and habitat use of marine turtles along the Khor Fakkan coast. Through systematic photographic records, the project seeks to create a visual and georeferenced database of individual turtles observed by researchers, students, divers, and citizen scientists. Each turtle photograph will be tagged with location (GPS), date, and habitat type, allowing for the analysis of spatial patterns, site fidelity, and potential threats such as entanglement or pollution. Over time, the dataset will serve as a baseline for long-term monitoring and for developing awareness materials and conservation strategies for Sharjah’s marine biodiversity.
+
+![](images/grid_TurtlesOfSMSRC.png)
 
 ### [WildRaptorID](https://zenodo.org/records/16731160) <a href="https://www.sciencedirect.com/science/article/pii/S1574954125003887" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
