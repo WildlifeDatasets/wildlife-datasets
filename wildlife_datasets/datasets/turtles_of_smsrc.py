@@ -25,7 +25,7 @@ summary = {
     "unique_pattern": True,
     "from_video": False,
     "cropped": False,
-    "span": "",
+    "span": "1 year",
     "size": None,
 }
 

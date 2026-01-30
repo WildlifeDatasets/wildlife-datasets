@@ -42,7 +42,7 @@ class Chicks4FreeID(DownloadHuggingFace, WildlifeDataset):
         self.dataset = dataset
         df = pd.DataFrame({
             'image_id': range(self.n_train+self.n_test),
-            'identity': dataset['train']['identity'] + dataset['test']['identity'],
+            'identity': list(dataset['train']['identity']) + list(dataset['test']['identity']),
             'path': np.nan,
             'split_original': self.n_train*['train'] + self.n_test*['test']
         })

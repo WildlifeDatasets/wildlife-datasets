@@ -10,7 +10,7 @@ summary = {
     'licenses_url': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
     'url': "https://www.kaggle.com/datasets/roberalcaraz/baleariclizard",
     'publication_url': None,
-    'cite': None,
+    'cite': '',
     'animals': {'balearic lizard'},
     'animals_simple': 'lizards',
     'real_animals': True,
@@ -24,6 +24,7 @@ summary = {
     'from_video': False,
     'cropped': True,
     'span': '15 years',
+    'size': 36450,
 }
 
 

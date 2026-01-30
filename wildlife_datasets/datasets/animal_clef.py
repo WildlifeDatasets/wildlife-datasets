@@ -11,7 +11,7 @@ summary_2026 = {
     'licenses_url': 'https://www.kaggle.com/competitions/animal-clef-2026',
     'url': 'https://www.kaggle.com/competitions/animal-clef-2026',
     'publication_url': None,
-    'cite': None,
+    'cite': '',
     'animals': {'loggerhead turtle', 'salamander', 'lynx', 'lizards'},
     'animals_simple': 'multiple',
     'real_animals': True,
