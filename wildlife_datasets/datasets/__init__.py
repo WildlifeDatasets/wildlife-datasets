@@ -104,11 +104,11 @@ names_all = [
     SMALST,
     SouthernProvinceTurtles,
     StripeSpotter,
+    TurtlesOfSMSRC,
     WildRaptorID,
     WhaleSharkID,
     ZakynthosTurtles,
     ZindiTurtleRecall,
-    TurtlesOfSMSRC,
 ]
 
 names_wild = [
@@ -130,6 +130,7 @@ names_wild = [
     SeaTurtleID2022,
     SouthernProvinceTurtles,
     StripeSpotter,
+    TurtlesOfSMSRC,
     WildRaptorID,
     WhaleSharkID,
     ZakynthosTurtles,
@@ -196,9 +197,9 @@ names_turtles = [
     ReunionTurtles,
     SeaTurtleIDHeads,
     SouthernProvinceTurtles,
+    TurtlesOfSMSRC,
     ZakynthosTurtles,
     ZindiTurtleRecall,
-    TurtlesOfSMSRC,
 ]
 
 names_whales = [
