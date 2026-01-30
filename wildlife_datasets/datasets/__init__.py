@@ -6,6 +6,7 @@ from .amvrakikos_turtles import AmvrakikosTurtles
 from .animal_clef import AnimalCLEF2026, AnimalCLEF2026_TexasHornedLizards
 from .animal_clef import AnimalCLEF2025, AnimalCLEF2025_LynxID2025, AnimalCLEF2025_SalamanderID2025, AnimalCLEF2025_SeaTurtleID2022
 from .atrw import ATRW
+from .balearic_lizard import BalearicLizard, BalearicLizardSegmented
 from .beluga_id import BelugaID, BelugaIDv2
 from .bird_individual_id import BirdIndividualID, BirdIndividualIDSegmented
 from .bristol_gorillas_2020 import BristolGorillas2020
@@ -60,6 +61,7 @@ names_all = [
     AerialCattle2017,
     AmvrakikosTurtles,
     ATRW,
+    BalearicLizard, BalearicLizardSegmented,
     BelugaIDv2,
     BirdIndividualID, BirdIndividualIDSegmented,
     BristolGorillas2020,
@@ -111,6 +113,7 @@ names_all = [
 
 names_wild = [
     AmvrakikosTurtles,
+    BalearicLizard,
     BelugaIDv2,
     CzechLynxv2,
     ELPephants,
