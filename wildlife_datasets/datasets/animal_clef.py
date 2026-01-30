@@ -6,9 +6,26 @@ import pandas as pd
 from .datasets import WildlifeDataset, utils
 from .downloads import DownloadKaggle, DownloadURL
 
-# TODO: finish
 summary_2026 = {
-
+    'licenses': 'Other',
+    'licenses_url': 'https://www.kaggle.com/competitions/animal-clef-2026',
+    'url': 'https://www.kaggle.com/competitions/animal-clef-2026',
+    'publication_url': None,
+    'cite': None,
+    'animals': {'loggerhead turtle', 'salamander', 'lynx', 'lizards'},
+    'animals_simple': 'multiple',
+    'real_animals': True,
+    'year': 2026,
+    'reported_n_total': 15483,
+    'reported_n_individuals': 1450,
+    'wild': True,
+    'clear_photos': True,
+    'pose': 'multiple',
+    'unique_pattern': True,
+    'from_video': False,
+    'cropped': True,
+    'span': 'very long',
+    'size': 2080,
 }
 
 class AnimalCLEF2026(DownloadKaggle, WildlifeDataset):    
@@ -59,14 +76,14 @@ summary_2025 = {
     'licenses': 'Other',
     'licenses_url': 'https://www.kaggle.com/competitions/animal-clef-2025',
     'url': 'https://www.kaggle.com/competitions/animal-clef-2025',
-    'publication_url': None,
+    'publication_url': 'https://ceur-ws.org/Vol-4038/paper_231.pdf',
     'cite': 'adam2025overview',
     'animals': {'loggerhead turtle', 'salamander', 'lynx'},
     'animals_simple': 'multiple',
     'real_animals': True,
     'year': 2025,
     'reported_n_total': 15209,
-    'reported_n_individuals': 1102,
+    'reported_n_individuals': 1233,
     'wild': True,
     'clear_photos': True,
     'pose': 'multiple',
