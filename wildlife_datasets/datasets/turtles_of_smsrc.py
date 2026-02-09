@@ -55,8 +55,9 @@ class TurtlesOfSMSRC(DownloadINaturalist, WildlifeDataset):
         df = pd.read_csv(os.path.join(self.root, "metadata.csv"))
         df["image_id"] = df["observation_id"].astype(str) + "_" + df["photo_id"].astype(str)
         df["identity"] = df["observation_id"]
-        df["latitute"] = df["location"].apply(lambda x: ast.literal_eval(x)[0]).astype(float)
-        df["longitude"] = df["location"].apply(lambda x: ast.literal_eval(x)[1]).astype(float)
+        mask = ~df["location"].isnull()
+        df["latitute"] = df.loc[mask, "location"].apply(lambda x: ast.literal_eval(x)[0]).astype(float)
+        df["longitude"] = df.loc[mask, "location"].apply(lambda x: ast.literal_eval(x)[1]).astype(float)
         df = df.drop(["location", "photo_id", "photo_url"], axis=1)
         df = df.rename({
             "observation_id": "encounter_id",
