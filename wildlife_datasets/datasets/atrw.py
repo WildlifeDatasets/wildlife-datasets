@@ -58,6 +58,7 @@ class ATRW(WildlifeDataset):
     
     def create_catalogue(self) -> pd.DataFrame:
         # Load information for the reid_train part of the dataset
+        assert self.root is not None
         ids = pd.read_csv(os.path.join(self.root, 'atrw_anno_reid_train', 'reid_list_train.csv'),
                         names=['identity', 'path'],
                         header=None

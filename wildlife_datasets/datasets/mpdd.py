@@ -37,6 +37,7 @@ class MPDD(DownloadURL, WildlifeDataset):
         utils.extract_archive(os.path.join('Multi-pose dog dataset', 'MPDD.zip'), delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
         identity = data['file'].apply(lambda x: int(x.split('_')[0]))

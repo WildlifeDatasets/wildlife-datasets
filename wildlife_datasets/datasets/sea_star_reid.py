@@ -32,6 +32,7 @@ class SeaStarReID2023(DownloadURL, WildlifeDataset):
     archive = 'sea-star-re-id.zip'
 
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
         species = folders[1].str[:4].replace({'Anau': 'Anthenea australiae', 'Asru': 'Asteria rubens'})

@@ -4,12 +4,12 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from .. import datasets, splits
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Sequence
 
 def resize_dataset(
         dataset: datasets.WildlifeDataset,
         new_root: str,
-        idx: Optional[List[int]] = None,
+        idx: Optional[Sequence[int]] = None,
         copy_files: bool = True,
         remove_str: List[str] = [],
         replace_extensions: Dict[str, str] = {},
@@ -19,7 +19,7 @@ def resize_dataset(
     Args:
         dataset (datasets.WildlifeDataset): Dataset to be resized.
         new_root (str): Root to store new images.
-        idx (Optional[List[int]], optional): If specified, then indices to consider.
+        idx (Optional[Sequence[int]], optional): If specified, then indices to consider.
         copy_files (bool, optional): Whether files should be copied as well or only datatframe created.
         remove_str (List[str], optional): List of strings to be removed from file names.
         replace_extensions (Dict[str, str], optional): Dictionary of extensions to be replaced.

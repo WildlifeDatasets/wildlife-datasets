@@ -41,6 +41,7 @@ class HolsteinCattleRecognition(DownloadURL, WildlifeDataset):
             utils.extract_archive(file_name, delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         data = utils.find_images(self.root)
 
         # Extract the full images only

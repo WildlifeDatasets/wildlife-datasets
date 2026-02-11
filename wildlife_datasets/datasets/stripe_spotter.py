@@ -56,6 +56,7 @@ class StripeSpotter(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
+        assert self.root is not None
         data = utils.find_images(self.root)
 
         # Extract information about the images

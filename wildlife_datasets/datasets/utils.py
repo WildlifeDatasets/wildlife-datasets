@@ -4,7 +4,7 @@ import os
 import ast
 import pandas as pd
 import numpy as np
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 import hashlib
 import urllib.request
 from tqdm import tqdm
@@ -13,12 +13,12 @@ from contextlib import contextmanager
 from PIL import Image, ImageOps, UnidentifiedImageError
 import cv2
 
-def load_image(path: str, max_size: int = None) -> Image:
+def load_image(path: str, max_size: Optional[int] = None) -> Image.Image:
     """Loads an image.
 
     Args:
         path (str): Path of the image.
-        max_size (int, optional): Maximal size of the image or None (no restriction).
+        max_size (Optional[int], optional): Maximal size of the image or None (no restriction).
 
     Returns:
         Loaded image.
@@ -35,11 +35,11 @@ def load_image(path: str, max_size: int = None) -> Image:
             img = img.resize((int(c*w), int(c*h)))
     return img
 
-def get_image(*args, **kwargs) -> Image:
+def get_image(*args, **kwargs) -> Image.Image:
     print("This function will be removed in future releases. Use load_image() instead.")
     return load_image(*args, **kwargs)
 
-def crop_black(img: Image) -> Image:
+def crop_black(img: Image.Image) -> Image.Image:
     """Crops black borders from an image.    
 
     Args:
@@ -49,7 +49,7 @@ def crop_black(img: Image) -> Image:
         Cropped image.
     """
     
-    y_nonzero, x_nonzero, _ = np.nonzero(img)
+    y_nonzero, x_nonzero, _ = np.nonzero(np.asarray(img))
     return img.crop(
         (
             np.min(x_nonzero),
@@ -59,7 +59,7 @@ def crop_black(img: Image) -> Image:
         )
     )
 
-def crop_white(img: Image) -> Image:
+def crop_white(img: Image.Image) -> Image.Image:
     """Crops white borders from an image.    
 
     Args:
@@ -69,7 +69,7 @@ def crop_white(img: Image) -> Image:
         Cropped image.
     """
     
-    y_nonzero, x_nonzero, _ = np.nonzero(ImageOps.invert(img))
+    y_nonzero, x_nonzero, _ = np.nonzero(np.asarray(ImageOps.invert(img)))
     return img.crop(
         (
             np.min(x_nonzero),
@@ -101,9 +101,7 @@ def find_images(
                 data.append({'path': os.path.relpath(path, start=root), 'file': file})
     return pd.DataFrame(data)
 
-def find_file_types(
-        root: str
-        ) -> pd.DataFrame:
+def find_file_types(root: str) -> pd.Series:
     """Finds all counted file extensions in lowercase in folder and subfolders.
 
     Args:

@@ -42,6 +42,7 @@ class ELPephants(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
+        assert self.root is not None
         data = utils.find_images(self.root)
 
         # Create the dataframe
@@ -54,6 +55,7 @@ class ELPephants(WildlifeDataset):
         })
 
         # Add training and testing split
+        # TODO: this is wrong
         path_txt = utils.find_images(self.root, img_extensions='.txt')
         idx_train = np.where(path_txt['file'] == 'train.txt')[0]
         idx_test = np.where(path_txt['file'] == 'val.txt')[0]

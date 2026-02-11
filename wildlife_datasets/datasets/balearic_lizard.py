@@ -56,6 +56,7 @@ class BalearicLizard(DownloadKaggle, WildlifeDataset):
         """
 
         # Load metadata
+        assert self.root is not None
         metadata_path = os.path.join(self.root, metadata_filename)
         df = pd.read_csv(metadata_path)
         df = df.rename({'id': 'identity'}, axis=1)

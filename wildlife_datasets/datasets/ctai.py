@@ -34,6 +34,7 @@ class CTai(DownloadURL, WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:            
         # Load information about the dataset
+        assert self.root is not None
         path = os.path.join('chimpanzee_faces-master', 'datasets_cropped_chimpanzee_faces', 'data_CTai',)
         data = pd.read_csv(os.path.join(self.root, path, 'annotations_ctai.txt'), header=None, sep=' ')
         

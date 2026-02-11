@@ -36,6 +36,7 @@ class NDD20(DownloadURL, WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the above-water dataset
+        assert self.root is not None
         with open(os.path.join(self.root, 'ABOVE_LABELS.json')) as file:
             data = json.load(file)
         
@@ -102,6 +103,7 @@ class NDD20v2(NDD20):
     outdated_dataset = False
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        assert self.root is not None
         for i, df_row in df.iterrows():
             # Rewrite wrong segmentations. There is no dolphin -> should be deleted.
             # But that would break compability and the identity is unknown anyway.

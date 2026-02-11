@@ -75,6 +75,7 @@ class CzechLynx(DownloadKaggle, WildlifeDataset):
         """
 
         # Load metadata
+        assert self.root is not None
         metadata_path = os.path.join(self.root, 'metadata.csv')
         df = pd.read_csv(metadata_path)
 
@@ -167,6 +168,7 @@ class CzechLynxv2(CzechLynx):
         """
 
         # Load real metadata
+        assert self.root is not None
         metadata_path = os.path.join(self.root, 'CzechLynxDataset-Metadata-Real.csv')
         df1 = pd.read_csv(metadata_path)
         df1['real_animal'] = True

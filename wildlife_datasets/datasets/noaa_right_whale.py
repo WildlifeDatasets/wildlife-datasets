@@ -48,6 +48,7 @@ class NOAARightWhale(DownloadKaggle, WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the training dataset
+        assert self.root is not None
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
         df1 = pd.DataFrame({
             'image_id': data['Image'].str.split('.', expand=True)[0].str.strip('w_').astype(int),

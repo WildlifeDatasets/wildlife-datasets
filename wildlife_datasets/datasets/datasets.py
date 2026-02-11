@@ -4,10 +4,11 @@ import os
 from copy import deepcopy
 import pandas as pd
 import numpy as np
-from typing import Optional, List, Union, Callable, Tuple
+from typing import Callable, List, Optional, Sequence, Tuple, Union
 import json
 from PIL import Image
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 import pycocotools.mask as mask_coco
 from . import utils
 
@@ -34,6 +35,7 @@ class WildlifeDataset:
       col_label (str): Column name containing individual animal names (labels).
     """
 
+    summary = {}
     unknown_name = 'unknown'
     outdated_dataset = False
     determined_by_df = True
@@ -97,6 +99,8 @@ class WildlifeDataset:
         else:
             if not self.determined_by_df:
                 print('This dataset is not determined by dataframe. But you construct it so.')
+        assert df is not None
+
         if remove_unknown:
             df = df[df[self.col_label] != self.unknown_name]
         self.df = df.reset_index(drop=True)
@@ -147,7 +151,7 @@ class WildlifeDataset:
     def __len__(self):
         return len(self.df)
 
-    def __getitem__(self, idx: int) -> Image:
+    def __getitem__(self, idx: int) -> Image.Image | tuple[Image.Image, int | str]:
         """Load an image with iloc `idx` with transforms `self.transform` and `self.img_load` applied.
 
         Args:
@@ -187,7 +191,7 @@ class WildlifeDataset:
         dataset.compute_attributes()
         return dataset
 
-    def get_image(self, idx: int) -> Image:
+    def get_image(self, idx: int) -> Image.Image:
         """Load an image with iloc `idx`.
 
         Args:
@@ -205,7 +209,7 @@ class WildlifeDataset:
         img = self.load_image(img_path)
         return img
     
-    def load_image(self, path: str) -> Image:
+    def load_image(self, path: str) -> Image.Image:
         """Load an image with `path`.
 
         Args:
@@ -217,7 +221,7 @@ class WildlifeDataset:
 
         return utils.load_image(path)
 
-    def apply_segmentation(self, img: Image, idx: int) -> Image:
+    def apply_segmentation(self, img: Image.Image, idx: int) -> Image.Image:
         """Applies segmentation or bounding box when loading an image.
 
         Args:
@@ -420,7 +424,7 @@ class WildlifeDataset:
 
     def set_transform(self, transform):
         self.transform = transform
-    
+
     def create_catalogue(self):
         """Creates the dataframe.
 
@@ -514,7 +518,7 @@ class WildlifeDataset:
 
     def finalize_catalogue(
             self,
-            df: pd.DataFrame = None,
+            df: Optional[pd.DataFrame] = None,
             ) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
 
@@ -523,7 +527,7 @@ class WildlifeDataset:
         Checks if ids are unique and if all files exist.
 
         Args:
-            df (pd.DataFrame, optional): A full dataframe of the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
 
         Returns:
             A full dataframe of the data, slightly modified.
@@ -555,11 +559,11 @@ class WildlifeDataset:
             else:
                 return df.rename({name_old: name_new}, axis=1, inplace=True)
 
-    def check_required_columns(self, df: pd.DataFrame = None) -> None:
+    def check_required_columns(self, df: Optional[pd.DataFrame] = None) -> None:
         """Check if all required columns are present.
 
         Args:
-            df (pd.DataFrame, optional): A full dataframe of the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
         if df is None:
@@ -568,7 +572,7 @@ class WildlifeDataset:
             if col_name not in df.columns:
                 raise Exception('Column %s must be in the dataframe columns.' % col_name)
 
-    def check_types_columns(self, df: pd.DataFrame = None) -> None:
+    def check_types_columns(self, df: Optional[pd.DataFrame] = None) -> None:
         """Checks if columns are in correct formats.
 
         The format are specified in `requirements`, which is list
@@ -577,7 +581,7 @@ class WildlifeDataset:
         must be at least one of the formats.
 
         Args:
-            df (pd.DataFrame, optional): A full dataframe of the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
         if df is None:
@@ -752,12 +756,12 @@ class WildlifeDataset:
             img_min: float = 100,
             rotate: bool = True,
             keep_aspect_ratios: bool = True,
-            header_cols: Optional[List[str]] = None,
-            idx: Optional[Union[List[bool],List[int]]] = None,
-            background_color: Tuple[int] = (0, 0, 0),
+            header_cols: Optional[Sequence[str]] = None,
+            idx: Optional[Sequence[bool] | Sequence[int] | np.ndarray] = None,
+            background_color: Tuple[int, int, int] = (0, 0, 0),
             keep_transform: bool = False,
             **kwargs
-            ) -> None:
+            ) -> Optional[Figure]:
         """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
 
         Args:
@@ -767,9 +771,9 @@ class WildlifeDataset:
             img_min (float, optional): The minimal size of the plotted images.
             rotate (bool, optional): Rotates the images to have the same orientation.
             keep_aspect_ratios (bool, optional): Whether aspect ratios are kept for images.
-            header_cols (Optional[List[str]], optional): List of headers for each column.
-            idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
-            background_color (Tuple[int], optional): Background color of the grid.
+            header_cols (Optional[Sequence[str]], optional): List of headers for each column.
+            idx (Optional[Union[Sequence[bool], Sequence[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
+            background_color (Tuple[int, int, int], optional): Background color of the grid.
             keep_transform (bool, optional): Whether `self.transform` is applied.
         """
 

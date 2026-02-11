@@ -53,6 +53,7 @@ class SMALST(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
+        assert self.root is not None
         data = utils.find_images(os.path.join(self.root, 'zebra_training_set', 'images'))
         
         # Extract information about the images

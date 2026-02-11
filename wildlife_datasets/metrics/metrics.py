@@ -17,7 +17,7 @@ def unify_types(
     Args:
         y_true (List): List of true labels.
         y_pred (List): List of predictions.
-        new_class (Optional[Union[int, str]]): Name of the new class.
+        new_class (Optional[Union[int, str]], optional): Name of the new class.
 
     Returns:
         Unified label types.
@@ -50,7 +50,7 @@ def unify_types(
 def accuracy(
         y_true: List,
         y_pred: List,
-        new_class: Union[int, str] = None,
+        new_class: Optional[Union[int, str]] = None,
     ) -> float:
     """Computes the accuracy.
 
@@ -59,7 +59,7 @@ def accuracy(
     Args:
         y_true (List): List of true labels.
         y_pred (List): List of predictions.
-        new_class (Union[int, str]): Name of the new class.
+        new_class (Optional[Union[int, str]], optional): Name of the new class.
 
     Returns:
         Computed accuracy.
@@ -71,7 +71,7 @@ def accuracy(
 def balanced_accuracy(
         y_true: List,
         y_pred: List,
-        new_class: Union[int, str] = None,
+        new_class: Optional[Union[int, str]] = None,
     ) -> float:
     """Computes the balanced accuracy.
 
@@ -83,7 +83,7 @@ def balanced_accuracy(
     Args:
         y_true (List): List of true labels.
         y_pred (List): List of predictions.
-        new_class (Union[int, str]): Name of the new class.
+        new_class (Optional[Union[int, str]], optional): Name of the new class.
 
     Returns:
         Computed balanced accuracy.
@@ -98,7 +98,7 @@ def balanced_accuracy(
 def class_average_accuracy(
         y_true: List,
         y_pred: List,
-        new_class: Union[int, str] = None,
+        new_class: Optional[Union[int, str]] = None,
     ) -> float:
     """Computes the class average accuracy.
 
@@ -107,7 +107,7 @@ def class_average_accuracy(
     Args:
         y_true (List): List of true labels.
         y_pred (List): List of predictions.
-        new_class (Union[int, str]): Name of the new class.
+        new_class (Optional[Union[int, str]], optional): Name of the new class.
 
     Returns:
         Computed class average accuracy.
@@ -120,7 +120,7 @@ def class_average_accuracy(
 def precision(
         y_true: List,
         y_pred: List,
-        new_class: Union[int, str] = None,
+        new_class: Optional[Union[int, str]] = None,
     ) -> float:
     """Computes the (macro-averaged) precision.
 
@@ -129,7 +129,7 @@ def precision(
     Args:
         y_true (List): List of true labels.
         y_pred (List): List of predictions.
-        new_class (Union[int, str]): Name of the new class.
+        new_class (Optional[Union[int, str]], optional): Name of the new class.
 
     Returns:
         Computed precision.
@@ -141,7 +141,7 @@ def precision(
 def recall(
         y_true: List,
         y_pred: List,
-        new_class: Union[int, str] = None,
+        new_class: Optional[Union[int, str]] = None,
         ignore_empty: bool = False
     ) -> float:
     """Computes the (macro-averaged) recall.
@@ -151,13 +151,13 @@ def recall(
     Args:
         y_true (List): List of true labels.
         y_pred (List): List of predictions.
-        new_class (Union[int, str]): Name of the new class.
-        ignore_empty (bool): Whether classes not in true labels should be ignored for averaging.
+        new_class (Optional[Union[int, str]], optional): Name of the new class.
+        ignore_empty (bool, optional): Whether classes not in true labels should be ignored for averaging.
 
     Returns:
         Computed recall.
     """
-
+    
     y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)
     if ignore_empty:
         C = skm.multilabel_confusion_matrix(y_true, y_pred)
@@ -168,7 +168,7 @@ def recall(
 def f1(
         y_true: List,
         y_pred: List,
-        new_class: Union[int, str] = None,
+        new_class: Optional[Union[int, str]] = None,
     ) -> float:
     """Computes the (macro-averaged) F1 score.
 
@@ -177,7 +177,7 @@ def f1(
     Args:
         y_true (List): List of true labels.
         y_pred (List): List of predictions.
-        new_class (Union[int, str]): Name of the new class.
+        new_class (Optional[Union[int, str]], optional): Name of the new class.
 
     Returns:
         Computed F1 score.

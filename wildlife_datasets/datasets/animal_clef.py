@@ -42,6 +42,7 @@ class AnimalCLEF2026_TexasHornedLizards(DownloadURL, WildlifeDataset):
     archive = '7. THL images - Original.zip'
 
     def create_catalogue(self):
+        assert self.root is not None
         data = utils.find_images(self.root)
 
         file_name = os.path.join(self.root, 'individuals.csv')
@@ -100,6 +101,7 @@ class AnimalCLEF2025(DownloadKaggle, WildlifeDataset):
     kaggle_type = 'competitions'
 
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         metadata = pd.read_csv(os.path.join(self.root, 'metadata.csv'))
         return self.finalize_catalogue(metadata)
 
@@ -113,6 +115,7 @@ class AnimalCLEF2025_LynxID2025(WildlifeDataset):
         pass
     
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         data1 = pd.read_csv(os.path.join(self.root, 'metadata_database.csv'))
         data2 = pd.read_csv(os.path.join(self.root, 'metadata_query.csv'))
         data = pd.concat((data1, data2))
@@ -132,6 +135,7 @@ class AnimalCLEF2025_SalamanderID2025(WildlifeDataset):
         pass
     
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         path_json = os.path.join('annotations', 'instances_default.json')
 
         # Load annotations JSON file
@@ -184,6 +188,7 @@ class AnimalCLEF2025_SeaTurtleID2022(WildlifeDataset):
         pass
     
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         data = pd.read_csv(os.path.join(self.root, 'annotations.csv'))
         data['image_name'] = data['path'].apply(lambda x: x.split('/')[-1])
         bbox = pd.read_csv(os.path.join(self.root, 'bbox.csv'))

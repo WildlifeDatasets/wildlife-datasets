@@ -34,6 +34,7 @@ class HappyWhale(DownloadKaggle, WildlifeDataset):
     
     def create_catalogue(self) -> pd.DataFrame:
         # Load the training data
+        assert self.root is not None
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
         df1 = pd.DataFrame({
             'image_id': data['image'].str.split('.', expand=True)[0],

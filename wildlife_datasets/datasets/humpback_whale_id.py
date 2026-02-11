@@ -34,6 +34,7 @@ class HumpbackWhaleID(DownloadKaggle, WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load the training data
+        assert self.root is not None
         data = pd.read_csv(os.path.join(self.root, 'train.csv'))
         data.loc[data['Id'] == 'new_whale', 'Id'] = self.unknown_name
         df1 = pd.DataFrame({

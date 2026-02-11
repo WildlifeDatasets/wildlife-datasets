@@ -32,6 +32,7 @@ class PolarBearVidID(DownloadURL, WildlifeDataset):
     archive = 'PolarBearVidID.zip'
 
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         metadata = pd.read_csv(os.path.join(self.root, 'animal_db.csv'))
         data = utils.find_images(self.root)
 

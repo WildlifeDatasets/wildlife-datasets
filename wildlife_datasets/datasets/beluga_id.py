@@ -41,6 +41,7 @@ class BelugaIDv2(BelugaID):
     outdated_dataset = False
     
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         # Use the original data
         df_train = self.create_catalogue_wildme(os.path.join('beluga', 'beluga'), 2022)
         df_train['original_split'] = 'train'

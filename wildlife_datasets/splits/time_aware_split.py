@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from .balanced_split import BalancedSplit
 
 
@@ -103,8 +103,8 @@ class TimeProportionOpenSetSplit(TimeAwareSplit):
     def __init__(
             self,
             ratio_train: float,
-            ratio_class_test: float = None,
-            n_class_test: int = None,
+            ratio_class_test: Optional[float] = None,
+            n_class_test: Optional[int] = None,
             **kwargs
             ) -> None:
         """Initializes the class.
@@ -116,8 +116,8 @@ class TimeProportionOpenSetSplit(TimeAwareSplit):
 
         Args:
             ratio_train (float): *Approximate* size of the training set.
-            ratio_class_test (float, optional): *Approximate* ratio of samples of individuals only in the testing set.
-            n_class_test (int, optional): Number of individuals only in the testing set.
+            ratio_class_test (Optional[float], optional): *Approximate* ratio of samples of individuals only in the testing set.
+            n_class_test (Optional[int], optional): Number of individuals only in the testing set.
             seed (int, optional): Initial seed for the LCG random generator.
             identity_skip (str, optional): Name of the identities to ignore.
             col_label (str, optional): Column name containing individual animal names (labels).

@@ -37,6 +37,7 @@ class ZindiTurtleRecall(DownloadURL, WildlifeDataset):
     
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the training images
+        assert self.root is not None
         data_train = pd.read_csv(os.path.join(self.root, 'train.csv'))
         data_train['split'] = 'train'
 

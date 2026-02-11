@@ -52,6 +52,7 @@ class TurtlesOfSMSRC(DownloadINaturalist, WildlifeDataset):
         return df
 
     def create_catalogue(self, load_segmentation=False) -> pd.DataFrame:
+        assert self.root is not None
         df = pd.read_csv(os.path.join(self.root, "metadata.csv"))
         df["image_id"] = df["observation_id"].astype(str) + "_" + df["photo_id"].astype(str)
         df["identity"] = df["observation_id"]

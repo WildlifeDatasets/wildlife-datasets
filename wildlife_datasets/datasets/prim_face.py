@@ -103,6 +103,7 @@ class PrimFace(DownloadURL, WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
+        assert self.root is not None
         data = utils.find_images(self.root)
         
         # Finalize the dataframe
@@ -115,7 +116,7 @@ class PrimFace(DownloadURL, WildlifeDataset):
         })
         return self.finalize_catalogue(df)
 
-    def load_image(self, path: str) -> Image:
+    def load_image(self, path: str) -> Image.Image:
         """Load an image with `path`. Need to write this because PIL loads (w,h,4), where the last channel is transparency.
 
         Args:

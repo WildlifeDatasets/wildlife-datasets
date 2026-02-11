@@ -32,6 +32,7 @@ class ReunionTurtles(DownloadKaggle, WildlifeDataset):
     kaggle_type = 'datasets'
 
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         data = pd.read_csv(os.path.join(self.root, 'data.csv'))
 
         date = pd.to_datetime(data['Date'])

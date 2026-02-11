@@ -36,6 +36,7 @@ class MacaqueFaces(DownloadURL, WildlifeDataset):
     
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset
+        assert self.root is not None
         data = pd.read_csv(os.path.join(self.root, 'MacaqueFaces_ImageInfo.csv'))
         date_taken = [datetime.datetime.strptime(date, '%d-%m-%Y').strftime('%Y-%m-%d') for date in data['DateTaken']]
         

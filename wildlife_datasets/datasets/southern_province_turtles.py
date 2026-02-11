@@ -31,6 +31,7 @@ class SouthernProvinceTurtles(DownloadKaggle, WildlifeDataset):
     kaggle_type = 'datasets'
 
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         file_name = os.path.join(self.root, 'annotations.csv')
         data = pd.read_csv(file_name)
 

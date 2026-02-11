@@ -31,6 +31,7 @@ class WildlifeReID10k(DownloadKaggle, WildlifeDataset):
     kaggle_type = 'datasets'
 
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         df = pd.read_csv(os.path.join(self.root, 'metadata.csv'), low_memory=False)
         df['image_id'] = range(len(df))
         return self.finalize_catalogue(df)
