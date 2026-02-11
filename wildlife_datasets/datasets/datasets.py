@@ -163,6 +163,8 @@ class WildlifeDataset:
 
         img = self.get_image(idx)
         img = self.apply_segmentation(img, idx)
+        if self.transform:
+            img = self.transform(img)
         if self.load_label and self.factorize_label:
             return img, self.labels[idx]
         elif self.load_label:
@@ -305,9 +307,6 @@ class WildlifeDataset:
             img = utils.crop_white(img)
         else:
             raise ValueError(f"Invalid img_load argument: {self.img_load}")
-
-        if self.transform:
-            img = self.transform(img)
 
         return img
 
