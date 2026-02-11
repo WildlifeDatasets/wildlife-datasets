@@ -722,11 +722,11 @@ class WildlifeDataset:
                 print(path)
             raise Exception('Some files not found')
 
-    def check_files_names(self, col: pd.Series | str = None) -> None:
+    def check_files_names(self, col: Optional[pd.Series | str] = None) -> None:
         """Checks if paths contain characters which may cause issues.
 
         Args:
-            col (pd.Series | str, optional): A column of a dataframe.
+            col (Optional[pd.Series | str], optional): A column of a dataframe.
         """
 
         if col is None:
@@ -751,7 +751,7 @@ class WildlifeDataset:
             self,
             n_rows: int = 5,
             n_cols: int = 8,
-            offset: float = 10,
+            offset: int = 10,
             img_min: float = 100,
             rotate: bool = True,
             keep_aspect_ratios: bool = True,
@@ -766,7 +766,7 @@ class WildlifeDataset:
         Args:
             n_rows (int, optional): The number of rows in the grid.
             n_cols (int, optional): The number of columns in the grid.
-            offset (float, optional): The offset between images.
+            offset (int, optional): The offset between images.
             img_min (float, optional): The minimal size of the plotted images.
             rotate (bool, optional): Rotates the images to have the same orientation.
             keep_aspect_ratios (bool, optional): Whether aspect ratios are kept for images.
