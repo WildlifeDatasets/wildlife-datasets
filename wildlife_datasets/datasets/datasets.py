@@ -223,6 +223,39 @@ class WildlifeDataset:
 
         return utils.load_image(path)
 
+    def _prepare_segmentation(self, img, segmentation):
+        if isinstance(segmentation, (list, np.ndarray)):
+            w, h = img.size
+            rles = mask_coco.frPyObjects([segmentation], h, w)
+            return mask_coco.merge(rles)
+
+        if isinstance(segmentation, dict) and isinstance(segmentation.get("counts"), (list, np.ndarray)):
+            h, w = segmentation["size"]
+            return mask_coco.frPyObjects(segmentation, h, w)
+
+        if isinstance(segmentation, dict) and isinstance(segmentation.get("counts"), str):
+            return segmentation
+
+        if isinstance(segmentation, str):
+            assert self.root is not None
+            m = np.asfortranarray(utils.load_image(os.path.join(self.root, segmentation)))
+            if m.ndim == 3:
+                m = m[:, :, 0]
+            return mask_coco.encode(m)
+
+        if not np.any(pd.isnull(segmentation)):
+            raise Exception("Segmentation type not recognized")
+
+        return segmentation
+
+    def _apply_mask(self, img: Image.Image, segmentation, invert: bool) -> Image.Image:
+        if np.any(pd.isnull(segmentation)):
+            return img
+        mask = mask_coco.decode(segmentation).astype(bool)
+        if invert:
+            mask = ~mask
+        return Image.fromarray(np.asarray(img) * mask[..., np.newaxis])
+
     def apply_segmentation(self, img: Image.Image, idx: int) -> Image.Image:
         """Applies segmentation or bounding box when loading an image.
 
@@ -234,81 +267,56 @@ class WildlifeDataset:
             Loaded image.
         """
 
-        # Prepare for segmentations        
-        if self.img_load in ["full_mask", "full_hide", "bbox_mask", "bbox_hide"]:
-            data = self.df.iloc[idx]
-            if not ("segmentation" in data):
-                raise ValueError(f"{self.img_load} selected but no segmentation found.")
-            segmentation = data["segmentation"]
-            if isinstance(segmentation, list) or isinstance(segmentation, np.ndarray):
-                # Convert polygon to compressed RLE
-                w, h = img.size
-                rles = mask_coco.frPyObjects([segmentation], h, w)
-                segmentation = mask_coco.merge(rles)
-            elif isinstance(segmentation, dict) and (isinstance(segmentation['counts'], list) or isinstance(segmentation['counts'], np.ndarray)):            
-                # Convert uncompressed RLE to compressed RLE
-                h, w = segmentation['size']
-                segmentation = mask_coco.frPyObjects(segmentation, h, w)
-            elif isinstance(segmentation, dict) and isinstance(segmentation.get('counts'), str):
-                # Already a compressed COCO RLE mask – nothing to convert
-                pass
-            elif isinstance(segmentation, str):
-                # Load image mask and convert it to compressed RLE
-                segmentation = np.asfortranarray(utils.load_image(os.path.join(self.root, segmentation)))
-                if segmentation.ndim == 3:
-                    segmentation = segmentation[:,:,0]
-                segmentation = mask_coco.encode(segmentation)
-            elif not np.any(pd.isnull(segmentation)):
-                raise Exception('Segmentation type not recognized')
-        # Prepare for bounding boxes
-        if self.img_load in ["bbox"]:
-            data = self.df.iloc[idx]
-            if not ("bbox" in data):
-                raise ValueError(f"{self.img_load} selected but no bbox found.")
-            if type(data["bbox"]) == str:
-                bbox = json.loads(data["bbox"])
-            else:
-                bbox = data["bbox"]
+        data = self.df.iloc[idx]
+        segmentation = None
         
+        # Prepare for segmentations        
+        if self.img_load in {"full_mask", "full_hide", "bbox_mask", "bbox_hide"}:
+            if "segmentation" not in data:
+                raise ValueError(f"{self.img_load} selected but no segmentation found.")
+            segmentation = self._prepare_segmentation(img, data["segmentation"])
+                
         # Load full image as it is.
         if self.img_load == "full":
-            img = img
+            return img
+        
         # Mask background using segmentation mask.
-        elif self.img_load == "full_mask":
-            if not np.any(pd.isnull(segmentation)):
-                mask = mask_coco.decode(segmentation).astype("bool")
-                img = Image.fromarray(img * mask[..., np.newaxis])
+        if self.img_load == "full_mask":
+            return self._apply_mask(img, segmentation, False)
+
         # Hide object using segmentation mask
-        elif self.img_load == "full_hide":
-            if not np.any(pd.isnull(segmentation)):
-                mask = mask_coco.decode(segmentation).astype("bool")
-                img = Image.fromarray(img * ~mask[..., np.newaxis])
+        if self.img_load == "full_hide":
+            return self._apply_mask(img, segmentation, True)
+
         # Crop to bounding box
-        elif self.img_load == "bbox":
+        if self.img_load == "bbox":
+            if "bbox" not in data:
+                raise ValueError(f"{self.img_load} selected but no bbox found.")
+            raw = data["bbox"]
+            bbox = json.loads(raw) if isinstance(raw, str) else raw
             if not np.any(pd.isnull(bbox)):
                 img = img.crop((bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]))
-        # Mask background using segmentation mask and crop to bounding box.
-        elif self.img_load == "bbox_mask":
-            if (not np.any(pd.isnull(segmentation))):
-                mask = mask_coco.decode(segmentation).astype("bool")
-                img = Image.fromarray(img * mask[..., np.newaxis])
-                img = utils.crop_black(img)
-        # Hide object using segmentation mask and crop to bounding box.
-        elif self.img_load == "bbox_hide":
-            if (not np.any(pd.isnull(segmentation))):
-                mask = mask_coco.decode(segmentation).astype("bool")
-                img = Image.fromarray(img * ~mask[..., np.newaxis])
-                img = utils.crop_black(img)
-        # Crop black background around images
-        elif self.img_load == "crop_black":
-            img = utils.crop_black(img)
-        # Crop white background around images
-        elif self.img_load == "crop_white":
-            img = utils.crop_white(img)
-        else:
-            raise ValueError(f"Invalid img_load argument: {self.img_load}")
+            return img
 
-        return img
+        # Mask background using segmentation mask and crop to bounding box.
+        if self.img_load == "bbox_mask":
+            img = self._apply_mask(img, segmentation, False)
+            return utils.crop_black(img)
+        
+        # Hide object using segmentation mask and crop to bounding box.
+        if self.img_load == "bbox_hide":
+            img = self._apply_mask(img, segmentation, True)
+            return utils.crop_black(img)
+
+        # Crop black background around images
+        if self.img_load == "crop_black":
+            return utils.crop_black(img)
+        
+        # Crop white background around images
+        if self.img_load == "crop_white":
+            return utils.crop_white(img)
+        
+        raise ValueError(f"Invalid img_load argument: {self.img_load}")
 
     @classmethod
     def get_data(
