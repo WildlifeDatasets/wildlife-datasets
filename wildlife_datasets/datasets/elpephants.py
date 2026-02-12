@@ -55,8 +55,7 @@ class ELPephants(WildlifeDataset):
         })
 
         # Add training and testing split
-        # TODO: this is wrong
-        path_txt = utils.find_images(self.root, img_extensions='.txt')
+        path_txt = utils.find_images(self.root, img_extensions=('.txt',))
         idx_train = np.where(path_txt['file'] == 'train.txt')[0]
         idx_test = np.where(path_txt['file'] == 'val.txt')[0]
         if len(idx_train) == 1 and len(idx_test) == 1:            
