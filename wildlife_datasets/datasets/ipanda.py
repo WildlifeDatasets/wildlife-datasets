@@ -39,7 +39,7 @@ class IPanda50(WildlifeDataset):
     @classmethod
     def _download(cls):
         exception_text = '''Download failed. GDown quota probably reached. Download dataset manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#ipanda50'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#ipanda50'''
         for url, archive in cls.downloads:
             utils.gdown_download(url, archive, exception_text=exception_text)
 

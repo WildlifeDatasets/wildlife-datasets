@@ -43,7 +43,7 @@ class NOAARightWhale(DownloadKaggle, WildlifeDataset):
         except:
             exception_text = '''Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
-                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#noaarightwhale'''
+                Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#noaarightwhale'''
             raise Exception(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:

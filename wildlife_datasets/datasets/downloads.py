@@ -72,7 +72,7 @@ class DownloadKaggle:
         else:
             raise ValueError(f'cls.kaggle_type must be datasets or competitions.')
         exception_text = f'''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#{display_name}'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}'''
         try:
             os.system(f"kaggle {command}")
         except:
@@ -88,7 +88,7 @@ class DownloadKaggle:
         except:
             exception_text = f'''Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
-                Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#{display_name}'''
+                Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}'''
             raise Exception(exception_text)
     
     @classmethod

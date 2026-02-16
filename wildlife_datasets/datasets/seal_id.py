@@ -34,7 +34,7 @@ class SealID(WildlifeDataset):
     @classmethod
     def _download(cls, url=None):
         if url is None:
-            raise(Exception('URL must be provided for SealID.\nCheck https://wildlifedatasets.github.io/wildlife-datasets/downloads/#sealid'))
+            raise(Exception('URL must be provided for SealID.\nCheck https://wildlifedatasets.github.io/wildlife-datasets/preprocessing/#sealid'))
         utils.download_url(url, cls.archive)
 
     @classmethod

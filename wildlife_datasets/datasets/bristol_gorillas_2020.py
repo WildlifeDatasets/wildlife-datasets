@@ -34,7 +34,7 @@ class BristolGorillas2020(WildlifeDataset):
     def _download(cls):
         command = f"wget -c -q {cls.url}"
         exception_text = '''Download works only on Linux. Please download it manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#bristolgorillas2020'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#bristolgorillas2020'''
         if os.name == 'posix':
             os.system(command)
         else:

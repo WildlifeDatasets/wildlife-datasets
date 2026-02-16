@@ -37,9 +37,8 @@ class BirdIndividualID(WildlifeDataset):
     @classmethod
     def _download(cls) -> None:
         exception_text = '''Dataset must be downloaded manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#birdindividualid'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#birdindividualid'''
         raise Exception(exception_text)
-        # utils.gdown_download(cls.url, cls.archive, exception_text=exception_text)
     
     @classmethod
     def _extract(cls):

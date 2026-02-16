@@ -41,7 +41,7 @@ class StripeSpotter(WildlifeDataset):
     @classmethod
     def _extract(cls):
         exception_text = '''Extracting works only on Linux. Please extract it manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#stripespotter'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#stripespotter'''
         if os.name == 'posix':
             os.system(f"zip -s- data-20110718.zip -O data-full.zip")
             if not os.path.exists('data-full.zip'):

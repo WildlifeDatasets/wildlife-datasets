@@ -34,7 +34,7 @@ class Giraffes(WildlifeDataset):
         url = 'ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021/'
         command = f"wget -rpk -l 10 -np -c --random-wait -U Mozilla {url} -P '.' "
         exception_text = '''Download works only on Linux. Please download it manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#giraffes'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#giraffes'''
         if os.name == 'posix':
             os.system(command)
         else:
