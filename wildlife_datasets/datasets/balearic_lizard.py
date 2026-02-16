@@ -70,3 +70,18 @@ class BalearicLizard(DownloadKaggle, WildlifeDataset):
 class BalearicLizardSegmented(BalearicLizard):
     root_prefix = 'images-segmented'
     convert_to_png = True
+    warning = '''You are trying to download or extract a segmented dataset.
+        It is already included in its non-segmented version.
+        Skipping.'''
+    
+    @classmethod
+    def get_data(cls, *args, **kwargs):
+        print(cls.warning)
+
+    @classmethod
+    def _download(cls):
+        print(cls.warning)
+
+    @classmethod
+    def _extract(cls):
+        print(cls.warning)

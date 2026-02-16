@@ -49,17 +49,16 @@ class Giraffes(WildlifeDataset):
         assert self.root is not None
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
-        n_folders = max(folders.columns)
 
         # Extract information from the folder structure
-        clusters = folders[n_folders-1] == 'clusters'
+        clusters = folders.iloc[:, -2] == 'clusters'
         data, folders = data[clusters], folders[clusters]
 
         # Finalize the dataframe
         df = pd.DataFrame({    
             'image_id': utils.create_id(data['file']),
             'path': data['path'] + os.path.sep + data['file'],
-            'identity': folders[n_folders],
+            'identity': folders.iloc[:, -1],
             'date': data['file'].apply(lambda x: self.extract_date(x))
         })
         return self.finalize_catalogue(df)

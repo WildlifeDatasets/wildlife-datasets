@@ -34,6 +34,7 @@ class AnimalCLEF2026(DownloadKaggle, WildlifeDataset):
     kaggle_type = 'competitions'
 
     def create_catalogue(self) -> pd.DataFrame:
+        assert self.root is not None
         metadata = pd.read_csv(os.path.join(self.root, 'metadata.csv'))
         return self.finalize_catalogue(metadata)
 

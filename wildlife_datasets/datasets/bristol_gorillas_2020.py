@@ -56,17 +56,16 @@ class BristolGorillas2020(WildlifeDataset):
         assert self.root is not None
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
-        n_folders = max(folders.columns)
 
         # Restrict to correct images
-        idx = folders[n_folders-2] != 'videos'
+        idx = folders.iloc[:, -3] != 'videos'
         data = data[idx]
         folders = folders[idx]
 
         # Create the dataframe
         df1 = pd.DataFrame({
             'path': data['path'] + os.path.sep + data['file'],
-            'original_split': folders[n_folders-2],
+            'original_split': folders.iloc[:, -3],
         })
         
         # Add bounding boxes (either load them or create and save them)
@@ -106,6 +105,7 @@ class BristolGorillas2020(WildlifeDataset):
                 if len(line) > 0:
                     identity = identity_conversion[int(line[0])]
                     bbox = [float(num) for num in line.split()[1:]]
+                    assert len(bbox) == 4
                     bbox = utils.yolo_to_pascalvoc(*bbox, w, h)
                     bbox = [bbox[0], bbox[1], bbox[2]-bbox[0], bbox[3]-bbox[1]]
                     identity_all.append(identity)

@@ -35,7 +35,7 @@ class HolsteinCattleRecognition(DownloadURL, WildlifeDataset):
     def _extract(cls):
         super()._extract()
         # Extract all archives in the original archive
-        zip_files = utils.find_images('.', img_extensions='zip')
+        zip_files = utils.find_images('.', img_extensions=('.zip',))
         for _, zip_file in zip_files.iterrows():
             file_name = os.path.join(zip_file['path'], zip_file['file'])
             utils.extract_archive(file_name, delete=True)

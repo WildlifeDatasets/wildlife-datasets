@@ -28,7 +28,7 @@ summary = {
 
 class CowDataset(DownloadURL, WildlifeDataset):
     summary = summary
-    url = 'https://figshare.com/ndownloader/files/31210192'
+    url = 'https://ndownloader.figshare.com/files/31210192'
     archive = 'cow-dataset.zip'
 
     @classmethod

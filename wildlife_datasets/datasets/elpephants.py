@@ -88,15 +88,11 @@ class ELPephants(WildlifeDataset):
             'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12
             }
         # Extract month
-        for month_try in conversion:
-            if month_try in x:
-                i = x.index(month_try)
-                if i > i_end:
-                    month = month_try
-                    i_end = i
-        # Month not found
-        if i_end == -np.inf:
+        matches = [(x.find(name), name, number) for name, number in conversion.items()]
+        i_last_match = np.argmax([i for i, _, _ in matches])
+        if matches[i_last_match][0] == -1:
             return np.nan
+        i_end, month, _ = matches[i_last_match]
         # Extract string after month and remove extension
         year = x[i_end+len(month):]
         year = os.path.splitext(year)[0]

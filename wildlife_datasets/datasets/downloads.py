@@ -3,7 +3,7 @@ import json
 import time
 import shutil
 import datetime
-from typing import List, Optional, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 from datasets import load_dataset
 import pandas as pd
@@ -11,9 +11,10 @@ from pyinaturalist import get_observations
 from . import utils
 
 
-def check_attribute(obj, attr):
-    if not hasattr(obj, attr):
-        raise Exception(f'Object {obj} must have attribute {attr}.')
+def check_attributes(obj, attrs: Iterable):
+    for attr in attrs:
+        if not hasattr(obj, attr) or getattr(obj, attr) is None:
+            raise Exception(f'Object {obj} must have attribute {attr}.')
 
 
 def json_serial(obj):
@@ -54,10 +55,15 @@ class DownloadURL:
             shutil.rmtree(cls.rmtree)
 
 class DownloadKaggle:
+    kaggle_url: str
+    kaggle_type: str
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        check_attributes(cls, ["kaggle_url", "kaggle_type"])
+    
     @classmethod
     def _download(cls):
-        check_attribute(cls, 'kaggle_url')
-        check_attribute(cls, 'kaggle_type')
         display_name = cls.display_name().lower()
         if cls.kaggle_type == 'datasets':
             command = f'datasets download -d {cls.kaggle_url} --force'
@@ -90,12 +96,16 @@ class DownloadKaggle:
         return cls.kaggle_url.split('/')[-1] + '.zip'
         
 class DownloadHuggingFace:
-    determined_by_df = False
-    saved_to_system_folder = True
+    determined_by_df: bool = False
+    saved_to_system_folder: bool = True
+    hf_url: str
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        check_attributes(cls, ["hf_url"])
 
     @classmethod
     def _download(cls, *args, **kwargs):
-        check_attribute(cls, 'hf_url')
         load_dataset(cls.hf_url, *args, **kwargs)
 
     @classmethod
@@ -138,7 +148,7 @@ class DownloadINaturalist:
         os.makedirs("metadata", exist_ok=True)
         while True:
             # Build query parameters depending on what is configured
-            params = {
+            params: dict[str, str | int] = {
                 "per_page": cls.per_page,
                 "page": page,
             }

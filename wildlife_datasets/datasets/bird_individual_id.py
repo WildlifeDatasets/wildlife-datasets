@@ -35,7 +35,7 @@ class BirdIndividualID(WildlifeDataset):
     archive = 'ferreira_et_al_2020.zip'
 
     @classmethod
-    def _download(cls):
+    def _download(cls) -> None:
         exception_text = '''Dataset must be downloaded manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#birdindividualid'''
         raise Exception(exception_text)
@@ -134,7 +134,7 @@ class BirdIndividualIDSegmented(BirdIndividualID):
         Skipping.'''
     
     @classmethod
-    def get_data(cls, root, name=None):
+    def get_data(cls, root, force=False, **kwargs):
         print(cls.warning)
 
     @classmethod

@@ -36,11 +36,10 @@ class CoBRAReIdentificationYoungstock(DownloadURL, WildlifeDataset):
         assert self.root is not None
         data = utils.find_images(self.root)
         folders = data['path'].str.split(os.path.sep, expand=True)
-        n_folders = max(folders.columns)
 
         # Extract information
-        identity = folders[n_folders]
-        orientation = folders[n_folders-1]
+        identity = folders.iloc[:, -1]
+        orientation = folders.iloc[:, -2]
 
         # Finalize the dataframe
         df = pd.DataFrame({

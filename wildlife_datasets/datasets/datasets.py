@@ -193,6 +193,12 @@ class WildlifeDataset:
         dataset.compute_attributes()
         return dataset
 
+    def get_absolute_path(self, path: str) -> str:
+        if self.root:
+            return os.path.join(self.root, path)
+        else:
+            return path
+
     def get_image(self, idx: int) -> Image.Image:
         """Load an image with iloc `idx`.
 
@@ -204,10 +210,7 @@ class WildlifeDataset:
         """
 
         data = self.df.iloc[idx]
-        if self.root:
-            img_path = os.path.join(self.root, data[self.col_path])
-        else:
-            img_path = data[self.col_path]
+        img_path = self.get_absolute_path(data[self.col_path])
         img = self.load_image(img_path)
         return img
     
@@ -680,11 +683,11 @@ class WildlifeDataset:
         df = df.sort_values('image_id').reset_index(drop=True)
         return df.reindex(columns=col_names)
 
-    def remove_constant_columns(self, df: pd.DataFrame = None) -> pd.DataFrame:
+    def remove_constant_columns(self, df: Optional[pd.DataFrame] = None) -> pd.DataFrame:
         """Removes columns with a single unique value.
 
         Args:
-            df (pd.DataFrame, optional): A full dataframe of the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
 
         Returns:
             A full dataframe of the data, slightly modified.
@@ -697,11 +700,11 @@ class WildlifeDataset:
                 df = df.drop([df_name], axis=1)
         return df
 
-    def check_unique_id(self, df: pd.DataFrame = None) -> None:
+    def check_unique_id(self, df: Optional[pd.DataFrame] = None) -> None:
         """Checks if values in the id column are unique.
 
         Args:
-            df (pd.DataFrame, optional): A full dataframe of the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
         if df is None:
@@ -709,11 +712,11 @@ class WildlifeDataset:
         if len(df["image_id"].unique()) != len(df):
             raise Exception("Image ID not unique.")
 
-    def check_files_exist(self, col: pd.Series | str = None) -> None:
+    def check_files_exist(self, col: Optional[pd.Series | str] = None) -> None:
         """Checks if paths in a given column exist.
 
         Args:
-            col (pd.Series | str, optional): A column of a dataframe.
+            col (Optional[pd.Series | str], optional): A column of a dataframe.
         """
 
         if col is None:
@@ -722,7 +725,7 @@ class WildlifeDataset:
             col = self.df[col]
         bad_paths = []
         for path in col:
-            if isinstance(path, str) and not os.path.exists(os.path.join(self.root, path)):
+            if isinstance(path, str) and not os.path.exists(self.get_absolute_path(path)):
                 bad_paths.append(path)
         if len(bad_paths) > 0:
             print("The following non-existing images were identified.")                
@@ -793,24 +796,21 @@ class WildlifeDataset:
             idx = np.random.permutation(len(self.df))[:n]
         else:
             if isinstance(idx, pd.Series):
-                idx = idx.values
+                idx = idx.to_numpy()
             if isinstance(idx[0], (bool, np.bool_)):
                 idx = np.where(idx)[0]
             n = min(np.array(idx).size, n_rows*n_cols)
-            idx = np.matrix.flatten(np.array(idx))[:n]
+            idx = np.asarray(idx).flatten()[:n]
 
         # Load images and compute their ratio
         ratios = []
         ims = []
         for k in idx:
             if k is not None and k >= 0:
-                # Load the image with index k
-                if keep_transform:
-                    with self.temporary_attrs(load_label=False):
-                        im = self[k]
-                else:
-                    with self.temporary_attrs(load_label=False, transform=None):
-                        im = self[k]
+                im = self.get_image(k)
+                im = self.apply_segmentation(im, k)
+                if keep_transform and self.transform:
+                    im = self.transform(im)
                 ims.append(im)
                 ratios.append(im.size[0] / im.size[1])
             else:
