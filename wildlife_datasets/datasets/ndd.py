@@ -34,6 +34,12 @@ class NDD20(DownloadURL, WildlifeDataset):
     url = 'https://data.ncl.ac.uk/ndownloader/files/22774175'
     archive = 'NDD20.zip'
 
+    @classmethod
+    def _download(cls):
+        exception_text = '''Dataset must be downloaded manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#ndd20'''
+        raise Exception(exception_text)
+
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the above-water dataset
         assert self.root is not None

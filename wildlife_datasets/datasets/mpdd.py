@@ -30,7 +30,13 @@ class MPDD(DownloadURL, WildlifeDataset):
     summary = summary
     url = 'https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/v5j6m8dzhv-1.zip'
     archive = 'MPDD.zip'
-    
+
+    @classmethod
+    def _download(cls):
+        exception_text = '''Dataset must be downloaded manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#mpdd'''
+        raise Exception(exception_text)
+        
     @classmethod
     def _extract(cls):
         super()._extract()

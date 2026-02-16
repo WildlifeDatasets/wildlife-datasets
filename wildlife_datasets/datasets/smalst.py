@@ -33,14 +33,15 @@ class SMALST(WildlifeDataset):
 
     @classmethod
     def _download(cls):
-        exception_text = '''Download failed. GDown quota probably reached. Download dataset manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#smalst'''
-        utils.gdown_download(cls.url, cls.archive, exception_text)
+        exception_text = '''Dataset must be downloaded manually.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#smalst'''
+        raise Exception(exception_text)
+        # utils.gdown_download(cls.url, cls.archive, exception_text)
 
     @classmethod
     def _extract(cls):
         exception_text = '''Extracting works only on Linux. Please extract it manually.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/downloads#smalst'''
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#smalst'''
         if os.name == 'posix':
             os.system('jar xvf ' + cls.archive)
             os.remove(cls.archive)
