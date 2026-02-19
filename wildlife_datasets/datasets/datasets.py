@@ -1,16 +1,20 @@
 from __future__ import annotations
-from contextlib import contextmanager
-import os
-from copy import deepcopy
-import pandas as pd
-import numpy as np
-from typing import Callable, List, Optional, Sequence, Tuple, Union
+
 import json
-from PIL import Image
+import os
+from contextlib import contextmanager
+from copy import deepcopy
+from typing import Callable, List, Optional, Sequence, Tuple, Union
+
 import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
+import numpy as np
+import pandas as pd
 import pycocotools.mask as mask_coco
+from matplotlib.figure import Figure
+from PIL import Image
+
 from . import utils
+
 
 class WildlifeDataset:
     """Base class for creating datasets.

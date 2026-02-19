@@ -1,7 +1,9 @@
+from typing import List, Optional, Tuple, Union
+
 import numpy as np
-import sklearn.metrics as skm
 import pandas as pd
-from typing import List, Tuple, Union, Optional
+import sklearn.metrics as skm
+
 
 def unify_types(
         y_true: List,

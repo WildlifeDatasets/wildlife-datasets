@@ -1,10 +1,12 @@
 import os
+
 import numpy as np
 import torchvision.transforms as T
 from timm import create_model
-from wildlife_datasets import datasets
-from wildlife_tools.features import DeepFeatures
 from transformers import AutoModel
+from wildlife_tools.features import DeepFeatures
+
+from wildlife_datasets import datasets
 
 device = 'cuda'
 root = '/data/wildlife_datasets/data/WildlifeReID10k'

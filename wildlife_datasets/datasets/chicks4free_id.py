@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
+from datasets import load_dataset
+
 from .datasets import WildlifeDataset
 from .downloads import DownloadHuggingFace
-from datasets import load_dataset
 
 summary = {
     'licenses': 'Attribution 4.0 International (CC BY 4.0)',

@@ -1,10 +1,13 @@
 import os
 from copy import deepcopy
+from typing import Dict, List, Optional, Sequence
+
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+
 from .. import datasets, splits
-from typing import Optional, Dict, List, Sequence
+
 
 def resize_dataset(
         dataset: datasets.WildlifeDataset,

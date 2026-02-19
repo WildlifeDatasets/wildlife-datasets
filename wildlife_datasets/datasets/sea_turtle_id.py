@@ -1,7 +1,9 @@
-import os
 import json
+import os
+
 import numpy as np
 import pandas as pd
+
 from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
 from .utils import parse_bbox_mask

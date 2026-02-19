@@ -1,9 +1,12 @@
-import os
 import json
+import os
+
 import numpy as np
 import pandas as pd
+
 from . import utils
 from .datasets import WildlifeDataset
+
 
 class WildlifeDatasetWildMe(WildlifeDataset):
     def create_catalogue_wildme(self, prefix: str, year: int) -> pd.DataFrame:

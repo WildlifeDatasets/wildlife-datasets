@@ -1,6 +1,8 @@
 import os
+
 import numpy as np
 import pandas as pd
+
 from . import utils
 from .datasets import WildlifeDataset
 

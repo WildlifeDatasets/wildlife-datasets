@@ -1,7 +1,9 @@
 import os
+
 import numpy as np
 import pandas as pd
 from PIL import Image
+
 from . import utils
 from .datasets import WildlifeDataset
 from .downloads import DownloadURL

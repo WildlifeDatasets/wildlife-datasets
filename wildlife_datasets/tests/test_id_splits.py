@@ -1,8 +1,11 @@
 import unittest
+
 import numpy as np
-from .utils import add_datasets, load_datasets
+
 from wildlife_datasets import splits
 from wildlife_datasets.datasets import IPanda50, MacaqueFaces
+
+from .utils import add_datasets, load_datasets
 
 dataset_names = [IPanda50, MacaqueFaces]
 n_orig_datasets = len(dataset_names)

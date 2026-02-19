@@ -1,9 +1,12 @@
 import unittest
+
 import numpy as np
 import pandas as pd
-from .utils import load_datasets, add_datasets
+
 from wildlife_datasets import splits
 from wildlife_datasets.datasets import IPanda50, MacaqueFaces
+
+from .utils import add_datasets, load_datasets
 
 dataset_names = [IPanda50, MacaqueFaces]
 

@@ -1,11 +1,13 @@
 import os
+from typing import Callable, List, Optional, Tuple
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import cosine_similarity
-from typing import Optional, List, Tuple, Callable
-from wildlife_datasets import datasets, metrics, splits
 from wildlife_tools.similarity import CosineSimilarity
+
+from wildlife_datasets import datasets, metrics, splits
 
 license_conversion = {
     'Missing': 'None',

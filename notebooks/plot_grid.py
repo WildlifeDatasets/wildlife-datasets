@@ -1,5 +1,7 @@
 import os
+
 import matplotlib.pyplot as plt
+
 from wildlife_datasets.datasets import *
 
 root = '/data/wildlife_datasets/data'

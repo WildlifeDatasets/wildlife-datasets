@@ -1,17 +1,19 @@
-import io
-import requests
-import os
 import ast
-import pandas as pd
-import numpy as np
-from typing import Tuple, List, Optional
 import hashlib
-import urllib.request
-from tqdm import tqdm
+import io
+import os
 import shutil
+import urllib.request
 from contextlib import contextmanager
-from PIL import Image, ImageOps, UnidentifiedImageError
+from typing import List, Optional, Tuple
+
 import cv2
+import numpy as np
+import pandas as pd
+import requests
+from PIL import Image, ImageOps, UnidentifiedImageError
+from tqdm import tqdm
+
 
 def load_image(path: str, max_size: Optional[int] = None) -> Image.Image:
     """Loads an image.

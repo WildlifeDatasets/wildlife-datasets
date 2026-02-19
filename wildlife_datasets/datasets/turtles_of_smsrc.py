@@ -1,11 +1,12 @@
-import os
-import json
 import ast
+import json
+import os
 
 import numpy as np
 import pandas as pd
-from .downloads import DownloadINaturalist
+
 from .datasets import WildlifeDataset
+from .downloads import DownloadINaturalist
 
 summary = {
     "licenses": "",

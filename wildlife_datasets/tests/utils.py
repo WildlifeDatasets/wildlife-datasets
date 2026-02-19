@@ -1,7 +1,10 @@
 import os
+
 import numpy as np
 import pandas as pd
+
 from wildlife_datasets.datasets import WildlifeDataset
+
 
 def create_dataset(df, check_files=False, **kwargs):
     dataset = WildlifeDataset(df=df, check_files=check_files, **kwargs)

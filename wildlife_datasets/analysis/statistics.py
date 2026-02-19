@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 def display_statistics(
         df: pd.DataFrame,
         unknown_name: str = '',

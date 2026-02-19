@@ -1,8 +1,10 @@
+import json
 import os
 import re
-import json
+
 import numpy as np
 import pandas as pd
+
 from .datasets import WildlifeDataset, utils
 from .downloads import DownloadKaggle, DownloadURL
 

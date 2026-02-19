@@ -1,9 +1,9 @@
 import os
+
 import pandas as pd
 
 from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
-
 
 summary = {
     'licenses': 'Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)',

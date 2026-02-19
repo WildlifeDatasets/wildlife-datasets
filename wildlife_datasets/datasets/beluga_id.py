@@ -1,5 +1,7 @@
 import os
+
 import pandas as pd
+
 from .datasets_wildme import WildlifeDatasetWildMe
 from .downloads import DownloadURL
 

@@ -1,6 +1,8 @@
+from typing import List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from typing import List, Optional, Tuple
+
 from .balanced_split import BalancedSplit
 
 

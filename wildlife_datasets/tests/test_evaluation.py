@@ -1,7 +1,9 @@
 import unittest
-import numpy as np
-from wildlife_datasets import metrics
 from collections.abc import Iterable
+
+import numpy as np
+
+from wildlife_datasets import metrics
 
 tol = 0.000001
 

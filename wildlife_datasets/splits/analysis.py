@@ -1,5 +1,6 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+
 
 def recognize_id_split(ids_train, ids_test):
     ids_train = set(ids_train)

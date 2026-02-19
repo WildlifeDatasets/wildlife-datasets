@@ -1,5 +1,7 @@
 import os
+
 import pandas as pd
+
 from . import utils
 from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
