@@ -2,10 +2,9 @@ from __future__ import annotations
 
 import json
 import os
+from collections.abc import Callable, Sequence
 from contextlib import contextmanager
 from copy import deepcopy
-from typing import List, Optional, Tuple, Union
-from collections.abc import Callable, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np

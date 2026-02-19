@@ -5,7 +5,6 @@ import os
 import shutil
 import urllib.request
 from contextlib import contextmanager
-from typing import List, Optional, Tuple
 
 import cv2
 import numpy as np
