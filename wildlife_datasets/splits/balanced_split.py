@@ -8,7 +8,7 @@ from tqdm import tqdm
 from .lcg import Lcg
 
 
-class BalancedSplit():
+class BalancedSplit:
     """Base class for splitting datasets into training and testing sets.
 
     Implements methods from [this paper](https://arxiv.org/abs/2211.10307).
@@ -57,7 +57,7 @@ class BalancedSplit():
         
         return Lcg(self.seed)
     
-    def split(self, *args, **kwargs) -> List[Tuple[np.ndarray, np.ndarray]]:
+    def split(self, *args, **kwargs) -> list[tuple[np.ndarray, np.ndarray]]:
         """Splitting method which needs to be implemented by subclasses.
 
         It splits the dataframe `df` into labels `idx_train` and `idx_test`.
@@ -74,7 +74,7 @@ class BalancedSplit():
             df: pd.DataFrame,
             idx_train: np.ndarray,
             idx_test: np.ndarray
-            ) -> Tuple[np.ndarray, np.ndarray]:
+            ) -> tuple[np.ndarray, np.ndarray]:
         """Creates a random re-split of an already existing split.
 
         The re-split mimics the split as the training set contains
@@ -126,9 +126,9 @@ class BalancedSplit():
             df: pd.DataFrame,
             features: np.ndarray,
             idx_train: np.ndarray,
-            save_clusters_prefix: Optional[str] = None,
+            save_clusters_prefix: str | None = None,
             **kwargs,
-            ) -> Tuple[np.ndarray, np.ndarray]:
+            ) -> tuple[np.ndarray, np.ndarray]:
         """Creates a random re-split of an already existing split.
 
         The re-split is based on similarity of features.
@@ -215,7 +215,7 @@ class BalancedSplit():
             df: pd.DataFrame,
             clusters: np.ndarray,
             idx_train: np.ndarray,
-            ) -> Tuple[np.ndarray, np.ndarray]:
+            ) -> tuple[np.ndarray, np.ndarray]:
         
         """Creates a random re-split of an already existing split.
 

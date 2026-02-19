@@ -2,7 +2,7 @@
 import numpy as np
 
 
-class Lcg():
+class Lcg:
     """Linear congruential generator for generating random numbers.
     
     Copied from [StackOverflow](https://stackoverflow.com/questions/18634079/glibc-rand-function-implementation).

@@ -91,7 +91,7 @@ class BristolGorillas2020(WildlifeDataset):
 
             # Load image size
             if os.path.exists(path_size):
-                with open(path_size, 'r') as file:
+                with open(path_size) as file:
                     line = file.readline()
                 w, h = [int(num) for num in line.split()]
             else:
@@ -101,7 +101,7 @@ class BristolGorillas2020(WildlifeDataset):
                     file.write(f'{w} {h}\n')
 
             # Load bounding boxes
-            with open(path_bbox, 'r') as file:
+            with open(path_bbox) as file:
                 lines = [line.rstrip() for line in file]
             for line in lines:
                 if len(line) > 0:

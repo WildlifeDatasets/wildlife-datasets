@@ -15,7 +15,7 @@ from PIL import Image, ImageOps
 from tqdm import tqdm
 
 
-def load_image(path: str, max_size: Optional[int] = None) -> Image.Image:
+def load_image(path: str, max_size: int | None = None) -> Image.Image:
     """Loads an image.
 
     Args:
@@ -85,7 +85,7 @@ def crop_white(img: Image.Image) -> Image.Image:
 
 def find_images(
         root: str,
-        img_extensions: Tuple[str, ...] = ('.png', '.jpg', '.jpeg')
+        img_extensions: tuple[str, ...] = ('.png', '.jpg', '.jpeg')
         ) -> pd.DataFrame:
     """Finds all image files in folder and subfolders.
 
@@ -136,7 +136,7 @@ def create_id(string_col: pd.Series) -> pd.Series:
     assert len(entity_id.unique()) == len(entity_id)
     return entity_id
 
-def bbox_segmentation(bbox: List[float]) -> List[float]:
+def bbox_segmentation(bbox: list[float]) -> list[float]:
     """Convert bounding box to segmentation.
 
     Args:
@@ -148,7 +148,7 @@ def bbox_segmentation(bbox: List[float]) -> List[float]:
 
     return [bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3], bbox[0], bbox[1]+bbox[3], bbox[0], bbox[1]]
 
-def segmentation_bbox(segmentation: List[float]) -> List[float]:
+def segmentation_bbox(segmentation: list[float]) -> list[float]:
     """Convert segmentation to bounding box.
 
     Args:
@@ -167,8 +167,8 @@ def segmentation_bbox(segmentation: List[float]) -> List[float]:
     return [x_min, y_min, x_max-x_min, y_max-y_min]
 
 def is_annotation_bbox(
-        segmentation: List[float],
-        bbox: List[float],
+        segmentation: list[float],
+        bbox: list[float],
         tol: float = 0
         ) -> bool:
     """Checks whether segmentation is bounding box.

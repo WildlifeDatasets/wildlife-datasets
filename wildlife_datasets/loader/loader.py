@@ -33,11 +33,11 @@ def get_dataframe_path(root_dataframe: str, class_dataset: type) -> str:
     return os.path.join(root_dataframe, class_dataset.__name__ + '.pkl')
     
 def load_datasets(
-        class_datasets: List[type],
+        class_datasets: list[type],
         root_dataset: str,
         root_dataframe: str,
         **kwargs
-        ) -> List[WildlifeDataset]:
+        ) -> list[WildlifeDataset]:
     """Loads multiple datasets as described in `load_dataset`.
 
     Args:

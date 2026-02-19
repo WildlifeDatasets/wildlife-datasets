@@ -65,7 +65,7 @@ class TimeProportionSplit(TimeAwareSplit):
         self.ratio = ratio
         super().__init__(**kwargs)
 
-    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
+    def split(self, df: pd.DataFrame) -> list[tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
@@ -105,8 +105,8 @@ class TimeProportionOpenSetSplit(TimeAwareSplit):
     def __init__(
             self,
             ratio_train: float,
-            ratio_class_test: Optional[float] = None,
-            n_class_test: Optional[int] = None,
+            ratio_class_test: float | None = None,
+            n_class_test: int | None = None,
             **kwargs
             ) -> None:
         """Initializes the class.
@@ -135,7 +135,7 @@ class TimeProportionOpenSetSplit(TimeAwareSplit):
         self.n_class_test = n_class_test
         super().__init__(**kwargs)
 
-    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
+    def split(self, df: pd.DataFrame) -> list[tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
@@ -235,7 +235,7 @@ class TimeCutoffSplit(TimeAwareSplit):
         self.test_one_year_only = test_one_year_only
         super().__init__(**kwargs)
     
-    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
+    def split(self, df: pd.DataFrame) -> list[tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
@@ -277,7 +277,7 @@ class TimeCutoffSplitAll(TimeAwareSplit):
         self.test_one_year_only = test_one_year_only
         super().__init__(**kwargs)
     
-    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
+    def split(self, df: pd.DataFrame) -> list[tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
@@ -303,7 +303,7 @@ class TimeCutoffSplitAll(TimeAwareSplit):
         return splits
 
 
-class RandomProportion():
+class RandomProportion:
     """Wrapper for resplits of TimeProportionSplit.
     """
 

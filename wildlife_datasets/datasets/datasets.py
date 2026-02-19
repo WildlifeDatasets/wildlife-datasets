@@ -4,7 +4,8 @@ import json
 import os
 from contextlib import contextmanager
 from copy import deepcopy
-from typing import Callable, List, Optional, Sequence, Tuple, Union
+from typing import List, Optional, Tuple, Union
+from collections.abc import Callable, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -54,10 +55,10 @@ class WildlifeDataset:
 
     def __init__(
             self, 
-            root: Optional[str] = None,
-            df: Optional[pd.DataFrame] = None,
+            root: str | None = None,
+            df: pd.DataFrame | None = None,
             update_wrong_labels: bool = True,
-            transform: Optional[Callable] = None,
+            transform: Callable | None = None,
             img_load: str = "full",
             remove_unknown: bool = False,
             remove_columns: bool = False,
@@ -179,7 +180,7 @@ class WildlifeDataset:
     def compute_attributes(self) -> None:
         self.labels, self.labels_map = pd.factorize(self.df[self.col_label].to_numpy())
 
-    def get_subset(self, idx: Union[List[int], List[bool]]) -> WildlifeDataset:
+    def get_subset(self, idx: list[int] | list[bool]) -> WildlifeDataset:
         """Returns a subset of the class.
 
         Args:
@@ -459,7 +460,7 @@ class WildlifeDataset:
     def fix_labels_replace_identity(
             self,
             df: pd.DataFrame,
-            replace_identity: List[Tuple],
+            replace_identity: list[tuple],
             col: str = 'identity'
             ) -> pd.DataFrame:
         """Replaces all instances of identities.
@@ -480,7 +481,7 @@ class WildlifeDataset:
     def fix_labels_remove_identity(
             self,
             df: pd.DataFrame,
-            identities_to_remove: List,
+            identities_to_remove: list,
             col: str = 'identity'
             ) -> pd.DataFrame:
         """Removes all instances of identities.
@@ -500,7 +501,7 @@ class WildlifeDataset:
     def fix_labels_replace_images(
             self,
             df: pd.DataFrame,
-            replace_identity: List[Tuple],
+            replace_identity: list[tuple],
             col: str = 'identity'
             ) -> pd.DataFrame:
         """Replaces specified images with specified identities.
@@ -532,7 +533,7 @@ class WildlifeDataset:
 
     def finalize_catalogue(
             self,
-            df: Optional[pd.DataFrame] = None,
+            df: pd.DataFrame | None = None,
             ) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
 
@@ -573,7 +574,7 @@ class WildlifeDataset:
             else:
                 return df.rename({name_old: name_new}, axis=1, inplace=True)
 
-    def check_required_columns(self, df: Optional[pd.DataFrame] = None) -> None:
+    def check_required_columns(self, df: pd.DataFrame | None = None) -> None:
         """Check if all required columns are present.
 
         Args:
@@ -586,7 +587,7 @@ class WildlifeDataset:
             if col_name not in df.columns:
                 raise Exception('Column %s must be in the dataframe columns.' % col_name)
 
-    def check_types_columns(self, df: Optional[pd.DataFrame] = None) -> None:
+    def check_types_columns(self, df: pd.DataFrame | None = None) -> None:
         """Checks if columns are in correct formats.
 
         The format are specified in `requirements`, which is list
@@ -619,7 +620,7 @@ class WildlifeDataset:
                 if len(col) > 0:
                     self.check_types_column(col, col_name, allowed_types)
     
-    def check_types_column(self, col: pd.Series, col_name: str, allowed_types: List[str]) -> None:
+    def check_types_column(self, col: pd.Series, col_name: str, allowed_types: list[str]) -> None:
         """Checks if the column `col` is in the format `allowed_types`.
 
         Args:
@@ -687,7 +688,7 @@ class WildlifeDataset:
         df = df.sort_values('image_id').reset_index(drop=True)
         return df.reindex(columns=col_names)
 
-    def remove_constant_columns(self, df: Optional[pd.DataFrame] = None) -> pd.DataFrame:
+    def remove_constant_columns(self, df: pd.DataFrame | None = None) -> pd.DataFrame:
         """Removes columns with a single unique value.
 
         Args:
@@ -704,7 +705,7 @@ class WildlifeDataset:
                 df = df.drop([df_name], axis=1)
         return df
 
-    def check_unique_id(self, df: Optional[pd.DataFrame] = None) -> None:
+    def check_unique_id(self, df: pd.DataFrame | None = None) -> None:
         """Checks if values in the id column are unique.
 
         Args:
@@ -716,7 +717,7 @@ class WildlifeDataset:
         if len(df["image_id"].unique()) != len(df):
             raise Exception("Image ID not unique.")
 
-    def check_files_exist(self, col: Optional[pd.Series | str] = None) -> None:
+    def check_files_exist(self, col: pd.Series | str | None = None) -> None:
         """Checks if paths in a given column exist.
 
         Args:
@@ -737,7 +738,7 @@ class WildlifeDataset:
                 print(path)
             raise Exception('Some files not found')
 
-    def check_files_names(self, col: Optional[pd.Series | str] = None) -> None:
+    def check_files_names(self, col: pd.Series | str | None = None) -> None:
         """Checks if paths contain characters which may cause issues.
 
         Args:
@@ -770,12 +771,12 @@ class WildlifeDataset:
             img_min: float = 100,
             rotate: bool = True,
             keep_aspect_ratios: bool = True,
-            header_cols: Optional[Sequence[str]] = None,
-            idx: Optional[Sequence[bool] | Sequence[int] | np.ndarray] = None,
-            background_color: Tuple[int, int, int] = (0, 0, 0),
+            header_cols: Sequence[str] | None = None,
+            idx: Sequence[bool] | Sequence[int] | np.ndarray | None = None,
+            background_color: tuple[int, int, int] = (0, 0, 0),
             keep_transform: bool = False,
             **kwargs
-            ) -> Optional[Figure]:
+            ) -> Figure | None:
         """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
 
         Args:

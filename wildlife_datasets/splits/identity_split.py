@@ -13,7 +13,7 @@ class FullSplit(BalancedSplit):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
+    def split(self, df: pd.DataFrame) -> list[tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
@@ -33,9 +33,9 @@ class IdentitySplit(BalancedSplit):
     def general_split(
             self,
             df: pd.DataFrame,
-            individual_train: List[str],
-            individual_test: List[str],
-            ) -> Tuple[np.ndarray, np.ndarray]:
+            individual_train: list[str],
+            individual_test: list[str],
+            ) -> tuple[np.ndarray, np.ndarray]:
         """General-purpose split into the training and testing sets.
 
         It puts all samples of `individual_train` into the training set
@@ -120,7 +120,7 @@ class ClosedSetSplit(IdentitySplit):
         self.ratio_train = ratio_train
         super().__init__(**kwargs)
     
-    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
+    def split(self, df: pd.DataFrame) -> list[tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
@@ -177,7 +177,7 @@ class OpenSetSplit(IdentitySplit):
         self.open_in_test = open_in_test
         super().__init__(**kwargs)
 
-    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
+    def split(self, df: pd.DataFrame) -> list[tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:
@@ -252,7 +252,7 @@ class DisjointSetSplit(IdentitySplit):
         self.n_class_test = n_class_test
         super().__init__(**kwargs)
 
-    def split(self, df: pd.DataFrame) -> List[Tuple[np.ndarray, np.ndarray]]:
+    def split(self, df: pd.DataFrame) -> list[tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
         Args:

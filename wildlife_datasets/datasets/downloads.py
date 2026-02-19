@@ -3,7 +3,8 @@ import json
 import os
 import shutil
 import time
-from typing import Iterable, List, Optional, Tuple
+from typing import List, Optional, Tuple
+from collections.abc import Iterable
 
 import pandas as pd
 from datasets import load_dataset
@@ -127,15 +128,15 @@ class DownloadINaturalist:
       are downloaded; if None, all species are accepted.
     """
 
-    username: Optional[str] = None
-    project_id: Optional[int | str] = None
+    username: str | None = None
+    project_id: int | str | None = None
 
     per_page: int = 10
     delay: float = 1.0  # seconds between API pages
-    target_species_guess: Optional[List[str]] = None
+    target_species_guess: list[str] | None = None
 
     # Only a subset of metadata to keep things small
-    metadata_fields: Optional[Tuple[str, ...]] = None
+    metadata_fields: tuple[str, ...] | None = None
 
     @classmethod
     def _download(cls, force=None):

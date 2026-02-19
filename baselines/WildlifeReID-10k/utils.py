@@ -1,5 +1,6 @@
 import os
-from typing import Callable, List, Optional, Tuple
+from typing import List, Optional, Tuple
+from collections.abc import Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -59,11 +60,11 @@ def load_clusters(identities, save_clusters_prefix):
 def compute_predictions(
         features_query: np.ndarray,
         features_database: np.ndarray,
-        ignore: Optional[List[List[int]]] = None,
+        ignore: list[list[int]] | None = None,
         matcher: Callable = cosine_similarity,
         k: int = 4,
         return_score: bool = False
-        ) -> Tuple[np.ndarray, np.ndarray]:
+        ) -> tuple[np.ndarray, np.ndarray]:
     """Computes a closest match in the database for each vector in the query set.
 
     Args:
@@ -234,7 +235,7 @@ def mean(x, idx=None):
 def greedy_similarity_clustering(
         similarity_matrix: np.ndarray,
         similarity_threshold: float
-        ) -> List:
+        ) -> list:
     """Performs greedy clustering by adding edges with similarity above a threshold.
 
     Args:

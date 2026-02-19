@@ -6,10 +6,10 @@ import sklearn.metrics as skm
 
 
 def unify_types(
-        y_true: List,
-        y_pred: List,
-        new_class: Optional[Union[int, str]] = None,
-    ) -> Tuple[List, List, Union[int, str]]:
+        y_true: list,
+        y_pred: list,
+        new_class: int | str | None = None,
+    ) -> tuple[list, list, int | str]:
     """Unifies label types.
 
     If `new_class` is string and labels integers (or the other way round),
@@ -50,9 +50,9 @@ def unify_types(
 
 
 def accuracy(
-        y_true: List,
-        y_pred: List,
-        new_class: Optional[Union[int, str]] = None,
+        y_true: list,
+        y_pred: list,
+        new_class: int | str | None = None,
     ) -> float:
     """Computes the accuracy.
 
@@ -71,9 +71,9 @@ def accuracy(
     return np.mean(np.array(y_pred) == np.array(y_true))
 
 def balanced_accuracy(
-        y_true: List,
-        y_pred: List,
-        new_class: Optional[Union[int, str]] = None,
+        y_true: list,
+        y_pred: list,
+        new_class: int | str | None = None,
     ) -> float:
     """Computes the balanced accuracy.
 
@@ -98,9 +98,9 @@ def balanced_accuracy(
     return np.mean(per_class[~np.isnan(per_class)])
 
 def class_average_accuracy(
-        y_true: List,
-        y_pred: List,
-        new_class: Optional[Union[int, str]] = None,
+        y_true: list,
+        y_pred: list,
+        new_class: int | str | None = None,
     ) -> float:
     """Computes the class average accuracy.
 
@@ -120,9 +120,9 @@ def class_average_accuracy(
     return np.mean([C_i[0,0]+C_i[1,1] for C_i in C]) / np.sum(C[0])
 
 def precision(
-        y_true: List,
-        y_pred: List,
-        new_class: Optional[Union[int, str]] = None,
+        y_true: list,
+        y_pred: list,
+        new_class: int | str | None = None,
     ) -> float:
     """Computes the (macro-averaged) precision.
 
@@ -141,9 +141,9 @@ def precision(
     return skm.precision_score(y_true, y_pred, average='macro')
 
 def recall(
-        y_true: List,
-        y_pred: List,
-        new_class: Optional[Union[int, str]] = None,
+        y_true: list,
+        y_pred: list,
+        new_class: int | str | None = None,
         ignore_empty: bool = False
     ) -> float:
     """Computes the (macro-averaged) recall.
@@ -168,9 +168,9 @@ def recall(
         return skm.recall_score(y_true, y_pred, average='macro')
 
 def f1(
-        y_true: List,
-        y_pred: List,
-        new_class: Optional[Union[int, str]] = None,
+        y_true: list,
+        y_pred: list,
+        new_class: int | str | None = None,
     ) -> float:
     """Computes the (macro-averaged) F1 score.
 
@@ -189,9 +189,9 @@ def f1(
     return skm.f1_score(y_true, y_pred, average='macro')
 
 def accuracy_known_samples(
-        y_true: List,
-        y_pred: List,
-        new_class: Union[int, str],
+        y_true: list,
+        y_pred: list,
+        new_class: int | str,
     ) -> float:
     """Computes the accuracy on known samples.
 
@@ -217,9 +217,9 @@ def accuracy_known_samples(
         return np.nan
 
 def accuracy_unknown_samples(
-        y_true: List,
-        y_pred: List,
-        new_class: Union[int, str],
+        y_true: list,
+        y_pred: list,
+        new_class: int | str,
     ) -> float:
     """Computes the accuracy on new (unknown) samples.
 
@@ -245,9 +245,9 @@ def accuracy_unknown_samples(
         return np.nan
     
 def normalized_accuracy(
-        y_true: List,
-        y_pred: List,
-        new_class: Union[int, str],
+        y_true: list,
+        y_pred: list,
+        new_class: int | str,
         mu: float
     ) -> float:
     """Computes the normalized accuracy.
@@ -270,8 +270,8 @@ def normalized_accuracy(
     return mu*aks + (1-mu)*aus
 
 def average_precision(
-        y_true: Union[int, str],
-        y_pred: List
+        y_true: int | str,
+        y_pred: list
     ) -> float:
     """Computes the average precision (for one sample).
 
@@ -294,8 +294,8 @@ def average_precision(
         return skm.average_precision_score(a, b)
 
 def mean_average_precision(
-        y_true: List,
-        y_pred: List[List]
+        y_true: list,
+        y_pred: list[list]
     ):
     """Computes the mean average precision (for multiple samples).
 
@@ -314,9 +314,9 @@ def mean_average_precision(
     return np.mean([average_precision(y_t, y_p) for y_t, y_p in zip(y_true, y_pred)])
 
 def auc_roc_new_class(
-        y_true: List,
-        y_score: List,
-        new_class: Union[int, str],
+        y_true: list,
+        y_score: list,
+        new_class: int | str,
     ) -> float:
     """Computes the area under ROC curve for detecting new individuals.
 
@@ -340,9 +340,9 @@ def auc_roc_new_class(
     return skm.roc_auc_score(a, b)
 
 def BAKS(
-        y_true: List,
-        y_pred: List,
-        identity_test_only: List,
+        y_true: list,
+        y_pred: list,
+        identity_test_only: list,
     ) -> float:
     """Computes BAKS (balanced accuracy on known samples).
 
@@ -380,10 +380,10 @@ def BAKS(
     return accuracy
 
 def BAUS(
-        y_true: List,
-        y_pred: List,
-        identity_test_only: List,
-        new_class: Union[int, str]
+        y_true: list,
+        y_pred: list,
+        identity_test_only: list,
+        new_class: int | str
     ) -> float:
     """Computes BAUS (balanced accuracy on unknown samples).
 

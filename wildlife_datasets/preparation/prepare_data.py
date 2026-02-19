@@ -1,6 +1,7 @@
 import os
 from copy import deepcopy
-from typing import Dict, List, Optional, Sequence
+from typing import Dict, List, Optional
+from collections.abc import Sequence
 
 import numpy as np
 import pandas as pd
@@ -12,10 +13,10 @@ from .. import datasets, splits
 def resize_dataset(
         dataset: datasets.WildlifeDataset,
         new_root: str,
-        idx: Optional[Sequence[int]] = None,
+        idx: Sequence[int] | None = None,
         copy_files: bool = True,
-        remove_str: List[str] = [],
-        replace_extensions: Dict[str, str] = {},
+        remove_str: list[str] = [],
+        replace_extensions: dict[str, str] = {},
         ) -> pd.DataFrame:
     """Resizes dataset using `dataset.transform` into `new_root`.
 
@@ -81,8 +82,8 @@ def resize_dataset(
 def get_every_k(
         dataset: datasets.WildlifeDataset,
         k: int,
-        groupby_cols: str | List[str],
-        ) -> List[int]:
+        groupby_cols: str | list[str],
+        ) -> list[int]:
     """Gets indices of every k-th image based on columns in `groupby_cols`.
 
     Args:
