@@ -56,3 +56,13 @@ packages = [
   "wildlife_datasets.preparation",  
   "wildlife_datasets.splits",  
 ]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
