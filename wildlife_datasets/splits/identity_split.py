@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 
@@ -6,8 +5,7 @@ from .balanced_split import BalancedSplit
 
 
 class FullSplit(BalancedSplit):
-    """Simplest split returning the whole dataset.
-    """
+    """Simplest split returning the whole dataset."""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -22,19 +20,18 @@ class FullSplit(BalancedSplit):
             List of splits. Each split is list of labels of the training and testing sets.
         """
 
-        return [ (df.index.values, np.array([], dtype=int)) ]
-    
+        return [(df.index.values, np.array([], dtype=int))]
+
 
 class IdentitySplit(BalancedSplit):
-    """Base class for `ClosedSetSplit`, `OpenSetSplit` and `DisjointSetSplit`.
-    """
-    
+    """Base class for `ClosedSetSplit`, `OpenSetSplit` and `DisjointSetSplit`."""
+
     def general_split(
-            self,
-            df: pd.DataFrame,
-            individual_train: list[str],
-            individual_test: list[str],
-            ) -> tuple[np.ndarray, np.ndarray]:
+        self,
+        df: pd.DataFrame,
+        individual_train: list[str],
+        individual_test: list[str],
+    ) -> tuple[np.ndarray, np.ndarray]:
         """General-purpose split into the training and testing sets.
 
         It puts all samples of `individual_train` into the training set
@@ -42,7 +39,7 @@ class IdentitySplit(BalancedSplit):
         The splitting is performed for each individual separately.
         The split will result in at least one sample in both the training and testing sets.
         If only one sample is available for an individual, it will be in the training set.
-                
+
         Args:
             df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
             individual_train (List[str]): Individuals to be only in the training test.
@@ -51,7 +48,7 @@ class IdentitySplit(BalancedSplit):
         Returns:
             List of labels of the training and testing sets.
         """
-        
+
         # Initialize the random number generator
         lcg = self.initialize_lcg()
 
@@ -59,21 +56,21 @@ class IdentitySplit(BalancedSplit):
         y_counts = df[self.col_label].value_counts()
         n_train = sum([y_counts.loc[y] for y in individual_train])
         n_test = sum([y_counts.loc[y] for y in individual_test])
-        
+
         # Recompute ratio_train and adjust it to proper bounds
         n = len(df)
         ratio_train = self.ratio_train
         if n_train + n_test > 0 and n_train + n_test < n:
-            ratio_train = (n*ratio_train - n_train) / (n - n_test - n_train)
+            ratio_train = (n * ratio_train - n_train) / (n - n_test - n_train)
         ratio_train = np.clip(ratio_train, 0, 1)
 
         idx_train = []
-        idx_test = []        
+        idx_test = []
         # Make a loop over all individuals
         for individual, df_individual in df.groupby(self.col_label):
             if individual in individual_train and individual in individual_test:
                 # Check if the class does not belong to both sets
-                raise(Exception('Individual cannot be both in individual_train and individual_test.'))
+                raise (Exception("Individual cannot be both in individual_train and individual_test."))
             elif individual in individual_train:
                 # Check if the class does not belong to the training set
                 idx_train += list(df_individual.index)
@@ -88,13 +85,13 @@ class IdentitySplit(BalancedSplit):
                     n_train -= 1
                 if n_train == 0:
                     n_train = 1
-                # Create indices to the training set and randomly permute them                
+                # Create indices to the training set and randomly permute them
                 idx_permutation = lcg.random_permutation(n_individual)
                 idx_permutation = np.array(idx_permutation)
                 idx_train += list(df_individual.index[idx_permutation[:n_train]])
                 idx_test += list(df_individual.index[idx_permutation[n_train:]])
         return np.array(idx_train), np.array(idx_test)
-    
+
 
 class ClosedSetSplit(IdentitySplit):
     """Closed-set splitting method into training and testing sets.
@@ -104,11 +101,7 @@ class ClosedSetSplit(IdentitySplit):
     Implementation of [this paper](https://arxiv.org/abs/2211.10307).
     """
 
-    def __init__(
-            self,
-            ratio_train: float,
-            **kwargs
-            ) -> None:
+    def __init__(self, ratio_train: float, **kwargs) -> None:
         """Initializes the class.
 
         Args:
@@ -118,7 +111,7 @@ class ClosedSetSplit(IdentitySplit):
 
         self.ratio_train = ratio_train
         super().__init__(**kwargs)
-    
+
     def split(self, df: pd.DataFrame) -> list[tuple[np.ndarray, np.ndarray]]:
         """Implementation of the [base splitting method](../reference_splits#splits.balanced_split.BalancedSplit.split).
 
@@ -143,13 +136,13 @@ class OpenSetSplit(IdentitySplit):
     """
 
     def __init__(
-            self,
-            ratio_train: float,
-            ratio_class_test: float = None,
-            n_class_test: int = None,
-            open_in_test: bool = True,
-            **kwargs
-            ) -> None:
+        self,
+        ratio_train: float,
+        ratio_class_test: float = None,
+        n_class_test: int = None,
+        open_in_test: bool = True,
+        **kwargs,
+    ) -> None:
         """Initializes the class.
 
         The user must provide exactly one from `ratio_class_test` and `n_class_test`.
@@ -166,10 +159,10 @@ class OpenSetSplit(IdentitySplit):
         """
 
         if ratio_class_test is None and n_class_test is None:
-            raise(Exception('Either ratio_class_test or n_class_test must be provided.'))
+            raise (Exception("Either ratio_class_test or n_class_test must be provided."))
         elif ratio_class_test is not None and n_class_test is not None:
-            raise(Exception('Only ratio_class_test or n_class_test can be provided.'))
-        
+            raise (Exception("Only ratio_class_test or n_class_test can be provided."))
+
         self.ratio_train = ratio_train
         self.ratio_class_test = ratio_class_test
         self.n_class_test = n_class_test
@@ -185,7 +178,7 @@ class OpenSetSplit(IdentitySplit):
         Returns:
             List of splits. Each split is list of labels of the training and testing sets.
         """
-        
+
         df = self.modify_df(df)
 
         # Initialize the random number generator
@@ -200,7 +193,7 @@ class OpenSetSplit(IdentitySplit):
         # Compute number of identities in the testing set
         n = len(df)
         if self.n_class_test is None:
-            n_test = np.round(n*self.ratio_class_test).astype(int)
+            n_test = np.round(n * self.ratio_class_test).astype(int)
             n_class_test = np.where(np.cumsum(y_counts) >= n_test)[0][0] + 1
         else:
             n_class_test = self.n_class_test
@@ -222,12 +215,7 @@ class DisjointSetSplit(IdentitySplit):
     Implementation of [this paper](https://arxiv.org/abs/2211.10307).
     """
 
-    def __init__(
-            self,
-            ratio_class_test: float = None,
-            n_class_test: int = None,
-            **kwargs
-            ) -> None:
+    def __init__(self, ratio_class_test: float = None, n_class_test: int = None, **kwargs) -> None:
         """Initializes the class.
 
         The user must provide exactly one from `ratio_class_test` and `n_class_test`.
@@ -242,11 +230,11 @@ class DisjointSetSplit(IdentitySplit):
         """
 
         if ratio_class_test is None and n_class_test is None:
-            raise(Exception('Either ratio_class_test or n_class_test must be provided.'))
+            raise (Exception("Either ratio_class_test or n_class_test must be provided."))
         elif ratio_class_test is not None and n_class_test is not None:
-            raise(Exception('Only ratio_class_test or n_class_test can be provided.'))
-        
-        self.ratio_train = 0 # Arbitrary value
+            raise (Exception("Only ratio_class_test or n_class_test can be provided."))
+
+        self.ratio_train = 0  # Arbitrary value
         self.ratio_class_test = ratio_class_test
         self.n_class_test = n_class_test
         super().__init__(**kwargs)
@@ -256,13 +244,13 @@ class DisjointSetSplit(IdentitySplit):
 
         Args:
             df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
-        
+
         Returns:
             List of splits. Each split is list of labels of the training and testing sets.
         """
 
         df = self.modify_df(df)
-        
+
         # Initialize the random number generator
         lcg = self.initialize_lcg()
 
@@ -275,7 +263,7 @@ class DisjointSetSplit(IdentitySplit):
         # Compute number of identities in the testing set
         n = len(df)
         if self.n_class_test is None:
-            n_test = np.round(n*self.ratio_class_test).astype(int)
+            n_test = np.round(n * self.ratio_class_test).astype(int)
             n_class_test = np.where(np.cumsum(y_counts) >= n_test)[0][0] + 1
         else:
             n_class_test = self.n_class_test
@@ -284,4 +272,3 @@ class DisjointSetSplit(IdentitySplit):
         individual_train = np.array(y_counts.index[n_class_test:])
         individual_test = np.array(y_counts.index[:n_class_test])
         return [self.general_split(df, individual_train, individual_test)]
-

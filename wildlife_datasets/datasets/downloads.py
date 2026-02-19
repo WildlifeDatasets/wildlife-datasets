@@ -15,13 +15,14 @@ from . import utils
 def check_attributes(obj, attrs: Iterable):
     for attr in attrs:
         if not hasattr(obj, attr) or getattr(obj, attr) is None:
-            raise Exception(f'Object {obj} must have attribute {attr}.')
+            raise Exception(f"Object {obj} must have attribute {attr}.")
 
 
 def json_serial(obj):
     if isinstance(obj, (datetime.datetime, datetime.date)):
         return obj.isoformat()
     raise TypeError("Type not serializable")
+
 
 class DownloadURL:
     url = None
@@ -36,24 +37,25 @@ class DownloadURL:
             if cls.archive:
                 utils.download_url(cls.url, cls.archive)
             else:
-                raise ValueError('When cls.url is specified, cls.archive must also be specified')
+                raise ValueError("When cls.url is specified, cls.archive must also be specified")
         for url, archive in cls.downloads:
-            utils.download_url(url, archive)        
+            utils.download_url(url, archive)
 
     @classmethod
-    def _extract(cls, exts = ['.zip', '.tar', '.tar.gz', '.tgz', '.tar.bz2', '.rar', '.7z']):
+    def _extract(cls, exts=[".zip", ".tar", ".tar.gz", ".tgz", ".tar.bz2", ".rar", ".7z"]):
         if cls.archive:
             if any(cls.archive.endswith(ext) for ext in exts):
                 utils.extract_archive(cls.archive, delete=True)
         for _, archive in cls.downloads:
             if any(archive.endswith(ext) for ext in exts):
                 if cls.extract_add_folder:
-                    archive_name = archive.split('.')[0]
+                    archive_name = archive.split(".")[0]
                     utils.extract_archive(archive, extract_path=archive_name, delete=True)
                 else:
                     utils.extract_archive(archive, delete=True)
         if cls.rmtree:
             shutil.rmtree(cls.rmtree)
+
 
 class DownloadKaggle:
     kaggle_url: str
@@ -62,18 +64,18 @@ class DownloadKaggle:
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         check_attributes(cls, ["kaggle_url", "kaggle_type"])
-    
+
     @classmethod
     def _download(cls):
         display_name = cls.display_name().lower()
-        if cls.kaggle_type == 'datasets':
-            command = f'datasets download -d {cls.kaggle_url} --force'
-        elif cls.kaggle_type == 'competitions':
-            command = f'competitions download -c {cls.kaggle_url} --force'
+        if cls.kaggle_type == "datasets":
+            command = f"datasets download -d {cls.kaggle_url} --force"
+        elif cls.kaggle_type == "competitions":
+            command = f"competitions download -c {cls.kaggle_url} --force"
         else:
-            raise ValueError('cls.kaggle_type must be datasets or competitions.')
-        exception_text = f'''Kaggle must be setup.
-            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}'''
+            raise ValueError("cls.kaggle_type must be datasets or competitions.")
+        exception_text = f"""Kaggle must be setup.
+            Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}"""
         try:
             os.system(f"kaggle {command}")
         except:
@@ -87,15 +89,16 @@ class DownloadKaggle:
         try:
             utils.extract_archive(cls.archive_name(), delete=True)
         except:
-            exception_text = f'''Extracting failed.
+            exception_text = f"""Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
-                Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}'''
+                Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}"""
             raise Exception(exception_text)
-    
+
     @classmethod
     def archive_name(cls):
-        return cls.kaggle_url.split('/')[-1] + '.zip'
-        
+        return cls.kaggle_url.split("/")[-1] + ".zip"
+
+
 class DownloadHuggingFace:
     determined_by_df: bool = False
     saved_to_system_folder: bool = True
@@ -167,7 +170,7 @@ class DownloadINaturalist:
                 if cls.target_species_guess is not None:
                     if obs.get("species_guess", "") not in cls.target_species_guess:
                         continue
-                
+
                 individual_id = obs.get("id")
                 for photo in obs.get("photos", []):
                     photo_id = photo["id"]
@@ -188,17 +191,13 @@ class DownloadINaturalist:
                     if not os.path.exists(file_name_image):
                         img = utils.download_image(url, file_name=file_name_image)
                         if not img:
-                            print(f'{url}: image download failed')
+                            print(f"{url}: image download failed")
                             continue
 
                     if cls.metadata_fields is None:
-                        selected_metadata = {
-                            key: value for key, value in obs.items() if key != "photos"
-                        }
+                        selected_metadata = {key: value for key, value in obs.items() if key != "photos"}
                     else:
-                        selected_metadata = {
-                            key: obs.get(key) for key in cls.metadata_fields
-                        }
+                        selected_metadata = {key: obs.get(key) for key in cls.metadata_fields}
 
                     metadata = {
                         "observation_id": individual_id,
@@ -223,12 +222,7 @@ class DownloadINaturalist:
         pass
 
     @classmethod
-    def get_data(
-            cls,
-            root: str,
-            force: bool = True,
-            **kwargs
-            ) -> None:
+    def get_data(cls, root: str, force: bool = True, **kwargs) -> None:
         """Downloads and extracts the data. Wrapper around `cls._download` and `cls._extract.`
 
         Args:
@@ -236,9 +230,9 @@ class DownloadINaturalist:
             force (bool, optional): It the root exists, whether it should be overwritten.
         """
 
-        dataset_name = cls.__name__        
-        print('DATASET %s: DOWNLOADING STARTED.' % dataset_name)
+        dataset_name = cls.__name__
+        print("DATASET %s: DOWNLOADING STARTED." % dataset_name)
         cls.download(root, force=force, **kwargs)
-        print('DATASET %s: EXTRACTING STARTED.' % dataset_name)
-        cls.extract(root,  **kwargs)
-        print('DATASET %s: FINISHED.\n' % dataset_name)
+        print("DATASET %s: EXTRACTING STARTED." % dataset_name)
+        cls.extract(root, **kwargs)
+        print("DATASET %s: FINISHED.\n" % dataset_name)

@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 from sklearn.cluster import DBSCAN
@@ -19,13 +18,13 @@ class BalancedSplit:
     """
 
     def __init__(
-            self,
-            seed: int = 666,
-            identity_skip: str = 'unknown',
-            col_label: str = 'identity',
-            disable_tqdm: bool = True,            
-            ) -> None:
-        
+        self,
+        seed: int = 666,
+        identity_skip: str = "unknown",
+        col_label: str = "identity",
+        disable_tqdm: bool = True,
+    ) -> None:
+
         self.seed = seed
         self.identity_skip = identity_skip
         self.col_label = col_label
@@ -42,20 +41,20 @@ class BalancedSplit:
         Returns:
             Modified dataframe of the data.
         """
-        
+
         df = df.copy()
         df = df[df[self.col_label] != self.identity_skip]
         return df
-    
+
     def initialize_lcg(self) -> Lcg:
         """Returns the random number generator.
 
         Returns:
             The random number generator.
         """
-        
+
         return Lcg(self.seed)
-    
+
     def split(self, *args, **kwargs) -> list[tuple[np.ndarray, np.ndarray]]:
         """Splitting method which needs to be implemented by subclasses.
 
@@ -66,14 +65,15 @@ class BalancedSplit:
             List of splits. Each split is list of labels of the training and testing sets.
         """
 
-        raise(NotImplementedError('Subclasses should implement this. \n You may want to use ClosedSetSplit instead of BalancedSplit.'))
+        raise (
+            NotImplementedError(
+                "Subclasses should implement this. \n You may want to use ClosedSetSplit instead of BalancedSplit."
+            )
+        )
 
     def resplit_random(
-            self,
-            df: pd.DataFrame,
-            idx_train: np.ndarray,
-            idx_test: np.ndarray
-            ) -> tuple[np.ndarray, np.ndarray]:
+        self, df: pd.DataFrame, idx_train: np.ndarray, idx_test: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Creates a random re-split of an already existing split.
 
         The re-split mimics the split as the training set contains
@@ -93,7 +93,7 @@ class BalancedSplit:
 
         # Initialize the random number generator
         lcg = self.initialize_lcg()
-        
+
         # Compute the number of samples for each individual in the training set
         counts_train = {}
         for name, df_name in df.loc[idx_train].groupby(self.col_label):
@@ -110,30 +110,30 @@ class BalancedSplit:
             # Extract the number of individuals in the training and testing sets
             n_train = counts_train.get(name, 0)
             n_test = counts_test.get(name, 0)
-            if n_train+n_test > 0:
-                if len(df_name) < n_train+n_test:
-                    raise(Exception('The set is too small.'))
+            if n_train + n_test > 0:
+                if len(df_name) < n_train + n_test:
+                    raise (Exception("The set is too small."))
                 # Get the correct number of indices in both sets
-                idx_permutation = lcg.random_permutation(n_train+n_test)
+                idx_permutation = lcg.random_permutation(n_train + n_test)
                 idx_permutation = np.array(idx_permutation)
                 idx_train_new += list(df_name.index[idx_permutation[:n_train]])
-                idx_test_new += list(df_name.index[idx_permutation[n_train:n_train+n_test]])
+                idx_test_new += list(df_name.index[idx_permutation[n_train : n_train + n_test]])
         return np.array(idx_train_new), np.array(idx_test_new)
 
     def resplit_by_features(
-            self,
-            df: pd.DataFrame,
-            features: np.ndarray,
-            idx_train: np.ndarray,
-            save_clusters_prefix: str | None = None,
-            **kwargs,
-            ) -> tuple[np.ndarray, np.ndarray]:
+        self,
+        df: pd.DataFrame,
+        features: np.ndarray,
+        idx_train: np.ndarray,
+        save_clusters_prefix: str | None = None,
+        **kwargs,
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Creates a random re-split of an already existing split.
 
         The re-split is based on similarity of features.
         It runs DBSCAN as described in `compute_clusters` and
         performs the clustering as described in `resplit_by_clusters`.
-        
+
         Args:
             df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
             features (np.ndarray): An array of features with the same length as `df`.
@@ -143,29 +143,28 @@ class BalancedSplit:
 
         Returns:
             List of labels of the training and testing sets.
-        """        
-        
+        """
+
         clusters = self.compute_clusters(df, features, **kwargs)
         if save_clusters_prefix is not None:
-            np.save(f'{save_clusters_prefix}.npy', clusters)
+            np.save(f"{save_clusters_prefix}.npy", clusters)
         return self.resplit_by_clusters(df, clusters, idx_train)
 
     def compute_clusters(
-            self,
-            df: pd.DataFrame,
-            features: np.ndarray,
-            n_max_cluster: int = 5,
-            eps_min: float = 0.01,
-            eps_max: float = 0.50,
-            eps_step: float = 0.01,
-            min_samples: int = 2,
-            ) -> np.ndarray:
-
+        self,
+        df: pd.DataFrame,
+        features: np.ndarray,
+        n_max_cluster: int = 5,
+        eps_min: float = 0.01,
+        eps_max: float = 0.50,
+        eps_step: float = 0.01,
+        min_samples: int = 2,
+    ) -> np.ndarray:
         """Computes clusters for a random re-split of an already existing split.
 
         It runs DBSCAN with increasing eps (cluster radius) until
         the clusters are smaller than `n_max_cluster`.
-        
+
         Args:
             df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
             features (np.ndarray): An array of features with the same length as `df`.
@@ -180,13 +179,13 @@ class BalancedSplit:
         """
 
         df = self.modify_df(df)
-        df['cluster'] = np.nan
+        df["cluster"] = np.nan
 
         for _, df_identity in tqdm(df.groupby(self.col_label), disable=self.disable_tqdm):
             f = features[df.index.get_indexer(df_identity.index)]
-            # Run DBScan with increasing eps until there are no clusters bigger than n_max_cluster 
+            # Run DBScan with increasing eps until there are no clusters bigger than n_max_cluster
             clusters_saved = None
-            for eps in np.arange(eps_min, eps_max+eps_step, eps_step):
+            for eps in np.arange(eps_min, eps_max + eps_step, eps_step):
                 clustering = DBSCAN(eps=eps, min_samples=min_samples)
                 clustering.fit(f)
                 clusters = pd.Series(clustering.labels_)
@@ -201,21 +200,20 @@ class BalancedSplit:
                     clusters_saved = clusters
                 else:
                     break
-            
+
             # Save the clusters
             if clusters_saved is not None:
                 clusters_saved[clusters_saved == -1] = np.nan
-                df.loc[df_identity.index, 'cluster'] = clusters_saved.to_numpy()
+                df.loc[df_identity.index, "cluster"] = clusters_saved.to_numpy()
 
-        return df['cluster'].to_numpy()
+        return df["cluster"].to_numpy()
 
     def resplit_by_clusters(
-            self,
-            df: pd.DataFrame,
-            clusters: np.ndarray,
-            idx_train: np.ndarray,
-            ) -> tuple[np.ndarray, np.ndarray]:
-        
+        self,
+        df: pd.DataFrame,
+        clusters: np.ndarray,
+        idx_train: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Creates a random re-split of an already existing split.
 
         The re-split is based on clusters which collect similar images.
@@ -224,7 +222,7 @@ class BalancedSplit:
         The re-split mimics the split as the training set contains
         the same number of samples for EACH individual.
         The same goes for the testing set.
-        
+
         Args:
             df (pd.DataFrame): A dataframe of the data. It must contain column `identity`.
             clusters (np.ndarray): An array of clusters with the same length as `df`.
@@ -233,13 +231,13 @@ class BalancedSplit:
         Returns:
             List of labels of the training and testing sets.
         """
-        
+
         df = self.modify_df(df)
 
         # Replace clusters appearing just ones with np.nan
         clusters_unique, clusters_count = np.unique(clusters, return_counts=True)
         clusters[np.isin(clusters, clusters_unique[clusters_count == 1])] = np.nan
-        df['cluster'] = clusters
+        df["cluster"] = clusters
 
         # Initialize the random number generator
         lcg = self.initialize_lcg()
@@ -259,7 +257,7 @@ class BalancedSplit:
             else:
                 # Add all the clusters into the training set
                 idx_train_identity = []
-                for _, df_cluster in df_identity.groupby('cluster'):
+                for _, df_cluster in df_identity.groupby("cluster"):
                     # Check if the training set is not too big
                     if len(idx_train_identity) + len(df_cluster) <= n_train:
                         idx_train_identity += list(df_cluster.index)
@@ -285,4 +283,4 @@ class BalancedSplit:
     def setdiff(self, a, b):
         a = np.array(a)
         b = np.array(b)
-        return pd.unique(a[~np.isin(a,b)])
+        return pd.unique(a[~np.isin(a, b)])

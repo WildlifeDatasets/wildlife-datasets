@@ -1,14 +1,13 @@
-
 import numpy as np
 import pandas as pd
 import sklearn.metrics as skm
 
 
 def unify_types(
-        y_true: list,
-        y_pred: list,
-        new_class: int | str | None = None,
-    ) -> tuple[list, list, int | str]:
+    y_true: list,
+    y_pred: list,
+    new_class: int | str | None = None,
+) -> tuple[list, list, int | str]:
     """Unifies label types.
 
     If `new_class` is string and labels integers (or the other way round),
@@ -31,7 +30,7 @@ def unify_types(
     is_integer = pd.api.types.is_integer_dtype(pd.Series(y_all))
     is_string = pd.api.types.is_string_dtype(pd.Series(y_all))
     if not is_integer and not is_string:
-        raise(Exception('Labels have mixed types. Convert all to int or str.'))
+        raise (Exception("Labels have mixed types. Convert all to int or str."))
     if is_string and isinstance(new_class, int):
         encoder = {new_class: new_class}
         for i, y in enumerate(y_all):
@@ -49,10 +48,10 @@ def unify_types(
 
 
 def accuracy(
-        y_true: list,
-        y_pred: list,
-        new_class: int | str | None = None,
-    ) -> float:
+    y_true: list,
+    y_pred: list,
+    new_class: int | str | None = None,
+) -> float:
     """Computes the accuracy.
 
     If `new_class` is specified, it handles it as a additional class.
@@ -69,11 +68,12 @@ def accuracy(
     y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)
     return np.mean(np.array(y_pred) == np.array(y_true))
 
+
 def balanced_accuracy(
-        y_true: list,
-        y_pred: list,
-        new_class: int | str | None = None,
-    ) -> float:
+    y_true: list,
+    y_pred: list,
+    new_class: int | str | None = None,
+) -> float:
     """Computes the balanced accuracy.
 
     If `new_class` is specified, it handles it as a additional class.
@@ -90,17 +90,18 @@ def balanced_accuracy(
         Computed balanced accuracy.
     """
 
-    y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)    
+    y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)
     C = skm.confusion_matrix(y_true, y_pred)
     with np.errstate(divide="ignore", invalid="ignore"):
         per_class = np.diag(C) / C.sum(axis=1)
     return np.mean(per_class[~np.isnan(per_class)])
 
+
 def class_average_accuracy(
-        y_true: list,
-        y_pred: list,
-        new_class: int | str | None = None,
-    ) -> float:
+    y_true: list,
+    y_pred: list,
+    new_class: int | str | None = None,
+) -> float:
     """Computes the class average accuracy.
 
     If `new_class` is specified, it handles it as a additional class.
@@ -113,16 +114,17 @@ def class_average_accuracy(
     Returns:
         Computed class average accuracy.
     """
-    
+
     y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)
     C = skm.multilabel_confusion_matrix(y_true, y_pred)
-    return np.mean([C_i[0,0]+C_i[1,1] for C_i in C]) / np.sum(C[0])
+    return np.mean([C_i[0, 0] + C_i[1, 1] for C_i in C]) / np.sum(C[0])
+
 
 def precision(
-        y_true: list,
-        y_pred: list,
-        new_class: int | str | None = None,
-    ) -> float:
+    y_true: list,
+    y_pred: list,
+    new_class: int | str | None = None,
+) -> float:
     """Computes the (macro-averaged) precision.
 
     If `new_class` is specified, it handles it as a additional class.
@@ -137,14 +139,10 @@ def precision(
     """
 
     y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)
-    return skm.precision_score(y_true, y_pred, average='macro')
+    return skm.precision_score(y_true, y_pred, average="macro")
 
-def recall(
-        y_true: list,
-        y_pred: list,
-        new_class: int | str | None = None,
-        ignore_empty: bool = False
-    ) -> float:
+
+def recall(y_true: list, y_pred: list, new_class: int | str | None = None, ignore_empty: bool = False) -> float:
     """Computes the (macro-averaged) recall.
 
     If `new_class` is specified, it handles it as a additional class.
@@ -158,19 +156,20 @@ def recall(
     Returns:
         Computed recall.
     """
-    
+
     y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)
     if ignore_empty:
         C = skm.multilabel_confusion_matrix(y_true, y_pred)
-        return np.mean([C_i[1,1]/(C_i[1,0]+C_i[1,1]) for C_i in C if C_i[1,0]+C_i[1,1] > 0])
+        return np.mean([C_i[1, 1] / (C_i[1, 0] + C_i[1, 1]) for C_i in C if C_i[1, 0] + C_i[1, 1] > 0])
     else:
-        return skm.recall_score(y_true, y_pred, average='macro')
+        return skm.recall_score(y_true, y_pred, average="macro")
+
 
 def f1(
-        y_true: list,
-        y_pred: list,
-        new_class: int | str | None = None,
-    ) -> float:
+    y_true: list,
+    y_pred: list,
+    new_class: int | str | None = None,
+) -> float:
     """Computes the (macro-averaged) F1 score.
 
     If `new_class` is specified, it handles it as a additional class.
@@ -185,13 +184,14 @@ def f1(
     """
 
     y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)
-    return skm.f1_score(y_true, y_pred, average='macro')
+    return skm.f1_score(y_true, y_pred, average="macro")
+
 
 def accuracy_known_samples(
-        y_true: list,
-        y_pred: list,
-        new_class: int | str,
-    ) -> float:
+    y_true: list,
+    y_pred: list,
+    new_class: int | str,
+) -> float:
     """Computes the accuracy on known samples.
 
     Samples of new (unknown) class are ignored.
@@ -207,7 +207,7 @@ def accuracy_known_samples(
     """
 
     y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)
-    y_true = np.array(y_true)    
+    y_true = np.array(y_true)
     y_pred = np.array(y_pred)
     known = y_true != new_class
     if sum(known) > 0:
@@ -215,11 +215,12 @@ def accuracy_known_samples(
     else:
         return np.nan
 
+
 def accuracy_unknown_samples(
-        y_true: list,
-        y_pred: list,
-        new_class: int | str,
-    ) -> float:
+    y_true: list,
+    y_pred: list,
+    new_class: int | str,
+) -> float:
     """Computes the accuracy on new (unknown) samples.
 
     Samples of known classes are ignored.
@@ -235,20 +236,16 @@ def accuracy_unknown_samples(
     """
 
     y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)
-    y_true = np.array(y_true)    
+    y_true = np.array(y_true)
     y_pred = np.array(y_pred)
     unknown = y_true == new_class
     if sum(unknown) > 0:
         return np.mean(y_true[unknown] == y_pred[unknown])
     else:
         return np.nan
-    
-def normalized_accuracy(
-        y_true: list,
-        y_pred: list,
-        new_class: int | str,
-        mu: float
-    ) -> float:
+
+
+def normalized_accuracy(y_true: list, y_pred: list, new_class: int | str, mu: float) -> float:
     """Computes the normalized accuracy.
 
     It is mu*accuracy on known samples + (1-mu)*accuracy on unknown samples.
@@ -266,12 +263,10 @@ def normalized_accuracy(
 
     aks = accuracy_known_samples(y_true, y_pred, new_class)
     aus = accuracy_unknown_samples(y_true, y_pred, new_class)
-    return mu*aks + (1-mu)*aus
+    return mu * aks + (1 - mu) * aus
 
-def average_precision(
-        y_true: int | str,
-        y_pred: list
-    ) -> float:
+
+def average_precision(y_true: int | str, y_pred: list) -> float:
     """Computes the average precision (for one sample).
 
     It computes AP@K, where K is the length of `y_pred`.
@@ -292,10 +287,8 @@ def average_precision(
     else:
         return skm.average_precision_score(a, b)
 
-def mean_average_precision(
-        y_true: list,
-        y_pred: list[list]
-    ):
+
+def mean_average_precision(y_true: list, y_pred: list[list]):
     """Computes the mean average precision (for multiple samples).
 
     It computes MAP@K, where K is the length of `y_pred[0]`.
@@ -312,11 +305,12 @@ def mean_average_precision(
     y_pred = np.array(y_pred)
     return np.mean([average_precision(y_t, y_p) for y_t, y_p in zip(y_true, y_pred)])
 
+
 def auc_roc_new_class(
-        y_true: list,
-        y_score: list,
-        new_class: int | str,
-    ) -> float:
+    y_true: list,
+    y_score: list,
+    new_class: int | str,
+) -> float:
     """Computes the area under ROC curve for detecting new individuals.
 
     High score suggests known individual.
@@ -333,16 +327,17 @@ def auc_roc_new_class(
         Computed arena under ROC curve.
     """
 
-    y_true, _, new_class = unify_types(y_true, [], new_class)    
+    y_true, _, new_class = unify_types(y_true, [], new_class)
     a = np.array(y_true) == new_class
     b = -np.array(y_score)
     return skm.roc_auc_score(a, b)
 
+
 def BAKS(
-        y_true: list,
-        y_pred: list,
-        identity_test_only: list,
-    ) -> float:
+    y_true: list,
+    y_pred: list,
+    identity_test_only: list,
+) -> float:
     """Computes BAKS (balanced accuracy on known samples).
 
     It ignores `identity_test_only` because they are unknown identities.
@@ -367,23 +362,19 @@ def BAKS(
     y_pred_idx = y_pred[idx]
     if len(y_true_idx) == 0:
         return np.nan
-    
+
     # Check if the remaining types are compatible
     unify_types(y_true_idx, y_pred_idx)
-    df = pd.DataFrame({'y_true': y_true_idx, 'y_pred': y_pred_idx})
+    df = pd.DataFrame({"y_true": y_true_idx, "y_pred": y_pred_idx})
 
     # Compute the balanced accuracy
     accuracy = 0
-    for _, df_identity in df.groupby('y_true'):
-        accuracy += 1 / df['y_true'].nunique() * np.mean(df_identity['y_pred'] == df_identity['y_true'])
+    for _, df_identity in df.groupby("y_true"):
+        accuracy += 1 / df["y_true"].nunique() * np.mean(df_identity["y_pred"] == df_identity["y_true"])
     return accuracy
 
-def BAUS(
-        y_true: list,
-        y_pred: list,
-        identity_test_only: list,
-        new_class: int | str
-    ) -> float:
+
+def BAUS(y_true: list, y_pred: list, identity_test_only: list, new_class: int | str) -> float:
     """Computes BAUS (balanced accuracy on unknown samples).
 
     It handles only `identity_test_only` because they are unknown identities.
@@ -412,10 +403,10 @@ def BAUS(
 
     # Check if the remaining types are compatible
     y_true_idx, y_pred_idx, new_class = unify_types(y_true_idx, y_pred_idx, new_class)
-    df = pd.DataFrame({'y_true': y_true_idx, 'y_pred': y_pred_idx})
+    df = pd.DataFrame({"y_true": y_true_idx, "y_pred": y_pred_idx})
 
     # Compute the balanced accuracy
     accuracy = 0
-    for _, df_identity in df.groupby('y_true'):
-        accuracy += 1 / df['y_true'].nunique() * np.mean(df_identity['y_pred'] == new_class)
+    for _, df_identity in df.groupby("y_true"):
+        accuracy += 1 / df["y_true"].nunique() * np.mean(df_identity["y_pred"] == new_class)
     return accuracy
