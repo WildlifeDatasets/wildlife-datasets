@@ -41,11 +41,11 @@ def display_statistics(
     if 'date' in df.columns:
         span_years = compute_span(df, col_label=col_label) / (60*60*24*365.25)
         if span_years > 1:
-            print(f"Images span                      %1.1f years" % (span_years))
+            print("Images span                      %1.1f years" % (span_years))
         elif span_years / 12 > 1:
-            print(f"Images span                      %1.1f months" % (span_years * 12))
+            print("Images span                      %1.1f months" % (span_years * 12))
         else:
-            print(f"Images span                      %1.0f days" % (span_years * 365.25))
+            print("Images span                      %1.0f days" % (span_years * 365.25))
 
 def compute_span(df: pd.DataFrame, col_label: str = 'identity') -> float:
     """Compute the time span of the dataset.

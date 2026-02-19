@@ -11,7 +11,7 @@ import cv2
 import numpy as np
 import pandas as pd
 import requests
-from PIL import Image, ImageOps, UnidentifiedImageError
+from PIL import Image, ImageOps
 from tqdm import tqdm
 
 

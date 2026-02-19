@@ -71,7 +71,7 @@ class DownloadKaggle:
         elif cls.kaggle_type == 'competitions':
             command = f'competitions download -c {cls.kaggle_url} --force'
         else:
-            raise ValueError(f'cls.kaggle_type must be datasets or competitions.')
+            raise ValueError('cls.kaggle_type must be datasets or competitions.')
         exception_text = f'''Kaggle must be setup.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}'''
         try:

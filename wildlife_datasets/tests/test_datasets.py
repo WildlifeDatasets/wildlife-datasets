@@ -2,7 +2,7 @@ import unittest
 
 from wildlife_datasets.datasets import IPanda50, MacaqueFaces, names_all
 
-from .utils import add_datasets, load_datasets
+from .utils import load_datasets
 
 dataset_names = [IPanda50, MacaqueFaces]
 datasets = load_datasets(dataset_names)

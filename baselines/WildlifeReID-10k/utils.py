@@ -5,9 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
-from wildlife_tools.similarity import CosineSimilarity
 
-from wildlife_datasets import datasets, metrics, splits
+from wildlife_datasets import metrics
 
 license_conversion = {
     'Missing': 'None',
