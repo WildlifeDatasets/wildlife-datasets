@@ -66,5 +66,5 @@ for dataset_class, img_load, rotate, name in data:
     if name is None:
         name = dataset_class.display_name()
     dataset = dataset_class(f'{root}/{name}', img_load=img_load)
-    dataset.plot_grid(n_rows=2, n_cols=6, rotate=rotate);
+    dataset.plot_grid(n_rows=2, n_cols=6, rotate=rotate)
     plt.savefig(f'{root_figures}/grid_{name}.png', bbox_inches='tight', dpi=200)
