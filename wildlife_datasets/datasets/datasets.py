@@ -92,7 +92,7 @@ class WildlifeDataset:
             raise Exception("root does not exist. You may have have mispelled it.")
         if self.outdated_dataset:
             print(
-                "This dataset is outdated. You may want to call a newer version such as %sv2." % self.__class__.__name__
+                f"This dataset is outdated. You may want to call a newer version such as {self.__class__.__name__}v2."
             )
         self.update_wrong_labels = update_wrong_labels
         self.root = root
@@ -342,14 +342,14 @@ class WildlifeDataset:
 
         already_downloaded = os.path.exists(mark_file_name)
         if not cls.saved_to_system_folder and already_downloaded and not force:
-            print("DATASET %s: DOWNLOADING STARTED." % dataset_name)
+            print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
             print(cls.download_warning)
         else:
-            print("DATASET %s: DOWNLOADING STARTED." % dataset_name)
+            print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
             cls.download(root, force=force, **kwargs)
-            print("DATASET %s: EXTRACTING STARTED." % dataset_name)
+            print(f"DATASET {dataset_name}: EXTRACTING STARTED.")
             cls.extract(root, **kwargs)
-            print("DATASET %s: FINISHED.\n" % dataset_name)
+            print(f"DATASET {dataset_name}: FINISHED.\n")
 
     @classmethod
     def download(cls, root: str, force: bool = False, **kwargs) -> None:
@@ -367,7 +367,7 @@ class WildlifeDataset:
         if cls.saved_to_system_folder:
             cls._download(**kwargs)
         elif already_downloaded and not force:
-            print("DATASET %s: DOWNLOADING STARTED." % dataset_name)
+            print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
             print(cls.download_warning)
         else:
             if os.path.exists(mark_file_name):
@@ -404,7 +404,7 @@ class WildlifeDataset:
         """
 
         cls_parent = cls.__bases__[-1]
-        while cls_parent != object and cls_parent.outdated_dataset:
+        while cls_parent is not object and cls_parent.outdated_dataset:
             cls = cls_parent
             cls_parent = cls.__bases__[-1]
         return cls.__name__
@@ -509,9 +509,9 @@ class WildlifeDataset:
                     df.loc[index, col] = new_identity
                     n_replaced += 1
             if n_replaced == 0:
-                print("File name %s with identity %s was not found." % (image_name, str(old_identity)))
+                print(f"File name {image_name} with identity {old_identity} was not found.")
             elif n_replaced > 1:
-                print("File name %s with identity %s was found multiple times." % (image_name, str(old_identity)))
+                print(f"File name {image_name} with identity {old_identity} was found multiple times.")
         return df
 
     def finalize_catalogue(
@@ -533,6 +533,7 @@ class WildlifeDataset:
 
         if df is None:
             df = self.df
+        assert df is not None
         if self.update_wrong_labels:
             df = self.fix_labels(df)
         self.rename_column(df, "path", self.col_path)
@@ -566,9 +567,10 @@ class WildlifeDataset:
 
         if df is None:
             df = self.df
+        assert df is not None
         for col_name in ["image_id", self.col_label, self.col_path]:
             if col_name not in df.columns:
-                raise Exception("Column %s must be in the dataframe columns." % col_name)
+                raise Exception(f"Column {col_name} must be in the dataframe columns.")
 
     def check_types_columns(self, df: pd.DataFrame | None = None) -> None:
         """Checks if columns are in correct formats.
@@ -584,6 +586,7 @@ class WildlifeDataset:
 
         if df is None:
             df = self.df
+        assert df is not None
         requirements = [
             ("image_id", ["int", "str"]),
             (self.col_label, ["int", "str"]),
@@ -641,9 +644,9 @@ class WildlifeDataset:
             try:
                 pd.to_datetime(col)
                 return None
-            except:
+            except Exception:
                 pass
-        raise Exception("Column %s has wrong type. Allowed types = %s" % (col_name, str(allowed_types)))
+        raise Exception(f"Column {col_name} has wrong type. Allowed types = {allowed_types}")
 
     def reorder_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders rows and columns in the dataframe.
@@ -693,10 +696,9 @@ class WildlifeDataset:
 
         if df is None:
             df = self.df
-        for df_name in list(df.columns):
-            if df[df_name].astype("str").nunique() == 1:
-                df = df.drop([df_name], axis=1)
-        return df
+        assert df is not None
+        drop_cols = [c for c in df.columns if df[c].astype(str).nunique() == 1]
+        return df.drop(columns=drop_cols)
 
     def check_unique_id(self, df: pd.DataFrame | None = None) -> None:
         """Checks if values in the id column are unique.
@@ -707,6 +709,7 @@ class WildlifeDataset:
 
         if df is None:
             df = self.df
+        assert df is not None
         if len(df["image_id"].unique()) != len(df):
             raise Exception("Image ID not unique.")
 
@@ -721,6 +724,7 @@ class WildlifeDataset:
             col = self.df[self.col_path]
         elif isinstance(col, str):
             col = self.df[col]
+        assert col is not None
         bad_paths = []
         for path in col:
             if isinstance(path, str) and not os.path.exists(self.get_absolute_path(path)):
@@ -742,6 +746,7 @@ class WildlifeDataset:
             col = self.df[self.col_path]
         elif isinstance(col, str):
             col = self.df[col]
+        assert col is not None
         bad_names = []
         for path in col:
             if not isinstance(path, str):
@@ -872,7 +877,7 @@ class WildlifeDataset:
         # Plot the image and add column headers if present
         fig = plt.figure()
         fig.patch.set_visible(False)
-        ax = fig.add_subplot(111)
+        fig.add_subplot(111)
         plt.axis("off")
         plt.imshow(im_grid)
         if header_cols is not None:

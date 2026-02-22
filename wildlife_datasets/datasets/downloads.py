@@ -76,10 +76,7 @@ class DownloadKaggle:
             raise ValueError("cls.kaggle_type must be datasets or competitions.")
         exception_text = f"""Kaggle must be setup.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}"""
-        try:
-            os.system(f"kaggle {command}")
-        except:
-            raise Exception(exception_text)
+        os.system(f"kaggle {command}")
         if not os.path.exists(cls.archive_name()):
             raise Exception(exception_text)
 
@@ -88,7 +85,7 @@ class DownloadKaggle:
         display_name = cls.display_name().lower()
         try:
             utils.extract_archive(cls.archive_name(), delete=True)
-        except:
+        except Exception:
             exception_text = f"""Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
                 Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}"""
@@ -231,8 +228,8 @@ class DownloadINaturalist:
         """
 
         dataset_name = cls.__name__
-        print("DATASET %s: DOWNLOADING STARTED." % dataset_name)
+        print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
         cls.download(root, force=force, **kwargs)
-        print("DATASET %s: EXTRACTING STARTED." % dataset_name)
+        print(f"DATASET {dataset_name}: EXTRACTING STARTED.")
         cls.extract(root, **kwargs)
-        print("DATASET %s: FINISHED.\n" % dataset_name)
+        print(f"DATASET {dataset_name}: FINISHED.\n")

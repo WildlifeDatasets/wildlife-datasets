@@ -90,13 +90,14 @@ class SeaTurtleID2022(DownloadKaggle, WildlifeDataset):
         category_id = categories[category_name]
 
         # Extract data from the JSON file
-        create_dict = lambda i: {
-            "id": i["id"],
-            "bbox": i["bbox"],
-            "image_id": i["image_id"],
-            "segmentation": i["segmentation"],
-            "orientation": i["attributes"][orientation_col] if orientation_col in i["attributes"] else np.nan,
-        }
+        def create_dict(i):
+            return {
+                "id": i["id"],
+                "bbox": i["bbox"],
+                "image_id": i["image_id"],
+                "segmentation": i["segmentation"],
+                "orientation": (i["attributes"][orientation_col] if orientation_col in i["attributes"] else np.nan),
+            }        
         df_annotation = pd.DataFrame([create_dict(i) for i in data["annotations"] if i["category_id"] == category_id])
         idx_bbox = ~df_annotation["bbox"].isnull()
         df_annotation.loc[idx_bbox, "bbox"] = df_annotation.loc[idx_bbox, "bbox"].apply(parse_bbox_mask)
@@ -128,15 +129,21 @@ class SeaTurtleIDHeads(DownloadKaggle, WildlifeDataset):
             data = json.load(file)
 
         # Extract dtaa from the JSON file
-        create_dict = lambda i: {
-            "id": i["id"],
-            "image_id": i["image_id"],
-            "identity": i["identity"],
-            "orientation": i["position"],
-        }
-        df_annotation = pd.DataFrame([create_dict(i) for i in data["annotations"]])
-        create_dict = lambda i: {"file_name": i["path"].split("/")[-1], "image_id": i["id"], "date": i["date"]}
-        df_images = pd.DataFrame([create_dict(i) for i in data["images"]])
+        def create_dict1(i):
+            return {
+                "id": i["id"],
+                "image_id": i["image_id"],
+                "identity": i["identity"],
+                "orientation": i["position"],
+            }        
+        df_annotation = pd.DataFrame([create_dict1(i) for i in data["annotations"]])
+        def create_dict2(i):
+            return {
+                "file_name": i["path"].split("/")[-1],
+                "image_id": i["id"],
+                "date": i["date"],
+            }        
+        df_images = pd.DataFrame([create_dict2(i) for i in data["images"]])
 
         # Merge the information from the JSON file
         df = pd.merge(df_annotation, df_images, on="image_id")

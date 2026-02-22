@@ -161,14 +161,17 @@ class AnimalCLEF2025_SalamanderID2025(WildlifeDataset):
                 raise (Exception("Rotation is not 0"))
 
         # Extract the data from the JSON file
-        create_dict = lambda i: {
-            "bbox": i["bbox"],
-            "image_id": i["image_id"],
-            "orientation": i["attributes"]["orientation"],
-        }
-        df_annotation = pd.DataFrame([create_dict(i) for i in data["annotations"]])
-        create_dict = lambda i: {"path": i["file_name"], "image_id": i["id"]}
-        df_images = pd.DataFrame([create_dict(i) for i in data["images"]])
+        def create_dict1(i):
+            return {
+                "bbox": i["bbox"],
+                "image_id": i["image_id"],
+                "orientation": i["attributes"]["orientation"],
+            }
+        df_annotation = pd.DataFrame([create_dict1(i) for i in data["annotations"]])
+        
+        def create_dict2(i):
+            return {"path": i["file_name"], "image_id": i["id"]}        
+        df_images = pd.DataFrame([create_dict2(i) for i in data["images"]])
 
         # Merge the information from the JSON file
         df = pd.merge(df_annotation, df_images, how="left", on="image_id")

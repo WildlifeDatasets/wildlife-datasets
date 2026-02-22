@@ -43,7 +43,7 @@ class NOAARightWhale(DownloadKaggle, WildlifeDataset):
             # Move misplaced image
             shutil.move("w_7489.jpg", "imgs")
             os.remove("w_7489.jpg.zip")
-        except:
+        except Exception:
             exception_text = """Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
                 Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#noaarightwhale"""

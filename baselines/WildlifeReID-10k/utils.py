@@ -41,7 +41,7 @@ def rename_index(df):
         try:
             summary = eval(f"datasets.{dataset_name}.summary")
             citation = " \cite{" + summary["cite"] + "}"
-        except:
+        except Exception:
             citation = ""
         rename[dataset_name] = dataset_name + citation
     return df.rename(index=rename)
@@ -248,7 +248,7 @@ def make_radar_plot2(
                     color="black",
                 )
 
-    leg = ax.legend(loc="upper right", prop={"size": 12}, bbox_to_anchor=(1.13, 1.05), bbox_transform=ax.transAxes)
+    ax.legend(loc="upper right", prop={"size": 12}, bbox_to_anchor=(1.13, 1.05), bbox_transform=ax.transAxes)
     if file_name is not None:
         plt.savefig(file_name)
 
