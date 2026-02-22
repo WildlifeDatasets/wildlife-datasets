@@ -33,7 +33,8 @@ class WildlifeDatasetWildMe(WildlifeDataset):
                 "category_id": i["category_id"],
                 "segmentation": i["segmentation"][0],
                 "orientation": i["viewpoint"],
-            }        
+            }
+
         df_annotation = pd.DataFrame([create_dict1(i) for i in data["annotations"]])
 
         def create_dict2(i):
@@ -42,6 +43,7 @@ class WildlifeDatasetWildMe(WildlifeDataset):
                 "image_id": i["id"],
                 "date": i["date_captured"],
             }
+
         df_images = pd.DataFrame([create_dict2(i) for i in data["images"]])
         species = pd.DataFrame(data["categories"])
         species = species.rename(columns={"id": "category_id", "name": "species"})

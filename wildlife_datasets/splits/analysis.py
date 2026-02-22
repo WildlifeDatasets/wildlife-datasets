@@ -83,23 +83,19 @@ def analyze_split(df, idx_train, idx_test, col_label="identity"):
     data = extract_data_split(df, idx_train, idx_test, col_label=col_label)
     print(f"Split: {data['time_split']} {data['id_split']}")
     print(
-        f"Samples: train/test/unassigned/total = "
-        f"{data['n_train']}/{data['n_test']}/{data['n_unassigned']}/{data['n']}"
+        f"Samples: train/test/unassigned/total = {data['n_train']}/{data['n_test']}/{data['n_unassigned']}/{data['n']}"
     )
     print(
         f"Classes: train/test/unassigned/total = "
         f"{data['n_ids_train']}/{data['n_ids_test']}/{data['n_ids_unassigned']}/{data['n_ids']}"
     )
 
-    print(
-        f"Samples: train only/test only        = "
-        f"{data['n_train_only']}/{data['n_test_only']}"
-    )
+    print(f"Samples: train only/test only        = {data['n_train_only']}/{data['n_test_only']}")
 
     print(
         f"Classes: train only/test only/joint  = "
         f"{data['n_ids_train_only']}/{data['n_ids_test_only']}/{data['n_ids_joint']}"
-    )    
+    )
     print("")
     print("Fraction of train set     = %1.2f%%" % (100 * data["n_train"] / data["n"]))
     print("Fraction of test set only = %1.2f%%" % (100 * data["n_test_only"] / data["n"]))

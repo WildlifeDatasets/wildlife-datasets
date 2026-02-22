@@ -167,10 +167,12 @@ class AnimalCLEF2025_SalamanderID2025(WildlifeDataset):
                 "image_id": i["image_id"],
                 "orientation": i["attributes"]["orientation"],
             }
+
         df_annotation = pd.DataFrame([create_dict1(i) for i in data["annotations"]])
-        
+
         def create_dict2(i):
-            return {"path": i["file_name"], "image_id": i["id"]}        
+            return {"path": i["file_name"], "image_id": i["id"]}
+
         df_images = pd.DataFrame([create_dict2(i) for i in data["images"]])
 
         # Merge the information from the JSON file

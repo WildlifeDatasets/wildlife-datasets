@@ -97,7 +97,8 @@ class SeaTurtleID2022(DownloadKaggle, WildlifeDataset):
                 "image_id": i["image_id"],
                 "segmentation": i["segmentation"],
                 "orientation": (i["attributes"][orientation_col] if orientation_col in i["attributes"] else np.nan),
-            }        
+            }
+
         df_annotation = pd.DataFrame([create_dict(i) for i in data["annotations"] if i["category_id"] == category_id])
         idx_bbox = ~df_annotation["bbox"].isnull()
         df_annotation.loc[idx_bbox, "bbox"] = df_annotation.loc[idx_bbox, "bbox"].apply(parse_bbox_mask)
@@ -135,14 +136,17 @@ class SeaTurtleIDHeads(DownloadKaggle, WildlifeDataset):
                 "image_id": i["image_id"],
                 "identity": i["identity"],
                 "orientation": i["position"],
-            }        
+            }
+
         df_annotation = pd.DataFrame([create_dict1(i) for i in data["annotations"]])
+
         def create_dict2(i):
             return {
                 "file_name": i["path"].split("/")[-1],
                 "image_id": i["id"],
                 "date": i["date"],
-            }        
+            }
+
         df_images = pd.DataFrame([create_dict2(i) for i in data["images"]])
 
         # Merge the information from the JSON file
