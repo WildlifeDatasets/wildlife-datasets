@@ -1,10 +1,9 @@
 import numpy as np
-from typing import List
 
 
-class Lcg():
+class Lcg:
     """Linear congruential generator for generating random numbers.
-    
+
     Copied from [StackOverflow](https://stackoverflow.com/questions/18634079/glibc-rand-function-implementation).
     It is machine-, distribution- and package version-independent.
     It has some drawbacks (check the link above) but perfectly sufficient for our application.
@@ -12,8 +11,8 @@ class Lcg():
     Attributes:
       state (int): Random state of the LCG.
     """
-    
-    def __init__(self, seed: int, iterate: int=0) -> None:
+
+    def __init__(self, seed: int, iterate: int = 0) -> None:
         """Initialization function for LCG.
 
         Args:
@@ -43,7 +42,7 @@ class Lcg():
         Returns:
             Permuted sequence.
         """
-        
+
         rnd = []
         for _ in range(n):
             self.random()

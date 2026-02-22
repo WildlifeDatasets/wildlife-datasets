@@ -1,25 +1,31 @@
-from .datasets import DatasetFactory, WildlifeDataset
-from .downloads import DownloadHuggingFace, DownloadKaggle, DownloadURL, DownloadINaturalist
 from .aau_zebrafish import AAUZebraFish
 from .aerial_cattle import AerialCattle2017
 from .amvrakikos_turtles import AmvrakikosTurtles
-from .animal_clef import AnimalCLEF2026, AnimalCLEF2026_TexasHornedLizards
-from .animal_clef import AnimalCLEF2025, AnimalCLEF2025_LynxID2025, AnimalCLEF2025_SalamanderID2025, AnimalCLEF2025_SeaTurtleID2022
+from .animal_clef import (
+    AnimalCLEF2025,
+    AnimalCLEF2025_LynxID2025,
+    AnimalCLEF2025_SalamanderID2025,
+    AnimalCLEF2025_SeaTurtleID2022,
+    AnimalCLEF2026,
+    AnimalCLEF2026_TexasHornedLizards,
+)
 from .atrw import ATRW
 from .balearic_lizard import BalearicLizard, BalearicLizardSegmented
 from .beluga_id import BelugaID, BelugaIDv2
 from .bird_individual_id import BirdIndividualID, BirdIndividualIDSegmented
 from .bristol_gorillas_2020 import BristolGorillas2020
-from .cattle_muzzle import CattleMuzzle
 from .cat_individual_images import CatIndividualImages
-from .cobra_re_identification_youngstock import CoBRAReIdentificationYoungstock
-from .ctai import CTai
-from .czoo import CZoo
+from .cattle_muzzle import CattleMuzzle
 from .chicks4free_id import Chicks4FreeID
+from .cobra_re_identification_youngstock import CoBRAReIdentificationYoungstock
 from .cow_dataset import CowDataset
 from .cows import Cows2021, Cows2021v2
+from .ctai import CTai
 from .czechlynx import CzechLynx, CzechLynxv2
+from .czoo import CZoo
+from .datasets import DatasetFactory, WildlifeDataset
 from .dog_face_net import DogFaceNet
+from .downloads import DownloadHuggingFace, DownloadINaturalist, DownloadKaggle, DownloadURL
 from .drosophila import Drosophila
 from .elpephants import ELPephants
 from .friesian_cattle import FriesianCattle2015, FriesianCattle2015v2, FriesianCattle2017
@@ -42,28 +48,30 @@ from .open_cows import OpenCows2020
 from .polar_bear_vid_id import PolarBearVidID
 from .prim_face import PrimFace
 from .reunion_turtles import ReunionTurtles
-from .seal_id import SealID, SealIDSegmented
 from .sea_star_reid import SeaStarReID2023
 from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
+from .seal_id import SealID, SealIDSegmented
 from .smalst import SMALST
 from .southern_province_turtles import SouthernProvinceTurtles
 from .stripe_spotter import StripeSpotter
-from .wildlife_reid_10k import WildlifeReID10k
-from .wild_raptor_id import WildRaptorID
+from .turtles_of_smsrc import TurtlesOfSMSRC
+from .utils import get_image, load_image
 from .whaleshark_id import WhaleSharkID
+from .wild_raptor_id import WildRaptorID
+from .wildlife_reid_10k import WildlifeReID10k
 from .zakynthos_turtles import ZakynthosTurtles
 from .zindi_turtle_recall import ZindiTurtleRecall
-from .turtles_of_smsrc import TurtlesOfSMSRC 
-from .utils import get_image, load_image
 
 names_all = [
     AAUZebraFish,
     AerialCattle2017,
     AmvrakikosTurtles,
     ATRW,
-    BalearicLizard, BalearicLizardSegmented,
+    BalearicLizard,
+    BalearicLizardSegmented,
     BelugaIDv2,
-    BirdIndividualID, BirdIndividualIDSegmented,
+    BirdIndividualID,
+    BirdIndividualIDSegmented,
     BristolGorillas2020,
     CattleMuzzle,
     CatIndividualImages,
@@ -98,9 +106,11 @@ names_all = [
     PolarBearVidID,
     PrimFace,
     ReunionTurtles,
-    SealID, SealIDSegmented,
+    SealID,
+    SealIDSegmented,
     SeaStarReID2023,
-    SeaTurtleID2022, SeaTurtleIDHeads,
+    SeaTurtleID2022,
+    SeaTurtleIDHeads,
     SMALST,
     SouthernProvinceTurtles,
     StripeSpotter,
