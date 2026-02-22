@@ -47,9 +47,9 @@ Some of the datasets require special treatment or the download of extraction wor
 | [LeopardID2022](https://lila.science/datasets/leopard-id-2022/) | | | Unknown animals renamed |
 | [LionData](https://github.com/tvanzyl/wildlife_reidentification) | <a href="https://ieeexplore.ieee.org/abstract/document/9311574" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | | |
 | [MacaqueFaces](https://github.com/clwitham/MacaqueFaces) | <a href="https://www.sciencedirect.com/science/article/pii/S0165027017302637" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | | |
-| [MPDD](https://data.mendeley.com/datasets/v5j6m8dzhv/1) | | | |
+| [MPDD](https://data.mendeley.com/datasets/v5j6m8dzhv/1) | | Manual download | |
 | [MultiCamCows2024](https://data.bris.ac.uk/data/dataset/2inu67jru7a6821kkgehxg3cv2) | <a href="https://arxiv.org/abs/2410.12695" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | | |
-| [NDD20](https://doi.org/10.25405/data.ncl.c.4982342) | <a href="https://arxiv.org/abs/2005.13359" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | | |
+| [NDD20](https://doi.org/10.25405/data.ncl.c.4982342) | <a href="https://arxiv.org/abs/2005.13359" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Manual download | |
 | [NOAARightWhale](https://www.kaggle.com/c/noaa-right-whale-recognition) | | Kaggle required + terms | |
 | [NyalaData](https://github.com/tvanzyl/wildlife_reidentification) | <a href="https://ieeexplore.ieee.org/abstract/document/9311574" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | | |
 | [OpenCows2020](https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17) | <a href="https://www.sciencedirect.com/science/article/pii/S0168169921001514" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | | |
@@ -59,7 +59,7 @@ Some of the datasets require special treatment or the download of extraction wor
 | [SealID](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53) | <a href="https://www.mdpi.com/1424-8220/22/19/7602" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Download with single use token | |
 | [SeaStarReID2023](https://lila.science/sea-star-re-id-2023/) | <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.14278" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | | |
 | [SeaTurtleID2022](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid2022) | <a href="https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Kaggle required | |
-| [SMALST](https://github.com/silviazuffi/smalst) | <a href="https://openaccess.thecvf.com/content_ICCV_2019/html/Zuffi_Three-D_Safari_Learning_to_Estimate_Zebra_Pose_Shape_and_Texture_ICCV_2019_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Only linux: extracting | |
+| [SMALST](https://github.com/silviazuffi/smalst) | <a href="https://openaccess.thecvf.com/content_ICCV_2019/html/Zuffi_Three-D_Safari_Learning_to_Estimate_Zebra_Pose_Shape_and_Texture_ICCV_2019_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Manual download + Only linux: extracting | |
 | [SouthernProvinceTurtles](https://www.kaggle.com/datasets/wildlifedatasets/southernprovinceturtles) | <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Kaggle required | |
 | [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads) | <a href="https://dl.acm.org/doi/abs/10.1145/1991996.1992002" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a> | Only linux: extracting | |
 | [TurtlesOfSMSRC](https://www.inaturalist.org/projects/turtles-of-smsrc) | | | |
@@ -148,6 +148,22 @@ IPanda50 may fail to download files because of Google Drive quotas. If this happ
 datasets.IPanda50.extract('data/IPanda50')
 ```
 
+### MPDD
+
+The dataset is does not have a permanent URL. Download it [manually](https://data.mendeley.com/datasets/v5j6m8dzhv/1). After doing so, extract it manually or run
+
+```python
+datasets.MPDD.extract('data/MPDD')
+```
+
+### NDD20
+
+The dataset is does not have a permanent URL. Download it [manually](https://doi.org/10.25405/data.ncl.c.4982342). After doing so, extract it manually or run
+
+```python
+datasets.NDD20v2.extract('data/NDD20')
+```
+
 ### NOAARightWhale
 
 [Kaggle requirements](#kaggle) need to be satisfied. Also you need to go to the [competition website](https://www.kaggle.com/c/noaa-right-whale-recognition), the Data tab and agree with terms.
@@ -171,13 +187,11 @@ datasets.SealID.get_data('data/SealID', url=url)
 
 ### SMALST
 
-Extracting works only on Linux. Use
+The dataset fails to download automatically. Download it [manually](https://drive.google.com/open?id=1yVy4--M4CNfE5x9wUr1QBmAXEcWb6PWF). After doing so, extract it manually or run
 
 ```python
-datasets.SMALST.download('data/SMALST')
+datasets.SMALST.extract('data/SMALST')
 ```
-
-to download the dataset and then extract it manually.
 
 ### SouthernProvinceTurtles
 

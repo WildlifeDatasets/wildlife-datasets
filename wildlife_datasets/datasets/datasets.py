@@ -1,20 +1,25 @@
 from __future__ import annotations
-from contextlib import contextmanager
-import os
-from copy import deepcopy
-import pandas as pd
-import numpy as np
-from typing import Optional, List, Union, Callable, Tuple
+
 import json
-from PIL import Image
+import os
+from collections.abc import Callable, Sequence
+from contextlib import contextmanager
+from copy import deepcopy
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import pycocotools.mask as mask_coco
+from matplotlib.figure import Figure
+from PIL import Image
+
 from . import utils
+
 
 class WildlifeDataset:
     """Base class for creating datasets.
 
-    Attributes:    
+    Attributes:
       df (pd.DataFrame): A full dataframe of the data.
       summary (dict): Summary of the dataset.
       root (str): Root directory for the data.
@@ -34,33 +39,35 @@ class WildlifeDataset:
       col_label (str): Column name containing individual animal names (labels).
     """
 
-    unknown_name = 'unknown'
+    summary = {}
+    unknown_name = "unknown"
     outdated_dataset = False
     determined_by_df = True
     saved_to_system_folder = False
-    download_warning = '''You are trying to download an already downloaded dataset.
+    download_warning = """You are trying to download an already downloaded dataset.
         This message may have happened to due interrupted download or extract.
         To force the download use the `force=True` keyword such as
         get_data(..., force=True) or download(..., force=True).
-        '''
-    download_mark_name = 'already_downloaded'
-    license_file_name = 'LICENSE_link'
+        """
+    download_mark_name = "already_downloaded"
+    license_file_name = "LICENSE_link"
 
     def __init__(
-            self, 
-            root: Optional[str] = None,
-            df: Optional[pd.DataFrame] = None,
-            update_wrong_labels: bool = True,
-            transform: Optional[Callable] = None,
-            img_load: str = "full",
-            remove_unknown: bool = False,
-            remove_columns: bool = False,
-            check_files: bool = True,
-            load_label: bool = False,
-            factorize_label: bool = False,
-            col_path: str = "path",
-            col_label: str = "identity",            
-            **kwargs) -> None:
+        self,
+        root: str | None = None,
+        df: pd.DataFrame | None = None,
+        update_wrong_labels: bool = True,
+        transform: Callable | None = None,
+        img_load: str = "full",
+        remove_unknown: bool = False,
+        remove_columns: bool = False,
+        check_files: bool = True,
+        load_label: bool = False,
+        factorize_label: bool = False,
+        col_path: str = "path",
+        col_label: str = "identity",
+        **kwargs,
+    ) -> None:
         """Initializes the class.
 
         If `df` is specified, it copies it. Otherwise, it creates it
@@ -80,11 +87,13 @@ class WildlifeDataset:
             col_path (str, optional): Column name containing image paths.
             col_label (str, optional): Column name containing individual animal names (labels).
         """
-        
-        if not self.saved_to_system_folder and not root is None and not os.path.exists(root):
-            raise Exception('root does not exist. You may have have mispelled it.')
+
+        if not self.saved_to_system_folder and root is not None and not os.path.exists(root):
+            raise Exception("root does not exist. You may have have mispelled it.")
         if self.outdated_dataset:
-            print('This dataset is outdated. You may want to call a newer version such as %sv2.' % self.__class__.__name__)
+            print(
+                f"This dataset is outdated. You may want to call a newer version such as {self.__class__.__name__}v2."
+            )
         self.update_wrong_labels = update_wrong_labels
         self.root = root
         self.col_path = col_path
@@ -96,7 +105,9 @@ class WildlifeDataset:
             df = self.create_catalogue(**kwargs)
         else:
             if not self.determined_by_df:
-                print('This dataset is not determined by dataframe. But you construct it so.')
+                print("This dataset is not determined by dataframe. But you construct it so.")
+        assert df is not None
+
         if remove_unknown:
             df = df[df[self.col_label] != self.unknown_name]
         self.df = df.reset_index(drop=True)
@@ -124,14 +135,14 @@ class WildlifeDataset:
     @property
     def identities(self):
         return self.df[self.col_label].unique()
-    
+
     @property
     def metadata(self):
         return self.df
-        
+
     @metadata.setter
     def metadata(self, value):
-        self.df = value	
+        self.df = value
 
     @contextmanager
     def temporary_attrs(self, **kwargs):
@@ -147,7 +158,7 @@ class WildlifeDataset:
     def __len__(self):
         return len(self.df)
 
-    def __getitem__(self, idx: int) -> Image:
+    def __getitem__(self, idx: int) -> Image.Image | tuple[Image.Image, int | str]:
         """Load an image with iloc `idx` with transforms `self.transform` and `self.img_load` applied.
 
         Args:
@@ -159,6 +170,8 @@ class WildlifeDataset:
 
         img = self.get_image(idx)
         img = self.apply_segmentation(img, idx)
+        if self.transform:
+            img = self.transform(img)
         if self.load_label and self.factorize_label:
             return img, self.labels[idx]
         elif self.load_label:
@@ -169,7 +182,7 @@ class WildlifeDataset:
     def compute_attributes(self) -> None:
         self.labels, self.labels_map = pd.factorize(self.df[self.col_label].to_numpy())
 
-    def get_subset(self, idx: Union[List[int], List[bool]]) -> WildlifeDataset:
+    def get_subset(self, idx: list[int] | list[bool]) -> WildlifeDataset:
         """Returns a subset of the class.
 
         Args:
@@ -187,7 +200,13 @@ class WildlifeDataset:
         dataset.compute_attributes()
         return dataset
 
-    def get_image(self, idx: int) -> Image:
+    def get_absolute_path(self, path: str) -> str:
+        if self.root:
+            return os.path.join(self.root, path)
+        else:
+            return path
+
+    def get_image(self, idx: int) -> Image.Image:
         """Load an image with iloc `idx`.
 
         Args:
@@ -198,14 +217,11 @@ class WildlifeDataset:
         """
 
         data = self.df.iloc[idx]
-        if self.root:
-            img_path = os.path.join(self.root, data[self.col_path])
-        else:
-            img_path = data[self.col_path]
+        img_path = self.get_absolute_path(data[self.col_path])
         img = self.load_image(img_path)
         return img
-    
-    def load_image(self, path: str) -> Image:
+
+    def load_image(self, path: str) -> Image.Image:
         """Load an image with `path`.
 
         Args:
@@ -217,7 +233,40 @@ class WildlifeDataset:
 
         return utils.load_image(path)
 
-    def apply_segmentation(self, img: Image, idx: int) -> Image:
+    def _prepare_segmentation(self, img, segmentation):
+        if isinstance(segmentation, (list, np.ndarray)):
+            w, h = img.size
+            rles = mask_coco.frPyObjects([segmentation], h, w)
+            return mask_coco.merge(rles)
+
+        if isinstance(segmentation, dict) and isinstance(segmentation.get("counts"), (list, np.ndarray)):
+            h, w = segmentation["size"]
+            return mask_coco.frPyObjects(segmentation, h, w)
+
+        if isinstance(segmentation, dict) and isinstance(segmentation.get("counts"), str):
+            return segmentation
+
+        if isinstance(segmentation, str):
+            assert self.root is not None
+            m = np.asfortranarray(utils.load_image(os.path.join(self.root, segmentation)))
+            if m.ndim == 3:
+                m = m[:, :, 0]
+            return mask_coco.encode(m)
+
+        if not np.any(pd.isnull(segmentation)):
+            raise Exception("Segmentation type not recognized")
+
+        return segmentation
+
+    def _apply_mask(self, img: Image.Image, segmentation, invert: bool) -> Image.Image:
+        if np.any(pd.isnull(segmentation)):
+            return img
+        mask = mask_coco.decode(segmentation).astype(bool)
+        if invert:
+            mask = ~mask
+        return Image.fromarray(np.asarray(img) * mask[..., np.newaxis])
+
+    def apply_segmentation(self, img: Image.Image, idx: int) -> Image.Image:
         """Applies segmentation or bounding box when loading an image.
 
         Args:
@@ -228,92 +277,59 @@ class WildlifeDataset:
             Loaded image.
         """
 
-        # Prepare for segmentations        
-        if self.img_load in ["full_mask", "full_hide", "bbox_mask", "bbox_hide"]:
-            data = self.df.iloc[idx]
-            if not ("segmentation" in data):
+        data = self.df.iloc[idx]
+        segmentation = None
+
+        # Prepare for segmentations
+        if self.img_load in {"full_mask", "full_hide", "bbox_mask", "bbox_hide"}:
+            if "segmentation" not in data:
                 raise ValueError(f"{self.img_load} selected but no segmentation found.")
-            segmentation = data["segmentation"]
-            if isinstance(segmentation, list) or isinstance(segmentation, np.ndarray):
-                # Convert polygon to compressed RLE
-                w, h = img.size
-                rles = mask_coco.frPyObjects([segmentation], h, w)
-                segmentation = mask_coco.merge(rles)
-            elif isinstance(segmentation, dict) and (isinstance(segmentation['counts'], list) or isinstance(segmentation['counts'], np.ndarray)):            
-                # Convert uncompressed RLE to compressed RLE
-                h, w = segmentation['size']
-                segmentation = mask_coco.frPyObjects(segmentation, h, w)
-            elif isinstance(segmentation, dict) and isinstance(segmentation.get('counts'), str):
-                # Already a compressed COCO RLE mask – nothing to convert
-                pass
-            elif isinstance(segmentation, str):
-                # Load image mask and convert it to compressed RLE
-                segmentation = np.asfortranarray(utils.load_image(os.path.join(self.root, segmentation)))
-                if segmentation.ndim == 3:
-                    segmentation = segmentation[:,:,0]
-                segmentation = mask_coco.encode(segmentation)
-            elif not np.any(pd.isnull(segmentation)):
-                raise Exception('Segmentation type not recognized')
-        # Prepare for bounding boxes
-        if self.img_load in ["bbox"]:
-            data = self.df.iloc[idx]
-            if not ("bbox" in data):
-                raise ValueError(f"{self.img_load} selected but no bbox found.")
-            if type(data["bbox"]) == str:
-                bbox = json.loads(data["bbox"])
-            else:
-                bbox = data["bbox"]
-        
+            segmentation = self._prepare_segmentation(img, data["segmentation"])
+
         # Load full image as it is.
         if self.img_load == "full":
-            img = img
+            return img
+
         # Mask background using segmentation mask.
-        elif self.img_load == "full_mask":
-            if not np.any(pd.isnull(segmentation)):
-                mask = mask_coco.decode(segmentation).astype("bool")
-                img = Image.fromarray(img * mask[..., np.newaxis])
+        if self.img_load == "full_mask":
+            return self._apply_mask(img, segmentation, False)
+
         # Hide object using segmentation mask
-        elif self.img_load == "full_hide":
-            if not np.any(pd.isnull(segmentation)):
-                mask = mask_coco.decode(segmentation).astype("bool")
-                img = Image.fromarray(img * ~mask[..., np.newaxis])
+        if self.img_load == "full_hide":
+            return self._apply_mask(img, segmentation, True)
+
         # Crop to bounding box
-        elif self.img_load == "bbox":
+        if self.img_load == "bbox":
+            if "bbox" not in data:
+                raise ValueError(f"{self.img_load} selected but no bbox found.")
+            raw = data["bbox"]
+            bbox = json.loads(raw) if isinstance(raw, str) else raw
             if not np.any(pd.isnull(bbox)):
                 img = img.crop((bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]))
+            return img
+
         # Mask background using segmentation mask and crop to bounding box.
-        elif self.img_load == "bbox_mask":
-            if (not np.any(pd.isnull(segmentation))):
-                mask = mask_coco.decode(segmentation).astype("bool")
-                img = Image.fromarray(img * mask[..., np.newaxis])
-                img = utils.crop_black(img)
+        if self.img_load == "bbox_mask":
+            img = self._apply_mask(img, segmentation, False)
+            return utils.crop_black(img)
+
         # Hide object using segmentation mask and crop to bounding box.
-        elif self.img_load == "bbox_hide":
-            if (not np.any(pd.isnull(segmentation))):
-                mask = mask_coco.decode(segmentation).astype("bool")
-                img = Image.fromarray(img * ~mask[..., np.newaxis])
-                img = utils.crop_black(img)
+        if self.img_load == "bbox_hide":
+            img = self._apply_mask(img, segmentation, True)
+            return utils.crop_black(img)
+
         # Crop black background around images
-        elif self.img_load == "crop_black":
-            img = utils.crop_black(img)
+        if self.img_load == "crop_black":
+            return utils.crop_black(img)
+
         # Crop white background around images
-        elif self.img_load == "crop_white":
-            img = utils.crop_white(img)
-        else:
-            raise ValueError(f"Invalid img_load argument: {self.img_load}")
+        if self.img_load == "crop_white":
+            return utils.crop_white(img)
 
-        if self.transform:
-            img = self.transform(img)
-
-        return img
+        raise ValueError(f"Invalid img_load argument: {self.img_load}")
 
     @classmethod
-    def get_data(
-            cls,
-            root: str,
-            force: bool = False,
-            **kwargs
-            ) -> None:
+    def get_data(cls, root: str, force: bool = False, **kwargs) -> None:
         """Downloads and extracts the data. Wrapper around `cls._download` and `cls._extract.`
 
         Args:
@@ -323,52 +339,47 @@ class WildlifeDataset:
 
         dataset_name = cls.__name__
         mark_file_name = os.path.join(root, cls.download_mark_name)
-        
+
         already_downloaded = os.path.exists(mark_file_name)
         if not cls.saved_to_system_folder and already_downloaded and not force:
-            print('DATASET %s: DOWNLOADING STARTED.' % dataset_name)
+            print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
             print(cls.download_warning)
         else:
-            print('DATASET %s: DOWNLOADING STARTED.' % dataset_name)
+            print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
             cls.download(root, force=force, **kwargs)
-            print('DATASET %s: EXTRACTING STARTED.' % dataset_name)
-            cls.extract(root,  **kwargs)
-            print('DATASET %s: FINISHED.\n' % dataset_name)
+            print(f"DATASET {dataset_name}: EXTRACTING STARTED.")
+            cls.extract(root, **kwargs)
+            print(f"DATASET {dataset_name}: FINISHED.\n")
 
     @classmethod
-    def download(
-            cls,
-            root: str,
-            force: bool = False,
-            **kwargs
-            ) -> None:
+    def download(cls, root: str, force: bool = False, **kwargs) -> None:
         """Downloads the data. Wrapper around `cls._download`.
 
         Args:
             root (str): Where the data should be stored.
             force (bool, optional): It the root exists, whether it should be overwritten.
         """
-        
+
         dataset_name = cls.__name__
         mark_file_name = os.path.join(root, cls.download_mark_name)
-        
+
         already_downloaded = os.path.exists(mark_file_name)
         if cls.saved_to_system_folder:
             cls._download(**kwargs)
         elif already_downloaded and not force:
-            print('DATASET %s: DOWNLOADING STARTED.' % dataset_name)            
+            print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
             print(cls.download_warning)
         else:
             if os.path.exists(mark_file_name):
                 os.remove(mark_file_name)
             with utils.data_directory(root):
                 cls._download(**kwargs)
-            open(mark_file_name, 'a').close()
-            if hasattr(cls, 'summary') and 'licenses_url' in cls.summary and isinstance(cls.summary, str):
-                with open(os.path.join(root, cls.license_file_name), 'w') as file:
-                    file.write(cls.summary['licenses_url'])
-        
-    @classmethod    
+            open(mark_file_name, "a").close()
+            if hasattr(cls, "summary") and "licenses_url" in cls.summary and isinstance(cls.summary, str):
+                with open(os.path.join(root, cls.license_file_name), "w") as file:
+                    file.write(cls.summary["licenses_url"])
+
+    @classmethod
     def extract(cls, root: str, **kwargs) -> None:
         """Extract the data. Wrapper around `cls._extract`.
 
@@ -382,8 +393,8 @@ class WildlifeDataset:
             with utils.data_directory(root):
                 cls._extract(**kwargs)
             mark_file_name = os.path.join(root, cls.download_mark_name)
-            open(mark_file_name, 'a').close()
-    
+            open(mark_file_name, "a").close()
+
     @classmethod
     def display_name(cls) -> str:
         """Returns name of the dataset without the v2 ending.
@@ -393,7 +404,7 @@ class WildlifeDataset:
         """
 
         cls_parent = cls.__bases__[-1]
-        while cls_parent != object and cls_parent.outdated_dataset:
+        while cls_parent is not object and cls_parent.outdated_dataset:
             cls = cls_parent
             cls_parent = cls.__bases__[-1]
         return cls.__name__
@@ -406,7 +417,7 @@ class WildlifeDataset:
             NotImplementedError: Needs to be implemented by subclasses.
         """
 
-        raise NotImplementedError('Needs to be implemented by subclasses.')
+        raise NotImplementedError("Needs to be implemented by subclasses.")
 
     @classmethod
     def _extract(cls):
@@ -416,11 +427,11 @@ class WildlifeDataset:
             NotImplementedError: Needs to be implemented by subclasses.
         """
 
-        raise NotImplementedError('Needs to be implemented by subclasses.')
+        raise NotImplementedError("Needs to be implemented by subclasses.")
 
     def set_transform(self, transform):
         self.transform = transform
-    
+
     def create_catalogue(self):
         """Creates the dataframe.
 
@@ -428,22 +439,19 @@ class WildlifeDataset:
             NotImplementedError: Needs to be implemented by subclasses.
         """
 
-        raise NotImplementedError('Needs to be implemented by subclasses.')
-    
+        raise NotImplementedError("Needs to be implemented by subclasses.")
+
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
         """Fixes labels in dataframe.
-        
-        Automatically called in `finalize_catalogue`.                
+
+        Automatically called in `finalize_catalogue`.
         """
 
         return df
 
     def fix_labels_replace_identity(
-            self,
-            df: pd.DataFrame,
-            replace_identity: List[Tuple],
-            col: str = 'identity'
-            ) -> pd.DataFrame:
+        self, df: pd.DataFrame, replace_identity: list[tuple], col: str = "identity"
+    ) -> pd.DataFrame:
         """Replaces all instances of identities.
 
         Args:
@@ -460,11 +468,8 @@ class WildlifeDataset:
         return df
 
     def fix_labels_remove_identity(
-            self,
-            df: pd.DataFrame,
-            identities_to_remove: List,
-            col: str = 'identity'
-            ) -> pd.DataFrame:
+        self, df: pd.DataFrame, identities_to_remove: list, col: str = "identity"
+    ) -> pd.DataFrame:
         """Removes all instances of identities.
 
         Args:
@@ -480,11 +485,8 @@ class WildlifeDataset:
         return df[~np.array(idx_remove)]
 
     def fix_labels_replace_images(
-            self,
-            df: pd.DataFrame,
-            replace_identity: List[Tuple],
-            col: str = 'identity'
-            ) -> pd.DataFrame:
+        self, df: pd.DataFrame, replace_identity: list[tuple], col: str = "identity"
+    ) -> pd.DataFrame:
         """Replaces specified images with specified identities.
 
         It looks for a subset of image_name in df[self.col_path].
@@ -502,20 +504,20 @@ class WildlifeDataset:
         for image_name, old_identity, new_identity in replace_identity:
             n_replaced = 0
             for index, df_row in df.iterrows():
-                # Check that there is a image with the required name and identity 
+                # Check that there is a image with the required name and identity
                 if image_name in df_row[self.col_path] and old_identity == df_row[col]:
                     df.loc[index, col] = new_identity
                     n_replaced += 1
             if n_replaced == 0:
-                print('File name %s with identity %s was not found.' % (image_name, str(old_identity)))
+                print(f"File name {image_name} with identity {old_identity} was not found.")
             elif n_replaced > 1:
-                print('File name %s with identity %s was found multiple times.' % (image_name, str(old_identity)))
+                print(f"File name {image_name} with identity {old_identity} was found multiple times.")
         return df
 
     def finalize_catalogue(
-            self,
-            df: pd.DataFrame = None,
-            ) -> pd.DataFrame:
+        self,
+        df: pd.DataFrame | None = None,
+    ) -> pd.DataFrame:
         """Reorders the dataframe and check file paths.
 
         Reorders the columns and removes constant columns.
@@ -523,7 +525,7 @@ class WildlifeDataset:
         Checks if ids are unique and if all files exist.
 
         Args:
-            df (pd.DataFrame, optional): A full dataframe of the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
 
         Returns:
             A full dataframe of the data, slightly modified.
@@ -531,10 +533,11 @@ class WildlifeDataset:
 
         if df is None:
             df = self.df
+        assert df is not None
         if self.update_wrong_labels:
             df = self.fix_labels(df)
-        self.rename_column(df, 'path', self.col_path)
-        self.rename_column(df, 'identity', self.col_label)
+        self.rename_column(df, "path", self.col_path)
+        self.rename_column(df, "identity", self.col_label)
         self.check_required_columns(df)
         self.check_types_columns(df)
         df = self.reorder_df(df)
@@ -544,31 +547,32 @@ class WildlifeDataset:
         if self.check_files:
             self.check_files_exist(df[self.col_path])
             self.check_files_names(df[self.col_path])
-            if 'segmentation' in df.columns:
-                self.check_files_exist(df['segmentation'])
+            if "segmentation" in df.columns:
+                self.check_files_exist(df["segmentation"])
         return df
 
     def rename_column(self, df: pd.DataFrame, name_old, name_new):
         if name_old != name_new:
             if name_new in df.columns:
-                raise Exception(f'Column {name_old} already present in dataframe. Cannot rename {name_old} to it.')
+                raise Exception(f"Column {name_old} already present in dataframe. Cannot rename {name_old} to it.")
             else:
                 return df.rename({name_old: name_new}, axis=1, inplace=True)
 
-    def check_required_columns(self, df: pd.DataFrame = None) -> None:
+    def check_required_columns(self, df: pd.DataFrame | None = None) -> None:
         """Check if all required columns are present.
 
         Args:
-            df (pd.DataFrame, optional): A full dataframe of the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
         if df is None:
             df = self.df
+        assert df is not None
         for col_name in ["image_id", self.col_label, self.col_path]:
             if col_name not in df.columns:
-                raise Exception('Column %s must be in the dataframe columns.' % col_name)
+                raise Exception(f"Column {col_name} must be in the dataframe columns.")
 
-    def check_types_columns(self, df: pd.DataFrame = None) -> None:
+    def check_types_columns(self, df: pd.DataFrame | None = None) -> None:
         """Checks if columns are in correct formats.
 
         The format are specified in `requirements`, which is list
@@ -577,21 +581,22 @@ class WildlifeDataset:
         must be at least one of the formats.
 
         Args:
-            df (pd.DataFrame, optional): A full dataframe of the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
         if df is None:
             df = self.df
+        assert df is not None
         requirements = [
-            ('image_id', ['int', 'str']),
-            (self.col_label, ['int', 'str']),
-            (self.col_path, ['str']),
-            ('bbox', ['list_numeric']),
-            ('date', ['date']),
-            ('keypoints', ['list_numeric']),
-            ('position', ['str']),
-            ('species', ['str', 'list']),
-            ('video', ['int']),
+            ("image_id", ["int", "str"]),
+            (self.col_label, ["int", "str"]),
+            (self.col_path, ["str"]),
+            ("bbox", ["list_numeric"]),
+            ("date", ["date"]),
+            ("keypoints", ["list_numeric"]),
+            ("position", ["str"]),
+            ("species", ["str", "list"]),
+            ("video", ["int"]),
         ]
         # Verify if the columns are in correct formats
         for col_name, allowed_types in requirements:
@@ -600,8 +605,8 @@ class WildlifeDataset:
                 col = df[col_name][~df[col_name].isnull()]
                 if len(col) > 0:
                     self.check_types_column(col, col_name, allowed_types)
-    
-    def check_types_column(self, col: pd.Series, col_name: str, allowed_types: List[str]) -> None:
+
+    def check_types_column(self, col: pd.Series, col_name: str, allowed_types: list[str]) -> None:
         """Checks if the column `col` is in the format `allowed_types`.
 
         Args:
@@ -615,33 +620,33 @@ class WildlifeDataset:
                 `date` (dates as tested by `pd.to_datetime`).
         """
 
-        if 'int' in allowed_types and pd.api.types.is_integer_dtype(col):
+        if "int" in allowed_types and pd.api.types.is_integer_dtype(col):
             return None
-        if 'str' in allowed_types and pd.api.types.is_string_dtype(col):
+        if "str" in allowed_types and pd.api.types.is_string_dtype(col):
             return None
-        if 'list' in allowed_types and pd.api.types.is_list_like(col):
+        if "list" in allowed_types and pd.api.types.is_list_like(col):
             check = True
             for val in col:
                 if not pd.api.types.is_list_like(val):
                     check = False
                     break
-            if check:                
-                return None        
-        if 'list_numeric' in allowed_types and pd.api.types.is_list_like(col):
+            if check:
+                return None
+        if "list_numeric" in allowed_types and pd.api.types.is_list_like(col):
             check = True
-            for val in col:            
+            for val in col:
                 if not pd.api.types.is_list_like(val) and not pd.api.types.is_numeric_dtype(pd.Series(val)):
                     check = False
                     break
-            if check:                
+            if check:
                 return None
-        if 'date' in allowed_types:
+        if "date" in allowed_types:
             try:
                 pd.to_datetime(col)
                 return None
-            except:
+            except Exception:
                 pass
-        raise Exception('Column %s has wrong type. Allowed types = %s' % (col_name, str(allowed_types)))
+        raise Exception(f"Column {col_name} has wrong type. Allowed types = {allowed_types}")
 
     def reorder_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders rows and columns in the dataframe.
@@ -656,7 +661,17 @@ class WildlifeDataset:
             A full dataframe of the data, slightly modified.
         """
 
-        default_order = ['image_id', self.col_label, self.col_path, 'bbox', 'date', 'keypoints', 'orientation', 'segmentation', 'species']
+        default_order = [
+            "image_id",
+            self.col_label,
+            self.col_path,
+            "bbox",
+            "date",
+            "keypoints",
+            "orientation",
+            "segmentation",
+            "species",
+        ]
         df_names = list(df.columns)
         col_names = []
         for name in default_order:
@@ -665,15 +680,15 @@ class WildlifeDataset:
         for name in df_names:
             if name not in default_order:
                 col_names.append(name)
-        
-        df = df.sort_values('image_id').reset_index(drop=True)
+
+        df = df.sort_values("image_id").reset_index(drop=True)
         return df.reindex(columns=col_names)
 
-    def remove_constant_columns(self, df: pd.DataFrame = None) -> pd.DataFrame:
+    def remove_constant_columns(self, df: pd.DataFrame | None = None) -> pd.DataFrame:
         """Removes columns with a single unique value.
 
         Args:
-            df (pd.DataFrame, optional): A full dataframe of the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
 
         Returns:
             A full dataframe of the data, slightly modified.
@@ -681,55 +696,57 @@ class WildlifeDataset:
 
         if df is None:
             df = self.df
-        for df_name in list(df.columns):
-            if df[df_name].astype("str").nunique() == 1:
-                df = df.drop([df_name], axis=1)
-        return df
+        assert df is not None
+        drop_cols = [c for c in df.columns if df[c].astype(str).nunique() == 1]
+        return df.drop(columns=drop_cols)
 
-    def check_unique_id(self, df: pd.DataFrame = None) -> None:
+    def check_unique_id(self, df: pd.DataFrame | None = None) -> None:
         """Checks if values in the id column are unique.
 
         Args:
-            df (pd.DataFrame, optional): A full dataframe of the data.
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
         if df is None:
             df = self.df
+        assert df is not None
         if len(df["image_id"].unique()) != len(df):
             raise Exception("Image ID not unique.")
 
-    def check_files_exist(self, col: pd.Series | str = None) -> None:
+    def check_files_exist(self, col: pd.Series | str | None = None) -> None:
         """Checks if paths in a given column exist.
 
         Args:
-            col (pd.Series | str, optional): A column of a dataframe.
+            col (Optional[pd.Series | str], optional): A column of a dataframe.
         """
 
         if col is None:
             col = self.df[self.col_path]
         elif isinstance(col, str):
             col = self.df[col]
+        assert col is not None
         bad_paths = []
         for path in col:
-            if isinstance(path, str) and not os.path.exists(os.path.join(self.root, path)):
+            if isinstance(path, str) and not os.path.exists(self.get_absolute_path(path)):
                 bad_paths.append(path)
         if len(bad_paths) > 0:
-            print("The following non-existing images were identified.")                
+            print("The following non-existing images were identified.")
             for path in bad_paths:
                 print(path)
-            raise Exception('Some files not found')
+            raise Exception("Some files not found")
 
-    def check_files_names(self, col: pd.Series | str = None) -> None:
+    def check_files_names(self, col: pd.Series | str | None = None) -> None:
         """Checks if paths contain characters which may cause issues.
 
         Args:
-            col (pd.Series | str, optional): A column of a dataframe.
+            col (Optional[pd.Series | str], optional): A column of a dataframe.
         """
 
         if col is None:
             col = self.df[self.col_path]
         elif isinstance(col, str):
             col = self.df[col]
+        assert col is not None
         bad_names = []
         for path in col:
             if not isinstance(path, str):
@@ -745,77 +762,74 @@ class WildlifeDataset:
             raise Exception("Non ISO-8859-1 characters in path may cause problems. Please change them.")
 
     def plot_grid(
-            self,
-            n_rows: int = 5,
-            n_cols: int = 8,
-            offset: float = 10,
-            img_min: float = 100,
-            rotate: bool = True,
-            keep_aspect_ratios: bool = True,
-            header_cols: Optional[List[str]] = None,
-            idx: Optional[Union[List[bool],List[int]]] = None,
-            background_color: Tuple[int] = (0, 0, 0),
-            keep_transform: bool = False,
-            **kwargs
-            ) -> None:
+        self,
+        n_rows: int = 5,
+        n_cols: int = 8,
+        offset: int = 10,
+        img_min: float = 100,
+        rotate: bool = True,
+        keep_aspect_ratios: bool = True,
+        header_cols: Sequence[str] | None = None,
+        idx: Sequence[bool] | Sequence[int] | np.ndarray | None = None,
+        background_color: tuple[int, int, int] = (0, 0, 0),
+        keep_transform: bool = False,
+        **kwargs,
+    ) -> Figure | None:
         """Plots a grid of size (n_rows, n_cols) with images from the dataframe.
 
         Args:
             n_rows (int, optional): The number of rows in the grid.
             n_cols (int, optional): The number of columns in the grid.
-            offset (float, optional): The offset between images.
+            offset (int, optional): The offset between images.
             img_min (float, optional): The minimal size of the plotted images.
             rotate (bool, optional): Rotates the images to have the same orientation.
             keep_aspect_ratios (bool, optional): Whether aspect ratios are kept for images.
-            header_cols (Optional[List[str]], optional): List of headers for each column.
-            idx (Optional[Union[List[bool],List[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
-            background_color (Tuple[int], optional): Background color of the grid.
+            header_cols (Optional[Sequence[str]], optional): List of headers for each column.
+            idx (Optional[Union[Sequence[bool], Sequence[int]]], optional): List of indices to plot. None plots random images. Index -1 plots an empty image.
+            background_color (Tuple[int, int, int], optional): Background color of the grid.
             keep_transform (bool, optional): Whether `self.transform` is applied.
         """
 
         if len(self.df) == 0:
             return None
-        
+
         # Select indices of images to be plotted
         if idx is None:
-            n = min(len(self.df), n_rows*n_cols)
+            n = min(len(self.df), n_rows * n_cols)
             idx = np.random.permutation(len(self.df))[:n]
         else:
             if isinstance(idx, pd.Series):
-                idx = idx.values
+                idx = idx.to_numpy()
             if isinstance(idx[0], (bool, np.bool_)):
                 idx = np.where(idx)[0]
-            n = min(np.array(idx).size, n_rows*n_cols)
-            idx = np.matrix.flatten(np.array(idx))[:n]
+            n = min(np.array(idx).size, n_rows * n_cols)
+            idx = np.asarray(idx).flatten()[:n]
 
         # Load images and compute their ratio
         ratios = []
         ims = []
         for k in idx:
             if k is not None and k >= 0:
-                # Load the image with index k
-                if keep_transform:
-                    with self.temporary_attrs(load_label=False):
-                        im = self[k]
-                else:
-                    with self.temporary_attrs(load_label=False, transform=None):
-                        im = self[k]
+                im = self.get_image(k)
+                im = self.apply_segmentation(im, k)
+                if keep_transform and self.transform:
+                    im = self.transform(im)
                 ims.append(im)
                 ratios.append(im.size[0] / im.size[1])
             else:
                 # Load a black image
-                ims.append(Image.fromarray(np.zeros((2, 2), dtype = "uint8")))
+                ims.append(Image.fromarray(np.zeros((2, 2), dtype="uint8")))
 
         # Safeguard when all indices are -1
         if len(ratios) == 0:
             return None
-        
+
         # Get the size of the images after being resized
         ratio = np.median(ratios)
-        if ratio > 1:    
-            img_w, img_h = int(img_min*ratio), int(img_min)
+        if ratio > 1:
+            img_w, img_h = int(img_min * ratio), int(img_min)
         else:
-            img_w, img_h = int(img_min), int(img_min/ratio)
+            img_w, img_h = int(img_min), int(img_min / ratio)
 
         # Compute height offset if headers are present
         if header_cols is not None:
@@ -826,14 +840,18 @@ class WildlifeDataset:
             offset_h = 0
 
         # Create an empty image grid
-        im_grid = Image.new('RGB', (n_cols*img_w + (n_cols-1)*offset, offset_h + n_rows*img_h + (n_rows-1)*offset), background_color)
+        im_grid = Image.new(
+            "RGB",
+            (n_cols * img_w + (n_cols - 1) * offset, offset_h + n_rows * img_h + (n_rows - 1) * offset),
+            background_color,
+        )
 
         # Fill the grid image by image
         pos_y = offset_h
         for i in range(n_rows):
             row_h = 0
             for j in range(n_cols):
-                k = (n_cols)*i + j
+                k = (n_cols) * i + j
                 if k < n:
                     # Possibly rotate the image
                     im = ims[k]
@@ -844,33 +862,34 @@ class WildlifeDataset:
                     if keep_aspect_ratios:
                         w, h = im.size
                         c = min(img_w / w, img_h / h)
-                        im = im.resize((int(c*w), int(c*h)))
+                        im = im.resize((int(c * w), int(c * h)))
                     else:
-                        im = im.resize((img_w,img_h))
+                        im = im.resize((img_w, img_h))
                     row_h = max(row_h, im.size[1])
 
                     # Place the image on the grid
-                    pos_x = j*img_w + j*offset
-                    im_grid.paste(im, (pos_x,pos_y))
+                    pos_x = j * img_w + j * offset
+                    im_grid.paste(im, (pos_x, pos_y))
             if row_h > 0:
                 pos_y += row_h + offset
-        im_grid = im_grid.crop((0, 0, im_grid.size[0], pos_y-offset))
- 
+        im_grid = im_grid.crop((0, 0, im_grid.size[0], pos_y - offset))
+
         # Plot the image and add column headers if present
         fig = plt.figure()
         fig.patch.set_visible(False)
-        ax = fig.add_subplot(111)
-        plt.axis('off')
+        fig.add_subplot(111)
+        plt.axis("off")
         plt.imshow(im_grid)
         if header_cols is not None:
-            color = kwargs.pop('color', 'white')
-            ha = kwargs.pop('ha', 'center')
-            va = kwargs.pop('va', 'center')
+            color = kwargs.pop("color", "white")
+            ha = kwargs.pop("ha", "center")
+            va = kwargs.pop("va", "center")
             for i, header in enumerate(header_cols):
-                pos_x = (i+0.5)*img_w + i*offset
-                pos_y = offset_h/2
+                pos_x = (i + 0.5) * img_w + i * offset
+                pos_y = offset_h / 2
                 plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
         return fig
+
 
 # Alias for WildlifeDataset
 class DatasetFactory(WildlifeDataset):

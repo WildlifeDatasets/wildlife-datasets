@@ -1,55 +1,65 @@
 import os
+
 import numpy as np
 import pandas as pd
+
 from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
 summary = {
-    'licenses': 'Other',
-    'licenses_url': 'https://github.com/cvjena/chimpanzee_faces/blob/master/README.md',
-    'url': 'https://github.com/cvjena/chimpanzee_faces',
-    'publication_url': 'https://link.springer.com/chapter/10.1007/978-3-319-45886-1_5',
-    'cite': 'freytag2016chimpanzee',
-    'animals': {'chimpanzee'},
-    'animals_simple': 'chimpanzees',
-    'real_animals': True,
-    'year': 2016,
-    'reported_n_total': 2109,
-    'reported_n_individuals': 24,
-    'wild': False,
-    'clear_photos': True,
-    'pose': 'single',
-    'unique_pattern': False,
-    'from_video': False,
-    'cropped': True,
-    'span': 'unknown',
-    'size': 634,
+    "licenses": "Other",
+    "licenses_url": "https://github.com/cvjena/chimpanzee_faces/blob/master/README.md",
+    "url": "https://github.com/cvjena/chimpanzee_faces",
+    "publication_url": "https://link.springer.com/chapter/10.1007/978-3-319-45886-1_5",
+    "cite": "freytag2016chimpanzee",
+    "animals": {"chimpanzee"},
+    "animals_simple": "chimpanzees",
+    "real_animals": True,
+    "year": 2016,
+    "reported_n_total": 2109,
+    "reported_n_individuals": 24,
+    "wild": False,
+    "clear_photos": True,
+    "pose": "single",
+    "unique_pattern": False,
+    "from_video": False,
+    "cropped": True,
+    "span": "unknown",
+    "size": 634,
 }
+
 
 class CZoo(DownloadURL, WildlifeDataset):
     summary = summary
-    url = 'https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip'
-    archive = 'master.zip'
-    rmtree = 'chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CTai'
+    url = "https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip"
+    archive = "master.zip"
+    rmtree = "chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CTai"
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset
-        path = os.path.join('chimpanzee_faces-master', 'datasets_cropped_chimpanzee_faces', 'data_CZoo',)
-        data = pd.read_csv(os.path.join(self.root, path, 'annotations_czoo.txt'), header=None, sep=' ')
+        assert self.root is not None
+        path = os.path.join(
+            "chimpanzee_faces-master",
+            "datasets_cropped_chimpanzee_faces",
+            "data_CZoo",
+        )
+        data = pd.read_csv(os.path.join(self.root, path, "annotations_czoo.txt"), header=None, sep=" ")
 
         # Extract keypoints from the information
         keypoints = data[[11, 12, 14, 15, 17, 18, 20, 21, 23, 24]].to_numpy()
         keypoints[np.isinf(keypoints)] = np.nan
         keypoints = pd.Series(list(keypoints))
-        
+
         # Finalize the dataframe
-        df = pd.DataFrame({
-            'image_id': pd.Series(range(len(data))),
-            'path': path + os.path.sep + data[1],
-            'identity': data[3],
-            'keypoints': keypoints,
-            'age': data[5],
-            'age_group': data[7],
-            'gender': data[9],
-        })
+        df = pd.DataFrame(
+            {
+                "image_id": pd.Series(range(len(data))),
+                "path": path + os.path.sep + data[1],
+                "identity": data[3],
+                "keypoints": keypoints,
+                "age": data[5],
+                "age_group": data[7],
+                "gender": data[9],
+            }
+        )
         return self.finalize_catalogue(df)

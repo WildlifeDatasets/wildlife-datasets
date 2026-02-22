@@ -1,6 +1,7 @@
 import os
+
 import pandas as pd
-from typing import List
+
 from ..datasets import WildlifeDataset
 
 
@@ -17,6 +18,7 @@ def get_dataset_folder(root_dataset: str, class_dataset: type) -> str:
 
     return os.path.join(root_dataset, class_dataset.display_name())
 
+
 def get_dataframe_path(root_dataframe: str, class_dataset: type) -> str:
     """Creates path to the pickled dataframe.
 
@@ -28,14 +30,12 @@ def get_dataframe_path(root_dataframe: str, class_dataset: type) -> str:
         Path to the dataframe.
     """
 
-    return os.path.join(root_dataframe, class_dataset.__name__ + '.pkl')
-    
+    return os.path.join(root_dataframe, class_dataset.__name__ + ".pkl")
+
+
 def load_datasets(
-        class_datasets: List[type],
-        root_dataset: str,
-        root_dataframe: str,
-        **kwargs
-        ) -> List[WildlifeDataset]:
+    class_datasets: list[type], root_dataset: str, root_dataframe: str, **kwargs
+) -> list[WildlifeDataset]:
     """Loads multiple datasets as described in `load_dataset`.
 
     Args:
@@ -46,16 +46,13 @@ def load_datasets(
     Returns:
         The list of loaded datasets.
     """
-    
+
     return [load_dataset(class_dataset, root_dataset, root_dataframe, **kwargs) for class_dataset in class_datasets]
 
+
 def load_dataset(
-        class_dataset: type,
-        root_dataset: str,
-        root_dataframe: str,
-        overwrite: bool = False,
-        **kwargs
-        ) -> WildlifeDataset:
+    class_dataset: type, root_dataset: str, root_dataframe: str, overwrite: bool = False, **kwargs
+) -> WildlifeDataset:
     """Loads dataset from a pickled dataframe or creates it.
 
     If the dataframe is already saved in a pkl file, it loads it.
@@ -70,11 +67,11 @@ def load_dataset(
     Returns:
         The loaded dataset.
     """
-    
+
     # Check if the dataset is downloaded.
     if not os.path.exists(root_dataset):
-        raise(Exception('Data not found. Download them first.'))
-    
+        raise (Exception("Data not found. Download them first."))
+
     # Get paths of the dataset and the pickled dataframe
     root = get_dataset_folder(root_dataset, class_dataset)
     df_path = get_dataframe_path(root_dataframe, class_dataset)
