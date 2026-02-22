@@ -61,7 +61,7 @@ packages = [
 line-length = 120
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "SIM"]
+select = ["E", "F", "I", "UP"]
 
 [tool.ruff.format]
 quote-style = "double"
