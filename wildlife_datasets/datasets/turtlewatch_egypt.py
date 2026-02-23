@@ -336,7 +336,7 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
         # Add path and corresponding image_id
         data["path"] = data["path"] + os.path.sep + data["file"]
         data["image_id"] = utils.get_persistent_id(data["path"])
-        
+
         # Finalize the dataframe
         data = data.drop("file", axis=1)
         return self.finalize_catalogue(data)
@@ -348,9 +348,8 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
             load_segmentation: bool = False,
             file_name: str | None = None
             ) -> pd.DataFrame:
-        # TODO: fix completely
+        assert self.root is not None
         self.load_individuals(file_name=file_name)
-
         data = utils.find_images(self.root)
 
         # Ignoring data starting with '.'
