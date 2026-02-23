@@ -320,3 +320,13 @@ def parse_bbox_mask(x):
         return ast.literal_eval(x)
     except (ValueError, SyntaxError):
         raise ValueError(f"Invalid bbox or mask value: {x}")
+
+
+def strip_suffixes(x: str, suffixes: list[str]) -> str:
+    suffixes = suffixes + [x.lower() for x in suffixes]
+    while any(x.lower().endswith(ext) for ext in suffixes):
+        for ext in suffixes:
+            if x.lower().endswith(ext):
+                x = x[:-len(ext)].strip()
+                break
+    return x
