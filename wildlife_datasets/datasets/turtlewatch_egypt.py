@@ -333,13 +333,13 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
         )
         data["orientation"] = orientation
 
-        # Finalize the dataframe
-        # TODO: need to assing persistent image_id
-        data = data.sort_values("file").reset_index(drop=True)
+        # Add path and corresponding image_id
         data["path"] = data["path"] + os.path.sep + data["file"]
+        normalized_path = data["path"].str.split(os.path.sep).apply(lambda x: "/".join(x[-4:]))
+        data["image_id"] = utils.create_id(normalized_path)
+
+        # Finalize the dataframe
         data = data.drop("file", axis=1)
-        # data = data.rename({"path_full": "path"}, axis=1)
-        data["image_id"] = range(len(data))
         return self.finalize_catalogue(data)
 
 
