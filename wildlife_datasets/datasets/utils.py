@@ -28,7 +28,14 @@ def load_image(path: str, max_size: int | None = None) -> Image.Image:
     # We load it with OpenCV because PIL does not apply metadata.
     img = cv2.imread(path)
     if img is None:
-        raise ValueError(f"Image was not loaded properly: {path}")
+        # Fall back to other loading (sometimes works for non-ASCII files).
+        try:
+            data = np.fromfile(path, dtype=np.uint8)
+            img = cv2.imdecode(data, cv2.IMREAD_COLOR)
+        except Exception:
+            img = None
+        if img is None:
+            raise ValueError(f"Image was not loaded properly: {path}")
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = Image.fromarray(img)
     if max_size is not None:
