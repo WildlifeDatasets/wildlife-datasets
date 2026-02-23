@@ -329,7 +329,7 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
         orientation[idx] = data.loc[idx, "file"].apply(lambda x: os.path.basename(x).split(".")[-2][-2:])
         orientation = orientation.apply(lambda x: x.strip().lower())
         orientation = orientation.apply(
-            lambda x: x if x in ["l", "r", "b", "c", "t", "alf", "arf", "rlf", "rrf"] else np.nan
+            lambda x: x if x in ["l", "r", "b", "c", "t", "alf", "arf", "rlf", "rrf"] else None
         )
         data["orientation"] = orientation
 
@@ -392,10 +392,10 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
         assert data["encounter_id"].nunique() == data["encounter_name"].nunique()
 
         # Preallocate columns to be able to handle strings and nans without warnings
-        data["identity"] = pd.Series([np.nan] * len(data), dtype="object")
-        data["leader"] = pd.Series([np.nan] * len(data), dtype="object")
-        data["place"] = pd.Series([np.nan] * len(data), dtype="object")
-        data["author"] = pd.Series([np.nan] * len(data), dtype="object")
+        data["identity"] = pd.Series([None] * len(data), dtype="object")
+        data["leader"] = pd.Series([None] * len(data), dtype="object")
+        data["place"] = pd.Series([None] * len(data), dtype="object")
+        data["author"] = pd.Series([None] * len(data), dtype="object")
 
         for _, df_encounter in data.groupby("encounter_id"):
             # Extract information from code
@@ -443,7 +443,7 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
             segmentation = pd.read_csv(f"{self.root}/segmentation.csv")
             data = pd.merge(data, segmentation, on="image_id", how="outer")
             data["bbox"] = list(data[cols].to_numpy())
-            data["orientation"] = data["label"].apply(lambda x: conversion.get(x, np.nan))
+            data["orientation"] = data["label"].apply(lambda x: conversion.get(x, None))
             data = data.drop(cols, axis=1)
             data = data.reset_index(drop=True)
         data["image_id"] = range(len(data))
