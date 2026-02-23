@@ -1,5 +1,7 @@
+from collections.abc import Sequence
 import os
 import re
+
 
 import numpy as np
 import pandas as pd
@@ -114,10 +116,10 @@ identity_replace = {
 }
 
 
-def get_encounter_name(x):
+def get_encounter_name(x: str) -> str | None:
     i = x.lower().rfind("sighting")
     if i == -1:
-        return np.nan
+        return None
     i = x.find(os.path.sep, i)
     if i == -1:
         return x
@@ -125,7 +127,7 @@ def get_encounter_name(x):
         return x[:i]
 
 
-def merge_codes(df, index, individuals):
+def merge_codes(df: pd.DataFrame, index, individuals: list[str]) -> list[str]:
     xs = []
     for name in df["file"]:
         x = code_to_info(name, individuals)[index]
@@ -133,7 +135,7 @@ def merge_codes(df, index, individuals):
     return list(pd.Series(xs).dropna().unique())
 
 
-def get_code(xs, name="variables"):
+def get_code(xs: Sequence[str], name: str  = "variables") -> str | None:
     xs = list(xs)
     for y in ["", "unknown"]:
         if len(xs) > 1 and y in xs:
@@ -144,10 +146,10 @@ def get_code(xs, name="variables"):
     elif len(xs) == 1:
         return xs[0]
     else:
-        return np.nan
+        return None
 
 
-def fix_identity(x, individuals):
+def fix_identity(x: str | None, individuals: list[str]) -> str | None:
     if pd.isnull(x):
         return x
     x = x.strip().lower()
@@ -174,14 +176,14 @@ def fix_identity(x, individuals):
     return x
 
 
-def is_int(x):
+def is_int(x) -> bool:
     try:
         return int(x) == float(x)
     except (TypeError, ValueError):
         return False
 
 
-def code_to_info(x, individuals):
+def code_to_info(x: str, individuals: list[str]) -> tuple[str | None, ...]:
     codes_morning = ["am", "am1"]
     codes_afternoon = ["pm"]
     codes_time = codes_morning + codes_afternoon
@@ -198,7 +200,7 @@ def code_to_info(x, individuals):
         date_year = x_split[3]
         date_month = x_split[4]
         date_day = x_split[5]
-        date = np.nan
+        date = None
         if is_int(date_year) and is_int(date_month) and is_int(date_day):
             date_year = int(date_year)
             date_month = int(date_month)
@@ -216,7 +218,7 @@ def code_to_info(x, individuals):
         place = x_split[i_place]
 
         # Extract hour
-        hour = np.nan
+        hour = None
         if x_split[i_noon].strip() in codes_morning:
             hour_candidate = x_split[i_hour].split(".")[0]
             if is_int(hour_candidate):
@@ -233,22 +235,30 @@ def code_to_info(x, individuals):
         author = re.sub(r"\d+$", "", author).strip()
     elif len(x_split) >= 5:
         identity = x_split[0].strip()
-        orientation, leader, date, place, hour, author = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        orientation, leader, date, place, hour, author = None, None, None, None, None, None
     else:
         identity, orientation, leader, date, place, hour, author = (
-            np.nan,
-            np.nan,
-            np.nan,
-            np.nan,
-            np.nan,
-            np.nan,
-            np.nan,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
         )
     identity = fix_identity(identity, individuals)
     return identity, orientation, leader, date, place, hour, author
 
 
-def info_to_code(identity, orientation, leader, date, place, hour=None, author=""):
+def info_to_code(
+        identity: str,
+        orientation: str,
+        leader: str,
+        date: str,
+        place: str,
+        hour: int | None = None,
+        author: str = ""
+        ) -> str:
     date_split = str(date).split("-")
     year = date_split[0]
     month = date_split[1]
@@ -270,17 +280,17 @@ def info_to_code(identity, orientation, leader, date, place, hour=None, author="
 
 class TurtlewatchEgypt_Base(WildlifeDataset):
     @classmethod
-    def _download(cls, **kwargs):
+    def _download(cls, **kwargs) -> None:
         pass
 
     @classmethod
-    def _extract(cls, **kwargs):
+    def _extract(cls, **kwargs) -> None:
         pass
 
-    def extract_info(self, i):
+    def extract_info(self, i: int) -> tuple[str | None, ...]:
         return code_to_info(self.df.loc[i, "path"].split(os.path.sep)[-1], self.individuals)
 
-    def extract_code(self, i):
+    def extract_code(self, i: int) -> str:
         df_row = self.df.iloc[i]
         identity = df_row["identity"]
         orientation = df_row["label"]
@@ -291,7 +301,7 @@ class TurtlewatchEgypt_Base(WildlifeDataset):
         author = df_row["author"] if not pd.isnull(df_row["author"]) else ""
         return info_to_code(identity, orientation, leader, date, place, hour=hour, author=author)
 
-    def load_individuals(self, file_name=None):
+    def load_individuals(self, file_name: str | None = None) -> None:
         if file_name is None:
             file_name = f"{os.path.dirname(os.path.abspath(__file__))}/individuals.csv"
         if not os.path.exists(file_name):
@@ -303,7 +313,8 @@ class TurtlewatchEgypt_Base(WildlifeDataset):
 
 
 class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
-    def create_catalogue(self, file_name=None) -> pd.DataFrame:
+    # TODO: add load_segmentation
+    def create_catalogue(self, file_name: str | None = None) -> pd.DataFrame:
         assert self.root is not None
         self.load_individuals(file_name=file_name)
         data = utils.find_images(self.root)
@@ -333,7 +344,11 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
 
 
 class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
-    def create_catalogue(self, load_segmentation=False, file_name=None) -> pd.DataFrame:
+    def create_catalogue(
+            self,
+            load_segmentation: bool = False,
+            file_name: str | None = None
+            ) -> pd.DataFrame:
         # TODO: fix completely
         self.load_individuals(file_name=file_name)
 
