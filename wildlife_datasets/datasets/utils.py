@@ -330,3 +330,12 @@ def strip_suffixes(x: str, suffixes: list[str]) -> str:
                 x = x[:-len(ext)].strip()
                 break
     return x
+
+def get_persistent_id(paths: pd.Series) -> pd.Series:
+    folders = paths.str.split(os.path.sep, expand=True)
+    counts = folders.nunique()
+    varying = counts[counts > 1]
+    if varying.empty:
+        raise ValueError("All entries are the same")
+    idx = varying.index.min()
+    return create_id(paths.str.split(os.path.sep).apply(lambda x: "/".join(x[idx:])))
