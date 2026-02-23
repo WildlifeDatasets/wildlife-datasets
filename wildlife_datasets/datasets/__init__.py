@@ -55,6 +55,7 @@ from .smalst import SMALST
 from .southern_province_turtles import SouthernProvinceTurtles
 from .stripe_spotter import StripeSpotter
 from .turtles_of_smsrc import TurtlesOfSMSRC
+from .turtlewatch_egypt import TurtlewatchEgypt_Master, TurtlewatchEgypt_New
 from .utils import get_image, load_image
 from .whaleshark_id import WhaleSharkID
 from .wild_raptor_id import WildRaptorID
