@@ -323,17 +323,14 @@ def rename_non_ascii(data):
     return data.drop_duplicates()
 
 
-def load_individuals(file_name=None):
-    if file_name is None:
-        file_name = f"{os.path.dirname(os.path.abspath(__file__))}/individuals.csv"
-    individuals = pd.read_csv(file_name)
-    individuals = individuals["Common_name"].to_numpy()
-    individuals = [fix_chars(x).lower().strip() for x in individuals]
-    return [strip_suffixes(x, [" C", " (DEAD)"]) for x in individuals]
-
-
 class TurtlewatchEgypt_Base(WildlifeDataset):
-    individuals = load_individuals()
+    @classmethod
+    def _download(cls, **kwargs):
+        pass
+
+    @classmethod
+    def _extract(cls, **kwargs):
+        pass
 
     def extract_info(self, i):
         return code_to_info(self.df.loc[i, "path"].split(os.path.sep)[-1], self.individuals)
@@ -349,15 +346,22 @@ class TurtlewatchEgypt_Base(WildlifeDataset):
         author = df_row["author"] if not pd.isnull(df_row["author"]) else ""
         return info_to_code(identity, orientation, leader, date, place, hour=hour, author=author)
 
+    def load_individuals(self, file_name=None):
+        if file_name is None:
+            file_name = f"{os.path.dirname(os.path.abspath(__file__))}/individuals.csv"
+        if not os.path.exists(file_name):
+            raise ValueError(f"File does not exist: {file_name}")
+        individuals = pd.read_csv(file_name)
+        individuals = individuals["Common_name"].to_numpy()
+        individuals = [fix_chars(x).lower().strip() for x in individuals]
+        self.individuals = [strip_suffixes(x, [" C", " (DEAD)"]) for x in individuals]
+
 
 class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
-    @classmethod
-    def _download(cls):
-        pass
-
-    @classmethod
-    def _extract(cls):
-        data = utils.find_images(".")
+    def create_catalogue(self, file_name=None) -> pd.DataFrame:
+        assert self.root is not None
+        self.load_individuals(file_name=file_name)
+        data = utils.find_images(self.root)
 
         # Get full file names
         data["path_full"] = data["path"] + os.path.sep + data["file"]
@@ -367,11 +371,11 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
         # data = rename_non_ascii(data)
 
         # Get identity
-        data["identity"] = data["file"].apply(lambda x: fix_identity(x.lower(), cls.individuals))
+        data["identity"] = data["file"].apply(lambda x: fix_identity(x.lower(), self.individuals))
 
         # Get orientation
-        data["date"] = data["file"].apply(lambda x: code_to_info(os.path.basename(x), cls.individuals)[3])
-        orientation = data["file"].apply(lambda x: code_to_info(os.path.basename(x), cls.individuals)[1])
+        data["date"] = data["file"].apply(lambda x: code_to_info(os.path.basename(x), self.individuals)[3])
+        orientation = data["file"].apply(lambda x: code_to_info(os.path.basename(x), self.individuals)[1])
         idx = orientation.isnull()
         orientation[idx] = data.loc[idx, "file"].apply(lambda x: os.path.basename(x).split(".")[-2][-2:])
         orientation = orientation.apply(lambda x: x.strip().lower())
@@ -385,22 +389,16 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
         data = data.sort_values("file").reset_index(drop=True)
         data = data.drop(["path", "file"], axis=1)
         data = data.rename({"path_full": "path"}, axis=1)
-        data.to_csv("metadata.csv", index=False)
-
-    def create_catalogue(self):
-        df = pd.read_csv(f"{self.root}/metadata.csv")
-        df["image_id"] = range(len(df))
-        return self.finalize_catalogue(df)
+        data["image_id"] = range(len(data))
+        return self.finalize_catalogue(data)
 
 
 class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
-    @classmethod
-    def _download(cls):
-        pass
+    def create_catalogue(self, load_segmentation=False, file_name=None) -> pd.DataFrame:
+        # TODO: fix completely
+        self.load_individuals(file_name=file_name)
 
-    @classmethod
-    def _extract(cls):
-        data = utils.find_images(".")
+        data = utils.find_images(self.root)
 
         # Ignoring data starting with '.'
         idx = data["file"].str.startswith(".")
@@ -446,12 +444,12 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
 
         for _, df_encounter in data.groupby("encounter_id"):
             # Extract information from code
-            identities = merge_codes(df_encounter, 0, cls.individuals)
-            leaders = merge_codes(df_encounter, 2, cls.individuals)
-            dates = merge_codes(df_encounter, 3, cls.individuals)
-            places = merge_codes(df_encounter, 4, cls.individuals)
-            hours = merge_codes(df_encounter, 5, cls.individuals)
-            authors = merge_codes(df_encounter, 6, cls.individuals)
+            identities = merge_codes(df_encounter, 0, self.individuals)
+            leaders = merge_codes(df_encounter, 2, self.individuals)
+            dates = merge_codes(df_encounter, 3, self.individuals)
+            places = merge_codes(df_encounter, 4, self.individuals)
+            hours = merge_codes(df_encounter, 5, self.individuals)
+            authors = merge_codes(df_encounter, 6, self.individuals)
             # Add individuals if empty
             if len(identities) == 0:
                 for name in df_encounter["path"]:
@@ -476,12 +474,9 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
         data = data.reset_index(drop=True)
         data = data.drop(["path", "file", "encounter_name"], axis=1)
         data = data.rename({"path_full": "path"}, axis=1)
-        data.to_csv("metadata.csv", index=False)
 
-    def create_catalogue(self, load_segmentation=False) -> pd.DataFrame:
-        df = pd.read_csv(f"{self.root}/metadata.csv")
-        df["image_id"] = range(len(df))
-        df.loc[df["identity"].isnull(), "identity"] = "unknown"
+        data["image_id"] = range(len(data))
+        data.loc[data["identity"].isnull(), "identity"] = "unknown"
         if load_segmentation:
             conversion = {
                 "flipper_fl": "alf",
@@ -491,10 +486,10 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
             }
             cols = ["bbox_x", "bbox_y", "bbox_w", "bbox_h"]
             segmentation = pd.read_csv(f"{self.root}/segmentation.csv")
-            df = pd.merge(df, segmentation, on="image_id", how="outer")
-            df["bbox"] = list(df[cols].to_numpy())
-            df["orientation"] = df["label"].apply(lambda x: conversion.get(x, np.nan))
-            df = df.drop(cols, axis=1)
-            df = df.reset_index(drop=True)
-        df["image_id"] = range(len(df))
-        return self.finalize_catalogue(df)
+            data = pd.merge(data, segmentation, on="image_id", how="outer")
+            data["bbox"] = list(data[cols].to_numpy())
+            data["orientation"] = data["label"].apply(lambda x: conversion.get(x, np.nan))
+            data = data.drop(cols, axis=1)
+            data = data.reset_index(drop=True)
+        data["image_id"] = range(len(data))
+        return self.finalize_catalogue(data)
