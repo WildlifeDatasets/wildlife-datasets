@@ -1,6 +1,5 @@
 import os
 import re
-import shutil
 
 import numpy as np
 import pandas as pd
@@ -8,37 +7,6 @@ import pandas as pd
 from .datasets import WildlifeDataset, utils
 from .utils import strip_suffixes
 
-replace_strings = {
-    "ł": "l",
-    "Ż": "Z",
-    "Ł": "L",
-    "ń": "n",
-    "á": "a",
-    "à": "a",
-    "Á": "A",
-    "ç": "c",
-    "Č": "C",
-    "ğ": "g",
-    "è": "e",
-    "é": "e",
-    "ě": "e",
-    "È": "e",
-    "ň": "n",
-    "ó": "o",
-    "ö": "o",
-    "Ö": "o",
-    "Ó": "O",
-    "š": "s",
-    "Š": "S",
-    "ř": "r",
-    "ž": "z",
-    "Ž": "Z",
-    "’": "'",
-    "“": "'",
-    "”": "'",
-    "\u200e": "",  # Remove LEFT-TO-RIGHT MARK
-    "\u200f": "",  # Remove RIGHT-TO-LEFT MARK
-}
 
 identity_replace = {
     "": np.nan,
@@ -179,13 +147,6 @@ def get_code(xs, name="variables"):
         return np.nan
 
 
-def fix_chars(x):
-    for str1, str2 in replace_strings.items():
-        if str1 in x:
-            x = x.replace(str1, str2)
-    return x
-
-
 def fix_identity(x, individuals):
     if pd.isnull(x):
         return x
@@ -307,22 +268,6 @@ def info_to_code(identity, orientation, leader, date, place, hour=None, author="
     return f"{code1}_{code2}"
 
 
-def rename_non_ascii(data):
-    for idx, df_row in data.iterrows():
-        old_file_name = df_row["path_full"]
-        new_file_name = df_row["path_full"]
-        new_file_name = fix_chars(new_file_name)
-        if old_file_name != new_file_name:
-            data.loc[idx, "path_full"] = new_file_name
-            data.loc[idx, "file"] = os.path.basename(new_file_name)
-            data.loc[idx, "path"] = os.path.dirname(new_file_name)
-            os.makedirs(os.path.dirname(new_file_name), exist_ok=True)
-            shutil.move(old_file_name, new_file_name)
-
-    # Drop possible duplicates because of renaming
-    return data.drop_duplicates()
-
-
 class TurtlewatchEgypt_Base(WildlifeDataset):
     @classmethod
     def _download(cls, **kwargs):
@@ -353,7 +298,7 @@ class TurtlewatchEgypt_Base(WildlifeDataset):
             raise ValueError(f"File does not exist: {file_name}")
         individuals = pd.read_csv(file_name)
         individuals = individuals["Common_name"].to_numpy()
-        individuals = [fix_chars(x).lower().strip() for x in individuals]
+        individuals = [x.lower().strip() for x in individuals]
         self.individuals = [strip_suffixes(x, [" C", " (DEAD)"]) for x in individuals]
 
 
@@ -362,13 +307,6 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
         assert self.root is not None
         self.load_individuals(file_name=file_name)
         data = utils.find_images(self.root)
-
-        # Get full file names
-        data["path_full"] = data["path"] + os.path.sep + data["file"]
-
-        # Rename data with non-ASCII characters
-        # TODO: deleted
-        # data = rename_non_ascii(data)
 
         # Get identity
         data["identity"] = data["file"].apply(lambda x: fix_identity(x.lower(), self.individuals))
@@ -387,8 +325,9 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
         # Finalize the dataframe
         # TODO: need to assing persistent image_id
         data = data.sort_values("file").reset_index(drop=True)
-        data = data.drop(["path", "file"], axis=1)
-        data = data.rename({"path_full": "path"}, axis=1)
+        data["path"] = data["path"] + os.path.sep + data["file"]
+        data = data.drop("file", axis=1)
+        # data = data.rename({"path_full": "path"}, axis=1)
         data["image_id"] = range(len(data))
         return self.finalize_catalogue(data)
 
@@ -408,7 +347,8 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
         data["path_full"] = data["path"] + os.path.sep + data["file"]
 
         # Rename data with non-ASCII characters
-        data = rename_non_ascii(data)
+        # TODO: removed
+        # data = rename_non_ascii(data)
 
         # Ignoring corruping data and adding date
         data["date"] = [utils.get_image_date(x) for x in data["path_full"]]
