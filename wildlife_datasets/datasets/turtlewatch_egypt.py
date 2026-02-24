@@ -257,10 +257,13 @@ def code_to_info(x: str, individuals: list[str]) -> tuple[str | None, ...]:
 def info_to_code(
     identity: str, orientation: str, leader: str, date: str, place: str, hour: int | None = None, author: str = ""
 ) -> str:
-    date_split = str(date).split("-")
-    year = date_split[0]
-    month = date_split[1]
-    day = date_split[2]
+    if pd.isnull(date):
+        year, month, day = "", "", ""
+    else:
+        date_split = str(date).split("-")
+        year = date_split[0]
+        month = date_split[1]
+        day = date_split[2]
     if pd.isnull(hour):
         hour1 = ""
         hour2 = ""
