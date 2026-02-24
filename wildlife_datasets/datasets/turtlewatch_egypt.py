@@ -1,12 +1,14 @@
 import os
 import re
 from collections.abc import Callable, Sequence
+from typing import cast
 
 import numpy as np
 import pandas as pd
 import requests
 from docx import Document
 from docx.shared import Pt
+from docx.styles.style import ParagraphStyle
 from docx.text.paragraph import Paragraph
 from tqdm import tqdm
 
@@ -551,8 +553,10 @@ def add_run_break(p: Paragraph, text1: str, text2: str | None = None) -> None:
 
 def create_info(d: pd.Series, save_folder: str) -> None:
     doc = Document()
+    style = doc.styles["Normal"]
+    style = cast(ParagraphStyle, style)
 
-    font = doc.styles["Normal"].font
+    font = style.font
     font.name = "Arial"
     font.size = Pt(11)
 
