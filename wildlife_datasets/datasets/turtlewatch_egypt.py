@@ -316,7 +316,6 @@ class TurtlewatchEgypt_Base(WildlifeDataset):
 
 
 class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
-    # TODO: add load_segmentation
     def create_catalogue(self, file_name: str | None = None) -> pd.DataFrame:
         assert self.root is not None
         self.load_individuals(file_name=file_name)
@@ -420,15 +419,7 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
 
         # Load segmentation
         if load_segmentation:
-            utils_load_segmentation(data, os.path.join(self.root, "segmentation.csv"))
-            conversion = {
-                "flipper_fl": "alf",
-                "flipper_fr": "arf",
-                "flipper_rl": "rlf",
-                "flipper_rr": "rrf",
-            }
-            # TODO: this is probably not desired
-            data["orientation"] = data["label"].apply(lambda x: conversion.get(x, None))
+            data = utils_load_segmentation(data, os.path.join(self.root, "segmentation.csv"))
         return self.finalize_catalogue(data)
 
 
