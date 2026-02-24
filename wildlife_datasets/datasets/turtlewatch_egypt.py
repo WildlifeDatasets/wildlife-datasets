@@ -393,7 +393,6 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
                         name_split2 = name_split1.lower().split(" ")
                         if name_split2[0] == "sighting" and len(name_split2) >= 3:
                             identities.append(name_split2[2])
-                            print(f"Adding identity {name_split2[2]}")
                 identities = pd.Series(identities).dropna().unique().tolist()
             # Save codes
             data.loc[df_encounter.index, "identity"] = get_code(identities, name="identities")
