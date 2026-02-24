@@ -374,11 +374,9 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
         data["encounter_name"] = data["path_full"].apply(lambda x: get_encounter_name(x))
         idx = data["encounter_name"].isnull()
         if sum(idx) > 0:
-            print("Creating artificial encounters:")
-            for i, (folder, df_folder) in enumerate(data[idx].groupby("path")):
+            for folder, df_folder in data[idx].groupby("path"):
                 assert isinstance(folder, str)
                 data.loc[df_folder.index, "encounter_name"] = folder.lower()
-                print(folder)
 
         # Sort data
         data = data.sort_values("encounter_name")
