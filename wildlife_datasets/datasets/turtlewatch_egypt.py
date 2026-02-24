@@ -148,8 +148,7 @@ def get_code(xs: Sequence[str], name: str = "variables") -> str | None:
         if len(xs) > 1 and y in xs:
             xs.remove(y)
     if len(xs) > 1:
-        print(f"Multiple {name}: {xs}")
-        return xs[0]
+        return '_'.join(xs)
     elif len(xs) == 1:
         return xs[0]
     else:
