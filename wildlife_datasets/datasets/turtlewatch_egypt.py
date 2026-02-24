@@ -14,7 +14,8 @@ from tqdm import tqdm
 
 from .datasets import WildlifeDataset, utils
 from .general import Dataset_Metadata
-from .utils import strip_suffixes
+from .utils import get_persistent_id, strip_suffixes
+from .utils import load_segmentation as utils_load_segmentation
 
 
 identity_replace = {
@@ -352,7 +353,6 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
 
 
 class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
-    # TODO: add load_segmentation
     def create_catalogue(
             self,
             load_segmentation: bool = False,
@@ -420,28 +420,28 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
             data.loc[df_encounter.index, "author"] = get_code(authors, name="authors")
             data.loc[df_encounter.index, "date"] = get_code(dates, name="dates")
 
-        # Finalize the dataframe
+        # Fix the column names
         data = data.reset_index(drop=True)
         data = data.drop(["path", "file", "encounter_name"], axis=1)
         data = data.rename({"path_full": "path"}, axis=1)
 
-        data["image_id"] = range(len(data))
+        # Fix unknown individuals
         data.loc[data["identity"].isnull(), "identity"] = "unknown"
+
+        # Add persistent image_id
+        data["image_id"] = utils.get_persistent_id(data["path"])
+
+        # Load segmentation
         if load_segmentation:
+            utils_load_segmentation(data, os.path.join(self.root, "segmentation.csv"))
             conversion = {
                 "flipper_fl": "alf",
                 "flipper_fr": "arf",
                 "flipper_rl": "rlf",
                 "flipper_rr": "rrf",
             }
-            cols = ["bbox_x", "bbox_y", "bbox_w", "bbox_h"]
-            segmentation = pd.read_csv(f"{self.root}/segmentation.csv")
-            data = pd.merge(data, segmentation, on="image_id", how="outer")
-            data["bbox"] = data[cols].to_numpy().tolist()
+            # TODO: this is probably not desired
             data["orientation"] = data["label"].apply(lambda x: conversion.get(x, None))
-            data = data.drop(cols, axis=1)
-            data = data.reset_index(drop=True)
-        data["image_id"] = range(len(data))
         return self.finalize_catalogue(data)
 
 
