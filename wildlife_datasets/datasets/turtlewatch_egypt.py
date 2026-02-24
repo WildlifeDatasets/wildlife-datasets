@@ -489,7 +489,7 @@ class TurtlewatchEgypt_Citizen(Dataset_Metadata):
             metadata_part = {
                 "path": save_paths,
                 "identity": "unknown",
-                "encounter": encounter,
+                "encounter_id": encounter,
             }
             metadata = pd.concat((metadata, pd.DataFrame(metadata_part)))
 
