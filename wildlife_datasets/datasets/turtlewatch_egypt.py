@@ -370,16 +370,6 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
         # Get full file names
         data["path_full"] = data["path"] + os.path.sep + data["file"]
 
-        # Ignoring corruping data and adding date
-        # TODO: this is problematic as it is going to take ages
-        data["date"] = [utils.get_image_date(x) for x in data["path_full"]]
-        idx = data["date"] == -1
-        if sum(idx) > 0:
-            print("Ignoring corrupted files:")
-            for i in np.where(idx)[0]:
-                print(data["path_full"].iloc[i])
-        data = data[~idx]
-
         # Adding artificial encounters
         data["encounter_name"] = data["path_full"].apply(lambda x: get_encounter_name(x))
         idx = data["encounter_name"].isnull()
@@ -403,6 +393,7 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
         data["leader"] = pd.Series([None] * len(data), dtype="object")
         data["place"] = pd.Series([None] * len(data), dtype="object")
         data["author"] = pd.Series([None] * len(data), dtype="object")
+        data["date"] = pd.Series([None] * len(data), dtype="object")
 
         for _, df_encounter in data.groupby("encounter_id"):
             # Extract information from code
@@ -427,10 +418,7 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
             data.loc[df_encounter.index, "place"] = get_code(places, name="places")
             data.loc[df_encounter.index, "hour"] = get_code(hours, name="hours")
             data.loc[df_encounter.index, "author"] = get_code(authors, name="authors")
-            # Rewrite the information from EXIF date if available
-            date = get_code(dates, name="dates")
-            if not pd.isnull(date):
-                data.loc[df_encounter.index, "date"] = date
+            data.loc[df_encounter.index, "date"] = get_code(dates, name="dates")
 
         # Finalize the dataframe
         data = data.reset_index(drop=True)
