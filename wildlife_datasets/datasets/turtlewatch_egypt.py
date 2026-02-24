@@ -285,7 +285,6 @@ def info_to_code(
     return f"{code1}_{code2}"
 
 
-# TODO: remove WildlifeDataset from here and add it to subclasses
 class TurtlewatchEgypt_Base(WildlifeDataset):
     @classmethod
     def _download(cls, **kwargs) -> None:
@@ -359,22 +358,20 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
             load_segmentation: bool = False,
             file_name: str | None = None
             ) -> pd.DataFrame:
+        
         assert self.root is not None
         self.load_individuals(file_name=file_name)
         data = utils.find_images(self.root)
 
         # Ignoring data starting with '.'
-        idx = data["file"].str.startswith(".")
-        data = data[~idx]
+        mask = data["file"].str.startswith(".")
+        data = data[~mask]
 
         # Get full file names
         data["path_full"] = data["path"] + os.path.sep + data["file"]
 
-        # Rename data with non-ASCII characters
-        # TODO: removed
-        # data = rename_non_ascii(data)
-
         # Ignoring corruping data and adding date
+        # TODO: this is problematic as it is going to take ages
         data["date"] = [utils.get_image_date(x) for x in data["path_full"]]
         idx = data["date"] == -1
         if sum(idx) > 0:
