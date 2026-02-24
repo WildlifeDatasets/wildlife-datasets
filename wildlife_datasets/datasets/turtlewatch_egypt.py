@@ -147,9 +147,7 @@ def get_code(xs: Sequence[str], name: str = "variables") -> str | None:
     for y in ["", "unknown"]:
         if len(xs) > 1 and y in xs:
             xs.remove(y)
-    if len(xs) > 1:
-        return '_'.join(xs)
-    elif len(xs) == 1:
+    if len(xs) >= 1:
         return xs[0]
     else:
         return None
