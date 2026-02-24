@@ -535,7 +535,7 @@ def add_run_break(p: Paragraph, text1: str, text2: str | None = None) -> None:
     if not pd.isnull(text2):
         r = p.add_run(f"{text1}: {text2}")
     else:
-        r = p.add_run(f"{text1}:")
+        r = p.add_run(f"{text1}")
     r.add_break()
 
 
