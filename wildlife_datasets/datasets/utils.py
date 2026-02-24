@@ -339,3 +339,29 @@ def get_persistent_id(paths: pd.Series) -> pd.Series:
         raise ValueError("All entries are the same")
     idx = varying.index.min()
     return create_id(paths.str.split(os.path.sep).apply(lambda x: "/".join(x[idx:])))
+
+def load_segmentation(metadata: pd.DataFrame, file_name: str) -> pd.DataFrame:
+    # Load segmentation
+    segmentation = pd.read_csv(file_name)
+
+    # Merge metadata and segmentation (may result in nans in segmentations)
+    cols = ["bbox_x", "bbox_y", "bbox_w", "bbox_h"]
+    metadata = pd.merge(metadata, segmentation, on="image_id", how="left")
+    metadata["bbox"] = metadata[cols].to_numpy().tolist()
+
+    # Check that there is no image_id with two nans
+    mask = metadata[cols].isnull().all(axis=1)
+    max_n_image_id = metadata.loc[mask, "image_id"].value_counts().max()
+    if max_n_image_id > 1:
+        raise ValueError("There is image_id with multiple nan bounding boxes")
+
+    # Generate new image_id
+    cols_enhanced = ["image_id"] + cols
+    new_image_id = metadata[cols_enhanced].round(2).astype(str).agg("_".join, axis=1)
+    new_image_id = get_persistent_id(new_image_id)        
+    metadata["image_id"] = metadata["image_id"].astype(str) + "_" + new_image_id
+    
+    # Finalize the dataframe
+    metadata = metadata.drop(cols, axis=1)
+    metadata = metadata.reset_index(drop=True)
+    return metadata
