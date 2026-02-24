@@ -1,22 +1,19 @@
-from collections.abc import Callable, Sequence
 import os
 import re
+from collections.abc import Callable, Sequence
+
+import numpy as np
+import pandas as pd
 import requests
-
-
 from docx import Document
 from docx.shared import Pt
 from docx.text.paragraph import Paragraph
-import numpy as np
-import pandas as pd
 from tqdm import tqdm
-
 
 from .datasets import WildlifeDataset, utils
 from .general import Dataset_Metadata
-from .utils import get_persistent_id, strip_suffixes
 from .utils import load_segmentation as utils_load_segmentation
-
+from .utils import strip_suffixes
 
 identity_replace = {
     "": np.nan,
@@ -143,7 +140,7 @@ def merge_codes(df: pd.DataFrame, index, individuals: list[str]) -> list[str]:
     return list(pd.Series(xs).dropna().unique())
 
 
-def get_code(xs: Sequence[str], name: str  = "variables") -> str | None:
+def get_code(xs: Sequence[str], name: str = "variables") -> str | None:
     xs = list(xs)
     for y in ["", "unknown"]:
         if len(xs) > 1 and y in xs:
@@ -259,14 +256,8 @@ def code_to_info(x: str, individuals: list[str]) -> tuple[str | None, ...]:
 
 
 def info_to_code(
-        identity: str,
-        orientation: str,
-        leader: str,
-        date: str,
-        place: str,
-        hour: int | None = None,
-        author: str = ""
-        ) -> str:
+    identity: str, orientation: str, leader: str, date: str, place: str, hour: int | None = None, author: str = ""
+) -> str:
     date_split = str(date).split("-")
     year = date_split[0]
     month = date_split[1]
@@ -297,7 +288,7 @@ class TurtlewatchEgypt_Base(WildlifeDataset):
 
     def extract_info(self, i: int) -> tuple[str | None, ...]:
         path = self.df.at[i, "path"]
-        assert isinstance(path , str)
+        assert isinstance(path, str)
         return code_to_info(path.split(os.path.sep)[-1], self.individuals)
 
     def extract_code(self, i: int) -> str:
@@ -353,12 +344,8 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
 
 
 class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
-    def create_catalogue(
-            self,
-            load_segmentation: bool = False,
-            file_name: str | None = None
-            ) -> pd.DataFrame:
-        
+    def create_catalogue(self, load_segmentation: bool = False, file_name: str | None = None) -> pd.DataFrame:
+
         assert self.root is not None
         self.load_individuals(file_name=file_name)
         data = utils.find_images(self.root)
@@ -468,7 +455,7 @@ class TurtlewatchEgypt_Citizen(Dataset_Metadata):
 
             save_paths = download_files(urls, folder_full)
             save_paths = [os.path.relpath(p, ".") for p in save_paths]
-            
+
             create_info(d, folder_full)
 
             metadata_part = {
@@ -488,16 +475,8 @@ class TurtlewatchEgypt_Citizen(Dataset_Metadata):
         pass
 
 
-IMAGE_EXTENSIONS = (
-    ".jpg", ".jpeg",
-    ".png",
-    ".bmp",
-    ".tif", ".tiff",
-    ".webp",
-    ".gif",
-    ".heic", ".heif",
-    ".avif"
-)
+IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".webp", ".gif", ".heic", ".heif", ".avif")
+
 
 def load_citizen_data(data: pd.DataFrame) -> pd.DataFrame:
     # Convert dates
@@ -521,10 +500,11 @@ def load_citizen_data(data: pd.DataFrame) -> pd.DataFrame:
     # Get folder and sightings
     data["folder"] = [get_folder(d) for _, d in data.iterrows()]
     for _, data_folder in data.groupby(["folder"]):
-        data.loc[data_folder.index, "sighting"] = list(range(1, len(data_folder)+1))
+        data.loc[data_folder.index, "sighting"] = list(range(1, len(data_folder) + 1))
     data["sighting"] = data["sighting"].astype(int)
 
     return data
+
 
 def get_folder(d: pd.Series) -> str:
     year = d["year"]
@@ -534,6 +514,7 @@ def get_folder(d: pd.Series) -> str:
     folder1 = f"{year}_{month:02d}_{day:02d}"
     folder2 = d["author"]
     return f"{folder1}/{folder2}"
+
 
 def download_files(urls: list[str], download_folder: str, exts: tuple[str, ...] = IMAGE_EXTENSIONS) -> list[str]:
     os.makedirs(download_folder, exist_ok=True)
@@ -559,12 +540,14 @@ def download_files(urls: list[str], download_folder: str, exts: tuple[str, ...] 
             print(f"Error downloading {url}: {e}")
     return save_paths
 
+
 def add_run_break(p: Paragraph, text1: str, text2: str | None = None) -> None:
     if not pd.isnull(text2):
         r = p.add_run(f"{text1}: {text2}")
     else:
         r = p.add_run(f"{text1}:")
     r.add_break()
+
 
 def create_info(d: pd.Series, save_folder: str) -> None:
     doc = Document()
@@ -577,7 +560,7 @@ def create_info(d: pd.Series, save_folder: str) -> None:
     add_run_break(p, "REQUIRED DATA")
     add_run_break(p, "From", d["email"])
     add_run_break(p, "Photographer", d["author"])
-    add_run_break(p, "Date", f'{d["year"]}-{d["month"]:02d}-{d["day"]:02d}')
+    add_run_break(p, "Date", f"{d['year']}-{d['month']:02d}-{d['day']:02d}")
     add_run_break(p, "Town", d["town-785"])
     add_run_break(p, "Location", d["location-785"])
     add_run_break(p, "")

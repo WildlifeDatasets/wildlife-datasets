@@ -327,9 +327,10 @@ def strip_suffixes(x: str, suffixes: list[str]) -> str:
     while any(x.lower().endswith(ext) for ext in suffixes):
         for ext in suffixes:
             if x.lower().endswith(ext):
-                x = x[:-len(ext)].strip()
+                x = x[: -len(ext)].strip()
                 break
     return x
+
 
 def get_persistent_id(paths: pd.Series) -> pd.Series:
     folders = paths.str.split(os.path.sep, expand=True)
@@ -339,6 +340,7 @@ def get_persistent_id(paths: pd.Series) -> pd.Series:
         raise ValueError("All entries are the same")
     idx = varying.index.min()
     return create_id(paths.str.split(os.path.sep).apply(lambda x: "/".join(x[idx:])))
+
 
 def load_segmentation(metadata: pd.DataFrame, file_name: str) -> pd.DataFrame:
     # Load segmentation
@@ -358,13 +360,14 @@ def load_segmentation(metadata: pd.DataFrame, file_name: str) -> pd.DataFrame:
     # Generate new image_id
     cols_enhanced = ["image_id"] + cols
     new_image_id = metadata[cols_enhanced].round(2).astype(str).agg("_".join, axis=1)
-    new_image_id = get_persistent_id(new_image_id)        
+    new_image_id = get_persistent_id(new_image_id)
     metadata["image_id"] = metadata["image_id"].astype(str) + "_" + new_image_id
-    
+
     # Finalize the dataframe
     metadata = metadata.drop(cols, axis=1)
     metadata = metadata.reset_index(drop=True)
     return metadata
+
 
 def find_corrupted_images(root: str) -> list[str]:
     images = find_images(root)
@@ -377,12 +380,11 @@ def find_corrupted_images(root: str) -> list[str]:
             corrupted.append(name)
     return corrupted
 
+
 def delete_corrupted_images(
-        root: str,
-        corrupted: list[str],
-        img_extensions: tuple[str, ...] = (".png", ".jpg", ".jpeg")
-        ) -> None:
-    
+    root: str, corrupted: list[str], img_extensions: tuple[str, ...] = (".png", ".jpg", ".jpeg")
+) -> None:
+
     for name in corrupted:
         full_name = os.path.join(root, name)
         if os.path.exists(full_name) and name.lower().endswith(img_extensions):
