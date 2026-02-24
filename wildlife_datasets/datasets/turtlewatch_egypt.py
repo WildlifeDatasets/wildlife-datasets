@@ -285,6 +285,7 @@ def info_to_code(
     return f"{code1}_{code2}"
 
 
+# TODO: remove WildlifeDataset from here and add it to subclasses
 class TurtlewatchEgypt_Base(WildlifeDataset):
     @classmethod
     def _download(cls, **kwargs) -> None:
@@ -352,6 +353,7 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
 
 
 class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
+    # TODO: add load_segmentation
     def create_catalogue(
             self,
             load_segmentation: bool = False,
