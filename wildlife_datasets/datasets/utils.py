@@ -365,3 +365,29 @@ def load_segmentation(metadata: pd.DataFrame, file_name: str) -> pd.DataFrame:
     metadata = metadata.drop(cols, axis=1)
     metadata = metadata.reset_index(drop=True)
     return metadata
+
+def find_corrupted_images(root: str) -> list[str]:
+    images = find_images(root)
+    names = images["path"].str.cat(images["file"], sep=os.path.sep)
+    corrupted = []
+    for name in tqdm(names):
+        try:
+            load_image(os.path.join(root, name))
+        except Exception:
+            corrupted.append(name)
+    return corrupted
+
+def delete_corrupted_images(
+        root: str,
+        corrupted: list[str],
+        img_extensions: tuple[str, ...] = (".png", ".jpg", ".jpeg")
+        ) -> None:
+    
+    for name in corrupted:
+        full_name = os.path.join(root, name)
+        if os.path.exists(full_name) and name.lower().endswith(img_extensions):
+            try:
+                load_image(full_name)
+                print(f"File is not corrupted: {full_name}")
+            except ValueError:
+                os.remove(full_name)
