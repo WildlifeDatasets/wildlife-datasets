@@ -316,7 +316,7 @@ class TurtlewatchEgypt_Base(WildlifeDataset):
 
 
 class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
-    def create_catalogue(self, file_name: str | None = None) -> pd.DataFrame:
+    def create_catalogue(self, load_segmentation: bool = False, file_name: str | None = None) -> pd.DataFrame:
         assert self.root is not None
         self.load_individuals(file_name=file_name)
         data = utils.find_images(self.root)
@@ -341,6 +341,8 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
 
         # Finalize the dataframe
         data = data.drop("file", axis=1)
+        if load_segmentation:
+            data = utils_load_segmentation(data, os.path.join(self.root, "segmentation.csv"))
         return self.finalize_catalogue(data)
 
 
