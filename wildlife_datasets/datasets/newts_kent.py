@@ -51,7 +51,7 @@ class NewtsKent(WildlifeDataset):
         mask = ~data['identity'].isnull()
         data, folders = restrict(data, folders, mask)
 
-        # Keep only M*, F* and *, where * are 4 or 5 digits.
+        # Keep only JUV*, M*, F* and *, where * are 4 or 5 digits.
         pattern1 = r'^[MF]?\d{4,5}$'
         mask1 = data['identity'].apply(lambda x: bool(re.match(pattern1, x)))
         pattern2 = r'^JUV\d{4,5}$'
