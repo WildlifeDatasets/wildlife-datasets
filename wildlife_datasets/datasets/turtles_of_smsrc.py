@@ -1,10 +1,9 @@
 import ast
-import os
 
 import pandas as pd
 
-from .datasets import WildlifeDataset
 from .downloads import DownloadINaturalist
+from .general import Dataset_Metadata
 
 summary = {
     "licenses": "",
@@ -29,7 +28,7 @@ summary = {
 }
 
 
-class TurtlesOfSMSRC(DownloadINaturalist, WildlifeDataset):
+class TurtlesOfSMSRC(DownloadINaturalist, Dataset_Metadata):
     summary = summary
     project_id = "turtles-of-smsrc"
     metadata_fields = (
@@ -38,32 +37,15 @@ class TurtlesOfSMSRC(DownloadINaturalist, WildlifeDataset):
         "location",
     )
 
-    def load_segmentation(self, df):
-        cols = ["bbox_x", "bbox_y", "bbox_w", "bbox_h"]
-        segmentation = pd.read_csv(f"{self.root}/segmentation.csv")
-        df = pd.merge(df, segmentation, on="image_id", how="left")
-        df["bbox"] = list(df[cols].to_numpy())
-        df = df.drop(cols, axis=1)
-        df = df.reset_index(drop=True)
-        for _, df_id in df.groupby("image_id"):
-            image_ids = [f"{image_id}_{i}" for i, image_id in enumerate(df_id["image_id"])]
-            df.loc[df_id.index, "image_id"] = image_ids
-        return df
-
-    def create_catalogue(self, load_segmentation=False) -> pd.DataFrame:
-        assert self.root is not None
-        df = pd.read_csv(os.path.join(self.root, "metadata.csv"))
-        df["image_id"] = df["observation_id"].astype(str) + "_" + df["photo_id"].astype(str)
-        df["identity"] = df["observation_id"]
-        mask = ~df["location"].isnull()
-        df["latitute"] = df.loc[mask, "location"].apply(lambda x: ast.literal_eval(x)[0]).astype(float)
-        df["longitude"] = df.loc[mask, "location"].apply(lambda x: ast.literal_eval(x)[1]).astype(float)
-        df = df.drop(["location", "photo_id", "photo_url"], axis=1)
-        df = df.rename(
+    def modify_metadata(self, metadata: pd.DataFrame) -> pd.DataFrame:
+        metadata["image_id"] = metadata["observation_id"].astype(str) + "_" + metadata["photo_id"].astype(str)
+        metadata["identity"] = metadata["observation_id"]
+        mask = ~metadata["location"].isnull()
+        metadata["latitute"] = metadata.loc[mask, "location"].apply(lambda x: ast.literal_eval(x)[0]).astype(float)
+        metadata["longitude"] = metadata.loc[mask, "location"].apply(lambda x: ast.literal_eval(x)[1]).astype(float)
+        metadata = metadata.drop(["location", "photo_id", "photo_url"], axis=1)
+        metadata = metadata.rename(
             {"observation_id": "encounter_id", "species_guess": "species", "file_name": "path", "observed_on": "date"},
             axis=1,
         )
-        if load_segmentation:
-            df = self.load_segmentation(df)
-
-        return self.finalize_catalogue(df)
+        return metadata

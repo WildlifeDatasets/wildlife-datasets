@@ -39,6 +39,7 @@ dependencies=[
           'gdown',
           'kaggle',
           'pyinaturalist',
+          'python-docx',
 ]
 
 [project.urls]
