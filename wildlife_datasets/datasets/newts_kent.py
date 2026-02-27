@@ -20,13 +20,13 @@ def restrict(data, folders, idx):
 
 
 def get_name(x):
-    x_splits = x.split("_")
-    if x.startswith("IMG_"):
-        if len(x_splits) >= 3:
-            return x_splits[2].split(".")[0]
-    else:
-        if len(x_splits) >= 2:
-            return x_splits[1].split(".")[0]
+    x = x.upper().replace('-', '_')
+    x_splits = x.split('_')
+    if len(x_splits) >= 2 and ('IMG_' not in x or len(x_splits) >= 3):
+        y = x_splits[-1]
+        for a in ['.', ' ', '(', ')']:
+            y = y.split(a)[0]
+        return y.strip()
     return None
 
 
