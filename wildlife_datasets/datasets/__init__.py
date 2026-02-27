@@ -25,7 +25,7 @@ from .czechlynx import CzechLynx, CzechLynxv2
 from .czoo import CZoo
 from .datasets import DatasetFactory, WildlifeDataset
 from .dog_face_net import DogFaceNet
-from .downloads import DownloadHuggingFace, DownloadINaturalist, DownloadKaggle, DownloadURL
+from .downloads import DownloadHuggingFace, DownloadINaturalist, DownloadKaggle, DownloadPrivate, DownloadURL
 from .drosophila import Drosophila
 from .elpephants import ELPephants
 from .friesian_cattle import FriesianCattle2015, FriesianCattle2015v2, FriesianCattle2017

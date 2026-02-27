@@ -13,6 +13,7 @@ from docx.text.paragraph import Paragraph
 from tqdm import tqdm
 
 from .datasets import WildlifeDataset, utils
+from .downloads import DownloadPrivate
 from .general import Dataset_Metadata
 from .utils import load_segmentation as utils_load_segmentation
 from .utils import strip_suffixes
@@ -279,15 +280,7 @@ def info_to_code(
     return f"{code1}_{code2}"
 
 
-class TurtlewatchEgypt_Base(WildlifeDataset):
-    @classmethod
-    def _download(cls, **kwargs) -> None:
-        pass
-
-    @classmethod
-    def _extract(cls, **kwargs) -> None:
-        pass
-
+class TurtlewatchEgypt_Base(DownloadPrivate, WildlifeDataset):
     def extract_info(self, i: int) -> tuple[str | None, ...]:
         path = self.df.at[i, "path"]
         assert isinstance(path, str)
