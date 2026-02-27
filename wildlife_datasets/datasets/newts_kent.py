@@ -52,9 +52,11 @@ class NewtsKent(WildlifeDataset):
         data, folders = restrict(data, folders, mask)
 
         # Keep only M*, F* and *, where * are 4 or 5 digits.
-        pattern = r'^[MF]?\d{4,5}$'
-        mask = data['identity'].apply(lambda x: bool(re.match(pattern, x)))
-        data, folders = restrict(data, folders, mask)
+        pattern1 = r'^[MF]?\d{4,5}$'
+        mask1 = data['identity'].apply(lambda x: bool(re.match(pattern1, x)))
+        pattern2 = r'^JUV\d{4,5}$'
+        mask2 = data['identity'].apply(lambda x: bool(re.match(pattern2, x)))
+        data, folders = restrict(data, folders, mask1 | mask2)
 
         data['image_id'] = utils.get_persistent_id(data['path'])
         data = data.drop('file', axis=1)
