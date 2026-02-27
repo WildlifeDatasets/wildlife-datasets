@@ -1,0 +1,1988 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../tutorial_splits/">
+      
+      
+        <link rel="next" href="../reference_datasets/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
+    
+    
+      
+        <title>Summary of datasets - Wildlife Datasets</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_markdown_exec_pyodide.css">
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#processing-datasets" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Wildlife Datasets" class="md-header__button md-logo" aria-label="Wildlife Datasets" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Wildlife Datasets
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Summary of datasets
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/WildlifeDatasets/wildlife-datasets" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    wildlife-datasets
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Wildlife Datasets" class="md-nav__button md-logo" aria-label="Wildlife Datasets" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Wildlife Datasets
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/WildlifeDatasets/wildlife-datasets" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    wildlife-datasets
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../datasets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Oveview of datasets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Tutorials
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_datasets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wildlife_dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Displaying datasets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../training/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Training ML models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../methods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing ML methods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adding new datasets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Advanced
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataframe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dataset representation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recommended/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Recommended datasets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../default_splits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Default splits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_splits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Advanced splits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Summary of datasets
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Summary of datasets
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#metadatasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      MetaDatasets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Datasets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-download-and-extracting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual download and extracting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Manual download and extracting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kaggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kaggle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aauzebrafish" class="md-nav__link">
+    <span class="md-ellipsis">
+      AAUZebrafish
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amvrakikosturtles" class="md-nav__link">
+    <span class="md-ellipsis">
+      AmvrakikosTurtles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#animalclef2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      AnimalCLEF2025
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#animalclef2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      AnimalCLEF2026
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#baleariclizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      BalearicLizard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#birdindividualid" class="md-nav__link">
+    <span class="md-ellipsis">
+      BirdIndividualID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bristolgorillas2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      BristolGorillas2020
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catindividualimages" class="md-nav__link">
+    <span class="md-ellipsis">
+      CatIndividualImages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#czechlynx" class="md-nav__link">
+    <span class="md-ellipsis">
+      CzechLynx
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elpephants" class="md-nav__link">
+    <span class="md-ellipsis">
+      ELPephants
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#giraffes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Giraffes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#happywhale" class="md-nav__link">
+    <span class="md-ellipsis">
+      HappyWhale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#humpbackwhale" class="md-nav__link">
+    <span class="md-ellipsis">
+      HumpbackWhale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipanda50" class="md-nav__link">
+    <span class="md-ellipsis">
+      IPanda50
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mpdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      MPDD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ndd20" class="md-nav__link">
+    <span class="md-ellipsis">
+      NDD20
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#noaarightwhale" class="md-nav__link">
+    <span class="md-ellipsis">
+      NOAARightWhale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reunionturtles" class="md-nav__link">
+    <span class="md-ellipsis">
+      ReunionTurtles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sealid" class="md-nav__link">
+    <span class="md-ellipsis">
+      SealID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seaturtleid2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      SeaTurtleID2022
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smalst" class="md-nav__link">
+    <span class="md-ellipsis">
+      SMALST
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#southernprovinceturtles" class="md-nav__link">
+    <span class="md-ellipsis">
+      SouthernProvinceTurtles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stripespotter" class="md-nav__link">
+    <span class="md-ellipsis">
+      StripeSpotter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wildlifereid10k" class="md-nav__link">
+    <span class="md-ellipsis">
+      WildlifeReID10k
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zakynthosturtles" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZakynthosTurtles
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-modifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dataset modifications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dataset modifications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#birdindividualid_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      BirdIndividualID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctai" class="md-nav__link">
+    <span class="md-ellipsis">
+      CTai
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cows2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cows2021
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drosophila" class="md-nav__link">
+    <span class="md-ellipsis">
+      Drosophila
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#friesiancattle2015" class="md-nav__link">
+    <span class="md-ellipsis">
+      FriesianCattle2015
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#happywhale_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      HappyWhale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#humpbackwhaleid" class="md-nav__link">
+    <span class="md-ellipsis">
+      HumpbackWhaleID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipanda50_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      IPanda50
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leopardid2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      LeopardID2022
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Reference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference_datasets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Datasets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference_analysis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Analysis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference_splits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Splits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#metadatasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      MetaDatasets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Datasets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-download-and-extracting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual download and extracting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Manual download and extracting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kaggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kaggle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aauzebrafish" class="md-nav__link">
+    <span class="md-ellipsis">
+      AAUZebrafish
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amvrakikosturtles" class="md-nav__link">
+    <span class="md-ellipsis">
+      AmvrakikosTurtles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#animalclef2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      AnimalCLEF2025
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#animalclef2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      AnimalCLEF2026
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#baleariclizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      BalearicLizard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#birdindividualid" class="md-nav__link">
+    <span class="md-ellipsis">
+      BirdIndividualID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bristolgorillas2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      BristolGorillas2020
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catindividualimages" class="md-nav__link">
+    <span class="md-ellipsis">
+      CatIndividualImages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#czechlynx" class="md-nav__link">
+    <span class="md-ellipsis">
+      CzechLynx
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elpephants" class="md-nav__link">
+    <span class="md-ellipsis">
+      ELPephants
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#giraffes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Giraffes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#happywhale" class="md-nav__link">
+    <span class="md-ellipsis">
+      HappyWhale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#humpbackwhale" class="md-nav__link">
+    <span class="md-ellipsis">
+      HumpbackWhale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipanda50" class="md-nav__link">
+    <span class="md-ellipsis">
+      IPanda50
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mpdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      MPDD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ndd20" class="md-nav__link">
+    <span class="md-ellipsis">
+      NDD20
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#noaarightwhale" class="md-nav__link">
+    <span class="md-ellipsis">
+      NOAARightWhale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reunionturtles" class="md-nav__link">
+    <span class="md-ellipsis">
+      ReunionTurtles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sealid" class="md-nav__link">
+    <span class="md-ellipsis">
+      SealID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seaturtleid2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      SeaTurtleID2022
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smalst" class="md-nav__link">
+    <span class="md-ellipsis">
+      SMALST
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#southernprovinceturtles" class="md-nav__link">
+    <span class="md-ellipsis">
+      SouthernProvinceTurtles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stripespotter" class="md-nav__link">
+    <span class="md-ellipsis">
+      StripeSpotter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wildlifereid10k" class="md-nav__link">
+    <span class="md-ellipsis">
+      WildlifeReID10k
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zakynthosturtles" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZakynthosTurtles
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-modifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dataset modifications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dataset modifications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#birdindividualid_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      BirdIndividualID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctai" class="md-nav__link">
+    <span class="md-ellipsis">
+      CTai
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cows2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cows2021
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drosophila" class="md-nav__link">
+    <span class="md-ellipsis">
+      Drosophila
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#friesiancattle2015" class="md-nav__link">
+    <span class="md-ellipsis">
+      FriesianCattle2015
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#happywhale_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      HappyWhale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#humpbackwhaleid" class="md-nav__link">
+    <span class="md-ellipsis">
+      HumpbackWhaleID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipanda50_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      IPanda50
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leopardid2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      LeopardID2022
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="processing-datasets">Processing datasets</h1>
+<p>Some of the datasets require special treatment or the download of extraction works only on Linux. These are described below in the <code>Processsing requirements</code> column. We also fixed labels in some datasets as described in the <code>Dataset modifications</code> column.</p>
+<h2 id="metadatasets">MetaDatasets</h2>
+<table>
+<thead>
+<tr>
+<th>MetaDataset</th>
+<th style="text-align: left;">Publication</th>
+<th style="text-align: left;">Processing requirements</th>
+<th style="text-align: left;">Dataset modifications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.kaggle.com/competitions/animal-clef-2025">AnimalCLEF2025</a></td>
+<td style="text-align: left;"><a href="https://ceur-ws.org/Vol-4038/paper_231.pdf" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/competitions/animal-clef-2026">AnimalCLEF2026</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/wildlifedatasets/wildlifereid-10k">WildlifeReID10k</a></td>
+<td style="text-align: left;"><a href="https://openaccess.thecvf.com/content/CVPR2025W/FGVC/html/Adam_WildlifeReID-10k_Wildlife_re-identification_dataset_with_10k_individual_animals_CVPRW_2025_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="datasets">Datasets</h2>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th style="text-align: left;">Publication</th>
+<th style="text-align: left;">Processing requirements</th>
+<th style="text-align: left;">Dataset modifications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/aalborguniversity/aau-zebrafish-reid">AAUZebrafish</a></td>
+<td style="text-align: left;"><a href="https://openaccess.thecvf.com/content_WACVW_2020/html/w2/Haurum_Re-Identification_of_Zebrafish_using_Metric_Learning_WACVW_2020_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/3owflku95bxsx24643cybxu3qh">AerialCattle2017</a></td>
+<td style="text-align: left;"><a href="https://openaccess.thecvf.com/content_ICCV_2017_workshops/w41/html/Andrew_Visual_Localisation_and_ICCV_2017_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/wildlifedatasets/amvrakikosturtles">AmvrakikosTurtles</a></td>
+<td style="text-align: left;"><a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/atrw">ATRW</a></td>
+<td style="text-align: left;"><a href="https://arxiv.org/abs/1906.05586" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/roberalcaraz/baleariclizard">BalearicLizard</a></td>
+<td style="text-align: left;"><a href="https://sciety.org/articles/activity/10.21203/rs.3.rs-7302183/v1" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/beluga-id-2022/">BelugaID</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/AndreCFerreira/Bird_individualID">BirdIndividualID</a></td>
+<td style="text-align: left;"><a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13436" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Manual download</td>
+<td style="text-align: left;">Few images removed</td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/jf0859kboy8k2ufv60dqeb2t8">BristolGorillas2020</a></td>
+<td style="text-align: left;"><a href="https://arxiv.org/abs/2012.04689" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Only linux: downloading</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/timost1234/cat-individuals">CatIndividualImages</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://cloud.une.edu.au/index.php/s/eMwaHAPK08dCDru">CattleMuzzle</a></td>
+<td style="text-align: left;"><a href="https://www.mdpi.com/2073-4395/11/11/2365" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/datasets/dariakern/Chicks4FreeID">Chicks4FreeID</a></td>
+<td style="text-align: left;"><a href="https://www.mdpi.com/2076-2615/15/1/1" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://zenodo.org/records/15018518">CoBRAReIdentificationYoungstock</a></td>
+<td style="text-align: left;"><a href="https://www.mdpi.com/1424-8220/25/10/2971" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://figshare.com/articles/dataset/data_set_zip/16879780">CowDataset</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7">Cows2021</a></td>
+<td style="text-align: left;"><a href="https://arxiv.org/abs/2105.01938" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Labels fixed</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/picekl/czechlynx">CzechLynx</a></td>
+<td style="text-align: left;"><a href="https://arxiv.org/abs/2506.04931" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"><a></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/cvjena/chimpanzee_faces">CTai</a></td>
+<td style="text-align: left;"><a href="https://link.springer.com/chapter/10.1007/978-3-319-45886-1_5" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Labels fixed</td>
+</tr>
+<tr>
+<td><a href="https://github.com/cvjena/chimpanzee_faces">CZoo</a></td>
+<td style="text-align: left;"><a href="https://link.springer.com/chapter/10.1007/978-3-319-45886-1_5" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/GuillaumeMougeot/DogFaceNet">DogFaceNet</a></td>
+<td style="text-align: left;"><a href="https://link.springer.com/chapter/10.1007/978-3-030-29894-4_34" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/j-schneider/fly_eye">Drosophila</a></td>
+<td style="text-align: left;"><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205043" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Few images removed</td>
+</tr>
+<tr>
+<td><a href="https://inf-cv.uni-jena.de/home/research/datasets/elpephants/">ELPephants</a></td>
+<td style="text-align: left;"><a href="https://openaccess.thecvf.com/content_ICCVW_2019/html/CVWC/Korschens_ELPephants_A_Fine-Grained_Dataset_for_Elephant_Re-Identification_ICCVW_2019_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Manual download</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/wurzq71kfm561ljahbwjhx9n3">FriesianCattle2015</a></td>
+<td style="text-align: left;"><a href="https://ieeexplore.ieee.org/abstract/document/7532404" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Labels fixed</td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/2yizcfbkuv4352pzc32n54371r">FriesianCattle2017</a></td>
+<td style="text-align: left;"><a href="https://openaccess.thecvf.com/content_ICCV_2017_workshops/w41/html/Andrew_Visual_Localisation_and_ICCV_2017_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021">Giraffes</a></td>
+<td style="text-align: left;"><a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13577" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Only linux: downloading</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/great-zebra-giraffe-id">GiraffeZebraID</a></td>
+<td style="text-align: left;"><a href="https://aaai.org/papers/15245-15245-animal-population-censusing-at-scale-with-citizen-science-and-photographic-identification/" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/competitions/happy-whale-and-dolphin">HappyWhale</a></td>
+<td style="text-align: left;"><a href="https://link.springer.com/article/10.1007/s42991-021-00180-9" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Kaggle required + terms</td>
+<td style="text-align: left;">Species fixed</td>
+</tr>
+<tr>
+<td><a href="https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/O1ZBSA">HolsteinCattleRecognition</a></td>
+<td style="text-align: left;"><a href="https://link.springer.com/chapter/10.1007/978-3-030-29891-3_10" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/competitions/humpback-whale-identification">HumpbackWhaleID</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Kaggle required + terms</td>
+<td style="text-align: left;">Unknown animals renamed</td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/hyena-id-2022/">HyenaID2022</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/iPandaDateset/iPanda-50">IPanda50</a></td>
+<td style="text-align: left;"><a href="https://ieeexplore.ieee.org/abstract/document/9347819" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Few image renamed</td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/leopard-id-2022/">LeopardID2022</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Unknown animals renamed</td>
+</tr>
+<tr>
+<td><a href="https://github.com/tvanzyl/wildlife_reidentification">LionData</a></td>
+<td style="text-align: left;"><a href="https://ieeexplore.ieee.org/abstract/document/9311574" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/clwitham/MacaqueFaces">MacaqueFaces</a></td>
+<td style="text-align: left;"><a href="https://www.sciencedirect.com/science/article/pii/S0165027017302637" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://data.mendeley.com/datasets/v5j6m8dzhv/1">MPDD</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Manual download</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/2inu67jru7a6821kkgehxg3cv2">MultiCamCows2024</a></td>
+<td style="text-align: left;"><a href="https://arxiv.org/abs/2410.12695" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.25405/data.ncl.c.4982342">NDD20</a></td>
+<td style="text-align: left;"><a href="https://arxiv.org/abs/2005.13359" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Manual download</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/c/noaa-right-whale-recognition">NOAARightWhale</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Kaggle required + terms</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/tvanzyl/wildlife_reidentification">NyalaData</a></td>
+<td style="text-align: left;"><a href="https://ieeexplore.ieee.org/abstract/document/9311574" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://data.bris.ac.uk/data/dataset/10m32xl88x2b61zlkkgz3fml17">OpenCows2020</a></td>
+<td style="text-align: left;"><a href="https://www.sciencedirect.com/science/article/pii/S0168169921001514" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://zenodo.org/records/7564529">PolarBearVidID</a></td>
+<td style="text-align: left;"><a href="https://www.mdpi.com/2076-2615/13/5/801" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://visiome.neuroinf.jp/primface/">PrimFace</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/wildlifedatasets/reunionturtles">ReunionTurtles</a></td>
+<td style="text-align: left;"><a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53">SealID</a></td>
+<td style="text-align: left;"><a href="https://www.mdpi.com/1424-8220/22/19/7602" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Download with single use token</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://lila.science/sea-star-re-id-2023/">SeaStarReID2023</a></td>
+<td style="text-align: left;"><a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.14278" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid2022">SeaTurtleID2022</a></td>
+<td style="text-align: left;"><a href="https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://github.com/silviazuffi/smalst">SMALST</a></td>
+<td style="text-align: left;"><a href="https://openaccess.thecvf.com/content_ICCV_2019/html/Zuffi_Three-D_Safari_Learning_to_Estimate_Zebra_Pose_Shape_and_Texture_ICCV_2019_paper.html" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Manual download + Only linux: extracting</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/wildlifedatasets/southernprovinceturtles">SouthernProvinceTurtles</a></td>
+<td style="text-align: left;"><a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://code.google.com/archive/p/stripespotter/downloads">StripeSpotter</a></td>
+<td style="text-align: left;"><a href="https://dl.acm.org/doi/abs/10.1145/1991996.1992002" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Only linux: extracting</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.inaturalist.org/projects/turtles-of-smsrc">TurtlesOfSMSRC</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://zenodo.org/records/16731160">WildRaptorID</a></td>
+<td style="text-align: left;"><a href="https://www.sciencedirect.com/science/article/pii/S1574954125003887" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://lila.science/datasets/whale-shark-id">WhaleSharkID</a></td>
+<td style="text-align: left;"><a href="https://www.int-res.com/abstracts/esr/v7/n1/p39-53/" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/datasets/wildlifedatasets/zakynthosturtles">ZakynthosTurtles</a></td>
+<td style="text-align: left;"><a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a></td>
+<td style="text-align: left;">Kaggle required</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td><a href="https://zindi.africa/competitions/turtle-recall-conservation-challenge">ZindiTurtleRecall</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="manual-download-and-extracting">Manual download and extracting</h2>
+<h3 id="kaggle">Kaggle</h3>
+<p>Some datasets are stored on Kaggle. To use our automatic download method, follow the <a href="https://www.kaggle.com/docs/api">steps</a> described in the Installation and Authentication sections.</p>
+<h3 id="aauzebrafish">AAUZebrafish</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h3 id="amvrakikosturtles">AmvrakikosTurtles</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h3 id="animalclef2025">AnimalCLEF2025</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h3 id="animalclef2026">AnimalCLEF2026</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h3 id="baleariclizard">BalearicLizard</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h3 id="birdindividualid">BirdIndividualID</h3>
+<p>The dataset is stored on <a href="https://drive.google.com/uc?id=1YT4w8yF44D-y9kdzgF38z2uYbHfpiDOA">Google drive</a> but needs to be downloaded manually due to its size. After downloading it, place it into folder ``BirdIndividualID'' and run</p>
+<div class="highlight"><pre><span></span><code><span class="n">datasets</span><span class="o">.</span><span class="n">BirdIndividualID</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">&#39;data/BirdIndividualID&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>to extract it. Do not extract it manually because there is some postprocessing involved.</p>
+<h3 id="bristolgorillas2020">BristolGorillas2020</h3>
+<p>Downloading works only on Linux. Download it manually from its <a href="https://data.bris.ac.uk/data/dataset/jf0859kboy8k2ufv60dqeb2t8">webpage</a>. It may take several retries. Then either extract it manually or call</p>
+<div class="highlight"><pre><span></span><code><span class="n">datasets</span><span class="o">.</span><span class="n">BristolGorillas2020</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">&#39;data/BristolGorillas2020&#39;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="catindividualimages">CatIndividualImages</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h3 id="czechlynx">CzechLynx</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h3 id="elpephants">ELPephants</h3>
+<p>The dataset is stored <a href="https://inf-cv.uni-jena.de/home/research/datasets/elpephants/">privately</a> and needs to acknowledge license terms before downloading. After doing so, extract it manually or run</p>
+<div class="highlight"><pre><span></span><code><span class="n">datasets</span><span class="o">.</span><span class="n">ELPephants</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">&#39;data/ELPephants&#39;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="giraffes">Giraffes</h3>
+<p>Downloading works only on Linux. Download it manually from the <a href="ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021/">FTP server</a> by using some client such as <a href="https://filezilla-project.org/download.php?type=client">FileZilla</a>.</p>
+<h3 id="happywhale">HappyWhale</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied. Also you need to go to the <a href="https://www.kaggle.com/competitions/happy-whale-and-dolphin">competition website</a>, the Data tab and agree with terms.</p>
+<h3 id="humpbackwhale">HumpbackWhale</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied. Also you need to go to the <a href="https://www.kaggle.com/competitions/humpback-whale-identification">competition website</a>, the Data tab and agree with terms.</p>
+<h3 id="ipanda50">IPanda50</h3>
+<p>IPanda50 may fail to download files because of Google Drive quotas. If this happens, download three zip files manually as described in this <a href="https://github.com/iPandaDateset/iPanda-50">Github repository</a>. Then either extract them manually or run</p>
+<div class="highlight"><pre><span></span><code><span class="n">datasets</span><span class="o">.</span><span class="n">IPanda50</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">&#39;data/IPanda50&#39;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="mpdd">MPDD</h3>
+<p>The dataset is does not have a permanent URL. Download it <a href="https://data.mendeley.com/datasets/v5j6m8dzhv/1">manually</a>. After doing so, extract it manually or run</p>
+<div class="highlight"><pre><span></span><code><span class="n">datasets</span><span class="o">.</span><span class="n">MPDD</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">&#39;data/MPDD&#39;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="ndd20">NDD20</h3>
+<p>The dataset is does not have a permanent URL. Download it <a href="https://doi.org/10.25405/data.ncl.c.4982342">manually</a>. After doing so, extract it manually or run</p>
+<div class="highlight"><pre><span></span><code><span class="n">datasets</span><span class="o">.</span><span class="n">NDD20v2</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">&#39;data/NDD20&#39;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="noaarightwhale">NOAARightWhale</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied. Also you need to go to the <a href="https://www.kaggle.com/c/noaa-right-whale-recognition">competition website</a>, the Data tab and agree with terms.</p>
+<h3 id="reunionturtles">ReunionTurtles</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h3 id="sealid">SealID</h3>
+<p>SealID requires a one-time token for download. Please go their <a href="https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53">download website</a>, click the Data tab, then three dots next to the Download button and copy the <code>URL</code> link. Then use</p>
+<div class="highlight"><pre><span></span><code><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="c1"># Paste the URL here</span>
+<span class="n">datasets</span><span class="o">.</span><span class="n">SealID</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s1">&#39;data/SealID&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="seaturtleid2022">SeaTurtleID2022</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h3 id="smalst">SMALST</h3>
+<p>The dataset fails to download automatically. Download it <a href="https://drive.google.com/open?id=1yVy4--M4CNfE5x9wUr1QBmAXEcWb6PWF">manually</a>. After doing so, extract it manually or run</p>
+<div class="highlight"><pre><span></span><code><span class="n">datasets</span><span class="o">.</span><span class="n">SMALST</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">&#39;data/SMALST&#39;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="southernprovinceturtles">SouthernProvinceTurtles</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h3 id="stripespotter">StripeSpotter</h3>
+<p>Extracting works only on Linux. Use</p>
+<div class="highlight"><pre><span></span><code><span class="n">datasets</span><span class="o">.</span><span class="n">StripeSpotter</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;data/StripeSpotter&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>to download the dataset and then extract it manually.</p>
+<h3 id="wildlifereid10k">WildlifeReID10k</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h3 id="zakynthosturtles">ZakynthosTurtles</h3>
+<p><a href="#kaggle">Kaggle requirements</a> need to be satisfied.</p>
+<h2 id="dataset-modifications">Dataset modifications</h2>
+<h3 id="birdindividualid_1">BirdIndividualID</h3>
+<p>We removed images containing multiple birds, where it not indicated which bird is which. We also removed a few cropped images due to different folder structure.</p>
+<h3 id="ctai">CTai</h3>
+<p>There were several misspelled labels, which we corrected. Mainly the correct forms read Akrouba (instead of Akouba), Fredy (Freddy), Ibrahim (Ibrahiim), Lilou (Liliou), Wapi (Wapii) and Woodstock (Woodstiock). Also the identity Adult was not a proper identity and we replaced it with <code>self.unknown_name</code>.</p>
+<h3 id="cows2021">Cows2021</h3>
+<p>We ignored all images not in the <code>Identification</code> folder because they were focused on detection. We also ignored all images in the <code>Identification/Train</code> because some folders contained images of different individuals.</p>
+<p>We merged identity 105 into 29 and 164 into 148 as they depicted the same individuals. We performed the following correction:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Image name</th>
+<th style="text-align: left;">Old identity</th>
+<th style="text-align: left;">New identity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">image_0001226_2020-02-11_12-43-7_roi_001.jpg</td>
+<td style="text-align: left;">137</td>
+<td style="text-align: left;">107</td>
+</tr>
+</tbody>
+</table>
+<h3 id="drosophila">Drosophila</h3>
+<p>We removed a few images due to different folder structure.</p>
+<h3 id="friesiancattle2015">FriesianCattle2015</h3>
+<p>Images in the folder <code>Cows-training</code> were removed as they are identical to images in the folder <code>Cows-testing</code>. </p>
+<p>Multiple individuals were removed as the images are copies of images of different individuals. Namely we removed 19 (duplicate of 15), 20 (18), 21 (17), 22 (16), 23 (11), 24 (14), 25 (13), 26 (12), 27 (11), 28 (13), 29 (12), 31 (17), 32 (16), 33 (18) and 37 (30).</p>
+<h3 id="happywhale_1">HappyWhale</h3>
+<p>We fixed the typos in species bottlenose_dolpin and kiler_whale.</p>
+<h3 id="humpbackwhaleid">HumpbackWhaleID</h3>
+<p>We replaced the <code>new_whale</code> by <code>self.unknown_name</code>.</p>
+<h3 id="ipanda50_1">IPanda50</h3>
+<p>We renamed imaged containing non-ASCII characters.</p>
+<h3 id="leopardid2022">LeopardID2022</h3>
+<p>We replaced the <code>____</code> by <code>self.unknown_name</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "content.code.copy"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+        <script src="../assets/_markdown_exec_pyodide.js"></script>
+      
+    
+  </body>
+</html>
