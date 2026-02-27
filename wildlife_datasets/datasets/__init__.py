@@ -25,10 +25,11 @@ from .czechlynx import CzechLynx, CzechLynxv2
 from .czoo import CZoo
 from .datasets import DatasetFactory, WildlifeDataset
 from .dog_face_net import DogFaceNet
-from .downloads import DownloadHuggingFace, DownloadINaturalist, DownloadKaggle, DownloadURL
+from .downloads import DownloadHuggingFace, DownloadINaturalist, DownloadKaggle, DownloadPrivate, DownloadURL
 from .drosophila import Drosophila
 from .elpephants import ELPephants
 from .friesian_cattle import FriesianCattle2015, FriesianCattle2015v2, FriesianCattle2017
+from .general import Dataset_Metadata
 from .giraffe_zebra_id import GiraffeZebraID
 from .giraffes import Giraffes
 from .happy_whale import HappyWhale
@@ -55,6 +56,7 @@ from .smalst import SMALST
 from .southern_province_turtles import SouthernProvinceTurtles
 from .stripe_spotter import StripeSpotter
 from .turtles_of_smsrc import TurtlesOfSMSRC
+from .turtlewatch_egypt import TurtlewatchEgypt_Citizen, TurtlewatchEgypt_Master, TurtlewatchEgypt_New
 from .utils import get_image, load_image
 from .whaleshark_id import WhaleSharkID
 from .wild_raptor_id import WildRaptorID

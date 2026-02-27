@@ -233,3 +233,13 @@ class DownloadINaturalist:
         print(f"DATASET {dataset_name}: EXTRACTING STARTED.")
         cls.extract(root, **kwargs)
         print(f"DATASET {dataset_name}: FINISHED.\n")
+
+
+class DownloadPrivate:
+    @classmethod
+    def _download(cls, *args, **kwargs):
+        raise ValueError("This dataset is private. Contact the owner for permissions.")
+
+    @classmethod
+    def _extract(cls, **kwargs):
+        pass
