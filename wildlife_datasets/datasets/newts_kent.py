@@ -1,4 +1,5 @@
 import os
+import re
 
 
 import numpy as np
@@ -8,7 +9,7 @@ import pandas as pd
 from .datasets import utils, WildlifeDataset
 
 
-def restrict(data, folders, idx):
+def restrict(data: pd.DataFrame, folders: pd.DataFrame, idx: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame]:
     data, folders = data[idx], folders[idx]
     while True:
         max_col = np.max(folders.columns)
@@ -31,48 +32,35 @@ def get_name(x):
 
 
 class NewtsKent(WildlifeDataset):
-    def create_catalogue(self, load_segmentation=False):
+    def create_catalogue(self, load_segmentation: bool = False) -> pd.DataFrame:
+        assert self.root is not None
         data = utils.find_images(self.root)
-        folders = data["path"].str.split(os.path.sep, expand=True)
-        # if (
-        #     folders[1].nunique() != 1
-        #     and folders[1].iloc[0] != "Identification"
-        # ):
-        #     raise ValueError("Structure wrong")
-        # idx = folders[3].isnull()
-        # data, folders = restrict(data, folders, idx)
+        folders = data['path'].str.split(os.path.sep, expand=True)
+        if folders[1].nunique() != 1 and folders[1].iloc[0] != 'Identification':
+            raise ValueError('Structure wrong')
 
-        data["identity"] = data["file"].apply(get_name)
+        data['identity'] = data['file'].apply(get_name)
+        data['path'] = data['path'] + os.path.sep + data['file']
+        data['year'] = folders[0].apply(lambda x: int(x[:4]))        
+        
+        # Remove duplicated images
+        mask = ~data['path'].apply(lambda x: 'Duplicated' in x)
+        data, folders = restrict(data, folders, mask)
 
-        idx = ~folders[2].isnull()
-        data, folders = restrict(data, folders, idx)
-        idx = ~folders[2].apply(lambda x: x.startswith("Duplicated"))
-        data, folders = restrict(data, folders, idx)
-        # TODO: no idea what to do with these
+        # Remove images without an identity
+        mask = ~data['identity'].isnull()
+        data, folders = restrict(data, folders, mask)
 
-        # TODO: possibly removing too many. now better than keeping bad
-        idx = ~data["identity"].isnull()
-        data, folders = restrict(data, folders, idx)
-        # TODO: removing juveniles and other. will not work when 10k+ individuals are there
-        idx = data["identity"].apply(len) <= 5
-        data, folders = restrict(data, folders, idx)
+        # Keep only M*, F* and *, where * are 4 or 5 digits.
+        pattern = r'^[MF]?\d{4,5}$'
+        mask = data['identity'].apply(lambda x: bool(re.match(pattern, x)))
+        data, folders = restrict(data, folders, mask)
 
-        data["path"] = data["path"] + os.path.sep + data["file"]
-        data["image_id"] = utils.create_id(
-            data["path"].apply(lambda x: x.replace(os.path.sep, "/"))
-        ).astype(str)
-        # data["year"] = folders[0].apply(lambda x: int(x[:4]))
-        data = data.drop("file", axis=1)
+        data['image_id'] = utils.get_persistent_id(data['path'])
+        data = data.drop('file', axis=1)
 
         if load_segmentation:
-            cols = ["bbox_x", "bbox_y", "bbox_w", "bbox_h"]
-            segmentation = pd.read_csv(f"{self.root}/segmentation.csv")
-            data = pd.merge(data, segmentation, on="image_id", how="outer")
-            data["bbox"] = list(data[cols].to_numpy())
-            data["segmentation"] = data["segmentation"].apply(
-                lambda x: eval(x)
-            )
-            data = data.drop(cols, axis=1)
-            data = data.reset_index(drop=True)
-
+            file_name = os.path.join(self.root, "segmentation.csv")
+            data = utils.load_segmentation(data, file_name)
+        
         return self.finalize_catalogue(data)
