@@ -7,6 +7,7 @@ import pandas as pd
 
 
 from .datasets import utils, WildlifeDataset
+from .downloads import DownloadPrivate
 
 
 def restrict(data: pd.DataFrame, folders: pd.DataFrame, idx: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -31,7 +32,32 @@ def get_name(x):
     return None
 
 
-class NewtsKent(WildlifeDataset):
+summary = {
+    "licenses": "",
+    "licenses_url": "",
+    "url": "",
+    "publication_url": "",
+    "cite": "",
+    "animals": {"newts"},
+    "animals_simple": "newts",
+    "real_animals": True,
+    "year": 2026,
+    "reported_n_total": None,
+    "reported_n_individuals": None,
+    "wild": False,
+    "clear_photos": True,
+    "pose": "single",
+    "unique_pattern": True,
+    "from_video": False,
+    "cropped": False,
+    "span": "5 years",
+    "size": None,
+}
+
+
+class NewtsKent(DownloadPrivate, WildlifeDataset):
+    summary = summary
+
     def create_catalogue(self, load_segmentation: bool = False) -> pd.DataFrame:
         assert self.root is not None
         data = utils.find_images(self.root)
