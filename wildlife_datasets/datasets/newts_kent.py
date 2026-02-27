@@ -92,3 +92,16 @@ class NewtsKent(DownloadPrivate, WildlifeDataset):
             data = utils.load_segmentation(data, file_name)
         
         return self.finalize_catalogue(data)
+
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        replace = [
+            ('F1602', 'F1503'),
+            ('F2121', 'F1837'), 
+            ('F2417', 'F2402'),
+            ('F2428', 'F2119'), 
+            ('M2206', 'M2104'),
+            ('M2207', 'M2104'),
+            ('M2336', 'M2108'),
+            ('M2422', 'M2219'), 
+        ]
+        return self.fix_labels_replace_identity(df, replace)        
