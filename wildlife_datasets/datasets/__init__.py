@@ -43,6 +43,7 @@ from .macaque_faces import MacaqueFaces
 from .mpdd import MPDD
 from .multi_cam_cows import MultiCamCows2024
 from .ndd import NDD20, NDD20v2
+from .newts_kent import NewtsKent
 from .noaa_right_whale import NOAARightWhale
 from .nyala_data import NyalaData
 from .open_cows import OpenCows2020
@@ -102,6 +103,7 @@ names_all = [
     MPDD,
     MultiCamCows2024,
     NDD20v2,
+    NewtsKent,
     NOAARightWhale,
     NyalaData,
     OpenCows2020,
