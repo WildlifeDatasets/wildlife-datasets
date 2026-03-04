@@ -462,9 +462,6 @@ class TurtlewatchEgypt_Citizen(Dataset_Metadata):
         pass
 
 
-IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".webp", ".gif", ".heic", ".heif", ".avif")
-
-
 def load_citizen_data(data: pd.DataFrame) -> pd.DataFrame:
     # Convert dates
     data["submit_time"] = pd.to_datetime(data["Date"])
@@ -495,15 +492,12 @@ def get_folder(d: pd.Series) -> str:
     return f"{folder1}/{folder2}"
 
 
-def download_files(urls: list[str], download_folder: str, exts: tuple[str, ...] = IMAGE_EXTENSIONS) -> list[str]:
+def download_files(urls: list[str], download_folder: str) -> list[str]:
     os.makedirs(download_folder, exist_ok=True)
 
     save_paths = []
     for url in urls:
         url = url.strip()
-        if not url.lower().endswith(exts):
-            print(f"Skipping non-image url: {url}")
-            continue
         file_name = url.split("/")[-1]
         save_path = os.path.join(download_folder, file_name)
         save_paths.append(save_path)
