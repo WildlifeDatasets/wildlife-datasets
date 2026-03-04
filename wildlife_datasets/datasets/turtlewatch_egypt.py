@@ -425,6 +425,8 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
 class TurtlewatchEgypt_Citizen(Dataset_Metadata):
     @classmethod
     def _download(cls, data: pd.DataFrame | None = None, transform: Callable | None = None) -> None:
+        img_extensions = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".tiff", ".raw")
+
         # Transform the data into the required form
         assert data is not None
         data = load_citizen_data(data)
@@ -442,11 +444,14 @@ class TurtlewatchEgypt_Citizen(Dataset_Metadata):
 
             save_paths = download_files(urls, folder_full)
             save_paths = [os.path.relpath(p, ".") for p in save_paths]
+            save_paths_images = [x for x in save_paths if x.lower().endswith(img_extensions)]
+            for x in set(save_paths).difference(set(save_paths_images)):
+                print(f"File non-image: {x}")
 
             create_info(d, folder_full)
 
             metadata_part = {
-                "path": save_paths,
+                "path": save_paths_images,
                 "identity": "unknown",
                 "encounter_id": encounter,
             }
@@ -465,7 +470,6 @@ class TurtlewatchEgypt_Citizen(Dataset_Metadata):
 def load_citizen_data(data: pd.DataFrame) -> pd.DataFrame:
     # Convert dates
     data["submit_time"] = pd.to_datetime(data["Date"])
-    data["observation_time"] = pd.to_datetime(data["Date 227"])
 
     # Merge multiple date options
     data["year"] = data["submit_time"].dt.year
@@ -484,12 +488,10 @@ def load_citizen_data(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def get_folder(d: pd.Series) -> str:
-    year = d["year"]
-    month = d["month"]
-
-    folder1 = f"{year}_{month:02d}"
-    folder2 = d["author"]
-    return f"{folder1}/{folder2}"
+    folder1 = d["year"]
+    folder2 = f"{d['month']:02d}"
+    folder3 = d["author"]
+    return f"{folder1}/{folder2}/{folder3}"
 
 
 def download_files(urls: list[str], download_folder: str) -> list[str]:
@@ -518,8 +520,10 @@ def download_files(urls: list[str], download_folder: str) -> list[str]:
 def add_run_break(p: Paragraph, text1: str, text2: str | None = None) -> None:
     if not pd.isnull(text2):
         r = p.add_run(f"{text1}: {text2}")
+    elif text1 != "":
+        r = p.add_run(f"{text1}:")
     else:
-        r = p.add_run(f"{text1}")
+        r = p.add_run("")
     r.add_break()
 
 
@@ -536,7 +540,8 @@ def create_info(d: pd.Series, save_folder: str) -> None:
     add_run_break(p, "REQUIRED DATA")
     add_run_break(p, "From", d["email"])
     add_run_break(p, "Photographer", d["author"])
-    add_run_break(p, "Date", d["observation_time"])
+    add_run_break(p, "Date submitted", d["submit_time"])
+    add_run_break(p, "Date observed", d["Date 227"])
     add_run_break(p, "Town", d["Town 785"])
     add_run_break(p, "Location", d["Location 785"])
     add_run_break(p, "")
@@ -555,14 +560,14 @@ def create_info(d: pd.Series, save_folder: str) -> None:
         add_run_break(p, "DATA TREATMENT")
         add_run_break(
             p,
-            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for didactic, educational and scientific use: Yes",
+            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for didactic, educational and scientific use", "Yes",
         )
         add_run_break(p, "")
         add_run_break(
             p,
-            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for marketing and advertising use (social media, magazines, ..): Yes",
+            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for marketing and advertising use (social media, magazines, ..)", "Yes",
         )
         add_run_break(p, "")
-        add_run_break(p, "Accettato: I authorize the treatment and management of personal data.")
+        add_run_break(p, "Accettato", "I authorize the treatment and management of personal data.")
 
     doc.save(f"{save_folder}/info.docx")
