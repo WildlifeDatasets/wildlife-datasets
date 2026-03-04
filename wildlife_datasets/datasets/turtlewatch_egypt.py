@@ -435,7 +435,7 @@ class TurtlewatchEgypt_Citizen(Dataset_Metadata):
         # Go through the rows and download data
         metadata = pd.DataFrame()
         for encounter, (_, d) in tqdm(enumerate(data.iterrows()), total=len(data)):
-            urls = d["upload-file-731"].split("\n")
+            urls = d["Upload File 731"].split(",")
             folder = d["folder"]
             sighting = d["sighting"]
             folder_full = os.path.join(folder, f"SIGHTING #{sighting}")
@@ -467,28 +467,21 @@ IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".webp", "
 
 def load_citizen_data(data: pd.DataFrame) -> pd.DataFrame:
     # Convert dates
-    data["submit_time"] = pd.to_datetime(data["submit_time"])
-    data["date-227"] = pd.to_datetime(data["date-227"])
+    data["submit_time"] = pd.to_datetime(data["Date"])
+    data["observation_time"] = pd.to_datetime(data["Date 227"])
 
     # Merge multiple date options
-    data["date"] = data["submit_time"].combine_first(data["date-227"])
-    data["year"] = data["date"].dt.year
-    data["month"] = data["date"].dt.month
-    data["day"] = data["date"].dt.day
+    data["year"] = data["submit_time"].dt.year
+    data["month"] = data["submit_time"].dt.month
+    data["day"] = data["submit_time"].dt.day
 
     # Merge multiple author and emails options
-    data["author"] = data["NOME"].combine_first(data["your-name"])
-    data["email"] = data["EMAIL"].combine_first(data["email-185"])
-
-    # Fill nans
-    data["author"] = data["author"].fillna("unknown")
-    data["email"] = data["email"].fillna("unknown")
+    data["author"] = data["NOME"].fillna("unknown")
+    data["email"] = data["EMAIL"]
 
     # Get folder and sightings
     data["folder"] = [get_folder(d) for _, d in data.iterrows()]
-    for _, data_folder in data.groupby(["folder"]):
-        data.loc[data_folder.index, "sighting"] = list(range(1, len(data_folder) + 1))
-    data["sighting"] = data["sighting"].astype(int)
+    data["sighting"] = data.groupby("folder").cumcount() + 1
 
     return data
 
@@ -496,9 +489,8 @@ def load_citizen_data(data: pd.DataFrame) -> pd.DataFrame:
 def get_folder(d: pd.Series) -> str:
     year = d["year"]
     month = d["month"]
-    day = d["day"]
 
-    folder1 = f"{year}_{month:02d}_{day:02d}"
+    folder1 = f"{year}_{month:02d}"
     folder2 = d["author"]
     return f"{folder1}/{folder2}"
 
@@ -508,6 +500,7 @@ def download_files(urls: list[str], download_folder: str, exts: tuple[str, ...] 
 
     save_paths = []
     for url in urls:
+        url = url.strip()
         if not url.lower().endswith(exts):
             print(f"Skipping non-image url: {url}")
             continue
@@ -549,21 +542,21 @@ def create_info(d: pd.Series, save_folder: str) -> None:
     add_run_break(p, "REQUIRED DATA")
     add_run_break(p, "From", d["email"])
     add_run_break(p, "Photographer", d["author"])
-    add_run_break(p, "Date", f"{d['year']}-{d['month']:02d}-{d['day']:02d}")
-    add_run_break(p, "Town", d["town-785"])
-    add_run_break(p, "Location", d["location-785"])
+    add_run_break(p, "Date", d["observation_time"])
+    add_run_break(p, "Town", d["Town 785"])
+    add_run_break(p, "Location", d["Location 785"])
     add_run_break(p, "")
     add_run_break(p, "OPTIONAL DATA")
-    add_run_break(p, "Dive centre/independent", d["dive-785"])
-    add_run_break(p, "Time", d["time-299"])
-    add_run_break(p, "Depth", d["depth-364"])
-    add_run_break(p, "Temperature", d["degrees-364"])
-    add_run_break(p, "Activity", d["radio-602"])
-    add_run_break(p, "Species", d["species-954"])
-    add_run_break(p, "Size", d["size-648"])
-    add_run_break(p, "Sex", d["sex-786"])
-    add_run_break(p, "Comments", d["textarea-268"])
-    if d["acceptance-359"] == 1:
+    add_run_break(p, "Dive centre/independent", d["Dive 785"])
+    add_run_break(p, "Time", d["Time 299"])
+    add_run_break(p, "Depth", d["Depth 364"])
+    add_run_break(p, "Temperature", d["Degrees 364"])
+    add_run_break(p, "Activity", d["Radio 602"])
+    add_run_break(p, "Species", d["Species 954"])
+    add_run_break(p, "Size", d["Size 648"])
+    add_run_break(p, "Sex", d["Sex 786"])
+    add_run_break(p, "Comments", d["Textarea 268"])
+    if d["Acceptance 359"] == 1:
         add_run_break(p, "")
         add_run_break(p, "DATA TREATMENT")
         add_run_break(
