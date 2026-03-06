@@ -206,6 +206,11 @@ class WildlifeDataset:
         else:
             return path
 
+    def set_absolute_paths(self) -> None:
+        if self.root is not None:
+            self.df["path"] = self.root + os.path.sep + self.df["path"]
+            self.root = None
+
     def get_image(self, idx: int) -> Image.Image:
         """Load an image with iloc `idx`.
 
