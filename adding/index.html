@@ -1,0 +1,1009 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../methods/">
+      
+      
+        <link rel="next" href="../dataframe/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
+    
+    
+      
+        <title>Adding new datasets - Wildlife Datasets</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_markdown_exec_pyodide.css">
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-to-add-new-datasets" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Wildlife Datasets" class="md-header__button md-logo" aria-label="Wildlife Datasets" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Wildlife Datasets
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Adding new datasets
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/WildlifeDatasets/wildlife-datasets" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    wildlife-datasets
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Wildlife Datasets" class="md-nav__button md-logo" aria-label="Wildlife Datasets" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Wildlife Datasets
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/WildlifeDatasets/wildlife-datasets" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    wildlife-datasets
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../datasets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Oveview of datasets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Tutorials
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_datasets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wildlife_dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Displaying datasets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../training/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Training ML models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../methods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing ML methods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Adding new datasets
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Adding new datasets
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#optional-including-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional: including metadata
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-including-download" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional: including download
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optional: including download">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#downloads-from-kaggle-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Downloads from Kaggle (recommended)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#downloads-from-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      Downloads from URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#downloads-from-huggingface-not-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Downloads from HuggingFace (not recommended)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-integrating-into-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional: integrating into package
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Advanced
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataframe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dataset representation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recommended/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Recommended datasets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../default_splits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Default splits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_splits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Advanced splits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preprocessing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summary of datasets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Reference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference_datasets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Datasets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference_analysis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Analysis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference_splits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Splits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#optional-including-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional: including metadata
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-including-download" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional: including download
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optional: including download">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#downloads-from-kaggle-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Downloads from Kaggle (recommended)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#downloads-from-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      Downloads from URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#downloads-from-huggingface-not-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Downloads from HuggingFace (not recommended)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-integrating-into-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional: integrating into package
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="how-to-add-new-datasets">How to add new datasets</h1>
+<p>Adding new datasets to WildlifeDatasets is easy. It is sufficient to create a subclass of <code>WildlifeDataset</code> with the <code>create_catalogue</code> method. A simple example is</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">wildlife_datasets.datasets</span> <span class="kn">import</span> <span class="n">WildlifeDataset</span>
+
+<span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="n">WildlifeDataset</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_catalogue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;image_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+            <span class="s1">&#39;identity&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Lukas&#39;</span><span class="p">,</span> <span class="s1">&#39;Vojta&#39;</span><span class="p">,</span> <span class="s1">&#39;Lukas&#39;</span><span class="p">,</span> <span class="s1">&#39;Vojta&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;img1.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;img2.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;img3.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;img4.jpg&#39;</span><span class="p">],</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">df</span>
+</code></pre></div>
+<p>The class is then created by <code>Test('.')</code>. The empty argument should point to the location where the images are stored. The dataframe can then be accessed by</p>
+<div class="highlight"><pre><span></span><code><span class="n">Test</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">df</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="go">   image_id identity      path</span>
+<span class="go">0         1    Lukas  img1.jpg</span>
+<span class="go">1         2    Vojta  img2.jpg</span>
+<span class="go">2         3    Lukas  img3.jpg</span>
+<span class="go">3         4    Vojta  img4.jpg</span>
+</code></pre></div>
+<p>The dataframe <code>df</code> must satisfy <a href="../dataframe/">some requirements</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Instead of returning <code>df</code> it is better to return <code>self.finalize_catalogue(df)</code>. This function will perform <a href="../reference_datasets/#datasets.datasets.WildlifeDataset.finalize_catalogue">multiple checks</a> to verify the created dataframe. However, in this case, this check would fail because the specified file paths do not exist.</p>
+</div>
+<p>To incorporate the new dataset into the list of all available datasets, the <a href="https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/__init__.py">init script</a> must be appropriately modified.</p>
+<h2 id="optional-including-metadata">Optional: including metadata</h2>
+<p>The metadata can be added by adding a dictionary as a class attribute. Its description is in a <a href="../dataframe/#metadata">separate file</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">wildlife_datasets.datasets</span> <span class="kn">import</span> <span class="n">WildlifeDataset</span>
+
+<span class="n">summary</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;reported_n_total&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s1">&#39;reported_n_individuals&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="n">WildlifeDataset</span><span class="p">):</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="n">summary</span>
+
+    <span class="k">def</span> <span class="nf">create_catalogue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;image_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+            <span class="s1">&#39;identity&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Lukas&#39;</span><span class="p">,</span> <span class="s1">&#39;Vojta&#39;</span><span class="p">,</span> <span class="s1">&#39;Lukas&#39;</span><span class="p">,</span> <span class="s1">&#39;Vojta&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;img1.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;img2.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;img3.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;img4.jpg&#39;</span><span class="p">],</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">df</span>
+</code></pre></div>
+<p>The metadata can be accessed by</p>
+<div class="highlight"><pre><span></span><code><span class="n">Test</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">summary</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="go">{&#39;reported_n_total&#39;: 4, &#39;reported_n_individuals&#39;: 2}</span>
+</code></pre></div>
+<h2 id="optional-including-download">Optional: including download</h2>
+<p>Adding the possibility to download is achieved by adding class methods <code>_download</code> and <code>_extract</code>. The simplest way is to use the predefined classes <code>DownloadKaggle</code>, <code>DownloadURL</code> and <code>DownloadHuggingFace</code>. In the multiple inheritence, <code>WildlifeDatasets</code> must always be inherited as last. Examples can be taken from existing <a href="https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/">datasets</a>.</p>
+<h3 id="downloads-from-kaggle-recommended">Downloads from Kaggle (recommended)</h3>
+<p><a href="https://www.kaggle.com/">Kaggle</a> supports free storage for competitions and datasets with fast download. The web address have two possible styles:</p>
+<div class="highlight"><pre><span></span><code>https://www.kaggle.com/competitions/animal-clef-2025
+https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid2022
+</code></pre></div>
+<p>It is sufficient to provided <code>kaggle_url</code> and <code>kaggle_type</code> as in the two examples below. The loaded class <code>DownloadKaggle</code> will add all the required functions for downloads and it is sufficient to write the <code>create_catalogue</code> function mentioned above.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">wildlife_datasets.datasets</span> <span class="kn">import</span> <span class="n">DownloadKaggle</span><span class="p">,</span> <span class="n">WildlifeDataset</span>
+
+<span class="k">class</span> <span class="nc">AnimalCLEF2025</span><span class="p">(</span><span class="n">DownloadKaggle</span><span class="p">,</span> <span class="n">WildlifeDataset</span><span class="p">):</span>    
+    <span class="n">kaggle_url</span> <span class="o">=</span> <span class="s1">&#39;animal-clef-2025&#39;</span>
+    <span class="n">kaggle_type</span> <span class="o">=</span> <span class="s1">&#39;competitions&#39;</span>
+
+<span class="k">class</span> <span class="nc">SeaTurtleID2022</span><span class="p">(</span><span class="n">DownloadKaggle</span><span class="p">,</span> <span class="n">WildlifeDataset</span><span class="p">):</span>
+    <span class="n">kaggle_url</span> <span class="o">=</span> <span class="s1">&#39;wildlifedatasets/seaturtleid2022&#39;</span>
+    <span class="n">kaggle_type</span> <span class="o">=</span> <span class="s1">&#39;datasets&#39;</span>
+</code></pre></div>
+<h3 id="downloads-from-url">Downloads from URL</h3>
+<p>Datasets may be stored at a private server. When there is a single file to download and extract, it is stored in the <code>url</code> and <code>archive</code> attributes. The latter is usually the last part of the former. Whenever multiple files need to be downloaded, they are saved in the <code>downloads</code> attribute as the examples below show.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">wildlife_datasets.datasets</span> <span class="kn">import</span> <span class="n">DownloadURL</span><span class="p">,</span> <span class="n">WildlifeDataset</span>
+
+<span class="k">class</span> <span class="nc">CTai</span><span class="p">(</span><span class="n">DownloadURL</span><span class="p">,</span> <span class="n">WildlifeDataset</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip&#39;</span>
+    <span class="n">archive</span> <span class="o">=</span> <span class="s1">&#39;master.zip&#39;</span>
+
+<span class="k">class</span> <span class="nc">MacaqueFaces</span><span class="p">(</span><span class="n">DownloadURL</span><span class="p">,</span> <span class="n">WildlifeDataset</span><span class="p">):</span>
+    <span class="n">downloads</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces.zip&#39;</span><span class="p">,</span> <span class="s1">&#39;MacaqueFaces.zip&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;https://github.com/clwitham/MacaqueFaces/raw/master/ModelSet/MacaqueFaces_ImageInfo.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;MacaqueFaces_ImageInfo.csv&#39;</span><span class="p">),</span>
+    <span class="p">]</span>
+</code></pre></div>
+<h3 id="downloads-from-huggingface-not-recommended">Downloads from HuggingFace (not recommended)</h3>
+<p>When the dataset is saved to <a href="https://huggingface.co/">HuggingFace</a>, it is sufficient to provide the <code>hf_url</code> attribute. However, due to different way of storing the images for these datasets, it may be necessary to overwrite the method <code>get_image</code> as showed, for example, in <a href="https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/chicks4free_id.py">this file</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">wildlife_datasets.datasets</span> <span class="kn">import</span> <span class="n">DownloadHuggingFace</span><span class="p">,</span> <span class="n">WildlifeDataset</span>
+
+<span class="k">class</span> <span class="nc">Chicks4FreeID</span><span class="p">(</span><span class="n">DownloadHuggingFace</span><span class="p">,</span> <span class="n">WildlifeDataset</span><span class="p">):</span>
+    <span class="n">hf_url</span> <span class="o">=</span> <span class="s1">&#39;dariakern/Chicks4FreeID&#39;</span>
+</code></pre></div>
+<h2 id="optional-integrating-into-package">Optional: integrating into package</h2>
+<p>New datasets may be integrated into the core package by pull requests on the <a href="https://github.com/WildlifeDatasets/wildlife-datasets">Github repo</a>. In such a case, the dataset should be freely downloadable and both download script and metadata should be provided. The added dataset should be placed into <a href="https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets">this folder</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "content.code.copy"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+        <script src="../assets/_markdown_exec_pyodide.js"></script>
+      
+    
+  </body>
+</html>
