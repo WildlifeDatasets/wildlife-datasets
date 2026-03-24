@@ -13,7 +13,7 @@ class Dataset_Folder(WildlifeDataset):
         data = find_images(self.root)
         df = pd.DataFrame({"identity": len(data) * ["unknown"], "path": data["path"] + os.path.sep + data["file"]})
         df["image_id"] = get_persistent_id(df["path"])
-        return df
+        return self.finalize_catalogue(df)
 
 
 class Dataset_Metadata(WildlifeDataset):
