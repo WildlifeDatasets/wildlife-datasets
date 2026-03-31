@@ -359,9 +359,9 @@ def load_segmentation(metadata: pd.DataFrame, file_name: str) -> pd.DataFrame:
 
     # Generate new image_id
     cols_enhanced = ["image_id"] + cols
-    new_image_id = metadata[cols_enhanced].round(2).astype(str).agg("_".join, axis=1)
+    new_image_id = metadata.loc[~mask, cols_enhanced].round(2).astype(str).agg("_".join, axis=1)
     new_image_id = get_persistent_id(new_image_id)
-    metadata["image_id"] = metadata["image_id"].astype(str) + "_" + new_image_id
+    metadata.loc[~mask, "image_id"] = metadata.loc[~mask, "image_id"].astype(str) + "_" + new_image_id
 
     # Finalize the dataframe
     metadata = metadata.drop(cols, axis=1)
