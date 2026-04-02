@@ -346,6 +346,10 @@ def load_segmentation(metadata: pd.DataFrame, file_name: str) -> pd.DataFrame:
     # Load segmentation
     segmentation = pd.read_csv(file_name)
 
+    # Fix segmentation as a dict
+    if "segmentation" in segmentation.columns:
+        segmentation["segmentation"] = segmentation["segmentation"].apply(parse_bbox_mask)
+
     # Merge metadata and segmentation (may result in nans in segmentations)
     cols = ["bbox_x", "bbox_y", "bbox_w", "bbox_h"]
     metadata = pd.merge(metadata, segmentation, on="image_id", how="left")
