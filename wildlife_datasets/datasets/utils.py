@@ -93,7 +93,7 @@ def crop_white(img: Image.Image) -> Image.Image:
     )
 
 
-def find_images(root: str, img_extensions: tuple[str, ...] = (".png", ".jpg", ".jpeg")) -> pd.DataFrame:
+def find_images(root: str, img_extensions: tuple[str, ...] = (".png", ".jpg", ".jpeg", ".tiff", ".bmp")) -> pd.DataFrame:
     """Finds all image files in folder and subfolders.
 
     Args:
