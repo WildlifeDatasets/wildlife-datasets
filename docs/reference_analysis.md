@@ -7,10 +7,11 @@ This file describes methods associated with dataset analysis and loading.
 ::: analysis.statistics
     options:
       heading_level: 3
+      show_source: false
 
 ## Loading
 
 ::: loader.loader
     options:
       heading_level: 3
-
+      show_source: false
