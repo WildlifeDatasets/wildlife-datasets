@@ -14,15 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v7
         with:
           python-version: 3.11
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
-      - uses: actions/cache@v4
-        with:
-          key: mkdocs-material-${{ env.cache_id }}
-          path: .cache
-          restore-keys: |
-            mkdocs-material-
-      - run: pip install -r docs/requirements.txt
-      - run: mkdocs gh-deploy --force
+          enable-cache: true
+      - run: uv venv
+      - run: uv pip install --python .venv/bin/python -r docs/requirements.txt
+      - run: uv run --python .venv/bin/python mkdocs gh-deploy --force

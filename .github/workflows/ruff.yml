@@ -14,11 +14,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Ruff
-        run: pip install ruff
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
 
       - name: Ruff lint
-        run: ruff check .
+        run: uvx ruff check .
 
       - name: Ruff format check
-        run: ruff format . --check
+        run: uvx ruff format . --check

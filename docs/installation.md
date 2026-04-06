@@ -3,5 +3,11 @@
 The installation of the package is simple by
 
 ```
-pip install wildlife-datasets
+uv add wildlife-datasets
+```
+
+Or, if you already have a virtual environment:
+
+```
+uv pip install wildlife-datasets
 ```
