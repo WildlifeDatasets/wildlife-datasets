@@ -40,6 +40,7 @@ dependencies=[
           'kaggle',
           'pyinaturalist',
           'python-docx',
+          "notebook>=7.5.5",
 ]
 
 [project.urls]

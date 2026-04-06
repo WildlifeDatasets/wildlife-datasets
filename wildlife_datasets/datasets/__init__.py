@@ -14,6 +14,7 @@ from .balearic_lizard import BalearicLizard, BalearicLizardSegmented
 from .beluga_id import BelugaID, BelugaIDv2
 from .bird_individual_id import BirdIndividualID, BirdIndividualIDSegmented
 from .bristol_gorillas_2020 import BristolGorillas2020
+from .brown_bear_heads import BrownBearHeads
 from .cat_individual_images import CatIndividualImages
 from .cattle_muzzle import CattleMuzzle
 from .chicks4free_id import Chicks4FreeID
@@ -76,6 +77,7 @@ names_all = [
     BirdIndividualID,
     BirdIndividualIDSegmented,
     BristolGorillas2020,
+    BrownBearHeads,
     CattleMuzzle,
     CatIndividualImages,
     Chicks4FreeID,
@@ -129,6 +131,7 @@ names_wild = [
     AmvrakikosTurtles,
     BalearicLizard,
     BelugaIDv2,
+    BrownBearHeads,
     CzechLynxv2,
     ELPephants,
     GiraffeZebraID,

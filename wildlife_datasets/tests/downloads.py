@@ -9,6 +9,7 @@ names_download = [
     (BalearicLizard, "BalearicLizard"),
     (BalearicLizardSegmented, "BalearicLizard"),
     (BelugaIDv2, "BelugaID"),
+    (BrownBearHeads, "BrownBearHeads"),
     (CattleMuzzle, "CattleMuzzle"),
     (CatIndividualImages, "CatIndividualImages"),
     (Chicks4FreeID, None),
