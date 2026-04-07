@@ -4,12 +4,19 @@ baselines/WildlifeReID-10k/features*/
 baselines/WildlifeReID-10k/results*/
 baselines/WildlifeReID-10k/clusters*/
 venv*/
+.venv/
+.tmp/
 
 .vscode/
 __pycache__/
 .ipynb_checkpoints/
 .idea
 .DS_Store
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
 *.out
 ibeis/
 logs/

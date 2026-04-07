@@ -70,7 +70,7 @@ def load_dataset(
 
     # Check if the dataset is downloaded.
     if not os.path.exists(root_dataset):
-        raise (Exception("Data not found. Download them first."))
+        raise FileNotFoundError(f"Dataset directory not found: {root_dataset}. Download the data first.")
 
     # Get paths of the dataset and the pickled dataframe
     root = get_dataset_folder(root_dataset, class_dataset)
