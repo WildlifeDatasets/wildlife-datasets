@@ -48,8 +48,11 @@ dev = [
     "ruff>=0.11",
 ]
 docs = [
-    "mkdocs>=1.6",
+    "mkdocs>=1.6,<2.0",
     "mkdocs-material>=9.0",
+    "mkdocstrings",
+    "mkdocstrings-python",
+    "markdown-exec",
 ]
 
 [project.urls]
