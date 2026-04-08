@@ -4,6 +4,7 @@ import io
 import os
 import shutil
 import urllib.request
+import warnings
 from contextlib import contextmanager
 
 import cv2
@@ -47,7 +48,11 @@ def load_image(path: str, max_size: int | None = None) -> Image.Image:
 
 
 def get_image(*args, **kwargs) -> Image.Image:
-    print("This function will be removed in future releases. Use load_image() instead.")
+    warnings.warn(
+        "get_image() is deprecated and will be removed in a future release. Use load_image() instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     return load_image(*args, **kwargs)
 
 

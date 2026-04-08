@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import warnings
 from collections.abc import Callable, Sequence
 from contextlib import contextmanager
 from copy import deepcopy
@@ -89,9 +90,9 @@ class WildlifeDataset:
         """
 
         if not self.saved_to_system_folder and root is not None and not os.path.exists(root):
-            raise Exception("root does not exist. You may have have mispelled it.")
+            raise FileNotFoundError(f"Dataset root does not exist: {root}")
         if self.outdated_dataset:
-            print(
+            warnings.warn(
                 f"This dataset is outdated. You may want to call a newer version such as {self.__class__.__name__}v2."
             )
         self.update_wrong_labels = update_wrong_labels
@@ -105,7 +106,9 @@ class WildlifeDataset:
             df = self.create_catalogue(**kwargs)
         else:
             if not self.determined_by_df:
-                print("This dataset is not determined by dataframe. But you construct it so.")
+                warnings.warn(
+                    "This dataset is not fully determined by its dataframe, so recreating it from df may be incomplete."
+                )
         assert df is not None
 
         if remove_unknown:
@@ -380,7 +383,7 @@ class WildlifeDataset:
             with utils.data_directory(root):
                 cls._download(**kwargs)
             open(mark_file_name, "a").close()
-            if hasattr(cls, "summary") and "licenses_url" in cls.summary and isinstance(cls.summary, str):
+            if hasattr(cls, "summary") and isinstance(cls.summary, dict) and "licenses_url" in cls.summary:
                 with open(os.path.join(root, cls.license_file_name), "w") as file:
                     file.write(cls.summary["licenses_url"])
 
