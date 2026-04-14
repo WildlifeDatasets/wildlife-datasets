@@ -293,8 +293,8 @@ class WildlifeDataset:
 
         # Crop both image and mask
         img_arr = np.asarray(img)
-        img_crop = img_arr[y_min:y_max+1, x_min:x_max+1]
-        mask_crop = mask[y_min:y_max+1, x_min:x_max+1]
+        img_crop = img_arr[y_min : y_max + 1, x_min : x_max + 1]
+        mask_crop = mask[y_min : y_max + 1, x_min : x_max + 1]
 
         # Apply mask only on cropped region
         result = img_crop * mask_crop[..., None]
