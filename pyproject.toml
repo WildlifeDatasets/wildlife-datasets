@@ -65,6 +65,7 @@ packages = [
   "wildlife_datasets",
   "wildlife_datasets.analysis",
   "wildlife_datasets.datasets",
+  "wildlife_datasets.detection",
   "wildlife_datasets.loader",
   "wildlife_datasets.metrics",
   "wildlife_datasets.preparation",  

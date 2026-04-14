@@ -274,6 +274,36 @@ class WildlifeDataset:
             mask = ~mask
         return Image.fromarray(np.asarray(img) * mask[..., np.newaxis])
 
+    def _apply_mask_crop(self, img: Image.Image, segmentation, invert: bool = False) -> Image.Image:
+        if segmentation is None or np.any(pd.isnull(segmentation)):
+            return img
+
+        # Decode mask (H, W) → bool
+        mask = mask_coco.decode(segmentation).astype(bool)
+
+        # If mask is empty, return original
+        if not mask.any():
+            return img
+
+        # Compute bounding box from mask
+        rows = np.any(mask, axis=1)
+        cols = np.any(mask, axis=0)
+        y_min, y_max = np.where(rows)[0][[0, -1]]
+        x_min, x_max = np.where(cols)[0][[0, -1]]
+
+        if invert:
+            mask = ~mask
+
+        # Crop both image and mask
+        img_arr = np.asarray(img)
+        img_crop = img_arr[y_min : y_max + 1, x_min : x_max + 1]
+        mask_crop = mask[y_min : y_max + 1, x_min : x_max + 1]
+
+        # Apply mask only on cropped region
+        result = img_crop * mask_crop[..., None]
+
+        return Image.fromarray(result)
+
     def apply_segmentation(self, img: Image.Image, idx: int) -> Image.Image:
         """Applies segmentation or bounding box when loading an image.
 
@@ -318,13 +348,11 @@ class WildlifeDataset:
 
         # Mask background using segmentation mask and crop to bounding box.
         if self.img_load == "bbox_mask":
-            img = self._apply_mask(img, segmentation, False)
-            return utils.crop_black(img)
+            return self._apply_mask_crop(img, segmentation, False)
 
         # Hide object using segmentation mask and crop to bounding box.
         if self.img_load == "bbox_hide":
-            img = self._apply_mask(img, segmentation, True)
-            return utils.crop_black(img)
+            return self._apply_mask_crop(img, segmentation, True)
 
         # Crop black background around images
         if self.img_load == "crop_black":
