@@ -15,16 +15,16 @@ summary = {
     "animals_simple": "bears",
     "real_animals": True,
     "year": 2026,
-    "reported_n_total": 72940,
+    "reported_n_total": 72939,
     "reported_n_individuals": 109,
     "wild": True,
     "clear_photos": True,
-    "pose": "single",
+    "pose": "multiple",
     "unique_pattern": False,
     "from_video": False,
     "cropped": True,
-    "span": "6 years",
-    "size": 32900,
+    "span": "5.1 years",
+    "size": 6740,
 }
 
 
