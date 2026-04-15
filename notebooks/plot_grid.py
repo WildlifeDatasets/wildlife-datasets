@@ -14,6 +14,7 @@ data = [
     (ATRW, "auto", False, None),
     (BalearicLizardSegmented, "auto", False, "BalearicLizard"),
     (BelugaIDv2, "auto", True, None),
+    (BrownBearHeads, "auto", False, None),
     (BirdIndividualIDSegmented, "auto", True, None),
     (BristolGorillas2020, "auto", False, None),
     (CatIndividualImages, "auto", False, None),

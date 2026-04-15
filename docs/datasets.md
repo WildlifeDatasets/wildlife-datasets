@@ -54,6 +54,13 @@ The high-quality datasets BelugaID, HyenaID2022 and LeopardID2022 were published
 
 ![](images/grid_BelugaID.png)
 
+### [BrownBearHeads](https://www.kaggle.com/datasets/picekl/brown-bear-heads) <a href="https://www.cell.com/current-biology/fulltext/S0960-9822(25)01670-7" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+BrownBearHeads is a longitudinal brown bear re-identification dataset collected at McNeil River State Game Sanctuary in Alaska, USA, between 2017 and 2022. It contains 72,940 head images of 109 known wild brown bears photographed across multiple years, viewpoints, and seasonal appearance changes such as fur shedding and substantial weight gain. 
+This provided version is re-distributed through the Kaggle reupload with a unified `metadata.csv` and standardized split columns. For details see `scripts/BrownBearHeads`.
+
+![](images/grid_BrownBearHeads.png)
+
 ### [BirdIndividualID](https://github.com/AndreCFerreira/Bird_individualID) <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13436" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
 BirdIndividualID is a collection of three separate bird datasets: sociable weavers at Benfontein Nature Reserve in Kimberley, South Africa, wild great tits in Möggingen, Germany and captive zebra finches at the same place. The individuals of sociable weavers and great tits were fitted with PIT-tags as nestlings, or when trapped in mist-nets as adults. The collection of labelled pictures in the wild was automated by combining RFID technology, single-board computers (Raspberry Pi), Pi cameras and artificial feeders. The authors fitted RFID antenna to small perches placed in front of bird feeders filled with seeds. The RFID data logger was then directly connected to a Raspberry Pi with a camera. When the RFID data logger detected a bird, it sent the individual's PIT-tag code to the Raspberry Pi, which took a picture. The cages of captive zebra finches were divided into equally sized partitions with a net, allowing us to take pictures from individual birds without completely socially isolating them. Besides the full images, they provided segmentated images of all birds. This is the only dataset, where authors admitted that part of the labels are wrong. This stemmed from the automatic procedure of labelling, where multiple birds sometimes entered the artificial feeder and the camera took a picture of the wrong bird. They manually checked the sociable weaver images and 4.4% images were confirmed to be mislabelled.

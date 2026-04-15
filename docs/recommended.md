@@ -59,6 +59,7 @@ print_list_red(datasets.names_wild) # markdown-exec: hide
 
 ![](images/grid_AmvrakikosTurtles.png)
 ![](images/grid_BelugaID.png)
+![](images/grid_BrownBearHeads.png)
 ![](images/grid_ELPephants.png)
 ![](images/grid_GiraffeZebraID.png)
 ![](images/grid_HappyWhale.png)
@@ -186,5 +187,3 @@ For researchers interested in the role of segmentation, multiple datasets have s
 ## Problematic datasets
 
 There are a few datasets which we recommend not to use. AAUZebraFish is more of a tracking dataset. Drosophila contains a huge number of fly images extracted from videos. LionData contain only a few images of each lion; moreover, most of the images contain only a small part of the lion (such as an ear).
-
-

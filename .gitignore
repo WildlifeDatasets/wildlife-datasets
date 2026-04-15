@@ -14,6 +14,12 @@ baselines/WildlifeReID-10k/clusters*/
 htmlcov/
 *.out
 logs/
+site/
+.tmp/
+
+*.pkl
+token.txt
+*.egg-info
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
