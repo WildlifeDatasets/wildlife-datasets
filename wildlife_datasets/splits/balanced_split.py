@@ -206,7 +206,7 @@ class BalancedSplit:
                 clusters_saved[clusters_saved == -1] = np.nan
                 df.loc[df_identity.index, "cluster"] = clusters_saved.to_numpy()
 
-        return df["cluster"].to_numpy()
+        return df["cluster"].to_numpy().copy()
 
     def resplit_by_clusters(
         self,
