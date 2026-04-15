@@ -42,6 +42,19 @@ dependencies=[
           'python-docx',
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.11",
+]
+docs = [
+    "mkdocs>=1.6,<2.0",
+    "mkdocs-material>=9.0",
+    "mkdocstrings",
+    "mkdocstrings-python",
+    "markdown-exec",
+]
+
 [project.urls]
 "Homepage" = "https://github.com/WildlifeDatasets/wildlife-datasets"
 "Documentation" = "https://wildlifedatasets.github.io/wildlife-datasets/"
@@ -52,6 +65,7 @@ packages = [
   "wildlife_datasets",
   "wildlife_datasets.analysis",
   "wildlife_datasets.datasets",
+  "wildlife_datasets.detection",
   "wildlife_datasets.loader",
   "wildlife_datasets.metrics",
   "wildlife_datasets.preparation",  
@@ -71,3 +85,6 @@ indent-style = "space"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
+
+[tool.pytest.ini_options]
+testpaths = ["wildlife_datasets/tests"]

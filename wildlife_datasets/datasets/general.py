@@ -2,9 +2,9 @@ import os
 
 import pandas as pd
 
+from ..detection import load_segmentation as utils_load_segmentation
 from .datasets import WildlifeDataset
 from .utils import find_images, get_persistent_id
-from .utils import load_segmentation as utils_load_segmentation
 
 
 class Dataset_Folder(WildlifeDataset):

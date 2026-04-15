@@ -1,1 +1,1 @@
-from . import analysis, datasets, loader, metrics, preparation, splits
+from . import analysis, datasets, detection, loader, metrics, preparation, splits

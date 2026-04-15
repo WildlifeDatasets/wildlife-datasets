@@ -12,10 +12,10 @@ from docx.styles.style import ParagraphStyle
 from docx.text.paragraph import Paragraph
 from tqdm import tqdm
 
+from ..detection import load_segmentation as utils_load_segmentation
 from .datasets import WildlifeDataset, utils
 from .downloads import DownloadPrivate
 from .general import Dataset_Metadata
-from .utils import load_segmentation as utils_load_segmentation
 from .utils import strip_suffixes
 
 identity_replace = {

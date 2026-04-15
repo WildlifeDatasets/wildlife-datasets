@@ -139,7 +139,7 @@ def precision(
     """
 
     y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)
-    return skm.precision_score(y_true, y_pred, average="macro")
+    return skm.precision_score(y_true, y_pred, average="macro", zero_division=0)
 
 
 def recall(y_true: list, y_pred: list, new_class: int | str | None = None, ignore_empty: bool = False) -> float:
@@ -162,7 +162,7 @@ def recall(y_true: list, y_pred: list, new_class: int | str | None = None, ignor
         C = skm.multilabel_confusion_matrix(y_true, y_pred)
         return np.mean([C_i[1, 1] / (C_i[1, 0] + C_i[1, 1]) for C_i in C if C_i[1, 0] + C_i[1, 1] > 0])
     else:
-        return skm.recall_score(y_true, y_pred, average="macro")
+        return skm.recall_score(y_true, y_pred, average="macro", zero_division=0)
 
 
 def f1(
@@ -184,7 +184,7 @@ def f1(
     """
 
     y_true, y_pred, new_class = unify_types(y_true, y_pred, new_class)
-    return skm.f1_score(y_true, y_pred, average="macro")
+    return skm.f1_score(y_true, y_pred, average="macro", zero_division=0)
 
 
 def accuracy_known_samples(

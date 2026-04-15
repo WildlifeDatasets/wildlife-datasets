@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import warnings
 from collections.abc import Callable, Sequence
 from contextlib import contextmanager
 from copy import deepcopy
@@ -89,9 +90,9 @@ class WildlifeDataset:
         """
 
         if not self.saved_to_system_folder and root is not None and not os.path.exists(root):
-            raise Exception("root does not exist. You may have have mispelled it.")
+            raise FileNotFoundError(f"Dataset root does not exist: {root}")
         if self.outdated_dataset:
-            print(
+            warnings.warn(
                 f"This dataset is outdated. You may want to call a newer version such as {self.__class__.__name__}v2."
             )
         self.update_wrong_labels = update_wrong_labels
@@ -105,7 +106,9 @@ class WildlifeDataset:
             df = self.create_catalogue(**kwargs)
         else:
             if not self.determined_by_df:
-                print("This dataset is not determined by dataframe. But you construct it so.")
+                warnings.warn(
+                    "This dataset is not fully determined by its dataframe, so recreating it from df may be incomplete."
+                )
         assert df is not None
 
         if remove_unknown:
@@ -271,6 +274,36 @@ class WildlifeDataset:
             mask = ~mask
         return Image.fromarray(np.asarray(img) * mask[..., np.newaxis])
 
+    def _apply_mask_crop(self, img: Image.Image, segmentation, invert: bool = False) -> Image.Image:
+        if segmentation is None or np.any(pd.isnull(segmentation)):
+            return img
+
+        # Decode mask (H, W) → bool
+        mask = mask_coco.decode(segmentation).astype(bool)
+
+        # If mask is empty, return original
+        if not mask.any():
+            return img
+
+        # Compute bounding box from mask
+        rows = np.any(mask, axis=1)
+        cols = np.any(mask, axis=0)
+        y_min, y_max = np.where(rows)[0][[0, -1]]
+        x_min, x_max = np.where(cols)[0][[0, -1]]
+
+        if invert:
+            mask = ~mask
+
+        # Crop both image and mask
+        img_arr = np.asarray(img)
+        img_crop = img_arr[y_min : y_max + 1, x_min : x_max + 1]
+        mask_crop = mask[y_min : y_max + 1, x_min : x_max + 1]
+
+        # Apply mask only on cropped region
+        result = img_crop * mask_crop[..., None]
+
+        return Image.fromarray(result)
+
     def apply_segmentation(self, img: Image.Image, idx: int) -> Image.Image:
         """Applies segmentation or bounding box when loading an image.
 
@@ -315,13 +348,11 @@ class WildlifeDataset:
 
         # Mask background using segmentation mask and crop to bounding box.
         if self.img_load == "bbox_mask":
-            img = self._apply_mask(img, segmentation, False)
-            return utils.crop_black(img)
+            return self._apply_mask_crop(img, segmentation, False)
 
         # Hide object using segmentation mask and crop to bounding box.
         if self.img_load == "bbox_hide":
-            img = self._apply_mask(img, segmentation, True)
-            return utils.crop_black(img)
+            return self._apply_mask_crop(img, segmentation, True)
 
         # Crop black background around images
         if self.img_load == "crop_black":
@@ -380,7 +411,7 @@ class WildlifeDataset:
             with utils.data_directory(root):
                 cls._download(**kwargs)
             open(mark_file_name, "a").close()
-            if hasattr(cls, "summary") and "licenses_url" in cls.summary and isinstance(cls.summary, str):
+            if hasattr(cls, "summary") and isinstance(cls.summary, dict) and "licenses_url" in cls.summary:
                 with open(os.path.join(root, cls.license_file_name), "w") as file:
                     file.write(cls.summary["licenses_url"])
 

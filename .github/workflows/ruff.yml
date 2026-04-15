@@ -21,4 +21,4 @@ jobs:
         run: ruff check .
 
       - name: Ruff format check
-        run: ruff format . --check
+        run: ruff format wildlife_datasets .github --check

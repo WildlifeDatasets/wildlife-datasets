@@ -4,6 +4,7 @@ import re
 import numpy as np
 import pandas as pd
 
+from ..detection import load_segmentation as utils_load_segmentation
 from .datasets import WildlifeDataset, utils
 from .downloads import DownloadPrivate
 
@@ -87,7 +88,7 @@ class NewtsKent(DownloadPrivate, WildlifeDataset):
 
         if load_segmentation:
             file_name = os.path.join(self.root, "segmentation.csv")
-            data = utils.load_segmentation(data, file_name)
+            data = utils_load_segmentation(data, file_name)
 
         return self.finalize_catalogue(data)
 

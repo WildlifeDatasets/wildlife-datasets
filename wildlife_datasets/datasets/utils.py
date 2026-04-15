@@ -4,6 +4,7 @@ import io
 import os
 import shutil
 import urllib.request
+import warnings
 from contextlib import contextmanager
 
 import cv2
@@ -47,7 +48,11 @@ def load_image(path: str, max_size: int | None = None) -> Image.Image:
 
 
 def get_image(*args, **kwargs) -> Image.Image:
-    print("This function will be removed in future releases. Use load_image() instead.")
+    warnings.warn(
+        "get_image() is deprecated and will be removed in a future release. Use load_image() instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     return load_image(*args, **kwargs)
 
 
@@ -93,7 +98,9 @@ def crop_white(img: Image.Image) -> Image.Image:
     )
 
 
-def find_images(root: str, img_extensions: tuple[str, ...] = (".png", ".jpg", ".jpeg")) -> pd.DataFrame:
+def find_images(
+    root: str, img_extensions: tuple[str, ...] = (".png", ".jpg", ".jpeg", ".tiff", ".bmp")
+) -> pd.DataFrame:
     """Finds all image files in folder and subfolders.
 
     Args:
@@ -340,33 +347,6 @@ def get_persistent_id(paths: pd.Series) -> pd.Series:
         raise ValueError("All entries are the same")
     idx = varying.index.min()
     return create_id(paths.str.split(os.path.sep).apply(lambda x: "/".join(x[idx:])))
-
-
-def load_segmentation(metadata: pd.DataFrame, file_name: str) -> pd.DataFrame:
-    # Load segmentation
-    segmentation = pd.read_csv(file_name)
-
-    # Merge metadata and segmentation (may result in nans in segmentations)
-    cols = ["bbox_x", "bbox_y", "bbox_w", "bbox_h"]
-    metadata = pd.merge(metadata, segmentation, on="image_id", how="left")
-    metadata["bbox"] = metadata[cols].to_numpy().tolist()
-
-    # Check that there is no image_id with two nans
-    mask = metadata[cols].isnull().all(axis=1)
-    max_n_image_id = metadata.loc[mask, "image_id"].value_counts().max()
-    if max_n_image_id > 1:
-        raise ValueError("There is image_id with multiple nan bounding boxes")
-
-    # Generate new image_id
-    cols_enhanced = ["image_id"] + cols
-    new_image_id = metadata.loc[~mask, cols_enhanced].round(2).astype(str).agg("_".join, axis=1)
-    new_image_id = get_persistent_id(new_image_id)
-    metadata.loc[~mask, "image_id"] = metadata.loc[~mask, "image_id"].astype(str) + "_" + new_image_id
-
-    # Finalize the dataframe
-    metadata = metadata.drop(cols, axis=1)
-    metadata = metadata.reset_index(drop=True)
-    return metadata
 
 
 def find_corrupted_images(root: str) -> list[str]:
