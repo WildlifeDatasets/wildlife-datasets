@@ -425,6 +425,8 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
 class TurtlewatchEgypt_Citizen(Dataset_Metadata):
     @classmethod
     def _download(cls, data: pd.DataFrame | None = None, transform: Callable | None = None) -> None:
+        img_extensions = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".tiff", ".raw")
+
         # Transform the data into the required form
         assert data is not None
         data = load_citizen_data(data)
@@ -435,18 +437,21 @@ class TurtlewatchEgypt_Citizen(Dataset_Metadata):
         # Go through the rows and download data
         metadata = pd.DataFrame()
         for encounter, (_, d) in tqdm(enumerate(data.iterrows()), total=len(data)):
-            urls = d["upload-file-731"].split("\n")
+            urls = d["Upload File 731"].split(",")
             folder = d["folder"]
             sighting = d["sighting"]
             folder_full = os.path.join(folder, f"SIGHTING #{sighting}")
 
             save_paths = download_files(urls, folder_full)
             save_paths = [os.path.relpath(p, ".") for p in save_paths]
+            save_paths_images = [x for x in save_paths if x.lower().endswith(img_extensions)]
+            for x in set(save_paths).difference(set(save_paths_images)):
+                print(f"File non-image: {x}")
 
             create_info(d, folder_full)
 
             metadata_part = {
-                "path": save_paths,
+                "path": save_paths_images,
                 "identity": "unknown",
                 "encounter_id": encounter,
             }
@@ -462,55 +467,39 @@ class TurtlewatchEgypt_Citizen(Dataset_Metadata):
         pass
 
 
-IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".webp", ".gif", ".heic", ".heif", ".avif")
-
-
 def load_citizen_data(data: pd.DataFrame) -> pd.DataFrame:
     # Convert dates
-    data["submit_time"] = pd.to_datetime(data["submit_time"])
-    data["date-227"] = pd.to_datetime(data["date-227"])
+    data["submit_time"] = pd.to_datetime(data["Date"])
 
     # Merge multiple date options
-    data["date"] = data["submit_time"].combine_first(data["date-227"])
-    data["year"] = data["date"].dt.year
-    data["month"] = data["date"].dt.month
-    data["day"] = data["date"].dt.day
+    data["year"] = data["submit_time"].dt.year
+    data["month"] = data["submit_time"].dt.month
+    data["day"] = data["submit_time"].dt.day
 
     # Merge multiple author and emails options
-    data["author"] = data["NOME"].combine_first(data["your-name"])
-    data["email"] = data["EMAIL"].combine_first(data["email-185"])
-
-    # Fill nans
-    data["author"] = data["author"].fillna("unknown")
-    data["email"] = data["email"].fillna("unknown")
+    data["author"] = data["NOME"].fillna("unknown")
+    data["email"] = data["EMAIL"]
 
     # Get folder and sightings
     data["folder"] = [get_folder(d) for _, d in data.iterrows()]
-    for _, data_folder in data.groupby(["folder"]):
-        data.loc[data_folder.index, "sighting"] = list(range(1, len(data_folder) + 1))
-    data["sighting"] = data["sighting"].astype(int)
+    data["sighting"] = data.groupby("folder").cumcount() + 1
 
     return data
 
 
 def get_folder(d: pd.Series) -> str:
-    year = d["year"]
-    month = d["month"]
-    day = d["day"]
-
-    folder1 = f"{year}_{month:02d}_{day:02d}"
-    folder2 = d["author"]
-    return f"{folder1}/{folder2}"
+    folder1 = d["year"]
+    folder2 = f"{d['month']:02d}"
+    folder3 = d["author"]
+    return f"{folder1}/{folder2}/{folder3}"
 
 
-def download_files(urls: list[str], download_folder: str, exts: tuple[str, ...] = IMAGE_EXTENSIONS) -> list[str]:
+def download_files(urls: list[str], download_folder: str) -> list[str]:
     os.makedirs(download_folder, exist_ok=True)
 
     save_paths = []
     for url in urls:
-        if not url.lower().endswith(exts):
-            print(f"Skipping non-image url: {url}")
-            continue
+        url = url.strip()
         file_name = url.split("/")[-1]
         save_path = os.path.join(download_folder, file_name)
         save_paths.append(save_path)
@@ -531,8 +520,10 @@ def download_files(urls: list[str], download_folder: str, exts: tuple[str, ...] 
 def add_run_break(p: Paragraph, text1: str, text2: str | None = None) -> None:
     if not pd.isnull(text2):
         r = p.add_run(f"{text1}: {text2}")
+    elif text1 != "":
+        r = p.add_run(f"{text1}:")
     else:
-        r = p.add_run(f"{text1}")
+        r = p.add_run("")
     r.add_break()
 
 
@@ -549,33 +540,34 @@ def create_info(d: pd.Series, save_folder: str) -> None:
     add_run_break(p, "REQUIRED DATA")
     add_run_break(p, "From", d["email"])
     add_run_break(p, "Photographer", d["author"])
-    add_run_break(p, "Date", f"{d['year']}-{d['month']:02d}-{d['day']:02d}")
-    add_run_break(p, "Town", d["town-785"])
-    add_run_break(p, "Location", d["location-785"])
+    add_run_break(p, "Date submitted", d["submit_time"])
+    add_run_break(p, "Date observed", d["Date 227"])
+    add_run_break(p, "Town", d["Town 785"])
+    add_run_break(p, "Location", d["Location 785"])
     add_run_break(p, "")
     add_run_break(p, "OPTIONAL DATA")
-    add_run_break(p, "Dive centre/independent", d["dive-785"])
-    add_run_break(p, "Time", d["time-299"])
-    add_run_break(p, "Depth", d["depth-364"])
-    add_run_break(p, "Temperature", d["degrees-364"])
-    add_run_break(p, "Activity", d["radio-602"])
-    add_run_break(p, "Species", d["species-954"])
-    add_run_break(p, "Size", d["size-648"])
-    add_run_break(p, "Sex", d["sex-786"])
-    add_run_break(p, "Comments", d["textarea-268"])
-    if d["acceptance-359"] == 1:
+    add_run_break(p, "Dive centre/independent", d["Dive 785"])
+    add_run_break(p, "Time", d["Time 299"])
+    add_run_break(p, "Depth", d["Depth 364"])
+    add_run_break(p, "Temperature", d["Degrees 364"])
+    add_run_break(p, "Activity", d["Radio 602"])
+    add_run_break(p, "Species", d["Species 954"])
+    add_run_break(p, "Size", d["Size 648"])
+    add_run_break(p, "Sex", d["Sex 786"])
+    add_run_break(p, "Comments", d["Textarea 268"])
+    if d["Acceptance 359"] == 1:
         add_run_break(p, "")
         add_run_break(p, "DATA TREATMENT")
         add_run_break(
             p,
-            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for didactic, educational and scientific use: Yes",
+            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for didactic, educational and scientific use", "Yes",
         )
         add_run_break(p, "")
         add_run_break(
             p,
-            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for marketing and advertising use (social media, magazines, ..): Yes",
+            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for marketing and advertising use (social media, magazines, ..)", "Yes",
         )
         add_run_break(p, "")
-        add_run_break(p, "Accettato: I authorize the treatment and management of personal data.")
+        add_run_break(p, "Accettato", "I authorize the treatment and management of personal data.")
 
     doc.save(f"{save_folder}/info.docx")
