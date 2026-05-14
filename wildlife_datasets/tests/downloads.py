@@ -38,6 +38,7 @@ names_download = [
     (OpenCows2020, "OpenCows2020"),
     (PolarBearVidID, "PolarBearVidID"),
     (PrimFace, "PrimFace"),
+    (RedBeeReID, None),
     (ReunionTurtles, "ReunionTurtles"),
     (SeaStarReID2023, "SeaStarReID2023"),
     (SeaTurtleID2022, "SeaTurtleID2022"),

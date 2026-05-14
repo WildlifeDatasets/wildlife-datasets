@@ -258,6 +258,12 @@ PolarBearVidID is a dataset of 13 individual polar bears from 6 German zoos. The
 
 ![](images/grid_PolarBearVidID.png)
 
+### [RedBeeReID](https://huggingface.co/datasets/megretlab/red_bee_reID) <a href="https://openaccess.thecvf.com/content/WACV2026/papers/Meyers_One-Shot_Fine-Grained_Re-Identification_of_Paint_Marked_Honey_Bees_using_Vision_WACV_2026_paper.pdf" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+RedBeeReID is a fine-grained honey bee re-identification dataset collected from 9 videos over 3 days at bee feeders. It contains 9495 cropped images of 45 red paint-marked honey bee identities across 358 tracks. The Hugging Face release provides both unrotated unmasked crops and pose-normalized, background-masked crops, with bounding boxes and 5-point pose labels.
+
+![](images/grid_RedBeeReID.png)
+
 ### [ReunionTurtles](https://www.kaggle.com/datasets/wildlifedatasets/reunionturtles) <a href="https://www.biorxiv.org/content/10.1101/2024.09.13.612839" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
 This dataset consists of photographs taken between 2007 and 2024 on Reunion Island, a French territory in the Indian Ocean (21°0'S, 55°30'E), whose shallow waters are known to be a development and foraging ground for green and hawksbill turtles. Photographs were taken by recreational divers as part of a citizen science programme with no specific associated protocols (no specific viewing angle or distance). Citizens shared their photographs whenever they wished with scientists for further analysis. All photographs are turtle head profiles taken during the same encounter and are stored in the TORSOOI database.
