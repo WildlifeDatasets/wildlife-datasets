@@ -1,6 +1,11 @@
+import io
+import os
+
 import numpy as np
 import pandas as pd
 from datasets import DownloadConfig, load_dataset
+from datasets import Image as HFImage
+from PIL import Image as PILImage
 
 from .datasets import WildlifeDataset
 from .downloads import DownloadHuggingFace
@@ -32,6 +37,7 @@ class RedBeeReID(DownloadHuggingFace, WildlifeDataset):
     summary = summary
     hf_url = "megretlab/red_bee_reID"
     image_columns = ("rotated_masked", "unrotated_unmasked")
+    keypoint_names = ("head", "neck", "thorax", "waist", "tail")
 
     def __init__(self, *args, image_column: str = "rotated_masked", **kwargs):
         self._check_image_column(image_column)
@@ -50,6 +56,61 @@ class RedBeeReID(DownloadHuggingFace, WildlifeDataset):
         if image_column not in cls.image_columns:
             raise ValueError(f"image_column must be one of {cls.image_columns}.")
 
+    @staticmethod
+    def _get_image_sizes(split, image_column: str) -> pd.DataFrame:
+        split = split.cast_column(image_column, HFImage(decode=False))
+
+        def get_size(image):
+            if image["path"] is not None and os.path.exists(image["path"]):
+                image_file = image["path"]
+            else:
+                image_file = io.BytesIO(image["bytes"])
+            with PILImage.open(image_file) as img:
+                return img.size
+
+        sizes = [get_size(row[image_column]) for row in split]
+        return pd.DataFrame(sizes, columns=["image_width", "image_height"])
+
+    @staticmethod
+    def _points_to_crop(df: pd.DataFrame, points: np.ndarray, image_column: str) -> np.ndarray:
+        points = points - df[["cx", "cy"]].to_numpy()[:, None, :]
+
+        if image_column == "rotated_masked":
+            angle = np.deg2rad(-90 - df["angle"].to_numpy())
+            cos = np.cos(angle)[:, None]
+            sin = np.sin(angle)[:, None]
+            x, y = points[..., 0], points[..., 1]
+            points = np.stack([x * cos - y * sin, x * sin + y * cos], axis=2)
+
+        points += df[["image_width", "image_height"]].to_numpy()[:, None, :] / 2
+        return points
+
+    @classmethod
+    def _annotations_to_crop(cls, df: pd.DataFrame, image_column: str) -> None:
+        keypoint_cols = [f"{name}_{axis}" for name in cls.keypoint_names for axis in ("x", "y")]
+        keypoint_source = df[keypoint_cols].to_numpy()
+        source_center_cols = ["bbox_x", "bbox_y", "bbox_width", "bbox_height"]
+        bbox_source_center = df[source_center_cols].to_numpy()
+        bbox_source = bbox_source_center.copy()
+        bbox_source[:, :2] -= bbox_source[:, 2:] / 2
+
+        keypoints = cls._points_to_crop(df, keypoint_source.reshape(len(df), -1, 2), image_column).reshape(len(df), -1)
+
+        offsets = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
+        corners = bbox_source[:, None, :2] + bbox_source[:, None, 2:] * offsets
+        corners = cls._points_to_crop(df, corners, image_column)
+
+        image_size = df[["image_width", "image_height"]].to_numpy()
+        top_left = np.clip(corners.min(axis=1), 0, image_size)
+        bottom_right = np.clip(corners.max(axis=1), 0, image_size)
+        bbox = np.column_stack([top_left, bottom_right - top_left])
+
+        df["keypoints_source"] = pd.Series(list(keypoint_source))
+        df["bbox_source_center"] = pd.Series(list(bbox_source_center))
+        df["bbox_source"] = pd.Series(list(bbox_source))
+        df["keypoints"] = pd.Series(list(keypoints))
+        df["bbox"] = pd.Series(list(bbox))
+
     def create_catalogue(
         self,
         image_column: str = "rotated_masked",
@@ -63,21 +124,8 @@ class RedBeeReID(DownloadHuggingFace, WildlifeDataset):
 
         split = self.dataset["train"]
         metadata = split.remove_columns(list(self.image_columns)).to_pandas()
-        keypoint_cols = [
-            "head_x",
-            "head_y",
-            "neck_x",
-            "neck_y",
-            "thorax_x",
-            "thorax_y",
-            "waist_x",
-            "waist_y",
-            "tail_x",
-            "tail_y",
-        ]
-        bbox_cols = ["bbox_x", "bbox_y", "bbox_width", "bbox_height"]
-        metadata["keypoints"] = pd.Series(list(metadata[keypoint_cols].to_numpy()))
-        metadata["bbox"] = pd.Series(list(metadata[bbox_cols].to_numpy()))
+        metadata = pd.concat([metadata, self._get_image_sizes(split, image_column)], axis=1)
+        self._annotations_to_crop(metadata, image_column)
         metadata["image_id"] = np.arange(len(metadata))
         metadata["identity"] = metadata["bee_id"].apply(
             lambda identity: self.unknown_name if pd.isna(identity) else str(int(identity))
