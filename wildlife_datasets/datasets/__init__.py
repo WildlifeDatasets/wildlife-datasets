@@ -230,16 +230,8 @@ names_whales = [
     NOAARightWhale,
     WhaleSharkID,
 ]
-<<<<<<< Updated upstream
-=======
-
-names_insect = [
-    RedBeeReID,
-    Drosophila,
-]
 
 names_fish = [
     AAUZebraFish,
     Melops,
 ]
->>>>>>> Stashed changes
