@@ -41,6 +41,7 @@ from .ipanda import IPanda50
 from .leopard_id import LeopardID2022
 from .lion_data import LionData
 from .macaque_faces import MacaqueFaces
+from .melops import Melops
 from .mpdd import MPDD
 from .multi_cam_cows import MultiCamCows2024
 from .ndd import NDD20, NDD20v2
@@ -102,6 +103,7 @@ names_all = [
     LeopardID2022,
     LionData,
     MacaqueFaces,
+    Melops,
     MPDD,
     MultiCamCows2024,
     NDD20v2,
@@ -139,6 +141,7 @@ names_wild = [
     HumpbackWhaleID,
     HyenaID2022,
     LeopardID2022,
+    Melops,
     NDD20v2,
     NOAARightWhale,
     NyalaData,
@@ -227,3 +230,16 @@ names_whales = [
     NOAARightWhale,
     WhaleSharkID,
 ]
+<<<<<<< Updated upstream
+=======
+
+names_insect = [
+    RedBeeReID,
+    Drosophila,
+]
+
+names_fish = [
+    AAUZebraFish,
+    Melops,
+]
+>>>>>>> Stashed changes

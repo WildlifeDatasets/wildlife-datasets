@@ -216,6 +216,12 @@ MacaqueFaces shows the faces of group-housed rhesus macaques at a breeding facil
 
 ![](images/grid_MacaqueFaces.png)
 
+### [Melops](https://zenodo.org/records/17404087) <a href="https://doi.org/10.1038/s41597-026-07045-1" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+Melops dataset features wild corkwing wrasse (Symphodus melops) photographed during a seven-year capture-mark-recapture study in Norway from 2018 to 2024. The dataset includes 24,578 images of 9,861 PIT-tagged individuals, providing reliable ground-truth identities for individual re-identification. It contains cropped head and body images from both left and right sides, capturing the species’ distinctive and asymmetric facial color patterns.
+![](images/grid_Melops.png)
+
+
 ### [MPDD](https://data.mendeley.com/datasets/v5j6m8dzhv/1)
 
 MPDD is a dataset of various dog breeds with 1657 images of 192 dogs. The dataset should be theoretically simple than most because the dogs differ significantly in size and color. 

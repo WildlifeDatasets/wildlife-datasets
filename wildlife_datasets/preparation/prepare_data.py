@@ -382,6 +382,16 @@ def prepare_macaque_faces(root, new_root, k=1, transform=None, add_split=False, 
     return df
 
 
+def prepare_melops(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
+    dataset = datasets.Melops(root, img_load="full", transform=transform, remove_unknown=True)
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
+        return add_split_column(df, splitter)
+    return df
+
+
 def prepare_mpdd(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     dataset = datasets.MPDD(root, img_load="full", transform=transform, remove_unknown=True)
     df = convert_dataset(dataset, new_root, k=k, **kwargs)
@@ -607,6 +617,7 @@ prepare_functions = {
     "IPanda50": prepare_ipanda_50,
     "LeopardID2022": prepare_leopard_id_2022,
     "MacaqueFaces": prepare_macaque_faces,
+    "Melops": prepare_melops,
     "MPDD": prepare_mpdd,
     "MultiCamCows2024": prepare_multi_cam_cows_2024,
     "NDD20": prepare_ndd20,
@@ -646,6 +657,7 @@ species_conversion = {
     "chimpanzee": "chimpanzee",
     "commersons_dolphin": "dolphin",
     "common_dolphin": "dolphin",
+    "corkwing wrasse": "fish",
     "cow": "cow",
     "cuviers_beaked_whale": "whale",
     "dog": "dog",
