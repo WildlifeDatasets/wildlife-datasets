@@ -107,6 +107,11 @@ class Melops(DownloadURL, WildlifeDataset):
         "anal_fin",
     )
     white_card_keypoint_names = ("stand_1", "stand_2", "stand_3", "stand_4")
+    bbox_fields = ("xcenter", "ycenter", "width", "height")
+    keypoint_files = (
+        ("keypoint_head.csv", head_keypoint_names, "keypoints_head"),
+        ("keypoint_white_card.csv", white_card_keypoint_names, "keypoints_white_card"),
+    )
     downloads = [
         ("https://zenodo.org/records/17404087/files/Melops_body.zip?download=1", "Melops_body.zip"),
         ("https://zenodo.org/records/17404087/files/Melops_metadata.txt?download=1", "Melops_metadata.txt"),
@@ -123,15 +128,13 @@ class Melops(DownloadURL, WildlifeDataset):
                 return os.path.join(path, file_name)
         return None
 
-    @staticmethod
-    def _relative_image_path(row: pd.Series) -> str:
-        if row["path"] == ".":
-            return row["file"]
-        return os.path.join(row["path"], row["file"])
+    @classmethod
+    def _bbox_columns(cls, part: str) -> list[str]:
+        return [f"{part}_{field}" for field in cls.bbox_fields]
 
     @staticmethod
-    def _to_series(values: np.ndarray) -> pd.Series:
-        return pd.Series(list(values))
+    def _array_series(values: np.ndarray, index: pd.Index) -> pd.Series:
+        return pd.Series(list(values), index=index)
 
     def _find_body_images(self) -> pd.DataFrame:
         assert self.root is not None
@@ -150,7 +153,10 @@ class Melops(DownloadURL, WildlifeDataset):
         if len(duplicates) > 0:
             raise ValueError(f"Duplicate Melops image names found, for example {duplicates[0]}.")
 
-        images["path"] = images.apply(self._relative_image_path, axis=1)
+        images["path"] = [
+            file_name if path == "." else os.path.join(path, file_name)
+            for path, file_name in zip(images["path"], images["file"])
+        ]
         return images[["filename_year", "path"]]
 
     def _add_optional_annotations(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -172,18 +178,14 @@ class Melops(DownloadURL, WildlifeDataset):
 
     def _add_source_bboxes(self, df: pd.DataFrame) -> None:
         for part in self.bbox_parts:
-            cols = [f"{part}_xcenter", f"{part}_ycenter", f"{part}_width", f"{part}_height"]
+            cols = self._bbox_columns(part)
             if all(col in df for col in cols):
-                df[f"bbox_{part}_source"] = self._to_series(df[cols].to_numpy())
+                df[f"bbox_{part}_source"] = self._array_series(df[cols].to_numpy(), df.index)
 
     def _check_bbox_columns(self, df: pd.DataFrame) -> None:
         missing = []
         for part in self.bbox_parts:
-            missing.extend(
-                col
-                for col in [f"{part}_xcenter", f"{part}_ycenter", f"{part}_width", f"{part}_height"]
-                if col not in df
-            )
+            missing.extend(col for col in self._bbox_columns(part) if col not in df)
         if missing:
             raise FileNotFoundError(
                 f"Melops_bbox_coords.txt is required for bbox conversion but these columns are missing: {missing}."
@@ -199,10 +201,10 @@ class Melops(DownloadURL, WildlifeDataset):
         sizes = [get_size(path) for path in tqdm(df["path"], desc="Melops image sizes", mininterval=1, ncols=100)]
         df[["image_width", "image_height"]] = pd.DataFrame(sizes, index=df.index)
 
-    @staticmethod
-    def _bbox_to_body_crop(df: pd.DataFrame, part: str) -> np.ndarray:
-        body = df[["body_xcenter", "body_ycenter", "body_width", "body_height"]].to_numpy()
-        boxes = df[[f"{part}_xcenter", f"{part}_ycenter", f"{part}_width", f"{part}_height"]].to_numpy()
+    @classmethod
+    def _bbox_to_body_crop(cls, df: pd.DataFrame, part: str) -> np.ndarray:
+        body = df[cls._bbox_columns("body")].to_numpy()
+        boxes = df[cls._bbox_columns(part)].to_numpy()
         image_size = df[["image_width", "image_height"]].to_numpy()
 
         body_top_left = body[:, :2] - body[:, 2:] / 2
@@ -217,10 +219,8 @@ class Melops(DownloadURL, WildlifeDataset):
     def _add_body_crop_bboxes(self, df: pd.DataFrame, bbox: str | None) -> None:
         self._check_bbox_columns(df)
         for part in self.bbox_parts:
-            df[f"bbox_{part}"] = self._to_series(self._bbox_to_body_crop(df, part))
+            df[f"bbox_{part}"] = self._array_series(self._bbox_to_body_crop(df, part), df.index)
         if bbox is not None:
-            if bbox not in self.bbox_parts:
-                raise ValueError(f"bbox must be one of {self.bbox_parts} or None.")
             df["bbox"] = df[f"bbox_{bbox}"]
 
     @staticmethod
@@ -228,16 +228,29 @@ class Melops(DownloadURL, WildlifeDataset):
         keypoints = keypoints.copy()
         keypoints["filename_year"] = keypoints["image"].apply(lambda x: os.path.splitext(x)[0])
         keypoints = keypoints.dropna(subset=["keypoint_id"])
+        keypoints["keypoint_id"] = keypoints["keypoint_id"].astype(int)
         keypoints = keypoints[keypoints["keypoint_id"].between(0, len(names) - 1)]
+        if len(keypoints) == 0:
+            return pd.DataFrame(columns=["filename_year", "keypoints"])
 
-        records = []
-        for filename_year, points in keypoints.groupby("filename_year"):
-            values = np.full(2 * len(names), np.nan)
-            for _, point in points.iterrows():
-                idx = int(point["keypoint_id"])
-                values[2 * idx : 2 * idx + 2] = [point["x_pred"], point["y_pred"]]
-            records.append({"filename_year": filename_year, "keypoints": values})
-        return pd.DataFrame(records)
+        keypoint_ids = range(len(names))
+        x = keypoints.pivot_table(
+            index="filename_year",
+            columns="keypoint_id",
+            values="x_pred",
+            aggfunc="last",
+        ).reindex(columns=keypoint_ids)
+        y = keypoints.pivot_table(
+            index="filename_year",
+            columns="keypoint_id",
+            values="y_pred",
+            aggfunc="last",
+        ).reindex(columns=keypoint_ids)
+
+        values = np.full((len(x), 2 * len(names)), np.nan)
+        values[:, 0::2] = x.to_numpy()
+        values[:, 1::2] = y.to_numpy()
+        return pd.DataFrame({"filename_year": x.index, "keypoints": list(values)})
 
     @staticmethod
     def _source_keypoints_to_body_crop(df: pd.DataFrame, keypoints: np.ndarray) -> np.ndarray:
@@ -252,10 +265,7 @@ class Melops(DownloadURL, WildlifeDataset):
 
     def _add_keypoints(self, df: pd.DataFrame) -> pd.DataFrame:
         assert self.root is not None
-        for file_name, names, column in [
-            ("keypoint_head.csv", self.head_keypoint_names, "keypoints_head"),
-            ("keypoint_white_card.csv", self.white_card_keypoint_names, "keypoints_white_card"),
-        ]:
+        for file_name, names, column in self.keypoint_files:
             path = self._find_file(self.root, file_name)
             if path is None:
                 continue
@@ -268,8 +278,8 @@ class Melops(DownloadURL, WildlifeDataset):
             found = df[f"{column}_source"].apply(lambda x: isinstance(x, np.ndarray))
             if found.any():
                 values[found] = np.stack(df.loc[found, f"{column}_source"].to_numpy())
-            df[f"{column}_source"] = self._to_series(values)
-            df[column] = self._to_series(self._source_keypoints_to_body_crop(df, values))
+            df[f"{column}_source"] = self._array_series(values, df.index)
+            df[column] = self._array_series(self._source_keypoints_to_body_crop(df, values), df.index)
         if "keypoints_head" in df:
             df["keypoints"] = df["keypoints_head"]
         return df
