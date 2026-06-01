@@ -166,6 +166,10 @@ class Melops(DownloadURL, WildlifeDataset):
         if bbox_path is not None:
             bboxes = pd.read_csv(bbox_path, sep="\t")
             df = df.merge(bboxes, on="filename_year", how="left")
+            for part in self.bbox_parts:
+                cols = self._bbox_columns(part)
+                if all(col in df for col in cols):
+                    df[f"bbox_{part}_source"] = self._array_series(df[cols].to_numpy(), df.index)
 
         color_path = self._find_file(self.root, "colour_extraction_correction.csv")
         if color_path is not None:
@@ -175,21 +179,6 @@ class Melops(DownloadURL, WildlifeDataset):
             df = df.merge(colors, on="filename_year", how="left")
 
         return df
-
-    def _add_source_bboxes(self, df: pd.DataFrame) -> None:
-        for part in self.bbox_parts:
-            cols = self._bbox_columns(part)
-            if all(col in df for col in cols):
-                df[f"bbox_{part}_source"] = self._array_series(df[cols].to_numpy(), df.index)
-
-    def _check_bbox_columns(self, df: pd.DataFrame) -> None:
-        missing = []
-        for part in self.bbox_parts:
-            missing.extend(col for col in self._bbox_columns(part) if col not in df)
-        if missing:
-            raise FileNotFoundError(
-                f"Melops_bbox_coords.txt is required for bbox conversion but these columns are missing: {missing}."
-            )
 
     def _add_image_sizes(self, df: pd.DataFrame) -> None:
         assert self.root is not None
@@ -217,7 +206,12 @@ class Melops(DownloadURL, WildlifeDataset):
         return np.column_stack([top_left, bottom_right - top_left])
 
     def _add_body_crop_bboxes(self, df: pd.DataFrame, bbox: str | None) -> None:
-        self._check_bbox_columns(df)
+        missing = [col for part in self.bbox_parts for col in self._bbox_columns(part) if col not in df]
+        if missing:
+            raise FileNotFoundError(
+                f"Melops_bbox_coords.txt is required for bbox conversion but these columns are missing: {missing}."
+            )
+
         for part in self.bbox_parts:
             df[f"bbox_{part}"] = self._array_series(self._bbox_to_body_crop(df, part), df.index)
         if bbox is not None:
@@ -233,33 +227,22 @@ class Melops(DownloadURL, WildlifeDataset):
         if len(keypoints) == 0:
             return pd.DataFrame(columns=["filename_year", "keypoints"])
 
-        keypoint_ids = range(len(names))
-        x = keypoints.pivot_table(
+        columns = pd.MultiIndex.from_product([range(len(names)), ["x_pred", "y_pred"]])
+        keypoints = keypoints.pivot_table(
             index="filename_year",
             columns="keypoint_id",
-            values="x_pred",
+            values=["x_pred", "y_pred"],
             aggfunc="last",
-        ).reindex(columns=keypoint_ids)
-        y = keypoints.pivot_table(
-            index="filename_year",
-            columns="keypoint_id",
-            values="y_pred",
-            aggfunc="last",
-        ).reindex(columns=keypoint_ids)
-
-        values = np.full((len(x), 2 * len(names)), np.nan)
-        values[:, 0::2] = x.to_numpy()
-        values[:, 1::2] = y.to_numpy()
-        return pd.DataFrame({"filename_year": x.index, "keypoints": list(values)})
-
-    @staticmethod
-    def _source_keypoints_to_body_crop(df: pd.DataFrame, keypoints: np.ndarray) -> np.ndarray:
-        points = keypoints.reshape(len(df), -1, 2)
-        source_size = df[["image_width", "image_height"]].to_numpy() / df[["body_width", "body_height"]].to_numpy()
-        body_top_left = (
-            df[["body_xcenter", "body_ycenter"]].to_numpy() - df[["body_width", "body_height"]].to_numpy() / 2
         )
-        body_top_left = body_top_left * source_size
+        keypoints = keypoints.swaplevel(axis=1).reindex(columns=columns)
+        return pd.DataFrame({"filename_year": keypoints.index, "keypoints": list(keypoints.to_numpy())})
+
+    @classmethod
+    def _source_keypoints_to_body_crop(cls, df: pd.DataFrame, keypoints: np.ndarray) -> np.ndarray:
+        points = keypoints.reshape(len(df), -1, 2)
+        body = df[cls._bbox_columns("body")].to_numpy()
+        source_size = df[["image_width", "image_height"]].to_numpy() / body[:, 2:]
+        body_top_left = (body[:, :2] - body[:, 2:] / 2) * source_size
         points = points - body_top_left[:, None, :]
         return points.reshape(len(df), -1)
 
@@ -312,7 +295,6 @@ class Melops(DownloadURL, WildlifeDataset):
             df = df[~missing].reset_index(drop=True)
 
         df = self._add_optional_annotations(df)
-        self._add_source_bboxes(df)
         if bbox is not None or load_image_size or load_keypoints:
             self._add_image_sizes(df)
             self._add_body_crop_bboxes(df, bbox)
