@@ -32,6 +32,7 @@ names_download = [
     (LeopardID2022, "LeopardID2022"),
     (LionData, "LionData"),
     (MacaqueFaces, "MacaqueFaces"),
+    (Melops, "Melops"),
     (MultiCamCows2024, "MultiCamCows2024"),
     (NOAARightWhale, "NOAARightWhale"),
     (NyalaData, "NyalaData"),
