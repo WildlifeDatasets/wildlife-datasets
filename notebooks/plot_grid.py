@@ -40,6 +40,7 @@ data = [
     (LeopardID2022, "auto", False, None),
     (LionData, "auto", False, None),
     (MacaqueFaces, "auto", False, None),
+    (Melops, "auto", False, None),
     (MPDD, "auto", False, None),
     (MultiCamCows2024, "auto", False, None),
     (NDD20v2, "auto", False, None),
