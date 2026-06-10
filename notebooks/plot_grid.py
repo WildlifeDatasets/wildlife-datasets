@@ -48,6 +48,7 @@ data = [
     (NyalaData, "auto", False, None),
     (OpenCows2020, "auto", True, None),
     (PolarBearVidID, "auto", False, None),
+    (RedBeeReID, "auto", False, None),
     (PrimFace, "crop_white", False, None),
     (ReunionTurtles, "auto", False, None),
     (SealIDSegmented, "crop_black", False, None),

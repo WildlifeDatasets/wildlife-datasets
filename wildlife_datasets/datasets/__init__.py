@@ -51,6 +51,7 @@ from .nyala_data import NyalaData
 from .open_cows import OpenCows2020
 from .polar_bear_vid_id import PolarBearVidID
 from .prim_face import PrimFace
+from .red_bee_reid import RedBeeReID
 from .reunion_turtles import ReunionTurtles
 from .sea_star_reid import SeaStarReID2023
 from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
@@ -113,6 +114,7 @@ names_all = [
     OpenCows2020,
     PolarBearVidID,
     PrimFace,
+    RedBeeReID,
     ReunionTurtles,
     SealID,
     SealIDSegmented,
@@ -229,6 +231,11 @@ names_whales = [
     NDD20v2,
     NOAARightWhale,
     WhaleSharkID,
+]
+
+names_insect = [
+    Drosophila,
+    RedBeeReID,
 ]
 
 names_fish = [

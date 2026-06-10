@@ -560,12 +560,14 @@ def create_info(d: pd.Series, save_folder: str) -> None:
         add_run_break(p, "DATA TREATMENT")
         add_run_break(
             p,
-            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for didactic, educational and scientific use", "Yes",
+            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for didactic, educational and scientific use",
+            "Yes",
         )
         add_run_break(p, "")
         add_run_break(
             p,
-            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for marketing and advertising use (social media, magazines, ..)", "Yes",
+            "I allow TurtleWatch Egypt 2.0 to use my digital contents (photos and videos) and the data entered in this form for marketing and advertising use (social media, magazines, ..)",
+            "Yes",
         )
         add_run_break(p, "")
         add_run_break(p, "Accettato", "I authorize the treatment and management of personal data.")

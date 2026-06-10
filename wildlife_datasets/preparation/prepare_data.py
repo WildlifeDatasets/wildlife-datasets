@@ -462,6 +462,18 @@ def prepare_polar_bear_vidid(root, new_root, k=100, transform=None, add_split=Fa
     return df
 
 
+def prepare_red_bee_reid(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
+    dataset = datasets.RedBeeReID(root, img_load="full", transform=transform, remove_unknown=True)
+    # Hugging Face image columns have no local file path, so create stable export paths.
+    dataset.df[dataset.col_path] = "images/" + dataset.df["crop_filename"]
+    df = convert_dataset(dataset, new_root, k=k, **kwargs)
+    if add_split:
+        if splitter is None:
+            splitter = splits.OpenSetSplit(0.8, 0.05, seed=666)
+        return add_split_column(df, splitter)
+    return df
+
+
 def prepare_prim_face(root, new_root, k=1, transform=None, add_split=False, splitter=None, **kwargs):
     kwargs = deepcopy(kwargs)
     remove_str = kwargs.pop("remove_str", [])
@@ -626,6 +638,7 @@ prepare_functions = {
     "OpenCows2020": prepare_open_cows_2020,
     "PolarBearVidID": prepare_polar_bear_vidid,
     "PrimFace": prepare_prim_face,
+    "RedBeeReID": prepare_red_bee_reid,
     "ReunionTurtles": prepare_reunion_turtles,
     "SealID": prepare_seal_id,
     "SeaStarReID2023": prepare_sea_star_reid_2023,
