@@ -77,7 +77,7 @@ class HulaPaintedFrogs(DownloadURL, WildlifeDataset):
                 - date (datetime): Observation timestamp.
                 - inferred (str | None): identity prediction, when the try label is missing.
         """
-        
+
         labeled = pd.read_csv(f"{self.root}/labeled.csv")
         labeled["path"] = "labeled" + os.path.sep + labeled["rel_path"].str.replace("/", os.path.sep)
         unlabeled = pd.read_csv(f"{self.root}/unlabeled.csv")
