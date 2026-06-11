@@ -18,7 +18,7 @@ summary = {
     "year": 2026,
     "reported_n_total": 1233,
     "reported_n_individuals": 191,
-    "wild": True,
+    "wild": False,
     "clear_photos": True,
     "pose": "single",
     "unique_pattern": True,
@@ -44,7 +44,7 @@ def get_date(x):
 
     return f"{year}-{month:02}-{day:02}"
 
-class HulaPaintedFrog(DownloadURL, WildlifeDataset):
+class HulaPaintedFrogs(DownloadURL, WildlifeDataset):
     downloads = [
         ("https://zenodo.org/records/20026776/files/extra.csv?download=1", "extra.csv"),
         ("https://zenodo.org/records/20026776/files/extra.zip?download=1", "extra.zip"),

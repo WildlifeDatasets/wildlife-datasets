@@ -35,7 +35,7 @@ from .giraffe_zebra_id import GiraffeZebraID
 from .giraffes import Giraffes
 from .happy_whale import HappyWhale
 from .holstein_cattle_recognition import HolsteinCattleRecognition
-from .hula_painted_frogs import HulaPaintedFrog
+from .hula_painted_frogs import HulaPaintedFrogs
 from .humpback_whale_id import HumpbackWhaleID
 from .hyena_id import HyenaID2022
 from .ipanda import IPanda50
@@ -99,7 +99,7 @@ names_all = [
     Giraffes,
     HappyWhale,
     HolsteinCattleRecognition,
-    HulaPaintedFrog,
+    HulaPaintedFrogs,
     HumpbackWhaleID,
     HyenaID2022,
     IPanda50,
@@ -142,7 +142,7 @@ names_wild = [
     ELPephants,
     GiraffeZebraID,
     HappyWhale,
-    HulaPaintedFrog,
+    HulaPaintedFrogs,
     HumpbackWhaleID,
     HyenaID2022,
     LeopardID2022,
