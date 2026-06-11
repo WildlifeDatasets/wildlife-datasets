@@ -58,6 +58,26 @@ class HulaPaintedFrogs(DownloadURL, WildlifeDataset):
     ]
 
     def create_catalogue(self) -> pd.DataFrame:
+        """
+        Create the catalogue DataFrame for the HulaPaintedFrogs dataset.
+
+        This loader slightly modify the dates via the `get_date` function, which
+        convert them from 2025-7 to 2025-07-01 and next days 2025-7a to 2025-07-02.
+        Most days will be artificially 01.
+
+        It loads all three subsets (labeled, unlabeled, extra), so the presented
+        numbers may be slightly different from the paper.
+
+        Returns:
+            pd.DataFrame: A dataframe containing one row per image.
+            The dataframe includes columns:
+
+                - identity (str): Individual identity label.
+                - path (str): Relative path to the image file.
+                - date (datetime): Observation timestamp.
+                - inferred (str | None): identity prediction, when the try label is missing.
+        """
+        
         labeled = pd.read_csv(f"{self.root}/labeled.csv")
         labeled["path"] = "labeled" + os.path.sep + labeled["rel_path"].str.replace("/", os.path.sep)
         unlabeled = pd.read_csv(f"{self.root}/unlabeled.csv")
