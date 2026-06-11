@@ -28,13 +28,14 @@ summary = {
     "size": 7000,
 }
 
+
 def get_date(x):
-    x_split = x.split('-')   
+    x_split = x.split("-")
     assert len(x_split) == 2
     year, month_day = x_split
 
     # Check whether it ends with a letter
-    m = re.fullmatch(r'(\d+)([a-z]?)', month_day)
+    m = re.fullmatch(r"(\d+)([a-z]?)", month_day)
     assert m is not None
 
     # Convert the letter into day (no -> 1, a -> 2, b -> 3, ...)
@@ -43,6 +44,7 @@ def get_date(x):
     day = ord(day_letter) - ord("a") + 2 if day_letter else 1
 
     return f"{year}-{month:02}-{day:02}"
+
 
 class HulaPaintedFrogs(DownloadURL, WildlifeDataset):
     summary = summary
@@ -69,5 +71,5 @@ class HulaPaintedFrogs(DownloadURL, WildlifeDataset):
         df["date"] = df["date"].apply(get_date)
         df = df.drop(["rel_path", "label"], axis=1)
         df = df.rename({"Inferred": "inferred"}, axis=1)
-        
+
         return self.finalize_catalogue(df)
