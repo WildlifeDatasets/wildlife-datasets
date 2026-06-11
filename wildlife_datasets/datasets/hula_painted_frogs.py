@@ -87,7 +87,7 @@ class HulaPaintedFrogs(DownloadURL, WildlifeDataset):
 
         df = pd.concat((labeled, unlabeled, extra))
         df["image_id"] = range(len(df))
-        df["identity"] = df["label"].apply(lambda x: None if pd.isnull(x) else str(int(x)))
+        df["identity"] = df["label"].apply(lambda x: self.unknown_name if pd.isnull(x) else str(int(x)))
         df["date"] = df["date"].apply(get_date)
         df = df.drop(["rel_path", "label"], axis=1)
         df = df.rename({"Inferred": "inferred"}, axis=1)
