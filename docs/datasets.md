@@ -180,6 +180,13 @@ The data set consists of 1237 pairs of thermal and RGB (640 x 320 pixels and 320
 
 ![](images/grid_HolsteinCattleRecognition.png)
 
+### [HulaPaintedFrogs](https://zenodo.org/records/20026776) <a href="https://arxiv.org/abs/2601.08798" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+The study draws on a dataset comprising a total of 1,233 color JPEG images of L. nigriventer collected during capture–recapture surveys between Dec 2013 and August 2020. Each frog was photographed with a small waterproof camera (Pentax WG-II) or a handheld digital SLR camera under ambient daylight and at a distance of 40–60 cm; multiple photos were taken per individual to capture minor pose and focus variation representative of real daytime monitoring conditions. The photos focus on the ventral view of the animals due to the abundance of white spots that can be used to distinguish between individuals. The authors labeled the dataset using Wild-ID to screen for matching frog images from previous days and then confirming the match by eye. They assigned unique labels to 191 frog individuals, each of them with between 1 and 20 images (median 5). Of the 191 identified frogs, 137 were only identified once, 43 were identified twice, eight were identified three times, two were identified four times, and one frog was identified five times. For each sampling date, there are between 1-18 images per frog individual (median 4).
+
+![](images/grid_HulaPaintedFrogs.png)
+
+
 ### [HumpbackWhaleID](https://www.kaggle.com/competitions/humpback-whale-identification)
 
 See the description in [HappyWhale](#happywhale).

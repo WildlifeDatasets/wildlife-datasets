@@ -34,6 +34,7 @@ data = [
     (Giraffes, "auto", False, None),
     (HappyWhale, "auto", False, None),
     (HolsteinCattleRecognition, "auto", False, None),
+    (HulaPaintedFrogs, "auto", False, None),
     (HumpbackWhaleID, "auto", False, None),
     (HyenaID2022, "auto", False, None),
     (IPanda50, "auto", False, None),
