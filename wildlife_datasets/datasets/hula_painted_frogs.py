@@ -10,7 +10,7 @@ summary = {
     "licenses": "Attribution 4.0 International (CC BY 4.0)",
     "licenses_url": "https://creativecommons.org/licenses/by/4.0/",
     "url": "https://zenodo.org/records/20026776",
-    "publication_url": "arxiv.org/abs/2601.08798",
+    "publication_url": "https://arxiv.org/abs/2601.08798",
     "cite": "yesharim2026near",
     "animals": {"Hula painted frog"},
     "animals_simple": "frogs",
