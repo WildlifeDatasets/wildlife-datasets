@@ -61,12 +61,12 @@ class RotwildID_Faces(DownloadKaggle, WildlifeDataset):
         allowed_types = ("landmark_affine", "landmark_crop", "mask")
         if image_type not in allowed_types:
             raise ValueError(f"image_type must by in {allowed_types}")
-        
+
         metadata_path = os.path.join(self.root, image_type, "image_metadata.csv")
         metadata = pd.read_csv(metadata_path, index_col=0)
         metadata["path"] = image_type + os.path.sep + metadata["path"]
         metadata["bbox"] = metadata["bbox"].apply(parse_bbox_mask)
         metadata["keypoints"] = metadata["keypoints"].apply(parse_bbox_mask)
         metadata["segmentation"] = metadata["segmentation"].apply(parse_bbox_mask)
-        
+
         return self.finalize_catalogue(metadata)
