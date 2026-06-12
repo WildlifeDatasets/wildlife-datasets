@@ -282,6 +282,12 @@ This dataset consists of photographs taken between 2007 and 2024 on Reunion Isla
 
 ![](images/grid_PrimFace.png)
 
+### [RotwildID_Faces](https://www.kaggle.com/datasets/jonaschu/rotwildid-faces)
+
+A face re-identification dataset for red deer (Cervus elaphus) collected in the wild in northern Germany. The dataset is intended for training and evaluating individual-identification (re-ID) models in the metric-learning setting — given two face crops, decide whether they show the same individual. 
+
+![](images/grid_RotwildID_Faces.png)
+
 ### [SealID](https://doi.org/10.23729/0f4a3296-3b10-40c8-9ad3-0cf00a5a4a53) <a href="https://www.mdpi.com/1424-8220/22/19/7602" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
 SealID is a Saimaa ringed seals database from the Lake Saimaa in Finland. The data were collected annually during the Saimaa ringed seal molting season from 2010 to 2019 by both ordinary digital cameras during boat surveys and game camera traps. The GPS coordinates, the observation times, and the numbers of the seals were noted.  Seal images were matched by an expert using individually characteristic fur patterns. The dataset contains patches and syandard images. Patches show small patterned body parts which are sufficient for seal identification. Standard images are presented both as full images and their segmented version with seal only and black background.
