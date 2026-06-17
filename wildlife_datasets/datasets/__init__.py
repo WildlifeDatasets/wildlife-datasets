@@ -53,6 +53,7 @@ from .polar_bear_vid_id import PolarBearVidID
 from .prim_face import PrimFace
 from .red_bee_reid import RedBeeReID
 from .reunion_turtles import ReunionTurtles
+from .rotwild_id_faces import RotwildID_Faces
 from .sea_star_reid import SeaStarReID2023
 from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
 from .seal_id import SealID, SealIDSegmented
@@ -116,6 +117,7 @@ names_all = [
     PrimFace,
     RedBeeReID,
     ReunionTurtles,
+    RotwildID_Faces,
     SealID,
     SealIDSegmented,
     SeaStarReID2023,
@@ -148,6 +150,7 @@ names_wild = [
     NOAARightWhale,
     NyalaData,
     ReunionTurtles,
+    RotwildID_Faces,
     SealID,
     SeaTurtleID2022,
     SouthernProvinceTurtles,
@@ -175,6 +178,7 @@ names_small = [
     NyalaData,
     PolarBearVidID,
     ReunionTurtles,
+    RotwildID_Faces,
     SeaTurtleIDHeads,
     SouthernProvinceTurtles,
     StripeSpotter,
