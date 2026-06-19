@@ -492,13 +492,29 @@ class WildlifeDataset:
 
         Args:
             df (pd.DataFrame): A full dataframe of the data.
-            replace_identity (List[Tuple]): List of (old_identity, new_identity)
+            replace_identity (list[tuple]): List of (old_identity, new_identity)
             col (str, optional): Column to replace in.
 
         Returns:
             A full dataframe of the data.
         """
 
+        identity_source = [old_identity for old_identity, _ in replace_identity]
+        if len(set(identity_source)) != len(identity_source):
+            raise ValueError("Identity changes are not unique")
+
+        mapping = dict(replace_identity)
+
+        def resolve(identity, visited):
+            if identity in visited:
+                raise ValueError(f"Cycle detected involving '{identity}'")
+            if identity not in mapping:
+                return identity
+            return resolve(mapping[identity], visited | {identity})
+
+        replace_identity = [(identity, resolve(identity, set())) for identity in mapping]
+
+        df = df.copy()
         for old_identity, new_identity in replace_identity:
             df[col] = df[col].replace({old_identity: new_identity})
         return df
@@ -537,6 +553,7 @@ class WildlifeDataset:
             A full dataframe of the data.
         """
 
+        df = df.copy()
         for image_name, old_identity, new_identity in replace_identity:
             n_replaced = 0
             for index, df_row in df.iterrows():
