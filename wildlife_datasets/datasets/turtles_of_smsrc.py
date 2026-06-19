@@ -37,6 +37,10 @@ class TurtlesOfSMSRC(DownloadINaturalist, Dataset_Metadata):
         "location",
     )
 
+    def create_catalogue(self, *, replace_identity: list[tuple] | None = None, **kwargs) -> pd.DataFrame:
+        self.replace_identity = [] if replace_identity is None else replace_identity
+        return super().create_catalogue(**kwargs)
+
     def modify_metadata(self, metadata: pd.DataFrame) -> pd.DataFrame:
         metadata["image_id"] = metadata["observation_id"].astype(str) + "_" + metadata["photo_id"].astype(str)
         metadata["identity"] = metadata["observation_id"]
@@ -49,3 +53,6 @@ class TurtlesOfSMSRC(DownloadINaturalist, Dataset_Metadata):
             axis=1,
         )
         return metadata
+
+    def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
+        return self.fix_labels_replace_identity(df, self.replace_identity)
