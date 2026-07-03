@@ -180,6 +180,13 @@ The data set consists of 1237 pairs of thermal and RGB (640 x 320 pixels and 320
 
 ![](images/grid_HolsteinCattleRecognition.png)
 
+### [HulaPaintedFrogs](https://zenodo.org/records/20026776) <a href="https://arxiv.org/abs/2601.08798" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+This dataset contains labeled and unlabeled images of the Hula painted frog (Latonia nigriventer), a critically endangered amphibian endemic to the Hula Valley, Israel, collected in the field across multiple observation dates to support automatic photo-identification and long-term population monitoring of the species. A subset of images was manually annotated with individual identities by domain experts, while a second subset has identities inferred using the method described in the associated publication, with individual numbering kept consistent between the two. In total, the dataset comprises 1,232 expert-labeled images, 1,691 images with inferred identities, and an additional 717 images not used in the paper's analyses, of which 314 carry expert-annotated identities and the remainder are unlabeled.
+
+![](images/grid_HulaPaintedFrogs.png)
+
+
 ### [HumpbackWhaleID](https://www.kaggle.com/competitions/humpback-whale-identification)
 
 See the description in [HappyWhale](#happywhale).
