@@ -17,6 +17,7 @@ from .bristol_gorillas_2020 import BristolGorillas2020
 from .brown_bear_heads import BrownBearHeads
 from .cat_individual_images import CatIndividualImages
 from .cattle_muzzle import CattleMuzzle
+from .CHIRP import CHIRP
 from .chicks4free_id import Chicks4FreeID
 from .cobra_re_identification_youngstock import CoBRAReIdentificationYoungstock
 from .cow_dataset import CowDataset
@@ -83,6 +84,7 @@ names_all = [
     BrownBearHeads,
     CattleMuzzle,
     CatIndividualImages,
+    CHIRP,
     Chicks4FreeID,
     CoBRAReIdentificationYoungstock,
     CowDataset,
@@ -138,6 +140,7 @@ names_wild = [
     BalearicLizard,
     BelugaIDv2,
     BrownBearHeads,
+    CHIRP,
     CzechLynxv2,
     ELPephants,
     GiraffeZebraID,

@@ -91,6 +91,17 @@ The Chicks4FreeID dataset contains top-down view images of individually segmente
 
 ![](images/grid_Chicks4FreeID.png)
 
+
+### [CHIRP](https://github.com/alexhang212/CHIRP_Dataset) <a href="https://openaccess.thecvf.com/content/CVPR2026/papers/Chan_CHIRP_dataset_towards_long-term_individual-level_behavioral_monitoring_of_bird_populations_CVPR_2026_paper.pdf" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="16"></a>
+
+The CHIRP video Re-ID dataset is part of a larger dataset covering a range of computer vision tasks, including object detection, keypoint estimation and action recognition of a wild population of Siberian Jays (*Perisoreus infaustus*) in Swedish Laplands. The video Re-ID dataset contains 16,109 samples across 183 unique individuals, on average 89 samples per individuals spanning multiple years. Each sample consists of 25 frames (1 second) for video re-id. All birds in the dataset are fitted with a unique combination of 3-4 colour rings on their legs, which can aid individual identification.
+
+![](images/grid_CHIRP.png)
+
+
+
+
+
 ### [CoBRAReIdentificationYoungstock](https://zenodo.org/records/15018518) <a href="https://www.mdpi.com/1424-8220/25/10/2971" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
 The data was collected at a commercial Belgian dairy farm between December 2021 and October 2023 in pen housing eight heifers aged 8 to 12 months. During the experimental period, six groups of animals were monitored, resulting in a total of 48 animals. Video footage was collected continuously during day and night with a roof-mounted 4MP camera (Hikvision Europe, Hoofddorp, The Netherlands, model DS-2CD2643G2-IZS) at 2 fps. For this study, only daylight video recordings were retained. Of the 48 monitored animals, 29 were purebred red Holstein-Friesian and 19 were purebred Holstein-Friesian.
