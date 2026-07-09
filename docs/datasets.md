@@ -205,6 +205,11 @@ The authors collected giant panda streaming videos from the Panda Channel, which
 
 ![](images/grid_IPanda50.png)
 
+### [LeopardID102](https://huggingface.co/datasets/WildCAT-Datasets/LeopardID102) <a href="https://arxiv.org/abs/2607.00804" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+LeopardID102 contains 717 labelled camera-trap photographs of 102 wild leopards from Zimbabwe, together with 148 additional leopard images that were not assigned to an individual identity. It comes from the same survey as SpottedHyenaID415 and includes all leopard images captured during that survey period. The images are full camera-trap frames and contain natural variation in viewpoint, lighting, animal size, and background clutter.
+![](images/grid_LeopardID102.png)
+
 ### [LeopardID2022](https://lila.science/datasets/leopard-id-2022/)
 
 See the description in [BelugaID](#belugaid).
@@ -328,6 +333,17 @@ SMALST is a unique dataset because it does not contain images of real animals. I
 SouthernProvinceTurtles is a collection of green sea turtles photos from two different sources in Southern Province, Sri Lanka. The first one comes from nesting turtles in the beaches Rekawa and Batigama, the seocnd one from multiple rescue centers in the southern coast of Sri Lanka. There is a significant shift between those two. The first source contains generally difficult photos taken with the red light in the night while the second source contains much simple photos.
 
 ![](images/grid_SouthernProvinceTurtles.png)
+
+### [SpottedHyenaID109](https://huggingface.co/datasets/WildCAT-Datasets/SpottedHyenaID109) <a href="https://arxiv.org/abs/2607.00804" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+SpottedHyenaID109 contains 704 camera-trap photographs of 109 wild spotted hyenas from Zimbabwe. The dataset comes from a larger survey with more than 800 identified hyenas, from which the authors selected individuals with reliable labels. The images are full camera-trap frames and contain natural variation in viewpoint, lighting, animal size, and background clutter.
+The dataset does not overlap with SpottedHyenaID415.
+![](images/grid_SpottedHyenaID109.png)
+
+### [SpottedHyenaID415](https://huggingface.co/datasets/WildCAT-Datasets/SpottedHyenaID415) <a href="https://arxiv.org/abs/2607.00804" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+SpottedHyenaID415 contains 1,871 labelled camera-trap photographs of 415 wild spotted hyenas from Zimbabwe, together with 376 additional hyena images that were not assigned to an individual identity. It comes from the same survey as LeopardID102 and includes all spotted hyena images captured during that survey period. The dataset does not overlap with SpottedHyenaID109.
+![](images/grid_SpottedHyenaID415.png)
 
 ### [StripeSpotter](https://code.google.com/archive/p/stripespotter/downloads) <a href="https://dl.acm.org/doi/abs/10.1145/1991996.1992002" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
