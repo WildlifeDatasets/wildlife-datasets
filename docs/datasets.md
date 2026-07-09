@@ -337,14 +337,12 @@ SouthernProvinceTurtles is a collection of green sea turtles photos from two dif
 ### [SpottedHyenaID109](https://huggingface.co/datasets/WildCAT-Datasets/SpottedHyenaID109) <a href="https://arxiv.org/abs/2607.00804" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
 SpottedHyenaID109 contains 704 camera-trap photographs of 109 wild spotted hyenas from Zimbabwe. The dataset comes from a larger survey with more than 800 identified hyenas, from which the authors selected individuals with reliable labels. The images are full camera-trap frames and contain natural variation in viewpoint, lighting, animal size, and background clutter. It does not overlap with SpottedHyenaID415.  No official train/test split has been provided by the authors. Therefore, we provide a time-aware 80/20 split.
-![](images/grid_LeopardID102.png)
 
 ![](images/grid_SpottedHyenaID109.png)
 
 ### [SpottedHyenaID415](https://huggingface.co/datasets/WildCAT-Datasets/SpottedHyenaID415) <a href="https://arxiv.org/abs/2607.00804" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
 SpottedHyenaID415 contains 1,871 labelled camera-trap photographs of 415 wild spotted hyenas from Zimbabwe, together with 376 additional hyena images that were not assigned to an individual identity. It comes from the same survey as LeopardID102 and includes all spotted hyena images captured during that survey period. The dataset does not overlap with SpottedHyenaID109.  No official train/test split has been provided by the authors. Therefore, we provide a time-aware 80/20 split.
-![](images/grid_LeopardID102.png)
 
 ![](images/grid_SpottedHyenaID415.png)
 
