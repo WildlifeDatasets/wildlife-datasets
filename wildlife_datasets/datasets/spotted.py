@@ -5,6 +5,7 @@ import shutil
 import pandas as pd
 from huggingface_hub import hf_hub_download
 
+from ..splits import TimeProportionSplit
 from . import utils
 from .datasets import WildlifeDataset
 
@@ -42,6 +43,7 @@ class _DownloadHuggingFaceArchive:
 class _SpottedDataset(_DownloadHuggingFaceArchive, WildlifeDataset):
     folder_name: str
     species: str
+    time_split_ratio: float = 0.8
     unknown_folders: tuple[str, ...] = ()
     orientation_map: dict[str, str] = {}
 
@@ -76,7 +78,6 @@ class _SpottedDataset(_DownloadHuggingFaceArchive, WildlifeDataset):
         metadata = {
             "identity": identity,
             "species": self.species,
-            "original_split": "train",
         }
         next_index = identity_index + 1
         if next_index < len(parts) - 1:
@@ -106,7 +107,19 @@ class _SpottedDataset(_DownloadHuggingFaceArchive, WildlifeDataset):
             records.append(record)
 
         df = pd.DataFrame(records).sort_values("path").reset_index(drop=True)
+        self._add_time_aware_split(df)
         return self.finalize_catalogue(df)
+
+    def _add_time_aware_split(self, df: pd.DataFrame) -> None:
+        splitter = TimeProportionSplit(
+            ratio=self.time_split_ratio,
+            identity_skip=self.unknown_name,
+            col_label=self.col_label,
+        )
+        idx_train, idx_test = splitter.split(df)[0]
+        df["time_split"] = pd.NA
+        df.loc[idx_train, "time_split"] = "train"
+        df.loc[idx_test, "time_split"] = "test"
 
 
 class LeopardID102(_SpottedDataset):
@@ -117,7 +130,7 @@ class LeopardID102(_SpottedDataset):
         "animals_simple": "leopards",
         "reported_n_total": 717,
         "reported_n_individuals": 102,
-        "size": 866,
+        "size": 865,
     }
     hf_repo = "WildCAT-Datasets/LeopardID102"
     archive = "LeopardID102.zip"
@@ -134,7 +147,7 @@ class SpottedHyenaID109(_SpottedDataset):
         "animals_simple": "hyenas",
         "reported_n_total": 704,
         "reported_n_individuals": 109,
-        "size": 705,
+        "size": 704,
     }
     hf_repo = "WildCAT-Datasets/SpottedHyenaID109"
     archive = "SpottedHyenaID109.zip"
@@ -151,7 +164,7 @@ class SpottedHyenaID415(_SpottedDataset):
         "animals_simple": "hyenas",
         "reported_n_total": 1871,
         "reported_n_individuals": 415,
-        "size": 2248,
+        "size": 2247,
     }
     hf_repo = "WildCAT-Datasets/SpottedHyenaID415"
     archive = "SpottedHyenaID415.zip"
