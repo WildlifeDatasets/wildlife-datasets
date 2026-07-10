@@ -18,6 +18,7 @@ from .brown_bear_heads import BrownBearHeads
 from .cat_individual_images import CatIndividualImages
 from .cattle_muzzle import CattleMuzzle
 from .chicks4free_id import Chicks4FreeID
+from .CHIRP import CHIRP
 from .cobra_re_identification_youngstock import CoBRAReIdentificationYoungstock
 from .cow_dataset import CowDataset
 from .cows import Cows2021, Cows2021v2
@@ -85,6 +86,7 @@ names_all = [
     BrownBearHeads,
     CattleMuzzle,
     CatIndividualImages,
+    CHIRP,
     Chicks4FreeID,
     CoBRAReIdentificationYoungstock,
     CowDataset,
@@ -144,6 +146,7 @@ names_wild = [
     BalearicLizard,
     BelugaIDv2,
     BrownBearHeads,
+    CHIRP,
     CzechLynxv2,
     ELPephants,
     GiraffeZebraID,
@@ -196,6 +199,8 @@ names_small = [
     StripeSpotter,
     ZakynthosTurtles,
 ]
+
+names_birds = [BirdIndividualID, CHIRP]
 
 names_cows = [
     AerialCattle2017,
