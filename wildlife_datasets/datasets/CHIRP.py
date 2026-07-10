@@ -78,8 +78,8 @@ class CHIRP(WildlifeDataset):
         """Creates catalogue for CHIRP dataset."""
         
         assert self.root is not None
-        PossibleNeighbour = pd.read_csv(os.path.join(self.root, "ReID","PossibleBirds_Neighbours.csv"))
-        PossibleTerritory = pd.read_csv(os.path.join(self.root, "ReID","PossibleBirds_Territory.csv"))
+        possible_neighbour = pd.read_csv(os.path.join(self.root, "ReID","PossibleBirds_Neighbours.csv"))
+        possible_territory = pd.read_csv(os.path.join(self.root, "ReID","PossibleBirds_Territory.csv"))
 
         data = pd.read_csv(os.path.join(self.root,"ReID", "Annotation.csv"))
         df = pd.DataFrame(
@@ -96,8 +96,8 @@ class CHIRP(WildlifeDataset):
                 "split-closed_set": data["ClosedSetSplit"],
                 "split-disjointed_set": data["DisjointedSetSplit"],
                 "split-open_set": data["OpenSetSplit"],
-                "possible_territory": data["Video"].map(PossibleTerritory.set_index("Video")["PossibleBirds"]),
-                "possible_neighbour": data["Video"].map(PossibleNeighbour.set_index("Video")["PossibleBirds"])
+                "possible_territory": data["Video"].map(possible_territory.set_index("Video")["PossibleBirds"]),
+                "possible_neighbour": data["Video"].map(possible_neighbour.set_index("Video")["PossibleBirds"])
             }
         )
         return self.finalize_catalogue(df)
