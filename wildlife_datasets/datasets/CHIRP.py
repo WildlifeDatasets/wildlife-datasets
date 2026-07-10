@@ -18,7 +18,7 @@ summary = {
     "real_animals": True,
     "year": 2026,
     "reported_n_total": 402750,
-    "reported_n_individuals": 183,
+    "reported_n_individuals": 182,
     "wild": True,
     "clear_photos": False,
     "pose": "multiple",
