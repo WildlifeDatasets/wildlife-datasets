@@ -191,6 +191,11 @@ names_small = [
     ZakynthosTurtles,
 ]
 
+names_birds = [
+    BirdIndividualID,
+    CHIRP
+]
+
 names_cows = [
     AerialCattle2017,
     CattleMuzzle,
