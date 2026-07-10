@@ -61,6 +61,7 @@ from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
 from .seal_id import SealID, SealIDSegmented
 from .smalst import SMALST
 from .southern_province_turtles import SouthernProvinceTurtles
+from .spotted import LeopardID102, SpottedHyenaID109, SpottedHyenaID415
 from .stripe_spotter import StripeSpotter
 from .turtles_of_smsrc import TurtlesOfSMSRC
 from .turtlewatch_egypt import TurtlewatchEgypt_Citizen, TurtlewatchEgypt_Master, TurtlewatchEgypt_New
@@ -106,6 +107,7 @@ names_all = [
     HumpbackWhaleID,
     HyenaID2022,
     IPanda50,
+    LeopardID102,
     LeopardID2022,
     LionData,
     MacaqueFaces,
@@ -129,6 +131,8 @@ names_all = [
     SeaTurtleIDHeads,
     SMALST,
     SouthernProvinceTurtles,
+    SpottedHyenaID109,
+    SpottedHyenaID415,
     StripeSpotter,
     TurtlesOfSMSRC,
     WildRaptorID,
@@ -150,6 +154,7 @@ names_wild = [
     HulaPaintedFrogs,
     HumpbackWhaleID,
     HyenaID2022,
+    LeopardID102,
     LeopardID2022,
     Melops,
     NDD20v2,
@@ -160,6 +165,8 @@ names_wild = [
     SealID,
     SeaTurtleID2022,
     SouthernProvinceTurtles,
+    SpottedHyenaID109,
+    SpottedHyenaID415,
     StripeSpotter,
     TurtlesOfSMSRC,
     WildRaptorID,
@@ -179,6 +186,7 @@ names_small = [
     FriesianCattle2017,
     HolsteinCattleRecognition,
     IPanda50,
+    LeopardID102,
     MacaqueFaces,
     MPDD,
     NyalaData,
@@ -187,6 +195,7 @@ names_small = [
     RotwildID_Faces,
     SeaTurtleIDHeads,
     SouthernProvinceTurtles,
+    SpottedHyenaID109,
     StripeSpotter,
     ZakynthosTurtles,
 ]
@@ -216,6 +225,17 @@ names_giraffes = [
     Giraffes,
     SMALST,
     StripeSpotter,
+]
+
+names_hyenas = [
+    HyenaID2022,
+    SpottedHyenaID109,
+    SpottedHyenaID415,
+]
+
+names_leopards = [
+    LeopardID102,
+    LeopardID2022,
 ]
 
 names_primates = [
