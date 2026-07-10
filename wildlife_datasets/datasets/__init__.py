@@ -222,6 +222,17 @@ names_giraffes = [
     StripeSpotter,
 ]
 
+names_hyenas = [
+    HyenaID2022,
+    SpottedHyenaID109,
+    SpottedHyenaID415,
+]
+
+names_leopards = [
+    LeopardID102,
+    LeopardID2022,
+]
+
 names_primates = [
     BristolGorillas2020,
     CTai,
