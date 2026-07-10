@@ -7,7 +7,6 @@ import requests
 from . import utils
 from .datasets import WildlifeDataset
 
-
 summary = {
     "licenses": "custom license",
     "licenses_url": "https://edmond.mpg.de/file.xhtml?fileId=345213&version=2.0&toolType=PREVIEW",
@@ -76,12 +75,12 @@ class CHIRP(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         """Creates catalogue for CHIRP dataset."""
-        
-        assert self.root is not None
-        possible_neighbour = pd.read_csv(os.path.join(self.root, "ReID","PossibleBirds_Neighbours.csv"))
-        possible_territory = pd.read_csv(os.path.join(self.root, "ReID","PossibleBirds_Territory.csv"))
 
-        data = pd.read_csv(os.path.join(self.root,"ReID", "Annotation.csv"))
+        assert self.root is not None
+        possible_neighbour = pd.read_csv(os.path.join(self.root, "ReID", "PossibleBirds_Neighbours.csv"))
+        possible_territory = pd.read_csv(os.path.join(self.root, "ReID", "PossibleBirds_Territory.csv"))
+
+        data = pd.read_csv(os.path.join(self.root, "ReID", "Annotation.csv"))
         df = pd.DataFrame(
             {
                 "image_id": data.index,
@@ -89,7 +88,9 @@ class CHIRP(WildlifeDataset):
                 "path": "ReID/" + os.path.sep + data["img"].astype(str).str.replace("/", os.path.sep, regex=False),
                 "date": data["Date"],
                 "video_name": data["Video"],
-                "observation_id": data["UnqTrack"].map({track: idx for idx, track in enumerate(data["UnqTrack"].unique())}),
+                "observation_id": data["UnqTrack"].map(
+                    {track: idx for idx, track in enumerate(data["UnqTrack"].unique())}
+                ),
                 "observation_name": data["UnqTrack"],
                 "territory": data["Territory"],
                 "year": data["Year"],
@@ -97,7 +98,7 @@ class CHIRP(WildlifeDataset):
                 "split-disjointed_set": data["DisjointedSetSplit"],
                 "split-open_set": data["OpenSetSplit"],
                 "possible_territory": data["Video"].map(possible_territory.set_index("Video")["PossibleBirds"]),
-                "possible_neighbour": data["Video"].map(possible_neighbour.set_index("Video")["PossibleBirds"])
+                "possible_neighbour": data["Video"].map(possible_neighbour.set_index("Video")["PossibleBirds"]),
             }
         )
         return self.finalize_catalogue(df)
