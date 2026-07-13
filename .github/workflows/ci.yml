@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  ruff:
+    uses: ./.github/workflows/ruff.yml
+
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  docs:
+    needs: [ruff, tests]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/docs.yml

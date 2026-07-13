@@ -1,10 +1,7 @@
 name: deploy gh pages
 
 on:
-  push:
-    branches:
-      - master
-      - main
+  workflow_call:
 
 permissions:
   contents: write
@@ -24,5 +21,5 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install "wildlife-datasets[docs] @ git+https://github.com/WildlifeDatasets/wildlife-datasets"
+      - run: pip install ".[docs]"
       - run: mkdocs gh-deploy --force
