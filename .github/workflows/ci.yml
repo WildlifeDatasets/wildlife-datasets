@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  ruff:
+    uses: ./.github/workflows/ruff.yml
+
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  docs:
+    needs: [tests]
+    permissions:
+      contents: write
+    uses: ./.github/workflows/docs.yml
+    with:
+      deploy: ${{ github.event_name == 'push' }}

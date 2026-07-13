@@ -1,28 +1,35 @@
-name: deploy gh pages
+name: Docs
 
 on:
-  push:
-    branches:
-      - master
-      - main
+  workflow_call:
+    inputs:
+      deploy:
+        description: "Push the built docs to gh-pages"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 jobs:
-  deploy:
+  docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: 3.11
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
       - uses: actions/cache@v4
         with:
           key: mkdocs-material-${{ env.cache_id }}
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install "wildlife-datasets[docs] @ git+https://github.com/WildlifeDatasets/wildlife-datasets"
-      - run: mkdocs gh-deploy --force
+      - run: pip install ".[docs]"
+      - name: Build docs
+        run: mkdocs build
+
+      - name: Deploy docs
+        if: inputs.deploy
+        run: mkdocs gh-deploy --force

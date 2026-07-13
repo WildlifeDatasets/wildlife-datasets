@@ -1,10 +1,8 @@
 <p align="center">
-  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues"><img src="https://img.shields.io/github/issues/WildlifeDatasets/wildlife-datasets" alt="GitHub issues"></a>
-  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/pulls"><img src="https://img.shields.io/github/issues-pr/WildlifeDatasets/wildlife-datasets" alt="GitHub pull requests"></a>
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/actions/workflows/ci.yml"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/actions/workflows/ci.yml/badge.svg" alt="WildlifeDatasets/wildlife-datasets CI"></a>
+  <a href="https://clickpy.clickhouse.com/dashboard/wildlife-datasets"><img src="https://static.pepy.tech/badge/wildlife-datasets" alt="WildlifeDatasets Downloads"></a>
   <a href="https://github.com/WildlifeDatasets/wildlife-datasets/graphs/contributors"><img src="https://img.shields.io/github/contributors/WildlifeDatasets/wildlife-datasets" alt="GitHub contributors"></a>
-  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/network/members"><img src="https://img.shields.io/github/forks/WildlifeDatasets/wildlife-datasets" alt="GitHub forks"></a>
   <a href="https://github.com/WildlifeDatasets/wildlife-datasets/stargazers"><img src="https://img.shields.io/github/stars/WildlifeDatasets/wildlife-datasets" alt="GitHub stars"></a>
-  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/watchers"><img src="https://img.shields.io/github/watchers/WildlifeDatasets/wildlife-datasets" alt="GitHub watchers"></a>
   <a href="https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/LICENSE"><img src="https://img.shields.io/github/license/WildlifeDatasets/wildlife-datasets" alt="License"></a>
 </p>
 
