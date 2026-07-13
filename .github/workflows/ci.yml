@@ -14,8 +14,9 @@ jobs:
     uses: ./.github/workflows/tests.yml
 
   docs:
-    needs: [ruff, tests]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [tests]
     permissions:
       contents: write
     uses: ./.github/workflows/docs.yml
+    with:
+      deploy: ${{ github.event_name == 'push' }}
