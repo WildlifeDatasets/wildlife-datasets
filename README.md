@@ -43,7 +43,8 @@ Do you know about any animal re-identification dataset which is not included? Po
 
 ## Changelog
 
-[30/01/2026] Added AnimalCLEF2026 (unifications of multiple datasets), BalearicLizards (lizards) and TurtlesOfSMSRC (sea turtles).
+[14/07/2026] Added BrownBearHeads (bears), CHIRP (birds), HulaPaintedFrogs (frogs), LeopardID102 (leopards), Melops (fish), RedBeeReID (bees), RotwildID_Faces (deer) and SpottedHyenaID109, SpottedHyenaID415 (hyenas).  
+[30/01/2026] Added AnimalCLEF2026 (unifications of multiple datasets), BalearicLizards (lizards) and TurtlesOfSMSRC (sea turtles).  
 [18/08/2025] Reached **50 datasets** by adding BristolGorillas2020 (primates), CattleMuzzle, CoBRAReIdentificationYoungstock, HolsteinCattleRecognition (cows), CzechLynx (lynxes) and WildRaptorID (eagles).  
 [14/04/2025] Added AnimalCLEF2025, WildlifeReID-10k (unifications of multiple datasets), MultiCamCows2024 (cows) and PrimFace (primates).  
 [31/10/2024] Added AmvrakikosTurtles, ReunionTurtles, SouthernProvinceTurtles, ZakynthosTurtles (sea turtles), ELPephants (elephants) and Chicks4FreeID (chickens).  
