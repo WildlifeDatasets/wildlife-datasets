@@ -137,11 +137,11 @@ For a list of additional datasets not included in WidlifeDatasets, see [this web
 
 ## License
 
-This project is dual-licensed. It is freely available under the [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE) for research, personal, and other AGPL-compliant use. Companies or individuals who want to use it without complying with the AGPL's obligations (e.g. inside a proprietary product or service) may instead obtain a separate commercial license by contacting [wilddatasets@gmail.com](mailto:wilddatasets@gmail.com).
+This project is freely available under the [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE) for research, personal, and other AGPL-compliant use. For companies or individuals who want to use it without complying with the AGPL's obligations (e.g. inside a proprietary product or service), we may offer a separate commercial license by contacting [wilddatasets@gmail.com](mailto:wilddatasets@gmail.com).
 
-## Citation
+This license covers the code in this repository only. It does not supersede the individual licenses of the datasets it can load or reference. If you use any dataset, you must separately comply with that dataset's own license and terms of use.
 
-If you like our package, please cite our [paper](https://openaccess.thecvf.com/content/WACV2024/html/Cermak_WildlifeDatasets_An_Open-Source_Toolkit_for_Animal_Re-Identification_WACV_2024_paper.html). You may be also interested in our [SeaTurtleID2022](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid2022) dataset published in another [paper](https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html).
+If you use our package, please cite the [paper](https://openaccess.thecvf.com/content/WACV2024/html/Cermak_WildlifeDatasets_An_Open-Source_Toolkit_for_Animal_Re-Identification_WACV_2024_paper.html).
 
 ```
 @InProceedings{Cermak_2024_WACV,
