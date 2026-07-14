@@ -35,8 +35,7 @@ The aim of the project is to provide a comprehensive overview of datasets for wi
 
 - overview of 61 publicly available wildlife re-identification datasets and 3 metadatasets.
 - utilities to mass download and convert them into a unified format and fix some wrong labels.
-- used for training our models [MegaDescriptor](https://wildlifedatasets.github.io/wildlife-tools/megadescriptor.md) and [WildFusion](https://wildlifedatasets.github.io/wildlife-tools/wildfusion/).
-- synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools) used for training ML models.
+- used in synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools) to train our models [MegaDescriptor](https://wildlifedatasets.github.io/wildlife-tools/megadescriptor/) and [WildFusion](https://wildlifedatasets.github.io/wildlife-tools/wildfusion/).
 
 An introductory example is provided in a [Jupyter notebook](notebooks/introduction.ipynb). The package provides a natural synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools), which provides our [MegaDescriptor](https://huggingface.co/BVRA/MegaDescriptor-L-384) model and tools for training neural networks. 
 
