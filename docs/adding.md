@@ -27,7 +27,7 @@ The dataframe `df` must satisfy [some requirements](./dataframe.md).
 
 !!! info
 
-    Instead of returning `df` it is better to return `self.finalize_catalogue(df)`. This function will perform [multiple checks](./reference_datasets.md/#datasets.datasets.WildlifeDataset.finalize_catalogue) to verify the created dataframe. However, in this case, this check would fail because the specified file paths do not exist.
+    Instead of returning `df` it is better to return `self.finalize_catalogue(df)`. This function will perform multiple checks to verify the created dataframe. However, in this case, this check would fail because the specified file paths do not exist.
 
 To incorporate the new dataset into the list of all available datasets, the [init script](https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/wildlife_datasets/datasets/__init__.py) must be appropriately modified.
 
