@@ -8,6 +8,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 
 import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 import pandas as pd
 import pycocotools.mask as mask_coco
@@ -517,6 +518,47 @@ class WildlifeDataset:
         df = df.copy()
         for old_identity, new_identity in replace_identity:
             df[col] = df[col].replace({old_identity: new_identity})
+        return df
+
+    def fix_labels_group_identity(
+        self, df: pd.DataFrame, replace_identity: list[tuple], col: str = "identity"
+    ) -> pd.DataFrame:
+        """Replaces identities by merging connected groups.
+
+        Each tuple represents identities that should be considered equivalent.
+        For example:
+            [(1, 2, 3), (3, 4), (7, 8)]
+
+        results in the mappings:
+            1,2,3,4 -> 1
+            7,8 -> 7
+
+        Args:
+            df (pd.DataFrame): A full dataframe of the data.
+            replace_identity (List[Tuple]): List of (identity1, identity2, ...) to be merged.
+            col (str, optional): Column to replace in.
+
+        Returns:
+            A full dataframe of the data.
+        """
+
+        graph = nx.Graph()
+        for group in replace_identity:
+            if len(group) == 0:
+                continue
+            graph.add_nodes_from(group)
+            graph.add_edges_from(zip(group[:-1], group[1:]))
+
+        mapping = {}
+        for component in nx.connected_components(graph):
+            representative = min(component)
+            if representative not in set(df[col]):
+                raise ValueError(f"Representative '{representative}' not found in column '{col}'.")            
+            for node in component:
+                mapping[node] = representative
+
+        df = df.copy()
+        df[col] = df[col].replace(mapping)
         return df
 
     def fix_labels_remove_identity(
