@@ -18,6 +18,7 @@ from .brown_bear_heads import BrownBearHeads
 from .cat_individual_images import CatIndividualImages
 from .cattle_muzzle import CattleMuzzle
 from .chicks4free_id import Chicks4FreeID
+from .CHIRP import CHIRP
 from .cobra_re_identification_youngstock import CoBRAReIdentificationYoungstock
 from .cow_dataset import CowDataset
 from .cows import Cows2021, Cows2021v2
@@ -35,6 +36,7 @@ from .giraffe_zebra_id import GiraffeZebraID
 from .giraffes import Giraffes
 from .happy_whale import HappyWhale
 from .holstein_cattle_recognition import HolsteinCattleRecognition
+from .hula_painted_frogs import HulaPaintedFrogs
 from .humpback_whale_id import HumpbackWhaleID
 from .hyena_id import HyenaID2022
 from .ipanda import IPanda50
@@ -59,6 +61,7 @@ from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
 from .seal_id import SealID, SealIDSegmented
 from .smalst import SMALST
 from .southern_province_turtles import SouthernProvinceTurtles
+from .spotted import LeopardID102, SpottedHyenaID109, SpottedHyenaID415
 from .stripe_spotter import StripeSpotter
 from .turtles_of_smsrc import TurtlesOfSMSRC
 from .turtlewatch_egypt import TurtlewatchEgypt_Citizen, TurtlewatchEgypt_Master, TurtlewatchEgypt_New
@@ -83,6 +86,7 @@ names_all = [
     BrownBearHeads,
     CattleMuzzle,
     CatIndividualImages,
+    CHIRP,
     Chicks4FreeID,
     CoBRAReIdentificationYoungstock,
     CowDataset,
@@ -99,9 +103,11 @@ names_all = [
     Giraffes,
     HappyWhale,
     HolsteinCattleRecognition,
+    HulaPaintedFrogs,
     HumpbackWhaleID,
     HyenaID2022,
     IPanda50,
+    LeopardID102,
     LeopardID2022,
     LionData,
     MacaqueFaces,
@@ -125,6 +131,8 @@ names_all = [
     SeaTurtleIDHeads,
     SMALST,
     SouthernProvinceTurtles,
+    SpottedHyenaID109,
+    SpottedHyenaID415,
     StripeSpotter,
     TurtlesOfSMSRC,
     WildRaptorID,
@@ -138,12 +146,15 @@ names_wild = [
     BalearicLizard,
     BelugaIDv2,
     BrownBearHeads,
+    CHIRP,
     CzechLynxv2,
     ELPephants,
     GiraffeZebraID,
     HappyWhale,
+    HulaPaintedFrogs,
     HumpbackWhaleID,
     HyenaID2022,
+    LeopardID102,
     LeopardID2022,
     Melops,
     NDD20v2,
@@ -154,6 +165,8 @@ names_wild = [
     SealID,
     SeaTurtleID2022,
     SouthernProvinceTurtles,
+    SpottedHyenaID109,
+    SpottedHyenaID415,
     StripeSpotter,
     TurtlesOfSMSRC,
     WildRaptorID,
@@ -173,6 +186,7 @@ names_small = [
     FriesianCattle2017,
     HolsteinCattleRecognition,
     IPanda50,
+    LeopardID102,
     MacaqueFaces,
     MPDD,
     NyalaData,
@@ -181,9 +195,12 @@ names_small = [
     RotwildID_Faces,
     SeaTurtleIDHeads,
     SouthernProvinceTurtles,
+    SpottedHyenaID109,
     StripeSpotter,
     ZakynthosTurtles,
 ]
+
+names_birds = [BirdIndividualID, CHIRP]
 
 names_cows = [
     AerialCattle2017,
@@ -208,6 +225,17 @@ names_giraffes = [
     Giraffes,
     SMALST,
     StripeSpotter,
+]
+
+names_hyenas = [
+    HyenaID2022,
+    SpottedHyenaID109,
+    SpottedHyenaID415,
+]
+
+names_leopards = [
+    LeopardID102,
+    LeopardID2022,
 ]
 
 names_primates = [

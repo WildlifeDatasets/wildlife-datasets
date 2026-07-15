@@ -1,10 +1,8 @@
 <p align="center">
-  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/issues"><img src="https://img.shields.io/github/issues/WildlifeDatasets/wildlife-datasets" alt="GitHub issues"></a>
-  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/pulls"><img src="https://img.shields.io/github/issues-pr/WildlifeDatasets/wildlife-datasets" alt="GitHub pull requests"></a>
+  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/actions/workflows/ci.yml"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/actions/workflows/ci.yml/badge.svg" alt="WildlifeDatasets/wildlife-datasets CI"></a>
+  <a href="https://clickpy.clickhouse.com/dashboard/wildlife-datasets"><img src="https://static.pepy.tech/badge/wildlife-datasets" alt="WildlifeDatasets Downloads"></a>
   <a href="https://github.com/WildlifeDatasets/wildlife-datasets/graphs/contributors"><img src="https://img.shields.io/github/contributors/WildlifeDatasets/wildlife-datasets" alt="GitHub contributors"></a>
-  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/network/members"><img src="https://img.shields.io/github/forks/WildlifeDatasets/wildlife-datasets" alt="GitHub forks"></a>
   <a href="https://github.com/WildlifeDatasets/wildlife-datasets/stargazers"><img src="https://img.shields.io/github/stars/WildlifeDatasets/wildlife-datasets" alt="GitHub stars"></a>
-  <a href="https://github.com/WildlifeDatasets/wildlife-datasets/watchers"><img src="https://img.shields.io/github/watchers/WildlifeDatasets/wildlife-datasets" alt="GitHub watchers"></a>
   <a href="https://github.com/WildlifeDatasets/wildlife-datasets/blob/main/LICENSE"><img src="https://img.shields.io/github/license/WildlifeDatasets/wildlife-datasets" alt="License"></a>
 </p>
 
@@ -35,10 +33,9 @@
 
 The aim of the project is to provide a comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
 
-- overview of 53 publicly available wildlife re-identification datasets and 3 metadatasets.
+- overview of 61 publicly available wildlife re-identification datasets and 3 metadatasets.
 - utilities to mass download and convert them into a unified format and fix some wrong labels.
-- used for training our models [MegaDescriptor](./megadescriptor.md) and [WildFusion](./wildfusion.md).
-- synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools) used for training ML models.
+- used in synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools) to train our models [MegaDescriptor](https://wildlifedatasets.github.io/wildlife-tools/megadescriptor/) and [WildFusion](https://wildlifedatasets.github.io/wildlife-tools/wildfusion/).
 
 An introductory example is provided in a [Jupyter notebook](notebooks/introduction.ipynb). The package provides a natural synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools), which provides our [MegaDescriptor](https://huggingface.co/BVRA/MegaDescriptor-L-384) model and tools for training neural networks. 
 
@@ -46,7 +43,8 @@ Do you know about any animal re-identification dataset which is not included? Po
 
 ## Changelog
 
-[30/01/2026] Added AnimalCLEF2026 (unifications of multiple datasets), BalearicLizards (lizards) and TurtlesOfSMSRC (sea turtles).
+[14/07/2026] Added BrownBearHeads (bears), CHIRP (birds), HulaPaintedFrogs (frogs), LeopardID102 (leopards), Melops (fish), RedBeeReID (bees), RotwildID_Faces (deer) and SpottedHyenaID109, SpottedHyenaID415 (hyenas).  
+[30/01/2026] Added AnimalCLEF2026 (unifications of multiple datasets), BalearicLizards (lizards) and TurtlesOfSMSRC (sea turtles).  
 [18/08/2025] Reached **50 datasets** by adding BristolGorillas2020 (primates), CattleMuzzle, CoBRAReIdentificationYoungstock, HolsteinCattleRecognition (cows), CzechLynx (lynxes) and WildRaptorID (eagles).  
 [14/04/2025] Added AnimalCLEF2025, WildlifeReID-10k (unifications of multiple datasets), MultiCamCows2024 (cows) and PrimFace (primates).  
 [31/10/2024] Added AmvrakikosTurtles, ReunionTurtles, SouthernProvinceTurtles, ZakynthosTurtles (sea turtles), ELPephants (elephants) and Chicks4FreeID (chickens).  
@@ -137,9 +135,13 @@ For additional functionality including mass loading, datasets splitting or evalu
 
 For a list of additional datasets not included in WidlifeDatasets, see [this webpage](https://github.com/DariaKern/IndividualAnimalRe-IDDatasets).
 
-## Citation
+## License
 
-If you like our package, please cite our [paper](https://openaccess.thecvf.com/content/WACV2024/html/Cermak_WildlifeDatasets_An_Open-Source_Toolkit_for_Animal_Re-Identification_WACV_2024_paper.html). You may be also interested in our [SeaTurtleID2022](https://www.kaggle.com/datasets/wildlifedatasets/seaturtleid2022) dataset published in another [paper](https://openaccess.thecvf.com/content/WACV2024/html/Adam_SeaTurtleID2022_A_Long-Span_Dataset_for_Reliable_Sea_Turtle_Re-Identification_WACV_2024_paper.html).
+This project is freely available under the [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE) for research, personal, and other AGPL-compliant use. For companies or individuals who want to use it without complying with the AGPL's obligations (e.g. inside a proprietary product or service), we may offer a separate commercial license by contacting [wilddatasets@gmail.com](mailto:wilddatasets@gmail.com).
+
+This license covers the code in this repository only. It does not supersede the individual licenses of the datasets it can load or reference. If you use any dataset, you must separately comply with that dataset's own license and terms of use.
+
+If you use our package, please cite the [paper](https://openaccess.thecvf.com/content/WACV2024/html/Cermak_WildlifeDatasets_An_Open-Source_Toolkit_for_Animal_Re-Identification_WACV_2024_paper.html).
 
 ```
 @InProceedings{Cermak_2024_WACV,
