@@ -30,6 +30,7 @@ from .dog_face_net import DogFaceNet
 from .downloads import DownloadHuggingFace, DownloadINaturalist, DownloadKaggle, DownloadPrivate, DownloadURL
 from .drosophila import Drosophila
 from .elpephants import ELPephants
+from .fire_salamanders import FireSalamanders
 from .friesian_cattle import FriesianCattle2015, FriesianCattle2015v2, FriesianCattle2017
 from .general import Dataset_Folder, Dataset_Metadata
 from .giraffe_zebra_id import GiraffeZebraID
@@ -97,6 +98,7 @@ names_all = [
     DogFaceNet,
     Drosophila,
     ELPephants,
+    FireSalamanders,
     FriesianCattle2015v2,
     FriesianCattle2017,
     GiraffeZebraID,
