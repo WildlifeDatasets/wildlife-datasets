@@ -553,7 +553,7 @@ class WildlifeDataset:
         for component in nx.connected_components(graph):
             representative = min(component)
             if representative not in set(df[col]):
-                raise ValueError(f"Representative '{representative}' not found in column '{col}'.")            
+                raise ValueError(f"Representative '{representative}' not found in column '{col}'.")
             for node in component:
                 mapping[node] = representative
 
