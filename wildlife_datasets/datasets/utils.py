@@ -304,7 +304,8 @@ def download_image(url, headers=None, file_name=None):
     if response.status_code == 200:
         img = Image.open(io.BytesIO(response.content))
         if file_name is not None:
-            img.save(file_name)
+            with open(file_name, "wb") as f:
+                f.write(response.content)
         return img
     elif response.status_code == 404:
         print(f"Image not found (404). Skipping... {url}")
