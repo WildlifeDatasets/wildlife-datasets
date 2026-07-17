@@ -55,4 +55,4 @@ class TurtlesOfSMSRC(DownloadINaturalist, Dataset_Metadata):
         return metadata
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
-        return self.fix_labels_replace_identity(df, self.replace_identity)
+        return self.fix_labels_group_identity(df, self.replace_identity)
