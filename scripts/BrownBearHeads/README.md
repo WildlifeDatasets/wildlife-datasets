@@ -1,153 +1,174 @@
-# BrownBearHeads Standardization
+# BrownBearHeads Preparation
 
-## Why this exists
+This folder contains the scripts used to build the Kaggle/WildlifeDatasets
+version of BrownBearHeads from the Zenodo public release.
 
-The original BrownBearHeads release form is not aligned with what is expected by the `wildlife-datasets`, e.g. one metadata file, one canonical image copy per image, one simple folder structure, and explicitly named split columns.
-
-Mo precisely, the official public release of the dataset 
-- includes everything (even including model checkpoints etc.) in one zip file which makes it much harder to download due to the size, i.e., 30Gb.
-- stores multiple experiment definitions separately, for example `test_on_2017`, `test_on_2018`, ..., `test_on_2022`, each with their own `train_iid.csv`, `val_iid.csv`, `test_iid.csv`, and `test_ood.csv`.
-
-The goal of this workflow is to convert the release into a **clean, reproducible, standardized local dataset** that can later be loaded in the same spirit as other datasets available through `wildlife-datasets`.
-
-
-## What the workflow produces
-
-The pipeline creates:
-- one cleaned metadata table derived from the original CSV files,
-- one canonical image folder with no repeated image files,
-
-The standardized prepared folder is intended to be easy to:
-- inspect manually,
-- load in Python,
-- version and reproduce,
-- integrate with `wildlife-datasets`.
-
-
-## The two steps
-
-The workflow is intentionally split into two scripts so that each script has one clear task.
-
-### 1. `scripts/BrownBearHears/metadata_cleanup.py`
-
-This is the **CSV-only** step.
-
-It:
-- loads all available split CSV files from the original BrownBearHeads release,
-- merges repeated rows describing the same original image path,
-- normalizes dates, years, and selected metadata fields,
-- creates explicit split columns for the standardized dataset.
-
-### 2. `scripts/BrownBearHears/brown_bear_heads_resize_images.py`
-
-This is the **image preparation** step.
-
-It:
-- reads the cleaned metadata created by `metadata_cleanup.py`,
-- resolves each original CSV image path to a real file in the raw release,
-- copies and optionally resizes that image,
-- writes the final prepared `metadata.csv`.
-
-
-
-## Example Usage
-
-```bash
-python scripts/BrownBearHears/metadata_cleanup.py \
-  /path/to/Public_release \
-  /path/to/output/metadata_clean.csv
-```
-
-```bash
-python scripts/BrownBearHears/brown_bear_heads_resize_images.py \
-  /path/to/Public_release \
-  /path/to/metadata_clean.csv \
-  /path/to/output_root \
-  --max-side 720 \
-  --workers 8
-```
-
-```bash
-python scripts/BrownBearHears/brown_bear_heads_build_prepared.py \
-  /path/to/Public_release \
-  /path/to/output_root \
-  --max-side 720 \
-  --workers 8
-```
-
-
-## Output structure
-
-The prepared output has this structure:
+The final dataset root should look like this:
 
 ```text
-Public_release_720_prepared/
-  metadata_clean.csv
+BrownBearHeads/
   metadata.csv
-  preparation_config.csv
-  images/
+  head_keypoints.csv
+  BrownBearHeads/
     2017/
-      IdentityA/
-        file.jpg
-    2018/
-      IdentityB/
-        file.jpg
+      Aardvark/
+        598A2507_BLR_0_Aardvark.JPG
+    ...
 ```
 
-## Standardized split columns
+`metadata.csv` is the main WildlifeDatasets metadata file. `head_keypoints.csv`
+is an optional pose sidecar. Both files must use the same `path` values.
 
-The cleaned metadata step creates 8 explicit split columns: `split_2017`, `split_2018`, `split_2019`, `split_2020`, `split_2021`, `split_2022`, `split_ood`, `split_iid`
+## Prepare Metadata
 
-### Original yearly experiment columns
+Create the intermediate metadata from the extracted Zenodo release:
 
-The columns `split_2017` to `split_2022` come from the original release structure.
-F or a given image, each of these columns records the role that the image plays in the corresponding original experiment:
-`train`, `val`, `test`, empty / missing if that image does not appear in that experiment
+```bash
+python scripts/BrownBearHeads/prepare_metadata.py \
+  /path/to/Public_release \
+  /path/to/BrownBearHeads/clean_metadata.csv
+```
 
-To make the representation simpler and more consistent:
+This writes one row per image. At this stage `path` and `path_original` both
+point to the original Zenodo head-crop path, for example:
 
-- `train_iid.csv` becomes `train`
-- `val_iid.csv` becomes `val`
-- `test_iid.csv` becomes `test`
-- `test_ood.csv` becomes `test`
+```text
+2017_heads/images/598A2507_BLR_0_Aardvark.JPG
+```
 
-This keeps the standardized output compact while still preserving experiment membership.
+Do not upload `clean_metadata.csv` to Kaggle. It is only an intermediate file.
 
+Sparse Zenodo ground-truth/preprocessing keypoints can be added for inspection:
 
-### Derived canonical split: `split_ood`
+```bash
+python scripts/BrownBearHeads/prepare_metadata.py \
+  /path/to/Public_release \
+  /path/to/BrownBearHeads/clean_metadata.csv \
+  --include-keypoints
+```
 
-`split_ood` is a **new standardized split**, not a direct copy of one original CSV.
-Its purpose is to provide one simple out-of-distribution protocol that can be used consistently with `wildlife-datasets`.  Definition:
+These sparse keypoints are not the final pose sidecar. The final `metadata.csv`
+should not contain pose columns.
 
-- all images from year `2022` are assigned to `test`,
-- all images from year `2021` are assigned to `val`,
-- all images from years `2017` to `2020` are assigned to `train`.
+## Prepare Images
 
+Create the final image folder and final `metadata.csv`:
 
-### Derived canonical split: `split_iid`
+```bash
+python scripts/BrownBearHeads/resize_and_restructure.py \
+  /path/to/Public_release \
+  /path/to/BrownBearHeads/clean_metadata.csv \
+  /path/to/BrownBearHeads \
+  --max-side 720
+```
 
-`split_iid` is another **new standardized split**, also not a direct copy of one original CSV.
-Its purpose is to provide one simple in-distribution protocol that can be reproduced and compared across methods.
-Definition:
+This copies/resizes images and rewrites `path` to the final Kaggle structure:
 
-- for each identity, observations are sorted chronologically,
-- the earliest `60%` are assigned to `train`,
-- the next `10%` are assigned to `val`,
-- the latest `30%` are assigned to `test`.
+```text
+BrownBearHeads/<year>/<identity>/<filename>
+```
 
-This means the split is day-based rather than image-based. That is important because it avoids leakage where near-duplicate images from the same day would appear in both training and testing.
+The script writes:
 
+```text
+/path/to/BrownBearHeads/metadata.csv
+```
 
-## Final metadata columns
+Final `metadata.csv` has no pose columns. Pose belongs in `head_keypoints.csv`.
 
-The final prepared `metadata.csv` contains:
+## Predict Head Keypoints
 
+Use the released HRNet pose checkpoint from the Zenodo release and a local
+checkout of the official `amathislab/BrownBear_ReID` code:
+
+```bash
+git clone https://github.com/amathislab/BrownBear_ReID /path/to/BrownBear_ReID
+```
+
+Run prediction on the prepared dataset root, not on the raw Zenodo root:
+
+```bash
+python scripts/BrownBearHeads/predict_keypoints.py \
+  /path/to/BrownBearHeads \
+  /path/to/BrownBearHeads/metadata.csv \
+  /path/to/BrownBearHeads/metadata_with_keypoints.csv \
+  --repo-root /path/to/BrownBear_ReID \
+  --checkpoint /path/to/Public_release/checkpoints/preprocessing_ckpts/pose/hrnet_w48_balanced_n13_refined.pth \
+  --device cuda:0 \
+  --batch-size 32 \
+  --sidecar-csv /path/to/BrownBearHeads/head_keypoints.csv
+```
+
+`metadata_with_keypoints.csv` is a diagnostic full metadata file with pose
+columns. The Kaggle dataset only needs `metadata.csv` and `head_keypoints.csv`.
+
+Smoke test:
+
+```bash
+python scripts/BrownBearHeads/predict_keypoints.py \
+  /path/to/BrownBearHeads \
+  /path/to/BrownBearHeads/metadata.csv \
+  /path/to/BrownBearHeads/metadata_with_keypoints_smoke.csv \
+  --repo-root /path/to/BrownBear_ReID \
+  --checkpoint /path/to/Public_release/checkpoints/preprocessing_ckpts/pose/hrnet_w48_balanced_n13_refined.pth \
+  --device cpu \
+  --limit 16 \
+  --sidecar-csv /path/to/BrownBearHeads/head_keypoints_smoke.csv
+```
+
+`head_keypoints.csv` stores pose in wide CSV form:
+
+```text
+path,
+keypoint_00_x,keypoint_00_y,keypoint_00_score,
+...
+keypoint_12_x,keypoint_12_y,keypoint_12_score,
+min_keypoint_score,mean_keypoint_score,n_out_of_bounds_keypoints
+```
+
+Its `path` column must match `metadata.csv["path"]` exactly.
+
+## Repair Old Sidecar
+
+If an older `head_keypoints.csv` has paths like `2017/images/...` or
+`2017_heads/images/...`, repair it once:
+
+```bash
+python scripts/BrownBearHeads/fix_head_keypoint_paths.py \
+  /path/to/BrownBearHeads \
+  --dry-run
+```
+
+Then overwrite the sidecar:
+
+```bash
+python scripts/BrownBearHeads/fix_head_keypoint_paths.py \
+  /path/to/BrownBearHeads
+```
+
+The repair maps keypoints by `year + filename` and rewrites the sidecar `path`
+to the exact final metadata path.
+
+## Load
+
+```python
+from wildlife_datasets import datasets
+
+root = "/path/to/BrownBearHeads"
+dataset = datasets.BrownBearHeads(root)
+dataset_with_pose = datasets.BrownBearHeads(root, load_keypoints=True)
+```
+
+`load_keypoints=True` joins `head_keypoints.csv` to `metadata.csv` by `path`
+and converts the wide sidecar columns into `keypoints` and `keypoint_scores`.
+
+## Final Metadata Columns
+
+Final `metadata.csv` contains:
+
+- `image_id`
 - `identity`
 - `path`
-- `width`
-- `height`
-- `width_original`
-- `height_original`
 - `date`
 - `year`
 - `camera`
@@ -159,3 +180,35 @@ The final prepared `metadata.csv` contains:
 - `split_2022`
 - `split_ood`
 - `split_iid`
+- `width`
+- `height`
+- `width_original`
+- `height_original`
+- `species` if added before upload
+
+Final `metadata.csv` should not contain:
+
+- `path_original`
+- `keypoints`
+- `keypoint_scores`
+- `min_keypoint_score`
+- `mean_keypoint_score`
+- `n_out_of_bounds_keypoints`
+
+## Splits
+
+The original yearly columns `split_2017` to `split_2022` preserve the released
+year-specific protocols. Original `train_iid`, `val_iid`, `test_iid`, and
+`test_ood` are normalized to `train`, `val`, or `test`.
+
+`split_ood` is the standardized out-of-distribution split:
+
+- years 2017-2020: `train`
+- year 2021: `val`
+- year 2022: `test`
+
+`split_iid` is an identity-wise chronological split by observation day:
+
+- earliest 60% of days: `train`
+- next 10% of days: `val`
+- latest 30% of days: `test`
