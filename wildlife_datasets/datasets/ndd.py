@@ -15,7 +15,7 @@ summary = {
     "publication_url": "https://arxiv.org/abs/2005.13359",
     "cite": "trotter2020ndd20",
     "animals": {"Northumberland dolphin"},
-    "animals_simple": "doplhins",
+    "animals_simple": "dolphins",
     "real_animals": True,
     "year": 2020,
     "reported_n_total": None,

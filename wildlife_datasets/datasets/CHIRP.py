@@ -14,7 +14,7 @@ summary = {
     "publication_url": "https://openaccess.thecvf.com/content/CVPR2026/papers/Chan_CHIRP_dataset_towards_long-term_individual-level_behavioral_monitoring_of_bird_populations_CVPR_2026_paper.pdf",
     "cite": "chan2026chirp",
     "animals": {"Siberian Jay"},
-    "animals_simple": "bird",
+    "animals_simple": "birds",
     "real_animals": True,
     "year": 2026,
     "reported_n_total": 402750,
