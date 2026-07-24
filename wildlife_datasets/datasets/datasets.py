@@ -184,6 +184,8 @@ class WildlifeDataset:
             return img
 
     def compute_attributes(self) -> None:
+        if self.col_label not in self.df.columns:
+            raise ValueError(f"{self.col_label} must be in metadata columns")
         self.labels, self.labels_map = pd.factorize(self.df[self.col_label].to_numpy())
 
     def get_subset(self, idx: list[int] | list[bool]) -> WildlifeDataset:
@@ -650,6 +652,8 @@ class WildlifeDataset:
         if name_old != name_new:
             if name_new in df.columns:
                 raise ValueError(f"Column {name_old} already present in dataframe. Cannot rename {name_old} to it.")
+            elif name_old not in df.columns:
+                raise ValueError(f"Column {name_new} not present in dataframe. Cannot rename it.")
             else:
                 return df.rename({name_old: name_new}, axis=1, inplace=True)
 
