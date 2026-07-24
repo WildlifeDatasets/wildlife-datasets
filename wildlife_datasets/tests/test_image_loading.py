@@ -102,7 +102,7 @@ class TestImgLoadModes(ImageLoadingTestCase):
         dataset = self.build(bbox=list(BOX), img_load="bbox")
         img = dataset[0]
         self.assertEqual(img.size, (BOX[2], BOX[3]))
-        self.assertTrue(all(px == BLUE for px in img.getdata()))
+        self.assertTrue(np.all(np.asarray(img) == BLUE))
 
     def test_full_mask_zeroes_background_keeps_object(self):
         dataset = self.build(segmentation=make_polygon(), img_load="full_mask")
@@ -122,13 +122,13 @@ class TestImgLoadModes(ImageLoadingTestCase):
         dataset = self.build(segmentation=make_polygon(), img_load="bbox_mask")
         img = dataset[0]
         self.assertEqual(img.size, (BOX[2], BOX[3]))
-        self.assertTrue(all(px == BLUE for px in img.getdata()))
+        self.assertTrue(np.all(np.asarray(img) == BLUE))
 
     def test_bbox_hide_of_object_filling_its_own_bbox_is_all_black(self):
         dataset = self.build(segmentation=make_polygon(), img_load="bbox_hide")
         img = dataset[0]
         self.assertEqual(img.size, (BOX[2], BOX[3]))
-        self.assertTrue(all(px == BLACK for px in img.getdata()))
+        self.assertTrue(np.all(np.asarray(img) == BLACK))
 
     def test_auto_picks_bbox_mask_when_segmentation_present(self):
         dataset = self.build(bbox=list(BOX), segmentation=make_polygon(), img_load="auto")
@@ -163,7 +163,7 @@ class TestSegmentationFormats(ImageLoadingTestCase):
         dataset = self.build(segmentation=make_polygon(), img_load="bbox_mask")
         img = dataset[0]
         self.assertEqual(img.size, (BOX[2], BOX[3]))
-        self.assertTrue(all(px == BLUE for px in img.getdata()))
+        self.assertTrue(np.all(np.asarray(img) == BLUE))
 
     def test_uncompressed_rle_list_counts(self):
         mask = make_box_mask()
@@ -171,7 +171,7 @@ class TestSegmentationFormats(ImageLoadingTestCase):
         dataset = self.build(segmentation=rle, img_load="bbox_mask")
         img = dataset[0]
         self.assertEqual(img.size, (BOX[2], BOX[3]))
-        self.assertTrue(all(px == BLUE for px in img.getdata()))
+        self.assertTrue(np.all(np.asarray(img) == BLUE))
 
     def test_compressed_rle_string_counts(self):
         mask = make_box_mask()
@@ -182,7 +182,7 @@ class TestSegmentationFormats(ImageLoadingTestCase):
         dataset = self.build(segmentation=rle, img_load="bbox_mask")
         img = dataset[0]
         self.assertEqual(img.size, (BOX[2], BOX[3]))
-        self.assertTrue(all(px == BLUE for px in img.getdata()))
+        self.assertTrue(np.all(np.asarray(img) == BLUE))
 
     def test_segmentation_as_path_to_mask_image(self):
         mask = make_box_mask().astype(np.uint8)
@@ -191,7 +191,7 @@ class TestSegmentationFormats(ImageLoadingTestCase):
         dataset = self.build(segmentation=mask_path, img_load="bbox_mask")
         img = dataset[0]
         self.assertEqual(img.size, (BOX[2], BOX[3]))
-        self.assertTrue(all(px == BLUE for px in img.getdata()))
+        self.assertTrue(np.all(np.asarray(img) == BLUE))
 
     def test_null_segmentation_is_passthrough(self):
         dataset = self.build(segmentation=np.nan, img_load="full_mask")
