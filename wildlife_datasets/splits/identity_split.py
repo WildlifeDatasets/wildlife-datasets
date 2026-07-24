@@ -70,7 +70,7 @@ class IdentitySplit(BalancedSplit):
         for individual, df_individual in df.groupby(self.col_label):
             if individual in individual_train and individual in individual_test:
                 # Check if the class does not belong to both sets
-                raise (Exception("Individual cannot be both in individual_train and individual_test."))
+                raise ValueError("Individual cannot be both in individual_train and individual_test.")
             elif individual in individual_train:
                 # Check if the class does not belong to the training set
                 idx_train += list(df_individual.index)
@@ -159,9 +159,9 @@ class OpenSetSplit(IdentitySplit):
         """
 
         if ratio_class_test is None and n_class_test is None:
-            raise (Exception("Either ratio_class_test or n_class_test must be provided."))
+            raise ValueError("Either ratio_class_test or n_class_test must be provided.")
         elif ratio_class_test is not None and n_class_test is not None:
-            raise (Exception("Only ratio_class_test or n_class_test can be provided."))
+            raise ValueError("Only ratio_class_test or n_class_test can be provided.")
 
         self.ratio_train = ratio_train
         self.ratio_class_test = ratio_class_test
@@ -230,9 +230,9 @@ class DisjointSetSplit(IdentitySplit):
         """
 
         if ratio_class_test is None and n_class_test is None:
-            raise (Exception("Either ratio_class_test or n_class_test must be provided."))
+            raise ValueError("Either ratio_class_test or n_class_test must be provided.")
         elif ratio_class_test is not None and n_class_test is not None:
-            raise (Exception("Only ratio_class_test or n_class_test can be provided."))
+            raise ValueError("Only ratio_class_test or n_class_test can be provided.")
 
         self.ratio_train = 0  # Arbitrary value
         self.ratio_class_test = ratio_class_test
