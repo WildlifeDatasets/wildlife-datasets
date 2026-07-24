@@ -40,7 +40,7 @@ def rename_index(df):
     for dataset_name in df.index:
         try:
             summary = eval(f"datasets.{dataset_name}.summary")
-            citation = " \cite{" + summary["cite"] + "}"
+            citation = r" \cite{" + summary["cite"] + "}"
         except Exception:
             citation = ""
         rename[dataset_name] = dataset_name + citation

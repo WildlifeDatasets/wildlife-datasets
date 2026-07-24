@@ -36,7 +36,3 @@ nav:
     - Default splits: default_splits.md
     - Advanced splits: tutorial_splits.md
     - Summary of datasets: preprocessing.md
-  - Reference:
-    - Datasets: reference_datasets.md
-    - Analysis: reference_analysis.md
-    - Splits: reference_splits.md

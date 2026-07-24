@@ -18,6 +18,7 @@ from .brown_bear_heads import BrownBearHeads
 from .cat_individual_images import CatIndividualImages
 from .cattle_muzzle import CattleMuzzle
 from .chicks4free_id import Chicks4FreeID
+from .CHIRP import CHIRP
 from .cobra_re_identification_youngstock import CoBRAReIdentificationYoungstock
 from .cow_dataset import CowDataset
 from .cows import Cows2021, Cows2021v2
@@ -35,6 +36,7 @@ from .giraffe_zebra_id import GiraffeZebraID
 from .giraffes import Giraffes
 from .happy_whale import HappyWhale
 from .holstein_cattle_recognition import HolsteinCattleRecognition
+from .hula_painted_frogs import HulaPaintedFrogs
 from .humpback_whale_id import HumpbackWhaleID
 from .hyena_id import HyenaID2022
 from .ipanda import IPanda50
@@ -59,6 +61,7 @@ from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
 from .seal_id import SealID, SealIDSegmented
 from .smalst import SMALST
 from .southern_province_turtles import SouthernProvinceTurtles
+from .spotted import LeopardID102, SpottedHyenaID109, SpottedHyenaID415
 from .stripe_spotter import StripeSpotter
 from .turtles_of_smsrc import TurtlesOfSMSRC
 from .turtlewatch_egypt import TurtlewatchEgypt_Citizen, TurtlewatchEgypt_Master, TurtlewatchEgypt_New
@@ -69,180 +72,49 @@ from .wildlife_reid_10k import WildlifeReID10k
 from .zakynthos_turtles import ZakynthosTurtles
 from .zindi_turtle_recall import ZindiTurtleRecall
 
-names_all = [
-    AAUZebraFish,
-    AerialCattle2017,
-    AmvrakikosTurtles,
-    ATRW,
-    BalearicLizard,
-    BalearicLizardSegmented,
-    BelugaIDv2,
-    BirdIndividualID,
-    BirdIndividualIDSegmented,
-    BristolGorillas2020,
-    BrownBearHeads,
-    CattleMuzzle,
-    CatIndividualImages,
-    Chicks4FreeID,
-    CoBRAReIdentificationYoungstock,
-    CowDataset,
-    Cows2021v2,
-    CzechLynxv2,
-    CTai,
-    CZoo,
-    DogFaceNet,
-    Drosophila,
-    ELPephants,
-    FriesianCattle2015v2,
-    FriesianCattle2017,
-    GiraffeZebraID,
-    Giraffes,
-    HappyWhale,
-    HolsteinCattleRecognition,
-    HumpbackWhaleID,
-    HyenaID2022,
-    IPanda50,
-    LeopardID2022,
-    LionData,
-    MacaqueFaces,
-    Melops,
-    MPDD,
-    MultiCamCows2024,
-    NDD20v2,
-    NewtsKent,
-    NOAARightWhale,
-    NyalaData,
-    OpenCows2020,
-    PolarBearVidID,
-    PrimFace,
-    RedBeeReID,
-    ReunionTurtles,
-    RotwildID_Faces,
-    SealID,
-    SealIDSegmented,
-    SeaStarReID2023,
-    SeaTurtleID2022,
-    SeaTurtleIDHeads,
-    SMALST,
-    SouthernProvinceTurtles,
-    StripeSpotter,
-    TurtlesOfSMSRC,
-    WildRaptorID,
-    WhaleSharkID,
-    ZakynthosTurtles,
-    ZindiTurtleRecall,
-]
 
-names_wild = [
-    AmvrakikosTurtles,
-    BalearicLizard,
-    BelugaIDv2,
-    BrownBearHeads,
-    CzechLynxv2,
-    ELPephants,
-    GiraffeZebraID,
-    HappyWhale,
-    HumpbackWhaleID,
-    HyenaID2022,
-    LeopardID2022,
-    Melops,
-    NDD20v2,
-    NOAARightWhale,
-    NyalaData,
-    ReunionTurtles,
-    RotwildID_Faces,
-    SealID,
-    SeaTurtleID2022,
-    SouthernProvinceTurtles,
-    StripeSpotter,
-    TurtlesOfSMSRC,
-    WildRaptorID,
-    WhaleSharkID,
-    ZakynthosTurtles,
-]
+def _all_dataset_classes():
+    seen = set()
+    stack = list(WildlifeDataset.__subclasses__())
+    while stack:
+        cls = stack.pop()
+        if cls not in seen:
+            seen.add(cls)
+            stack.extend(cls.__subclasses__())
+    return sorted(seen, key=lambda c: c.__name__)
 
-names_small = [
-    AerialCattle2017,
-    BelugaIDv2,
-    CoBRAReIdentificationYoungstock,
-    CTai,
-    CZoo,
-    DogFaceNet,
-    ELPephants,
-    FriesianCattle2015v2,
-    FriesianCattle2017,
-    HolsteinCattleRecognition,
-    IPanda50,
-    MacaqueFaces,
-    MPDD,
-    NyalaData,
-    PolarBearVidID,
-    ReunionTurtles,
-    RotwildID_Faces,
-    SeaTurtleIDHeads,
-    SouthernProvinceTurtles,
-    StripeSpotter,
-    ZakynthosTurtles,
-]
 
-names_cows = [
-    AerialCattle2017,
-    CattleMuzzle,
-    CoBRAReIdentificationYoungstock,
-    CowDataset,
-    Cows2021v2,
-    FriesianCattle2015v2,
-    FriesianCattle2017,
-    HolsteinCattleRecognition,
-    MultiCamCows2024,
-    OpenCows2020,
-]
+def _subset_name(classes, animal_names):
+    return [c for c in classes if c.summary.get("animals_simple") in animal_names]
 
-names_dogs = [
-    DogFaceNet,
-    MPDD,
-]
 
-names_giraffes = [
-    GiraffeZebraID,
-    Giraffes,
-    SMALST,
-    StripeSpotter,
-]
+def _subset_small(names_all, max_size=1000):
+    subset = []
+    for c in names_all:
+        size = c.summary.get("size")
+        if size and size <= max_size:
+            subset.append(c)
+    return subset
 
-names_primates = [
-    BristolGorillas2020,
-    CTai,
-    CZoo,
-    MacaqueFaces,
-    PrimFace,
-]
 
-names_turtles = [
-    AmvrakikosTurtles,
-    ReunionTurtles,
-    SeaTurtleIDHeads,
-    SouthernProvinceTurtles,
-    TurtlesOfSMSRC,
-    ZakynthosTurtles,
-    ZindiTurtleRecall,
-]
+def _subset_wild(names_all):
+    return [c for c in names_all if c.summary.get("wild") is True]
 
-names_whales = [
-    BelugaIDv2,
-    HappyWhale,
-    HumpbackWhaleID,
-    NDD20v2,
-    NOAARightWhale,
-    WhaleSharkID,
-]
 
-names_insect = [
-    Drosophila,
-    RedBeeReID,
-]
+_classes = _all_dataset_classes()
 
-names_fish = [
-    AAUZebraFish,
-    Melops,
-]
+names_all = [c for c in _classes if bool(c.summary) and not c.outdated_dataset]
+names_small = _subset_small(names_all)
+names_wild = _subset_wild(names_all)
+
+names_birds = _subset_name(names_all, ["birds"])
+names_cows = _subset_name(names_all, ["cows"])
+names_dogs = _subset_name(names_all, ["dogs"])
+names_fish = _subset_name(names_all, ["fish"])
+names_giraffes_zebras = _subset_name(names_all, ["giraffes", "zebras", "giraffes+zebras"])
+names_insect = _subset_name(names_all, ["flies", "bees"])
+names_hyenas = _subset_name(names_all, ["hyenas"])
+names_leopards = _subset_name(names_all, ["leopards"])
+names_primates = _subset_name(names_all, ["monkeys", "macaques", "chimpanzees", "gorillas"])
+names_turtles = _subset_name(names_all, ["sea turtles"])
+names_whales_dolphins = _subset_name(names_all, ["whales", "dolphins+whales", "dolphins"])
