@@ -67,7 +67,7 @@ class CHIRP(WildlifeDataset):
                         progress.update(len(chunk))
 
         if not os.path.exists(archive) or os.path.getsize(archive) == 0:
-            raise Exception("Download failed.")
+            raise RuntimeError("Download failed.")
 
     @classmethod
     def _extract(cls, archive: str | None = None) -> None:

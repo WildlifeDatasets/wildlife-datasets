@@ -262,7 +262,7 @@ def gdown_download(url, archive, exception_text=""):
     gdown.download(url, archive, quiet=False)
     if not os.path.exists(archive):
         print(exception_text)
-        raise Exception(exception_text)
+        raise RuntimeError(exception_text)
 
 
 def get_split(x, data_train, data_test):

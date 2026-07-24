@@ -57,14 +57,14 @@ class StripeSpotter(WildlifeDataset):
         if os.name == "posix":
             os.system("zip -s- data-20110718.zip -O data-full.zip")
             if not os.path.exists("data-full.zip"):
-                raise Exception("Download or extraction failed. Check if zip is installed.")
+                raise RuntimeError("Download or extraction failed. Check if zip is installed.")
             os.system("unzip data-full.zip")
             os.remove("data-20110718.zip")
             os.remove("data-20110718.z01")
             os.remove("data-20110718.z02")
             os.remove("data-full.zip")
         else:
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root

@@ -41,7 +41,7 @@ class Giraffes(WildlifeDataset):
         if os.name == "posix":
             os.system(command)
         else:
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     @classmethod
     def _extract(cls):

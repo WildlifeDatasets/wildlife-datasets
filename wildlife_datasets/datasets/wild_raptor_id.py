@@ -48,7 +48,7 @@ class WildRaptorID(DownloadURL, WildlifeDataset):
         for _, df_red in data.groupby(cols):
             if len(df_red) > 1:
                 if df_red["file_size"].nunique() != 1:
-                    raise Exception("The expected duplicates are not duplicates")
+                    raise ValueError("The expected duplicates are not duplicates")
 
         # Remove the duplicates
         data = data.drop_duplicates(subset=cols)
