@@ -4,6 +4,7 @@ baselines/WildlifeReID-10k/features*/
 baselines/WildlifeReID-10k/results*/
 baselines/WildlifeReID-10k/clusters*/
 .tmp/
+.claude
 
 .idea
 .DS_Store
