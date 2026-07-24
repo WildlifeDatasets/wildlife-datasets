@@ -348,8 +348,8 @@ class TestEvaluation(unittest.TestCase):
 
         y_true = y_true_basis
         y_pred = y_pred_basis
-        self.assertRaises(ValueError, metric, y_true, y_pred)
-        self.assertRaises(ValueError, metric, y_true, y_pred, 1)
+        self.assertRaises(TypeError, metric, y_true, y_pred)
+        self.assertRaises(TypeError, metric, y_true, y_pred, 1)
         for mu in np.arange(0, 1, step=0.2):
             self.assertAlmostEqual(
                 metric(y_true, y_pred, 1, mu), mu * expected_value1 + (1 - mu) * expected_value2, delta=tol
@@ -357,8 +357,8 @@ class TestEvaluation(unittest.TestCase):
 
         y_true = encode(y_true_basis, encoder1)
         y_pred = encode(y_pred_basis, encoder1)
-        self.assertRaises(ValueError, metric, y_true, y_pred)
-        self.assertRaises(ValueError, metric, y_true, y_pred, 1)
+        self.assertRaises(TypeError, metric, y_true, y_pred)
+        self.assertRaises(TypeError, metric, y_true, y_pred, 1)
         for mu in np.arange(0, 1, step=0.2):
             self.assertAlmostEqual(
                 metric(y_true, y_pred, "a", mu), mu * expected_value1 + (1 - mu) * expected_value2, delta=tol
