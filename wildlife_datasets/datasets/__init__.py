@@ -72,205 +72,49 @@ from .wildlife_reid_10k import WildlifeReID10k
 from .zakynthos_turtles import ZakynthosTurtles
 from .zindi_turtle_recall import ZindiTurtleRecall
 
-names_all = [
-    AAUZebraFish,
-    AerialCattle2017,
-    AmvrakikosTurtles,
-    ATRW,
-    BalearicLizard,
-    BalearicLizardSegmented,
-    BelugaIDv2,
-    BirdIndividualID,
-    BirdIndividualIDSegmented,
-    BristolGorillas2020,
-    BrownBearHeads,
-    CattleMuzzle,
-    CatIndividualImages,
-    CHIRP,
-    Chicks4FreeID,
-    CoBRAReIdentificationYoungstock,
-    CowDataset,
-    Cows2021v2,
-    CzechLynxv2,
-    CTai,
-    CZoo,
-    DogFaceNet,
-    Drosophila,
-    ELPephants,
-    FriesianCattle2015v2,
-    FriesianCattle2017,
-    GiraffeZebraID,
-    Giraffes,
-    HappyWhale,
-    HolsteinCattleRecognition,
-    HulaPaintedFrogs,
-    HumpbackWhaleID,
-    HyenaID2022,
-    IPanda50,
-    LeopardID102,
-    LeopardID2022,
-    LionData,
-    MacaqueFaces,
-    Melops,
-    MPDD,
-    MultiCamCows2024,
-    NDD20v2,
-    NewtsKent,
-    NOAARightWhale,
-    NyalaData,
-    OpenCows2020,
-    PolarBearVidID,
-    PrimFace,
-    RedBeeReID,
-    ReunionTurtles,
-    RotwildID_Faces,
-    SealID,
-    SealIDSegmented,
-    SeaStarReID2023,
-    SeaTurtleID2022,
-    SeaTurtleIDHeads,
-    SMALST,
-    SouthernProvinceTurtles,
-    SpottedHyenaID109,
-    SpottedHyenaID415,
-    StripeSpotter,
-    TurtlesOfSMSRC,
-    WildRaptorID,
-    WhaleSharkID,
-    ZakynthosTurtles,
-    ZindiTurtleRecall,
-]
 
-names_wild = [
-    AmvrakikosTurtles,
-    BalearicLizard,
-    BelugaIDv2,
-    BrownBearHeads,
-    CHIRP,
-    CzechLynxv2,
-    ELPephants,
-    GiraffeZebraID,
-    HappyWhale,
-    HulaPaintedFrogs,
-    HumpbackWhaleID,
-    HyenaID2022,
-    LeopardID102,
-    LeopardID2022,
-    Melops,
-    NDD20v2,
-    NOAARightWhale,
-    NyalaData,
-    ReunionTurtles,
-    RotwildID_Faces,
-    SealID,
-    SeaTurtleID2022,
-    SouthernProvinceTurtles,
-    SpottedHyenaID109,
-    SpottedHyenaID415,
-    StripeSpotter,
-    TurtlesOfSMSRC,
-    WildRaptorID,
-    WhaleSharkID,
-    ZakynthosTurtles,
-]
+def _all_dataset_classes():
+    seen = set()
+    stack = list(WildlifeDataset.__subclasses__())
+    while stack:
+        cls = stack.pop()
+        if cls not in seen:
+            seen.add(cls)
+            stack.extend(cls.__subclasses__())
+    return sorted(seen, key=lambda c: c.__name__)
 
-names_small = [
-    AerialCattle2017,
-    BelugaIDv2,
-    CoBRAReIdentificationYoungstock,
-    CTai,
-    CZoo,
-    DogFaceNet,
-    ELPephants,
-    FriesianCattle2015v2,
-    FriesianCattle2017,
-    HolsteinCattleRecognition,
-    IPanda50,
-    LeopardID102,
-    MacaqueFaces,
-    MPDD,
-    NyalaData,
-    PolarBearVidID,
-    ReunionTurtles,
-    RotwildID_Faces,
-    SeaTurtleIDHeads,
-    SouthernProvinceTurtles,
-    SpottedHyenaID109,
-    StripeSpotter,
-    ZakynthosTurtles,
-]
 
-names_birds = [BirdIndividualID, CHIRP]
+def _subset_name(classes, animal_names):
+    return [c for c in classes if c.summary.get("animals_simple") in animal_names]
 
-names_cows = [
-    AerialCattle2017,
-    CattleMuzzle,
-    CoBRAReIdentificationYoungstock,
-    CowDataset,
-    Cows2021v2,
-    FriesianCattle2015v2,
-    FriesianCattle2017,
-    HolsteinCattleRecognition,
-    MultiCamCows2024,
-    OpenCows2020,
-]
 
-names_dogs = [
-    DogFaceNet,
-    MPDD,
-]
+def _subset_small(names_all, max_size=1000):
+    subset = []
+    for c in names_all:
+        size = c.summary.get("size")
+        if size and size <= max_size:
+            subset.append(c)
+    return subset
 
-names_giraffes = [
-    GiraffeZebraID,
-    Giraffes,
-    SMALST,
-    StripeSpotter,
-]
 
-names_hyenas = [
-    HyenaID2022,
-    SpottedHyenaID109,
-    SpottedHyenaID415,
-]
+def _subset_wild(names_all):
+    return [c for c in names_all if c.summary.get("wild") is True]
 
-names_leopards = [
-    LeopardID102,
-    LeopardID2022,
-]
 
-names_primates = [
-    BristolGorillas2020,
-    CTai,
-    CZoo,
-    MacaqueFaces,
-    PrimFace,
-]
+_classes = _all_dataset_classes()
 
-names_turtles = [
-    AmvrakikosTurtles,
-    ReunionTurtles,
-    SeaTurtleIDHeads,
-    SouthernProvinceTurtles,
-    TurtlesOfSMSRC,
-    ZakynthosTurtles,
-    ZindiTurtleRecall,
-]
+names_all = [c for c in _classes if bool(c.summary) and not c.outdated_dataset]
+names_small = _subset_small(names_all)
+names_wild = _subset_wild(names_all)
 
-names_whales = [
-    BelugaIDv2,
-    HappyWhale,
-    HumpbackWhaleID,
-    NDD20v2,
-    NOAARightWhale,
-    WhaleSharkID,
-]
-
-names_insect = [
-    Drosophila,
-    RedBeeReID,
-]
-
-names_fish = [
-    AAUZebraFish,
-    Melops,
-]
+names_birds = _subset_name(names_all, ["birds"])
+names_cows = _subset_name(names_all, ["cows"])
+names_dogs = _subset_name(names_all, ["dogs"])
+names_fish = _subset_name(names_all, ["fish"])
+names_giraffes_zebras = _subset_name(names_all, ["giraffes", "zebras", "giraffes+zebras"])
+names_insect = _subset_name(names_all, ["flies", "bees"])
+names_hyenas = _subset_name(names_all, ["hyenas"])
+names_leopards = _subset_name(names_all, ["leopards"])
+names_primates = _subset_name(names_all, ["monkeys", "macaques", "chimpanzees", "gorillas"])
+names_turtles = _subset_name(names_all, ["sea turtles"])
+names_whales_dolphins = _subset_name(names_all, ["whales", "dolphins+whales", "dolphins"])
