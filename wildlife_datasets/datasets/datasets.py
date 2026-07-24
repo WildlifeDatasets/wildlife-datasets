@@ -188,21 +188,18 @@ class WildlifeDataset:
             raise ValueError(f"{self.col_label} must be in metadata columns")
         self.labels, self.labels_map = pd.factorize(self.df[self.col_label].to_numpy())
 
-    def get_subset(self, idx: list[int] | list[bool]) -> WildlifeDataset:
+    def get_subset(self, idx: list[int] | list[bool] | pd.Series | pd.Index) -> WildlifeDataset:
         """Returns a subset of the class.
 
         Args:
-            idx (Union[List[int], List[bool]]): Indices in the dataframe of the subset.
+            idx (Union[Sequence[int], Sequence[bool], pd.Series]): Indices or boolean mask of the subset.
 
         Returns:
             The subset class.
         """
 
         dataset = deepcopy(self)
-        if len(self) == len(idx):
-            dataset.df = dataset.df[idx].reset_index(drop=True)
-        else:
-            dataset.df = dataset.df.loc[idx].reset_index(drop=True)
+        dataset.df = dataset.df.loc[idx].reset_index(drop=True)
         dataset.compute_attributes()
         return dataset
 
@@ -214,7 +211,7 @@ class WildlifeDataset:
 
     def set_absolute_paths(self) -> None:
         if self.root is not None:
-            self.df["path"] = self.root + os.path.sep + self.df["path"]
+            self.df[self.col_path] = self.root + os.path.sep + self.df[self.col_path]
             self.root = None
 
     def get_image(self, idx: int) -> Image.Image:
