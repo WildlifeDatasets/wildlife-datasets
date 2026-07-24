@@ -8,6 +8,7 @@ import pycocotools.mask as mask_coco
 from PIL import Image
 
 from wildlife_datasets.datasets import utils as ds_utils
+
 from .utils import create_dataset
 
 # A small, fully-known image: red (255, 0, 0) everywhere except a blue
@@ -234,6 +235,28 @@ class TestCropBlackWhite(unittest.TestCase):
         cropped = ds_utils.crop_white(img)
         expected_size = (content_box[2] - content_box[0], content_box[3] - content_box[1])
         self.assertEqual(cropped.size, expected_size)
+
+    def test_crop_black_on_blank_image_returns_unchanged(self):
+        img = Image.new("RGB", (8, 8), color=BLACK)
+        cropped = ds_utils.crop_black(img)
+        self.assertEqual(cropped.size, img.size)
+        self.assertTrue(np.all(np.asarray(cropped) == np.asarray(img)))
+
+    def test_crop_white_on_blank_image_returns_unchanged(self):
+        img = Image.new("RGB", (8, 8), color=(255, 255, 255))
+        cropped = ds_utils.crop_white(img)
+        self.assertEqual(cropped.size, img.size)
+        self.assertTrue(np.all(np.asarray(cropped) == np.asarray(img)))
+
+    def test_crop_black_on_fully_white_image_returns_unchanged(self):
+        img = Image.new("RGB", (8, 8), color=(255, 255, 255))
+        cropped = ds_utils.crop_black(img)
+        self.assertEqual(cropped.size, img.size)
+
+    def test_crop_white_on_fully_black_image_returns_unchanged(self):
+        img = Image.new("RGB", (8, 8), color=BLACK)
+        cropped = ds_utils.crop_white(img)
+        self.assertEqual(cropped.size, img.size)
 
 
 if __name__ == "__main__":
