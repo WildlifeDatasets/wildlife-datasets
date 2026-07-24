@@ -192,7 +192,7 @@ class WildlifeDataset:
         """Returns a subset of the class.
 
         Args:
-            idx (Union[Sequence[int], Sequence[bool], pd.Series]): Indices or boolean mask of the subset.
+            idx (list[int] | list[bool] | pd.Series | pd.Index): Indices or boolean mask of the subset.
 
         Returns:
             The subset class.
