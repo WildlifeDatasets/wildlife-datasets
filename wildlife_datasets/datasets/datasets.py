@@ -649,7 +649,7 @@ class WildlifeDataset:
     def rename_column(self, df: pd.DataFrame, name_old, name_new):
         if name_old != name_new:
             if name_new in df.columns:
-                raise Exception(f"Column {name_old} already present in dataframe. Cannot rename {name_old} to it.")
+                raise ValueError(f"Column {name_old} already present in dataframe. Cannot rename {name_old} to it.")
             else:
                 return df.rename({name_old: name_new}, axis=1, inplace=True)
 
@@ -665,7 +665,7 @@ class WildlifeDataset:
         assert df is not None
         for col_name in ["image_id", self.col_label, self.col_path]:
             if col_name not in df.columns:
-                raise Exception(f"Column {col_name} must be in the dataframe columns.")
+                raise ValueError(f"Column {col_name} must be in the dataframe columns.")
 
     def check_types_columns(self, df: pd.DataFrame | None = None) -> None:
         """Checks if columns are in correct formats.
@@ -741,7 +741,7 @@ class WildlifeDataset:
                 return None
             except Exception:
                 pass
-        raise Exception(f"Column {col_name} has wrong type. Allowed types = {allowed_types}")
+        raise ValueError(f"Column {col_name} has wrong type. Allowed types = {allowed_types}")
 
     def reorder_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders rows and columns in the dataframe.
@@ -806,7 +806,7 @@ class WildlifeDataset:
             df = self.df
         assert df is not None
         if len(df["image_id"].unique()) != len(df):
-            raise Exception("Image ID not unique.")
+            raise ValueError("Image ID not unique.")
 
     def check_files_exist(self, col: pd.Series | str | None = None) -> None:
         """Checks if paths in a given column exist.
@@ -828,7 +828,7 @@ class WildlifeDataset:
             print("The following non-existing images were identified.")
             for path in bad_paths:
                 print(path)
-            raise Exception("Some files not found")
+            raise FileNotFoundError("Some files not found")
 
     def check_files_names(self, col: pd.Series | str | None = None) -> None:
         """Checks if paths contain characters which may cause issues.
@@ -854,7 +854,7 @@ class WildlifeDataset:
             print("The following not ISO-8859-1 file names were identified.")
             for path in bad_names:
                 print(path)
-            raise Exception("Non ISO-8859-1 characters in path may cause problems. Please change them.")
+            raise ValueError("Non ISO-8859-1 characters in path may cause problems. Please change them.")
 
     def plot_grid(
         self,
