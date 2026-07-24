@@ -4,7 +4,7 @@ import unittest
 
 import pandas as pd
 
-from wildlife_datasets.datasets import DatasetFactory
+from wildlife_datasets.datasets import WildlifeDataset
 
 from .utils import create_dataset
 
@@ -60,7 +60,7 @@ class TestColumnTypes(unittest.TestCase):
         create_dataset(df)
 
     def test_bbox_scalar_non_numeric_raises(self):
-        df = pd.DataFrame([{**make_base_row(), "bbox": "not_a_list"}])
+        df = pd.DataFrame([{**make_base_row(), "bbox": "[1, 2, 3, 4]"}])
         with self.assertRaises(ValueError):
             create_dataset(df)
 
@@ -73,7 +73,7 @@ class TestColumnTypes(unittest.TestCase):
         create_dataset(df)
 
     def test_keypoints_scalar_non_numeric_raises(self):
-        df = pd.DataFrame([{**make_base_row(), "keypoints": "nope"}])
+        df = pd.DataFrame([{**make_base_row(), "keypoints": "[1.0, 2.0, 3.0, 4.0]"}])
         with self.assertRaises(ValueError):
             create_dataset(df)
 
@@ -99,7 +99,7 @@ class TestColumnTypes(unittest.TestCase):
         create_dataset(df)
 
     def test_video_non_int_raises(self):
-        df = pd.DataFrame([{**make_base_row(), "video": "not_a_number"}])
+        df = pd.DataFrame([{**make_base_row(), "video": "0"}])
         with self.assertRaises(ValueError):
             create_dataset(df)
 
@@ -181,7 +181,7 @@ class TestFinalizeCatalogueIntegration(unittest.TestCase):
     def test_update_wrong_labels_true_calls_fix_labels(self):
         calls = []
 
-        class _Tracking(DatasetFactory):
+        class _Tracking(WildlifeDataset):
             def fix_labels(self, df):
                 calls.append(True)
                 return df
@@ -194,7 +194,7 @@ class TestFinalizeCatalogueIntegration(unittest.TestCase):
     def test_update_wrong_labels_false_skips_fix_labels(self):
         calls = []
 
-        class _Tracking(DatasetFactory):
+        class _Tracking(WildlifeDataset):
             def fix_labels(self, df):
                 calls.append(True)
                 return df
