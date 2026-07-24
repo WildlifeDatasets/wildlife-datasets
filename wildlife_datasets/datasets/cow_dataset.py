@@ -40,7 +40,7 @@ class CowDataset(DownloadURL, WildlifeDataset):
         # Rename the folder with non-ASCII characters
         dirs = [x for x in os.listdir() if os.path.isdir(x)]
         if len(dirs) != 1:
-            raise Exception("There should be only one directory after extracting the file.")
+            raise ValueError("There should be only one directory after extracting the file.")
         os.rename(dirs[0], "images")
 
     def create_catalogue(self) -> pd.DataFrame:

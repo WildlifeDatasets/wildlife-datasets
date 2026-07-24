@@ -54,7 +54,7 @@ class BelugaIDv2(BelugaID):
         id_conversion = {}
         for old_id, data_train_red in data_train.groupby("original_whale_id"):
             if data_train_red["whale_id"].nunique() != 1:
-                raise Exception("Conversion of old to new whale_id is not unique.")
+                raise ValueError("Conversion of old to new whale_id is not unique.")
             id_conversion[old_id] = data_train_red["whale_id"].iloc[0]
 
         # Add the new data

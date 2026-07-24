@@ -41,7 +41,7 @@ class BristolGorillas2020(WildlifeDataset):
         if os.name == "posix":
             os.system(command)
         else:
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     @classmethod
     def _extract(cls):
@@ -53,7 +53,7 @@ class BristolGorillas2020(WildlifeDataset):
             utils.extract_archive(cls.archive, delete=True)
         except Exception as e:
             print(e)
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
         assert self.root is not None

@@ -112,7 +112,7 @@ class IPanda50(WildlifeDataset):
                     ids_old.append(df_row["image_id"])
                     ids_new.append(utils.create_id(pd.Series(os.path.split(df_row["path"])[-1])).iloc[0])
             if len(df) != df["path"].nunique():
-                raise (Exception("Non-unique names. Something went wrong when renaming."))
+                raise ValueError("Non-unique names. Something went wrong when renaming.")
             pd.DataFrame({"id_old": ids_old, "id_new": ids_new}).to_csv(file_name)
 
         # Finalize the dataframe

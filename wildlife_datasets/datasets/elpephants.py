@@ -37,7 +37,7 @@ class ELPephants(WildlifeDataset):
     def _download(cls):
         exception_text = """Dataset must be downloaded manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#elpephants"""
-        raise Exception(exception_text)
+        raise RuntimeError(exception_text)
 
     @classmethod
     def _extract(cls):

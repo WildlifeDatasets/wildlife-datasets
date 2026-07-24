@@ -30,7 +30,7 @@ def unify_types(
     is_integer = pd.api.types.is_integer_dtype(pd.Series(y_all))
     is_string = pd.api.types.is_string_dtype(pd.Series(y_all))
     if not is_integer and not is_string:
-        raise (Exception("Labels have mixed types. Convert all to int or str."))
+        raise ValueError("Labels have mixed types. Convert all to int or str.")
     if is_string and isinstance(new_class, int):
         encoder = {new_class: new_class}
         for i, y in enumerate(y_all):

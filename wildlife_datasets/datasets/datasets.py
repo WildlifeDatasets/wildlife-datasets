@@ -184,23 +184,22 @@ class WildlifeDataset:
             return img
 
     def compute_attributes(self) -> None:
+        if self.col_label not in self.df.columns:
+            raise ValueError(f"{self.col_label} must be in metadata columns")
         self.labels, self.labels_map = pd.factorize(self.df[self.col_label].to_numpy())
 
-    def get_subset(self, idx: list[int] | list[bool]) -> WildlifeDataset:
+    def get_subset(self, idx: list[int] | list[bool] | pd.Series | pd.Index) -> WildlifeDataset:
         """Returns a subset of the class.
 
         Args:
-            idx (Union[List[int], List[bool]]): Indices in the dataframe of the subset.
+            idx (list[int] | list[bool] | pd.Series | pd.Index): Indices or boolean mask of the subset.
 
         Returns:
             The subset class.
         """
 
         dataset = deepcopy(self)
-        if len(self) == len(idx):
-            dataset.df = dataset.df[idx].reset_index(drop=True)
-        else:
-            dataset.df = dataset.df.loc[idx].reset_index(drop=True)
+        dataset.df = dataset.df.loc[idx].reset_index(drop=True)
         dataset.compute_attributes()
         return dataset
 
@@ -212,7 +211,7 @@ class WildlifeDataset:
 
     def set_absolute_paths(self) -> None:
         if self.root is not None:
-            self.df["path"] = self.root + os.path.sep + self.df["path"]
+            self.df[self.col_path] = self.root + os.path.sep + self.df[self.col_path]
             self.root = None
 
     def get_image(self, idx: int) -> Image.Image:
@@ -263,7 +262,7 @@ class WildlifeDataset:
             return mask_coco.encode(m)
 
         if not np.any(pd.isnull(segmentation)):
-            raise Exception("Segmentation type not recognized")
+            raise ValueError("Segmentation type not recognized")
 
         return segmentation
 
@@ -649,7 +648,9 @@ class WildlifeDataset:
     def rename_column(self, df: pd.DataFrame, name_old, name_new):
         if name_old != name_new:
             if name_new in df.columns:
-                raise Exception(f"Column {name_old} already present in dataframe. Cannot rename {name_old} to it.")
+                raise ValueError(f"Column {name_old} already present in dataframe. Cannot rename {name_old} to it.")
+            elif name_old not in df.columns:
+                raise ValueError(f"Column {name_new} not present in dataframe. Cannot rename it.")
             else:
                 return df.rename({name_old: name_new}, axis=1, inplace=True)
 
@@ -665,7 +666,7 @@ class WildlifeDataset:
         assert df is not None
         for col_name in ["image_id", self.col_label, self.col_path]:
             if col_name not in df.columns:
-                raise Exception(f"Column {col_name} must be in the dataframe columns.")
+                raise ValueError(f"Column {col_name} must be in the dataframe columns.")
 
     def check_types_columns(self, df: pd.DataFrame | None = None) -> None:
         """Checks if columns are in correct formats.
@@ -741,7 +742,7 @@ class WildlifeDataset:
                 return None
             except Exception:
                 pass
-        raise Exception(f"Column {col_name} has wrong type. Allowed types = {allowed_types}")
+        raise ValueError(f"Column {col_name} has wrong type. Allowed types = {allowed_types}")
 
     def reorder_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """Reorders rows and columns in the dataframe.
@@ -806,7 +807,7 @@ class WildlifeDataset:
             df = self.df
         assert df is not None
         if len(df["image_id"].unique()) != len(df):
-            raise Exception("Image ID not unique.")
+            raise ValueError("Image ID not unique.")
 
     def check_files_exist(self, col: pd.Series | str | None = None) -> None:
         """Checks if paths in a given column exist.
@@ -828,7 +829,7 @@ class WildlifeDataset:
             print("The following non-existing images were identified.")
             for path in bad_paths:
                 print(path)
-            raise Exception("Some files not found")
+            raise FileNotFoundError("Some files not found")
 
     def check_files_names(self, col: pd.Series | str | None = None) -> None:
         """Checks if paths contain characters which may cause issues.
@@ -854,7 +855,7 @@ class WildlifeDataset:
             print("The following not ISO-8859-1 file names were identified.")
             for path in bad_names:
                 print(path)
-            raise Exception("Non ISO-8859-1 characters in path may cause problems. Please change them.")
+            raise ValueError("Non ISO-8859-1 characters in path may cause problems. Please change them.")
 
     def plot_grid(
         self,
@@ -930,7 +931,7 @@ class WildlifeDataset:
         if header_cols is not None:
             offset_h = 30
             if len(header_cols) != n_cols:
-                raise Exception("Length of header_cols must be the same as n_cols.")
+                raise ValueError("Length of header_cols must be the same as n_cols.")
         else:
             offset_h = 0
 

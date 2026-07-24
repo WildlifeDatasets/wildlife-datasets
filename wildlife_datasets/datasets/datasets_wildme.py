@@ -22,7 +22,7 @@ class WildlifeDatasetWildMe(WildlifeDataset):
         # Check whether segmentation is different from a box
         for ann in data["annotations"]:
             if len(ann["segmentation"]) != 1:
-                raise (Exception("Wrong number of segmentations"))
+                raise ValueError("Wrong number of segmentations")
 
         # Extract the data from the JSON file
         def create_dict1(i):

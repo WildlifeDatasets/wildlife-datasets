@@ -23,7 +23,7 @@ class TimeAwareSplit(BalancedSplit):
 
         # Check if the DataFrame contain the column date.
         if "date" not in df.columns:
-            raise (Exception("Dataframe df does not contain column date."))
+            raise ValueError("Dataframe df does not contain column date.")
 
         # Remove identities to be skipped
         df = df.copy()
@@ -115,9 +115,9 @@ class TimeProportionOpenSetSplit(TimeAwareSplit):
         """
 
         if ratio_class_test is None and n_class_test is None:
-            raise (Exception("Either ratio_class_test or n_class_test must be provided."))
+            raise ValueError("Either ratio_class_test or n_class_test must be provided.")
         elif ratio_class_test is not None and n_class_test is not None:
-            raise (Exception("Only ratio_class_test or n_class_test can be provided."))
+            raise ValueError("Only ratio_class_test or n_class_test can be provided.")
 
         self.ratio_train = ratio_train
         self.ratio_class_test = ratio_class_test
@@ -174,7 +174,7 @@ class TimeProportionOpenSetSplit(TimeAwareSplit):
         for name, df_name in df.groupby(self.col_label):
             if name in individual_train and name in individual_test:
                 # Check if the class does not belong to both sets
-                raise (Exception("Individual cannot be both in individual_train and individual_test."))
+                raise ValueError("Individual cannot be both in individual_train and individual_test.")
             elif name in individual_train:
                 # Check if the class does not belong to the training set
                 idx_train += list(df_name.index)

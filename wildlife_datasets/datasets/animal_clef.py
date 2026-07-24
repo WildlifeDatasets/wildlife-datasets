@@ -119,7 +119,7 @@ class AnimalCLEF2025(DownloadKaggle, WildlifeDataset):
 class AnimalCLEF2025_LynxID2025(WildlifeDataset):
     @classmethod
     def _download(cls):
-        raise Exception("This dataset is currently available only as part of the AnimalCLEF2025 competition.")
+        raise RuntimeError("This dataset is currently available only as part of the AnimalCLEF2025 competition.")
 
     @classmethod
     def _extract(cls):
@@ -139,7 +139,7 @@ class AnimalCLEF2025_LynxID2025(WildlifeDataset):
 class AnimalCLEF2025_SalamanderID2025(WildlifeDataset):
     @classmethod
     def _download(cls):
-        raise Exception("This dataset is currently available only as part of the AnimalCLEF2025 competition.")
+        raise RuntimeError("This dataset is currently available only as part of the AnimalCLEF2025 competition.")
 
     @classmethod
     def _extract(cls):
@@ -156,9 +156,9 @@ class AnimalCLEF2025_SalamanderID2025(WildlifeDataset):
         # Check whether segmentation is different from a box
         for ann in data["annotations"]:
             if len(ann["bbox"]) != 4:
-                raise (Exception("Bounding box missing"))
+                raise ValueError("Bounding box missing")
             if ann["attributes"]["rotation"] not in [0, 359.99999999929037]:
-                raise (Exception("Rotation is not 0"))
+                raise ValueError("Rotation is not 0")
 
         # Extract the data from the JSON file
         def create_dict1(i):
@@ -201,7 +201,7 @@ class AnimalCLEF2025_SalamanderID2025(WildlifeDataset):
 class AnimalCLEF2025_SeaTurtleID2022(WildlifeDataset):
     @classmethod
     def _download(cls):
-        raise Exception("This dataset is currently available only as part of the AnimalCLEF2025 competition.")
+        raise RuntimeError("This dataset is currently available only as part of the AnimalCLEF2025 competition.")
 
     @classmethod
     def _extract(cls):

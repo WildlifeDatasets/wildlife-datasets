@@ -15,7 +15,7 @@ from . import utils
 def check_attributes(obj, attrs: Iterable):
     for attr in attrs:
         if not hasattr(obj, attr) or getattr(obj, attr) is None:
-            raise Exception(f"Object {obj} must have attribute {attr}.")
+            raise AttributeError(f"Object {obj} must have attribute {attr}.")
 
 
 def json_serial(obj):
@@ -78,7 +78,7 @@ class DownloadKaggle:
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}"""
         os.system(f"kaggle {command}")
         if not os.path.exists(cls.archive_name()):
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     @classmethod
     def _extract(cls):
@@ -89,7 +89,7 @@ class DownloadKaggle:
             exception_text = f"""Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
                 Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}"""
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     @classmethod
     def archive_name(cls):

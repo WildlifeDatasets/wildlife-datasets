@@ -41,7 +41,7 @@ class NDD20(DownloadURL, WildlifeDataset):
     def _download(cls):
         exception_text = """Dataset must be downloaded manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#ndd20"""
-        raise Exception(exception_text)
+        raise RuntimeError(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the above-water dataset
@@ -103,7 +103,7 @@ class NDD20(DownloadURL, WildlifeDataset):
         # Create the dataframe from entries
         df = pd.DataFrame(entries)
         if len(df.reg_type.unique()) != 1:
-            raise (Exception("Multiple segmentation types"))
+            raise ValueError("Multiple segmentation types")
 
         # Finalize the dataframe
         df["image_id"] = range(len(df))

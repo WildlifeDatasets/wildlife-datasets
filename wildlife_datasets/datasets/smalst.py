@@ -38,7 +38,7 @@ class SMALST(WildlifeDataset):
     def _download(cls):
         exception_text = """Dataset must be downloaded manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#smalst"""
-        raise Exception(exception_text)
+        raise RuntimeError(exception_text)
         # utils.gdown_download(cls.url, cls.archive, exception_text)
 
     @classmethod
@@ -53,7 +53,7 @@ class SMALST(WildlifeDataset):
             shutil.rmtree(os.path.join("zebra_training_set", "uvflow"))
 
         else:
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
