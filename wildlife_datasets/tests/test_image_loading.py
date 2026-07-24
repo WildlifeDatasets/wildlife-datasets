@@ -203,7 +203,7 @@ class TestSegmentationFormats(ImageLoadingTestCase):
 
     def test_unrecognized_segmentation_type_raises(self):
         dataset = self.build(segmentation=12345, img_load="full_mask")
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValueError):
             dataset[0]
 
 

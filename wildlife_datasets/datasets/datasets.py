@@ -262,7 +262,7 @@ class WildlifeDataset:
             return mask_coco.encode(m)
 
         if not np.any(pd.isnull(segmentation)):
-            raise Exception("Segmentation type not recognized")
+            raise ValueError("Segmentation type not recognized")
 
         return segmentation
 
@@ -931,7 +931,7 @@ class WildlifeDataset:
         if header_cols is not None:
             offset_h = 30
             if len(header_cols) != n_cols:
-                raise Exception("Length of header_cols must be the same as n_cols.")
+                raise ValueError("Length of header_cols must be the same as n_cols.")
         else:
             offset_h = 0
 
