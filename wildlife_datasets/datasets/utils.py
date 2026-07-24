@@ -67,12 +67,14 @@ def crop_black(img: Image.Image) -> Image.Image:
     """
 
     y_nonzero, x_nonzero, _ = np.nonzero(np.asarray(img))
+    if x_nonzero.size == 0:
+        return img
     return img.crop(
         (
             int(np.min(x_nonzero)),
             int(np.min(y_nonzero)),
-            int(np.max(x_nonzero)),
-            int(np.max(y_nonzero)),
+            int(np.max(x_nonzero)) + 1,
+            int(np.max(y_nonzero)) + 1,
         )
     )
 
@@ -88,12 +90,14 @@ def crop_white(img: Image.Image) -> Image.Image:
     """
 
     y_nonzero, x_nonzero, _ = np.nonzero(np.asarray(ImageOps.invert(img)))
+    if x_nonzero.size == 0:
+        return img
     return img.crop(
         (
             int(np.min(x_nonzero)),
             int(np.min(y_nonzero)),
-            int(np.max(x_nonzero)),
-            int(np.max(y_nonzero)),
+            int(np.max(x_nonzero)) + 1,
+            int(np.max(y_nonzero)) + 1,
         )
     )
 
