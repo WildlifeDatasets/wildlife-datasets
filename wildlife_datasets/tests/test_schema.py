@@ -42,7 +42,10 @@ class TestRequiredColumns(unittest.TestCase):
 class TestColumnRenames(unittest.TestCase):
     def test_default_aliases_renamed_to_custom_names(self):
         df = pd.DataFrame([make_base_row()])
-        dataset = create_dataset(df, col_label="animal", col_path="filepath")
+        dataset = WildlifeDataset(df=df, root=None, check_files=False)
+        dataset.col_label = "animal"
+        dataset.col_path = "filepath"
+        dataset.df = dataset.finalize_catalogue(dataset.df)
         self.assertIn("animal", dataset.df.columns)
         self.assertIn("filepath", dataset.df.columns)
         self.assertNotIn("identity", dataset.df.columns)
