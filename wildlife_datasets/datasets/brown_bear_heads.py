@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import pandas as pd
 
 from .datasets import WildlifeDataset
@@ -32,8 +33,38 @@ class BrownBearHeads(DownloadKaggle, WildlifeDataset):
     summary = summary
     kaggle_url = "picekl/brown-bear-heads"
     kaggle_type = "datasets"
+    head_keypoints_file = "head_keypoints.csv"
 
-    def create_catalogue(self) -> pd.DataFrame:
+    @staticmethod
+    def parse_keypoints(keypoints: pd.DataFrame) -> pd.DataFrame:
+        point_indices = sorted({int(column.split("_")[1]) for column in keypoints.columns if column.endswith("_x")})
+        return pd.DataFrame(
+            {
+                "path": keypoints["path"],
+                "keypoints": [
+                    [
+                        float(value) if not pd.isna(value) else np.nan
+                        for point_index in point_indices
+                        for value in (row[f"keypoint_{point_index:02d}_x"], row[f"keypoint_{point_index:02d}_y"])
+                    ]
+                    for _, row in keypoints.iterrows()
+                ],
+                "keypoint_scores": [
+                    [
+                        float(row[f"keypoint_{point_index:02d}_score"])
+                        if not pd.isna(row[f"keypoint_{point_index:02d}_score"])
+                        else np.nan
+                        for point_index in point_indices
+                    ]
+                    for _, row in keypoints.iterrows()
+                ],
+                "min_keypoint_score": keypoints["min_keypoint_score"],
+                "mean_keypoint_score": keypoints["mean_keypoint_score"],
+                "n_out_of_bounds_keypoints": keypoints["n_out_of_bounds_keypoints"],
+            }
+        )
+
+    def create_catalogue(self, load_keypoints: bool = False) -> pd.DataFrame:
         """
         Create the catalogue DataFrame for the prepared BrownBearHeads dataset.
 
@@ -59,50 +90,25 @@ class BrownBearHeads(DownloadKaggle, WildlifeDataset):
                 - split_2017 ... split_2022 (str): Original yearly split roles.
                 - split_ood (str): Standardized out-of-distribution split.
                 - split_iid (str): Standardized in-distribution split.
-                - image_id (int): Added automatically if missing.
+                - image_id (int): Stable image identifier.
                 - species (str): Added automatically as `brown bear` if missing.
-
-        Notes:
-            - The method looks for `metadata.csv` either directly in `self.root`
-              or in a nested `BrownBearHeads/` folder.
-            - If `image_id` is not present in the metadata, a sequential one is
-              created.
-            - If `species` is not present in the metadata, it is set to
-              `brown bear`.
+                - keypoints (list[float], optional): Face keypoints loaded from
+                  `head_keypoints.csv` when `load_keypoints=True`.
+                - keypoint_scores (list[float], optional): Per-keypoint model
+                  scores loaded from `head_keypoints.csv` when requested.
         """
 
         assert self.root is not None
-        metadata_path = self.find_metadata_path()
-        df = pd.read_csv(metadata_path, low_memory=False)
-
+        df = pd.read_csv(os.path.join(self.root, "metadata.csv"), low_memory=False)
         if "image_id" not in df.columns:
             df["image_id"] = range(len(df))
+
+        if load_keypoints:
+            keypoints = pd.read_csv(os.path.join(self.root, self.head_keypoints_file), low_memory=False)
+            keypoints = self.parse_keypoints(keypoints)
+            df = df.merge(keypoints, on="path", how="left")
+
         if "species" not in df.columns:
             df["species"] = "brown bear"
 
         return self.finalize_catalogue(df)
-
-    def find_metadata_path(self) -> str:
-        """
-        Find the prepared BrownBearHeads metadata file.
-
-        The Kaggle reupload may store `metadata.csv` either directly in the
-        dataset root or inside a nested `BrownBearHeads/` directory.
-
-        Returns:
-            str: Absolute path to the discovered `metadata.csv` file.
-
-        Raises:
-            FileNotFoundError: If `metadata.csv` cannot be found in any
-            supported location.
-        """
-
-        assert self.root is not None
-        candidates = [
-            os.path.join(self.root, "metadata.csv"),
-            os.path.join(self.root, "BrownBearHeads", "metadata.csv"),
-        ]
-        for candidate in candidates:
-            if os.path.exists(candidate):
-                return candidate
-        raise FileNotFoundError("Could not find BrownBearHeads metadata.csv in the provided root.")

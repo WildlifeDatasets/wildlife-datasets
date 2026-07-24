@@ -101,41 +101,65 @@ def resize_and_restructure(
     """Resize and restructure the dataset in one metadata pass."""
 
     used_paths: set[str] = set()
+    tasks = []
     prepared_records = []
     columns = metadata.columns.tolist()
 
-    with ProcessPoolExecutor(max_workers=workers) as executor:
-        future_to_record = {}
+    for row_index, values in enumerate(metadata.itertuples(index=False, name=None)):
+        record = dict(zip(columns, values))
+        source_relpath = os.path.normpath(str(record.pop("path_original", record.get("path"))))
+        source_path = os.path.join(source_root, source_relpath)
+        if not os.path.exists(source_path):
+            raise FileNotFoundError(f"Could not find source image: {source_path}")
 
-        for values in metadata.itertuples(index=False, name=None):
-            record = dict(zip(columns, values))
-            source_relpath = os.path.normpath(str(record.pop("path_original")))
-            source_path = os.path.join(source_root, source_relpath)
-            if not os.path.exists(source_path):
-                raise FileNotFoundError(f"Could not find source image: {source_path}")
+        target_path = build_target_path(
+            source_relpath=source_relpath,
+            year=record["year"],
+            identity=record["identity"],
+            used_paths=used_paths,
+        )
+        output_path = os.path.join(prepared_root, target_path)
+        tasks.append((row_index, record, source_path, output_path, target_path))
 
-            target_path = build_target_path(
-                source_relpath=source_relpath,
-                year=record["year"],
-                identity=record["identity"],
-                used_paths=used_paths,
-            )
-            output_path = os.path.join(prepared_root, target_path)
-
-            future = executor.submit(process_one_image, source_path, output_path, max_side)
-            future_to_record[future] = (record, target_path)
-
-        for future in tqdm(as_completed(future_to_record), total=len(future_to_record), desc="Processing images"):
-            record, target_path = future_to_record[future]
-            width, height, width_original, height_original = future.result()
+    if workers == 1:
+        iterator = tqdm(tasks, desc="Processing images")
+        for row_index, record, source_path, output_path, target_path in iterator:
+            width, height, width_original, height_original = process_one_image(source_path, output_path, max_side)
+            record["_row_index"] = row_index
             record["path"] = target_path
             record["width"] = width
             record["height"] = height
             record["width_original"] = width_original
             record["height_original"] = height_original
             prepared_records.append(record)
+    else:
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            future_to_record = {}
+            for row_index, record, source_path, output_path, target_path in tasks:
+                future = executor.submit(process_one_image, source_path, output_path, max_side)
+                future_to_record[future] = (row_index, record, target_path)
 
-    return pd.DataFrame(prepared_records)
+            for future in tqdm(as_completed(future_to_record), total=len(future_to_record), desc="Processing images"):
+                row_index, record, target_path = future_to_record[future]
+                width, height, width_original, height_original = future.result()
+                record["_row_index"] = row_index
+                record["path"] = target_path
+                record["width"] = width
+                record["height"] = height
+                record["width_original"] = width_original
+                record["height_original"] = height_original
+                prepared_records.append(record)
+
+    prepared = pd.DataFrame(prepared_records)
+    prepared = prepared.sort_values("_row_index").drop(columns="_row_index").reset_index(drop=True)
+    pose_columns = [
+        "keypoints",
+        "keypoint_scores",
+        "min_keypoint_score",
+        "mean_keypoint_score",
+        "n_out_of_bounds_keypoints",
+    ]
+    return prepared.drop(columns=pose_columns, errors="ignore")
 
 
 def main(
@@ -147,6 +171,9 @@ def main(
 ) -> pd.DataFrame:
     """Run the resize and restructure step and write `metadata.csv`."""
 
+    source_root = os.path.expanduser(source_root)
+    metadata_path = os.path.expanduser(metadata_path)
+    prepared_root = os.path.expanduser(prepared_root)
     Path(prepared_root).mkdir(parents=True, exist_ok=True)
     metadata = load_metadata(metadata_path)
     prepared = resize_and_restructure(
@@ -169,9 +196,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "metadata_path",
         nargs="?",
-        default="~/BrownBearHears/clean_metadata.csv",
+        default="~/BrownBearHeads/clean_metadata.csv",
     )
-    parser.add_argument("prepared_root", nargs="?", default="~/BrownBearHears")
+    parser.add_argument("prepared_root", nargs="?", default="~/BrownBearHeads")
     parser.add_argument("--max-side", type=int, default=720)
     parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 1) - 1))
     args = parser.parse_args()
