@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import pandas as pd
 
@@ -35,11 +36,10 @@ class BristolGorillas2020(WildlifeDataset):
 
     @classmethod
     def _download(cls):
-        command = f"wget -c -q {cls.url}"
         exception_text = """Download works only on Linux. Please download it manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#bristolgorillas2020"""
         if os.name == "posix":
-            os.system(command)
+            subprocess.run(["wget", "-c", "-q", cls.url], check=True)
         else:
             raise RuntimeError(exception_text)
 

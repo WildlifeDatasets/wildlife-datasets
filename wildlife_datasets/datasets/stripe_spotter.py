@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import pandas as pd
 
@@ -55,10 +56,10 @@ class StripeSpotter(WildlifeDataset):
         exception_text = """Extracting works only on Linux. Please extract it manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#stripespotter"""
         if os.name == "posix":
-            os.system("zip -s- data-20110718.zip -O data-full.zip")
+            subprocess.run(["zip", "-s-", "data-20110718.zip", "-O", "data-full.zip"], check=True)
             if not os.path.exists("data-full.zip"):
                 raise RuntimeError("Download or extraction failed. Check if zip is installed.")
-            os.system("unzip data-full.zip")
+            subprocess.run(["unzip", "data-full.zip"], check=True)
             os.remove("data-20110718.zip")
             os.remove("data-20110718.z01")
             os.remove("data-20110718.z02")

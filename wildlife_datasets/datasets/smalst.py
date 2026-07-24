@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 
 import pandas as pd
 
@@ -46,7 +47,7 @@ class SMALST(WildlifeDataset):
         exception_text = """Extracting works only on Linux. Please extract it manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#smalst"""
         if os.name == "posix":
-            os.system("jar xvf " + cls.archive)
+            subprocess.run(["jar", "xvf", cls.archive], check=True)
             os.remove(cls.archive)
             shutil.rmtree(os.path.join("zebra_training_set", "annotations"))
             shutil.rmtree(os.path.join("zebra_training_set", "texmap"))

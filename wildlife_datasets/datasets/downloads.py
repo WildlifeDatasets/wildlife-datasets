@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 import shutil
+import subprocess
 import time
 from collections.abc import Iterable
 
@@ -69,14 +70,17 @@ class DownloadKaggle:
     def _download(cls):
         display_name = cls.display_name().lower()
         if cls.kaggle_type == "datasets":
-            command = f"datasets download -d {cls.kaggle_url} --force"
+            args = ["kaggle", "datasets", "download", "-d", cls.kaggle_url, "--force"]
         elif cls.kaggle_type == "competitions":
-            command = f"competitions download -c {cls.kaggle_url} --force"
+            args = ["kaggle", "competitions", "download", "-c", cls.kaggle_url, "--force"]
         else:
             raise ValueError("cls.kaggle_type must be datasets or competitions.")
         exception_text = f"""Kaggle must be setup.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}"""
-        os.system(f"kaggle {command}")
+        try:
+            subprocess.run(args, check=True)
+        except (subprocess.CalledProcessError, FileNotFoundError) as e:
+            raise RuntimeError(exception_text) from e
         if not os.path.exists(cls.archive_name()):
             raise RuntimeError(exception_text)
 

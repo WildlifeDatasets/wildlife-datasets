@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import numpy as np
 import pandas as pd
@@ -35,11 +36,13 @@ class Giraffes(WildlifeDataset):
     @classmethod
     def _download(cls):
         url = "ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021/"
-        command = f"wget -rpk -l 10 -np -c --random-wait -U Mozilla {url} -P '.' "
         exception_text = """Download works only on Linux. Please download it manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#giraffes"""
         if os.name == "posix":
-            os.system(command)
+            subprocess.run(
+                ["wget", "-rpk", "-l", "10", "-np", "-c", "--random-wait", "-U", "Mozilla", url, "-P", "."],
+                check=True,
+            )
         else:
             raise RuntimeError(exception_text)
 
