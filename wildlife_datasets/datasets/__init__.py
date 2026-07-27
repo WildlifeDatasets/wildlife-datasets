@@ -15,7 +15,7 @@ from .beluga_id import BelugaID, BelugaIDv2
 from .bird_individual_id import BirdIndividualID, BirdIndividualIDSegmented
 from .bristol_gorillas_2020 import BristolGorillas2020
 from .brown_bear_heads import BrownBearHeads
-from .cat_individual_images import CatIndividualImages
+from .cat_individual_images import CatIndividualImages, CatIndividualImagesv2
 from .cattle_muzzle import CattleMuzzle
 from .chicks4free_id import Chicks4FreeID
 from .CHIRP import CHIRP
