@@ -85,7 +85,6 @@ class SeaTurtleID2022(DownloadKaggle, WildlifeDataset):
         else:
             orientation_col = "orientation"
         if category_name not in categories:
-            # printfor category in categories.keys()
             raise ValueError(f"Category {category_name} not allowed. Choose one from {categories.keys()}.")
         category_id = categories[category_name]
 

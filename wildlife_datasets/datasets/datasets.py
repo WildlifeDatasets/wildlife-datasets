@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import warnings
 from collections.abc import Callable, Sequence
@@ -16,6 +17,8 @@ from matplotlib.figure import Figure
 from PIL import Image
 
 from . import utils
+
+logger = logging.getLogger(__name__)
 
 
 class WildlifeDataset:
@@ -390,8 +393,7 @@ class WildlifeDataset:
 
         already_downloaded = os.path.exists(mark_file_name)
         if not cls.saved_to_system_folder and already_downloaded and not force:
-            print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
-            print(cls.download_warning)
+            logger.warning(f"DATASET {dataset_name}: {cls.download_warning}")
         else:
             print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
             cls.download(root, force=force, **kwargs)
@@ -415,8 +417,7 @@ class WildlifeDataset:
         if cls.saved_to_system_folder:
             cls._download(**kwargs)
         elif already_downloaded and not force:
-            print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
-            print(cls.download_warning)
+            logger.warning(f"DATASET {dataset_name}: {cls.download_warning}")
         else:
             if os.path.exists(mark_file_name):
                 os.remove(mark_file_name)
@@ -615,9 +616,9 @@ class WildlifeDataset:
                     df.loc[index, col] = new_identity
                     n_replaced += 1
             if n_replaced == 0:
-                print(f"File name {image_name} with identity {old_identity} was not found.")
+                logger.warning(f"File name {image_name} with identity {old_identity} was not found.")
             elif n_replaced > 1:
-                print(f"File name {image_name} with identity {old_identity} was found multiple times.")
+                logger.warning(f"File name {image_name} with identity {old_identity} was found multiple times.")
         return df
 
     def finalize_catalogue(
@@ -827,9 +828,7 @@ class WildlifeDataset:
             if isinstance(path, str) and not os.path.exists(self.get_absolute_path(path)):
                 bad_paths.append(path)
         if len(bad_paths) > 0:
-            print("The following non-existing images were identified.")
-            for path in bad_paths:
-                print(path)
+            logger.warning("The following non-existing images were identified: %s", bad_paths)
             raise FileNotFoundError("Some files not found")
 
     def check_files_names(self, col: pd.Series | str | None = None) -> None:
@@ -852,9 +851,7 @@ class WildlifeDataset:
             except UnicodeEncodeError:
                 bad_names.append(path)
         if len(bad_names) > 0:
-            print("The following not ISO-8859-1 file names were identified.")
-            for path in bad_names:
-                print(path)
+            logger.warning("The following not ISO-8859-1 file names were identified: %s", bad_names)
             raise ValueError("Non ISO-8859-1 characters in path may cause problems. Please change them.")
 
     def plot_grid(

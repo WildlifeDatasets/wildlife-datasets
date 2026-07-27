@@ -1,6 +1,7 @@
 import ast
 import hashlib
 import io
+import logging
 import os
 import shutil
 import urllib.request
@@ -13,6 +14,8 @@ import pandas as pd
 import requests
 from PIL import Image, ImageOps
 from tqdm import tqdm
+
+logger = logging.getLogger(__name__)
 
 
 def load_image(path: str, max_size: int | None = None) -> Image.Image:
@@ -262,7 +265,6 @@ def gdown_download(url, archive, exception_text=""):
 
     gdown.download(url, archive, quiet=False)
     if not os.path.exists(archive):
-        print(exception_text)
         raise RuntimeError(exception_text)
 
 
@@ -313,16 +315,17 @@ def download_image(url, headers=None, file_name=None):
                 f.write(response.content)
         return img
     elif response.status_code == 404:
-        print(f"Image not found (404). Skipping... {url}")
+        logger.warning(f"Image not found (404). Skipping... {url}")
     else:
-        print(f"Failed to download image with status code {response.status_code}. {url}")
+        message = f"Failed to download image with status code {response.status_code}. {url}"
         try:
-            message = response.content.decode("utf-8")
-            message = message.split("<Details>")[1]
-            message = message.split("</Details>")[0]
-            print(message)
+            details = response.content.decode("utf-8")
+            details = details.split("<Details>")[1]
+            details = details.split("</Details>")[0]
+            message += f" {details}"
         except Exception:
             pass
+        logger.warning(message)
     return None
 
 
@@ -376,6 +379,6 @@ def delete_corrupted_images(
         if os.path.exists(full_name) and name.lower().endswith(img_extensions):
             try:
                 load_image(full_name)
-                print(f"File is not corrupted: {full_name}")
+                logger.warning(f"File is not corrupted: {full_name}")
             except ValueError:
                 os.remove(full_name)
