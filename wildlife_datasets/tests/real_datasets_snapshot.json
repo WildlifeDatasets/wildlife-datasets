@@ -1,0 +1,672 @@
+{
+  "AAUZebraFish": {
+    "first_image_ids": [
+      "0000ef3f3f3ccd20",
+      "00024452851a343c",
+      "0002c4ff6deeae40",
+      "000444965a5463b1",
+      "000e4b1f6c1b701a"
+    ],
+    "length": 6672
+  },
+  "ATRW": {
+    "first_image_ids": [
+      "000408498f926bc6",
+      "0004d0b59e19461f",
+      "000871c1fc726f0b",
+      "0031e80738c8832c",
+      "00411460f7c92d21"
+    ],
+    "length": 5415
+  },
+  "AerialCattle2017": {
+    "first_image_ids": [
+      "0000e6ec141733f6",
+      "000124f2ca1067b3",
+      "0001da74f37e7021",
+      "00022bf38f98f888",
+      "0002a2e9b0493ac8"
+    ],
+    "length": 46340
+  },
+  "AmvrakikosTurtles": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 200
+  },
+  "AnimalCLEF2025": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 15209
+  },
+  "AnimalCLEF2026": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 15483
+  },
+  "BalearicLizard": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 4619
+  },
+  "BalearicLizardSegmented": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 4619
+  },
+  "BelugaIDv2": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 9304
+  },
+  "BirdIndividualID": {
+    "first_image_ids": [
+      "00001e87901dbf71",
+      "0000a372903a53f8",
+      "000156aa80be3202",
+      "0001b84cf55cb42a",
+      "0001e15353597c63"
+    ],
+    "length": 52434
+  },
+  "BirdIndividualIDSegmented": {
+    "first_image_ids": [
+      "00001e87901dbf71",
+      "0000a372903a53f8",
+      "000156aa80be3202",
+      "0001b84cf55cb42a",
+      "0001e15353597c63"
+    ],
+    "length": 52774
+  },
+  "BristolGorillas2020": {
+    "first_image_ids": [
+      "0018c04c8fc88c75",
+      "002368537d87fe74",
+      "002a6aca623cf822",
+      "004b53e287e62ab0",
+      "005b1e69ff79f407"
+    ],
+    "length": 5594
+  },
+  "BrownBearHeads": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 72939
+  },
+  "CHIRP": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 402750
+  },
+  "CTai": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 5078
+  },
+  "CZoo": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 2109
+  },
+  "CatIndividualImagesv2": {
+    "first_image_ids": [
+      "0001_000",
+      "0001_001",
+      "0001_002",
+      "0001_003",
+      "0001_004"
+    ],
+    "length": 13478
+  },
+  "CattleMuzzle": {
+    "first_image_ids": [
+      "0008",
+      "0009",
+      "0010",
+      "0011",
+      "0012"
+    ],
+    "length": 2899
+  },
+  "Chicks4FreeID": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 1146
+  },
+  "CoBRAReIdentificationYoungstock": {
+    "first_image_ids": [
+      "0002ab547efd9433",
+      "00096da58b3ed753",
+      "000a9b17dbb098a6",
+      "0017ac38abccabc1",
+      "0017d0b68bc2057c"
+    ],
+    "length": 11438
+  },
+  "CowDataset": {
+    "first_image_ids": [
+      "001b3e8d69a657be",
+      "0051c8072b6d4e60",
+      "006698294d4f5443",
+      "006ac0437e0409e3",
+      "011ce6078f80ca9b"
+    ],
+    "length": 1485
+  },
+  "Cows2021v2": {
+    "first_image_ids": [
+      "0002727eeb73821e",
+      "0006bdedf01b398c",
+      "0008348119f439bf",
+      "000a638c38d40de4",
+      "000ef4fe8e5eb2d4"
+    ],
+    "length": 8670
+  },
+  "CzechLynxv2": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 79760
+  },
+  "DogFaceNet": {
+    "first_image_ids": [
+      "000c4fee0388d6c3",
+      "0012472451c1fddc",
+      "0014cd77d2f2032c",
+      "00179e8070d14035",
+      "001810f4c10ab71f"
+    ],
+    "length": 8363
+  },
+  "ELPephants": {
+    "first_image_ids": [
+      "0010ae716882691c",
+      "00181e893b7d10ac",
+      "00250c82b3123448",
+      "00675a37fe2ccb8f",
+      "009d00a9013d77f7"
+    ],
+    "length": 2078
+  },
+  "FriesianCattle2015v2": {
+    "first_image_ids": [
+      "000912763e305fbf",
+      "00fa32a2e11048da",
+      "01d8f02c86b3c48a",
+      "058a6023a45f69d1",
+      "06b9b3c0d1875fa6"
+    ],
+    "length": 193
+  },
+  "FriesianCattle2017": {
+    "first_image_ids": [
+      "00b9268464cdc1ce",
+      "00e37d1890461de4",
+      "00f3e3314ae3096e",
+      "015315fd3f8e0195",
+      "0284943241a395b9"
+    ],
+    "length": 940
+  },
+  "GiraffeZebraID": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 6925
+  },
+  "Giraffes": {
+    "first_image_ids": [
+      "007814b19d61746a",
+      "009302cbbd62935c",
+      "00f03bf50f67578e",
+      "014ca92c414554c8",
+      "01528dcb1ae17c2b"
+    ],
+    "length": 1393
+  },
+  "HappyWhale": {
+    "first_image_ids": [
+      "000110707af0ba",
+      "00021adfb725ed",
+      "000562241d384d",
+      "0006287ec424cb",
+      "0007c33415ce37"
+    ],
+    "length": 78989
+  },
+  "HolsteinCattleRecognition": {
+    "first_image_ids": [
+      "1493",
+      "1496",
+      "1497",
+      "1498",
+      "1500"
+    ],
+    "length": 1237
+  },
+  "HulaPaintedFrogs": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 3640
+  },
+  "HumpbackWhaleID": {
+    "first_image_ids": [
+      "0000e88ab",
+      "0001f9222",
+      "00028a005",
+      "00029d126",
+      "00050a15a"
+    ],
+    "length": 33321
+  },
+  "HyenaID2022": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 3129
+  },
+  "IPanda50": {
+    "first_image_ids": [
+      "000012e43ecad67a",
+      "000322ab6c96fb1d",
+      "0006ec8d36dfe8ca",
+      "0007464d66d9892e",
+      "0010147ec2c8da72"
+    ],
+    "length": 6874
+  },
+  "LeopardID102": {
+    "first_image_ids": [
+      "LeopardID102/LpF0001/CTS2021_CAM02-17X-1406_2021-06-07_21-11-00_CDY_0009.JPG",
+      "LeopardID102/LpF0001/CTS2021_CAM02-17Z-1406_2021-06-07_21-10-16_I__00013.JPG",
+      "LeopardID102/LpF0001/CTS2021_CAM02-7X-3105_2021-05-21_08-35-00_CDY_0017.JPG",
+      "LeopardID102/LpF0001/CTS2021_CAM02-7X-3105_2021-05-23_03-57-00_CDY_0029.JPG",
+      "LeopardID102/LpF0001/CTS2021_CAM02-7X-3105_2021-05-27_21-21-00_CDY_0038.JPG"
+    ],
+    "length": 865
+  },
+  "LeopardID2022": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 6825
+  },
+  "LionData": {
+    "first_image_ids": [
+      "0050b870a1f4d586",
+      "009b7fa63cfb88f5",
+      "01038e09440889ed",
+      "015e3dd761fdc45e",
+      "01719ac6abb0c2b0"
+    ],
+    "length": 740
+  },
+  "MPDD": {
+    "first_image_ids": [
+      "0_c1s1_7.jpg",
+      "0_c2s2_6.jpg",
+      "0_c2s5_0.jpg",
+      "0_c3s3_8.jpg",
+      "0_c4s1_9.jpg"
+    ],
+    "length": 1657
+  },
+  "MacaqueFaces": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 6280
+  },
+  "Melops": {
+    "first_image_ids": [
+      "1160507_2018",
+      "1160508_2018",
+      "1160509_2018",
+      "1160510_2018",
+      "1160513_2018"
+    ],
+    "length": 24577
+  },
+  "MultiCamCows2024": {
+    "first_image_ids": [
+      "001_2023Aug14_00001_1.jpg",
+      "001_2023Aug14_00002_1.jpg",
+      "001_2023Aug14_00003_1.jpg",
+      "001_2023Aug14_00004_1.jpg",
+      "001_2023Aug14_00005_1.jpg"
+    ],
+    "length": 101329
+  },
+  "NDD20v2": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 6102
+  },
+  "NOAARightWhale": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 11469
+  },
+  "NyalaData": {
+    "first_image_ids": [
+      "0059ff52cecc36e9",
+      "005d8127c517bb4f",
+      "008704ae8100e69a",
+      "0093921f040a08f1",
+      "00b507f86cb33078"
+    ],
+    "length": 1942
+  },
+  "OpenCows2020": {
+    "first_image_ids": [
+      "00192639fd6df155",
+      "001d0519bc54343e",
+      "002c48f3caf7516e",
+      "00517a4f8038ee4b",
+      "00538b3d4b88aed0"
+    ],
+    "length": 4736
+  },
+  "PolarBearVidID": {
+    "first_image_ids": [
+      "000C01T000F000",
+      "000C01T000F001",
+      "000C01T000F002",
+      "000C01T000F003",
+      "000C01T000F004"
+    ],
+    "length": 138363
+  },
+  "PrimFace": {
+    "first_image_ids": [
+      "c01_01",
+      "c01_02",
+      "c01_03",
+      "c01_04",
+      "c01_05"
+    ],
+    "length": 1282
+  },
+  "RedBeeReID": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 9495
+  },
+  "ReunionTurtles": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 336
+  },
+  "RotwildID_Faces": {
+    "first_image_ids": [
+      "007e58b29bfbcca8efaefc78e9d4e0f5",
+      "01a6bb57ac7aa9995870cf6ee3213e37",
+      "01bf9cfefcb9be6e1dad111b10d83021",
+      "0223498f1f0ee6d6f9cbf984dc93e7d0",
+      "022b283a47e7e142ece007c1c8f7c625"
+    ],
+    "length": 1012
+  },
+  "SMALST": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 12850
+  },
+  "SeaStarReID2023": {
+    "first_image_ids": [
+      "0019d2ea2b1cd4af",
+      "002605b01eababfc",
+      "0048b09774b69e92",
+      "004f9b4ebca29657",
+      "0063b9794114d86c"
+    ],
+    "length": 2187
+  },
+  "SeaTurtleID2022": {
+    "first_image_ids": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "length": 8729
+  },
+  "SeaTurtleIDHeads": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 7582
+  },
+  "SealID": {
+    "first_image_ids": [
+      "aadqxb",
+      "aayvnn",
+      "abecjl",
+      "abejsg",
+      "abnqwb"
+    ],
+    "length": 2080
+  },
+  "SealIDSegmented": {
+    "first_image_ids": [
+      "aadqxb",
+      "aayvnn",
+      "abecjl",
+      "abejsg",
+      "abnqwb"
+    ],
+    "length": 2080
+  },
+  "SouthernProvinceTurtles": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 481
+  },
+  "SpottedHyenaID109": {
+    "first_image_ids": [
+      "SpottedHyenaID109/SH1057/L/CAM44_20230914_055153_Spotted_hyeana_129287925.jpg",
+      "SpottedHyenaID109/SH1057/L/CAM44_20230914_055256_Spotted_hyeana_129285748.jpg",
+      "SpottedHyenaID109/SH1057/L/CAM44_20230923_232327_Spotted_hyeana_129286790.jpg",
+      "SpottedHyenaID109/SH1057/L/CAM44_20230925_010321_Spotted_hyeana_129287006.jpg",
+      "SpottedHyenaID109/SH1057/R/CAM44_20230914_055150_Spotted_hyeana_129285739.jpg"
+    ],
+    "length": 704
+  },
+  "SpottedHyenaID415": {
+    "first_image_ids": [
+      "SpottedHyenaID415/SH0003/CAM02_20210506_003105_Spotted_hyeana_2594979.jpg",
+      "SpottedHyenaID415/SH0004/CAM02_20210506_003224_Spotted_hyeana_2594981.jpg",
+      "SpottedHyenaID415/SH0004/CAM02_20210506_003249_Spotted_hyeana_2594983.jpg",
+      "SpottedHyenaID415/SH0004/CAM03_20210506_033857_Spotted_hyeana_2595634.jpg",
+      "SpottedHyenaID415/SH0004/CAM04_20210608_023522_Spotted_hyeana_2667511.jpg"
+    ],
+    "length": 2247
+  },
+  "StripeSpotter": {
+    "first_image_ids": [
+      "005c8fdfdd7b5029",
+      "00770b7816973760",
+      "0081df80e662f31a",
+      "00ad39579920ae3e",
+      "00f70eabfc4c9d23"
+    ],
+    "length": 824
+  },
+  "TurtlesOfSMSRC": {
+    "first_image_ids": [
+      "321559873_581562729",
+      "321595638_581630638",
+      "321595639_581630651",
+      "321595642_581630599",
+      "321595643_581630639"
+    ],
+    "length": 1527
+  },
+  "WhaleSharkID": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 7693
+  },
+  "WildRaptorID": {
+    "first_image_ids": [
+      "ID001_202212050820_0007",
+      "ID001_202212050820_0008",
+      "ID001_202212050820_0028",
+      "ID001_202212050820_0029",
+      "ID001_202212050820_0034"
+    ],
+    "length": 14817
+  },
+  "WildlifeReID10k": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 140488
+  },
+  "ZakynthosTurtles": {
+    "first_image_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "length": 160
+  },
+  "ZindiTurtleRecall": {
+    "first_image_ids": [
+      "ID_0014D1K8",
+      "ID_001DWTZB",
+      "ID_009TNNQ8",
+      "ID_00CWHTC5",
+      "ID_00JE9D7C"
+    ],
+    "length": 13293
+  }
+}

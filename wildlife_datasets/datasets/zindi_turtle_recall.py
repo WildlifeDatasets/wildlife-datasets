@@ -40,16 +40,16 @@ class ZindiTurtleRecall(DownloadURL, WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the training images
-        assert self.root is not None
-        data_train = pd.read_csv(os.path.join(self.root, "train.csv"))
+        root = self.get_root()
+        data_train = pd.read_csv(os.path.join(root, "train.csv"))
         data_train["split"] = "train"
 
         # Load information about the testing images
-        data_test = pd.read_csv(os.path.join(self.root, "test.csv"))
+        data_test = pd.read_csv(os.path.join(root, "test.csv"))
         data_test["split"] = "test"
 
         # Load information about the additional images
-        data_extra = pd.read_csv(os.path.join(self.root, "extra_images.csv"))
+        data_extra = pd.read_csv(os.path.join(root, "extra_images.csv"))
         data_extra["split"] = np.nan
 
         # Finalize the dataframe

@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import pandas as pd
 
@@ -55,28 +56,28 @@ class StripeSpotter(WildlifeDataset):
         exception_text = """Extracting works only on Linux. Please extract it manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#stripespotter"""
         if os.name == "posix":
-            os.system("zip -s- data-20110718.zip -O data-full.zip")
+            subprocess.run(["zip", "-s-", "data-20110718.zip", "-O", "data-full.zip"], check=True)
             if not os.path.exists("data-full.zip"):
-                raise Exception("Download or extraction failed. Check if zip is installed.")
-            os.system("unzip data-full.zip")
+                raise RuntimeError("Download or extraction failed. Check if zip is installed.")
+            subprocess.run(["unzip", "data-full.zip"], check=True)
             os.remove("data-20110718.zip")
             os.remove("data-20110718.z01")
             os.remove("data-20110718.z02")
             os.remove("data-full.zip")
         else:
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
 
         # Extract information about the images
         data["index"] = data["file"].str[-7:-4].astype(int)
         data = data[data["file"].str.startswith("img")]
 
         # Load additional information
-        data_aux = pd.read_csv(os.path.join(self.root, "data", "SightingData.csv"))
+        data_aux = pd.read_csv(os.path.join(root, "data", "SightingData.csv"))
         data = pd.merge(data, data_aux, how="left", left_on="index", right_on="#imgindex")
         data.loc[data["animal_name"].isnull(), "animal_name"] = self.unknown_name
 

@@ -137,10 +137,10 @@ class Melops(DownloadURL, WildlifeDataset):
         return pd.Series(list(values), index=index)
 
     def _find_body_images(self) -> pd.DataFrame:
-        assert self.root is not None
-        images = utils.find_images(self.root)
+        root = self.get_root()
+        images = utils.find_images(root)
         if len(images) == 0:
-            raise FileNotFoundError(f"No body images found in {self.root}.")
+            raise FileNotFoundError(f"No body images found in {root}.")
 
         rel_path = images["path"].str.cat(images["file"], sep=os.path.sep).str.lower()
         body_images = images[rel_path.str.contains("body") & ~rel_path.str.contains("headless")]
@@ -160,9 +160,9 @@ class Melops(DownloadURL, WildlifeDataset):
         return images[["filename_year", "path"]]
 
     def _add_optional_annotations(self, df: pd.DataFrame) -> pd.DataFrame:
-        assert self.root is not None
+        root = self.get_root()
 
-        bbox_path = self._find_file(self.root, "Melops_bbox_coords.txt")
+        bbox_path = self._find_file(root, "Melops_bbox_coords.txt")
         if bbox_path is not None:
             bboxes = pd.read_csv(bbox_path, sep="\t")
             df = df.merge(bboxes, on="filename_year", how="left")
@@ -171,7 +171,7 @@ class Melops(DownloadURL, WildlifeDataset):
                 if all(col in df for col in cols):
                     df[f"bbox_{part}_source"] = self._array_series(df[cols].to_numpy(), df.index)
 
-        color_path = self._find_file(self.root, "colour_extraction_correction.csv")
+        color_path = self._find_file(root, "colour_extraction_correction.csv")
         if color_path is not None:
             colors = pd.read_csv(color_path)
             colors["filename_year"] = colors["image"].apply(lambda x: os.path.splitext(x)[0])
@@ -181,10 +181,10 @@ class Melops(DownloadURL, WildlifeDataset):
         return df
 
     def _add_image_sizes(self, df: pd.DataFrame) -> None:
-        assert self.root is not None
+        root = self.get_root()
 
         def get_size(path):
-            with Image.open(os.path.join(self.root, path)) as img:
+            with Image.open(os.path.join(root, path)) as img:
                 return img.size
 
         sizes = [get_size(path) for path in tqdm(df["path"], desc="Melops image sizes", mininterval=1, ncols=100)]
@@ -247,9 +247,9 @@ class Melops(DownloadURL, WildlifeDataset):
         return points.reshape(len(df), -1)
 
     def _add_keypoints(self, df: pd.DataFrame) -> pd.DataFrame:
-        assert self.root is not None
+        root = self.get_root()
         for file_name, names, column in self.keypoint_files:
-            path = self._find_file(self.root, file_name)
+            path = self._find_file(root, file_name)
             if path is None:
                 continue
             keypoints = pd.read_csv(path)
@@ -274,11 +274,11 @@ class Melops(DownloadURL, WildlifeDataset):
         load_image_size: bool = False,
         load_keypoints: bool = False,
     ) -> pd.DataFrame:
-        assert self.root is not None
+        root = self.get_root()
         if bbox is not None and bbox not in self.bbox_parts:
             raise ValueError(f"bbox must be one of {self.bbox_parts} or None.")
 
-        metadata_path = self._find_file(self.root, "Melops_metadata.txt")
+        metadata_path = self._find_file(root, "Melops_metadata.txt")
         if metadata_path is None:
             raise FileNotFoundError("Could not find Melops_metadata.txt.")
 

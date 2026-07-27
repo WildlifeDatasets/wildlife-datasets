@@ -47,12 +47,12 @@ class NOAARightWhale(DownloadKaggle, WildlifeDataset):
             exception_text = """Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
                 Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#noaarightwhale"""
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the training dataset
-        assert self.root is not None
-        data = pd.read_csv(os.path.join(self.root, "train.csv"))
+        root = self.get_root()
+        data = pd.read_csv(os.path.join(root, "train.csv"))
         df1 = pd.DataFrame(
             {
                 "image_id": data["Image"].str.split(".", expand=True)[0].str.strip("w_").astype(int),
@@ -63,7 +63,7 @@ class NOAARightWhale(DownloadKaggle, WildlifeDataset):
         )
 
         # Load information about the testing dataset
-        data = pd.read_csv(os.path.join(self.root, "sample_submission.csv"))
+        data = pd.read_csv(os.path.join(root, "sample_submission.csv"))
         df2 = pd.DataFrame(
             {
                 "image_id": data["Image"].str.split(".", expand=True)[0].str.strip("w_").astype(int),

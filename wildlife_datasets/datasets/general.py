@@ -9,8 +9,8 @@ from .utils import find_images, get_persistent_id
 
 class Dataset_Folder(WildlifeDataset):
     def create_catalogue(self) -> pd.DataFrame:
-        assert self.root is not None
-        data = find_images(self.root)
+        root = self.get_root()
+        data = find_images(root)
         df = pd.DataFrame({"identity": len(data) * ["unknown"], "path": data["path"] + os.path.sep + data["file"]})
         df["image_id"] = get_persistent_id(df["path"])
         return self.finalize_catalogue(df)
@@ -19,11 +19,11 @@ class Dataset_Folder(WildlifeDataset):
 class Dataset_Metadata(WildlifeDataset):
     def create_catalogue(self, file_name: str = "metadata.csv", load_segmentation: bool = False) -> pd.DataFrame:
 
-        assert self.root is not None
-        metadata = pd.read_csv(os.path.join(self.root, file_name))
+        root = self.get_root()
+        metadata = pd.read_csv(os.path.join(root, file_name))
         metadata = self.modify_metadata(metadata)
         if load_segmentation:
-            file_name = os.path.join(self.root, "segmentation.csv")
+            file_name = os.path.join(root, "segmentation.csv")
             metadata = utils_load_segmentation(metadata, file_name)
         return self.finalize_catalogue(metadata)
 

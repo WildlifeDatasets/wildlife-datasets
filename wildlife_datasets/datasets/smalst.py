@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 
 import pandas as pd
 
@@ -38,7 +39,7 @@ class SMALST(WildlifeDataset):
     def _download(cls):
         exception_text = """Dataset must be downloaded manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#smalst"""
-        raise Exception(exception_text)
+        raise RuntimeError(exception_text)
         # utils.gdown_download(cls.url, cls.archive, exception_text)
 
     @classmethod
@@ -46,19 +47,19 @@ class SMALST(WildlifeDataset):
         exception_text = """Extracting works only on Linux. Please extract it manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#smalst"""
         if os.name == "posix":
-            os.system("jar xvf " + cls.archive)
+            subprocess.run(["jar", "xvf", cls.archive], check=True)
             os.remove(cls.archive)
             shutil.rmtree(os.path.join("zebra_training_set", "annotations"))
             shutil.rmtree(os.path.join("zebra_training_set", "texmap"))
             shutil.rmtree(os.path.join("zebra_training_set", "uvflow"))
 
         else:
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        data = utils.find_images(os.path.join(self.root, "zebra_training_set", "images"))
+        root = self.get_root()
+        data = utils.find_images(os.path.join(root, "zebra_training_set", "images"))
 
         # Extract information about the images
         path = data["file"].str.strip("zebra_")
@@ -68,7 +69,7 @@ class SMALST(WildlifeDataset):
         data = data.drop(["file"], axis=1)
 
         # Find all masks in root
-        masks = utils.find_images(os.path.join(self.root, "zebra_training_set", "bgsub"))
+        masks = utils.find_images(os.path.join(root, "zebra_training_set", "bgsub"))
 
         # Extract information about the images
         path = masks["file"].str.strip("zebra_")

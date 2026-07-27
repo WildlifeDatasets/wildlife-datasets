@@ -1,9 +1,12 @@
+import logging
 import os
 
 import pandas as pd
 
 from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
+
+logger = logging.getLogger(__name__)
 
 summary = {
     "licenses": "Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)",
@@ -43,7 +46,7 @@ class BalearicLizard(DownloadKaggle, WildlifeDataset):
         transparently retries with that prefix.
 
         Args:
-            metadata_filename: Relative path to the metadata CSV inside ``self.root``.
+            metadata_filename: Relative path to the metadata CSV inside ``root``.
 
         Returns:
             pd.DataFrame: A dataframe including the following columns:
@@ -56,8 +59,8 @@ class BalearicLizard(DownloadKaggle, WildlifeDataset):
         """
 
         # Load metadata
-        assert self.root is not None
-        metadata_path = os.path.join(self.root, metadata_filename)
+        root = self.get_root()
+        metadata_path = os.path.join(root, metadata_filename)
         df = pd.read_csv(metadata_path)
         df = df.rename({"id": "identity"}, axis=1)
         df["image_id"] = range(len(df))
@@ -77,12 +80,12 @@ class BalearicLizardSegmented(BalearicLizard):
 
     @classmethod
     def get_data(cls, *args, **kwargs):
-        print(cls.warning)
+        logger.warning(cls.warning)
 
     @classmethod
     def _download(cls):
-        print(cls.warning)
+        logger.warning(cls.warning)
 
     @classmethod
     def _extract(cls):
-        print(cls.warning)
+        logger.warning(cls.warning)

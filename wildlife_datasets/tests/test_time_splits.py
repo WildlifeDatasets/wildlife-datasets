@@ -49,7 +49,7 @@ class TestTimeSplits(unittest.TestCase):
             splitter = splits.TimeProportionSplit(col_label=dataset.col_label)
             df = dataset.df
             if "date" not in df.columns:
-                self.assertRaises(Exception, splitter.split, df)
+                self.assertRaises(ValueError, splitter.split, df)
             else:
                 for idx_train, idx_test in splitter.split(df):
                     df_train = df.loc[idx_train]
@@ -63,7 +63,7 @@ class TestTimeSplits(unittest.TestCase):
             df = dataset.df
             if "date" not in df.columns:
                 splitter = splits.TimeCutoffSplit(0, col_label=dataset.col_label)
-                self.assertRaises(Exception, splitter.split, df)
+                self.assertRaises(ValueError, splitter.split, df)
             else:
                 years = pd.to_datetime(df["date"]).apply(lambda x: x.year)
                 splitter = splits.TimeCutoffSplit(max(years), col_label=dataset.col_label)
@@ -79,7 +79,7 @@ class TestTimeSplits(unittest.TestCase):
             df = dataset.df
             splitter = splits.TimeCutoffSplitAll(col_label=dataset.col_label)
             if "date" not in df.columns:
-                self.assertRaises(Exception, splitter.split, df)
+                self.assertRaises(ValueError, splitter.split, df)
             else:
                 for idx_train, idx_test in splitter.split(df):
                     df_train = df.loc[idx_train]
@@ -93,7 +93,7 @@ class TestTimeSplits(unittest.TestCase):
             df = dataset.df
             splitter = splits.TimeProportionSplit(col_label=dataset.col_label)
             if "date" not in df.columns:
-                self.assertRaises(Exception, splitter.split, df)
+                self.assertRaises(ValueError, splitter.split, df)
             else:
                 for idx_train1, idx_test1 in splitter.split(df):
                     idx_train2, idx_test2 = splitter.resplit_random(df, idx_train1, idx_test1)

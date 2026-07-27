@@ -1,6 +1,7 @@
 import ast
 import hashlib
 import io
+import logging
 import os
 import shutil
 import urllib.request
@@ -13,6 +14,8 @@ import pandas as pd
 import requests
 from PIL import Image, ImageOps
 from tqdm import tqdm
+
+logger = logging.getLogger(__name__)
 
 
 def load_image(path: str, max_size: int | None = None) -> Image.Image:
@@ -67,12 +70,14 @@ def crop_black(img: Image.Image) -> Image.Image:
     """
 
     y_nonzero, x_nonzero, _ = np.nonzero(np.asarray(img))
+    if x_nonzero.size == 0:
+        return img
     return img.crop(
         (
             int(np.min(x_nonzero)),
             int(np.min(y_nonzero)),
-            int(np.max(x_nonzero)),
-            int(np.max(y_nonzero)),
+            int(np.max(x_nonzero)) + 1,
+            int(np.max(y_nonzero)) + 1,
         )
     )
 
@@ -88,12 +93,14 @@ def crop_white(img: Image.Image) -> Image.Image:
     """
 
     y_nonzero, x_nonzero, _ = np.nonzero(np.asarray(ImageOps.invert(img)))
+    if x_nonzero.size == 0:
+        return img
     return img.crop(
         (
             int(np.min(x_nonzero)),
             int(np.min(y_nonzero)),
-            int(np.max(x_nonzero)),
-            int(np.max(y_nonzero)),
+            int(np.max(x_nonzero)) + 1,
+            int(np.max(y_nonzero)) + 1,
         )
     )
 
@@ -111,7 +118,6 @@ def find_images(
         Dataframe of relative paths of the images.
     """
 
-    # TODO: does not handle heic (CatIndividualImages) and webp images (ReunionTurtles)
     data = []
     for path, directories, files in os.walk(root):
         for file in files:
@@ -149,7 +155,8 @@ def create_id(string_col: pd.Series) -> pd.Series:
     """
 
     entity_id = string_col.apply(lambda x: hashlib.md5(x.encode()).hexdigest()[:16])
-    assert len(entity_id.unique()) == len(entity_id)
+    if len(entity_id.unique()) != len(entity_id):
+        raise ValueError("Generated ids are not unique.")
     return entity_id
 
 
@@ -253,12 +260,16 @@ def data_directory(dir):
 
 
 def gdown_download(url, archive, exception_text=""):
-    import gdown
+    try:
+        import gdown
+    except ImportError as e:
+        raise ImportError(
+            "Downloading this dataset requires gdown. Install it via: pip install wildlife_datasets[full]"
+        ) from e
 
     gdown.download(url, archive, quiet=False)
     if not os.path.exists(archive):
-        print(exception_text)
-        raise Exception(exception_text)
+        raise RuntimeError(exception_text)
 
 
 def get_split(x, data_train, data_test):
@@ -308,16 +319,17 @@ def download_image(url, headers=None, file_name=None):
                 f.write(response.content)
         return img
     elif response.status_code == 404:
-        print(f"Image not found (404). Skipping... {url}")
+        logger.warning(f"Image not found (404). Skipping... {url}")
     else:
-        print(f"Failed to download image with status code {response.status_code}. {url}")
+        message = f"Failed to download image with status code {response.status_code}. {url}"
         try:
-            message = response.content.decode("utf-8")
-            message = message.split("<Details>")[1]
-            message = message.split("</Details>")[0]
-            print(message)
+            details = response.content.decode("utf-8")
+            details = details.split("<Details>")[1]
+            details = details.split("</Details>")[0]
+            message += f" {details}"
         except Exception:
             pass
+        logger.warning(message)
     return None
 
 
@@ -371,6 +383,6 @@ def delete_corrupted_images(
         if os.path.exists(full_name) and name.lower().endswith(img_extensions):
             try:
                 load_image(full_name)
-                print(f"File is not corrupted: {full_name}")
+                logger.warning(f"File is not corrupted: {full_name}")
             except ValueError:
                 os.remove(full_name)

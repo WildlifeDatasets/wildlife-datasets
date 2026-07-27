@@ -14,7 +14,7 @@ summary = {
     "publication_url": "https://openaccess.thecvf.com/content/CVPR2026/papers/Chan_CHIRP_dataset_towards_long-term_individual-level_behavioral_monitoring_of_bird_populations_CVPR_2026_paper.pdf",
     "cite": "chan2026chirp",
     "animals": {"Siberian Jay"},
-    "animals_simple": "bird",
+    "animals_simple": "birds",
     "real_animals": True,
     "year": 2026,
     "reported_n_total": 402750,
@@ -67,7 +67,7 @@ class CHIRP(WildlifeDataset):
                         progress.update(len(chunk))
 
         if not os.path.exists(archive) or os.path.getsize(archive) == 0:
-            raise Exception("Download failed.")
+            raise RuntimeError("Download failed.")
 
     @classmethod
     def _extract(cls, archive: str | None = None) -> None:
@@ -76,11 +76,11 @@ class CHIRP(WildlifeDataset):
     def create_catalogue(self) -> pd.DataFrame:
         """Creates catalogue for CHIRP dataset."""
 
-        assert self.root is not None
-        possible_neighbour = pd.read_csv(os.path.join(self.root, "ReID", "PossibleBirds_Neighbours.csv"))
-        possible_territory = pd.read_csv(os.path.join(self.root, "ReID", "PossibleBirds_Territory.csv"))
+        root = self.get_root()
+        possible_neighbour = pd.read_csv(os.path.join(root, "ReID", "PossibleBirds_Neighbours.csv"))
+        possible_territory = pd.read_csv(os.path.join(root, "ReID", "PossibleBirds_Territory.csv"))
 
-        data = pd.read_csv(os.path.join(self.root, "ReID", "Annotation.csv"))
+        data = pd.read_csv(os.path.join(root, "ReID", "Annotation.csv"))
         df = pd.DataFrame(
             {
                 "image_id": data.index,

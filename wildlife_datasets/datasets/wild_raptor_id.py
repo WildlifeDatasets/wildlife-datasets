@@ -35,12 +35,12 @@ class WildRaptorID(DownloadURL, WildlifeDataset):
     archive = "wild_raptor_id.zip"
 
     def create_catalogue(self) -> pd.DataFrame:
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
         folders = data["path"].str.split(os.path.sep, expand=True)
         n_folders = max(folders.columns)
 
-        data["file_size"] = [os.path.getsize(os.path.join(self.root, x["path"], x["file"])) for _, x in data.iterrows()]
+        data["file_size"] = [os.path.getsize(os.path.join(root, x["path"], x["file"])) for _, x in data.iterrows()]
         data["identity"] = folders[n_folders].apply(lambda x: x.split("_")[0])
 
         # Very rough way of checking that the files with the same cols are duplicates
@@ -48,7 +48,7 @@ class WildRaptorID(DownloadURL, WildlifeDataset):
         for _, df_red in data.groupby(cols):
             if len(df_red) > 1:
                 if df_red["file_size"].nunique() != 1:
-                    raise Exception("The expected duplicates are not duplicates")
+                    raise ValueError("The expected duplicates are not duplicates")
 
         # Remove the duplicates
         data = data.drop_duplicates(subset=cols)

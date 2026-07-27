@@ -60,8 +60,8 @@ class FriesianCattle2015(DownloadURL, WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
         folders = data["path"].str.split(os.path.sep, expand=True)
 
         # Extract information from the folder structure
@@ -100,8 +100,8 @@ class FriesianCattle2017(DownloadURL, WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
         folders = data["path"].str.split(os.path.sep, expand=True)
 
         # Finalize the dataframe

@@ -41,7 +41,7 @@ def load_segmentation(metadata: pd.DataFrame, file_name: str) -> pd.DataFrame:
 
 
 def run_detection(dataset: WildlifeDataset, model) -> pd.DataFrame:
-    assert dataset.root is not None
+    root = dataset.get_root()
 
     image_ids = np.empty(0, dtype=int)
     bboxes = np.empty((0, 4))
@@ -50,7 +50,7 @@ def run_detection(dataset: WildlifeDataset, model) -> pd.DataFrame:
     labels = np.empty(0, dtype=int)
     names = []
     for _, df_row in tqdm(dataset.df.iterrows(), total=len(dataset)):
-        file_name = os.path.join(dataset.root, df_row["path"])
+        file_name = os.path.join(root, df_row["path"])
         try:
             result = model.predict(source=file_name, verbose=False, save=False, show=False)[0]
             names = result.names

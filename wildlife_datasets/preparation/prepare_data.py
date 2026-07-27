@@ -62,7 +62,7 @@ def resize_dataset(
             if hasattr(dataset, "summary"):
                 species = dataset.summary["animals"]
                 if len(species) != 1:
-                    raise Exception("There should be only one species")
+                    raise ValueError("There should be only one species")
                 species = list(species)[0]
             else:
                 species = np.nan

@@ -1,7 +1,9 @@
 import datetime
 import json
+import logging
 import os
 import shutil
+import subprocess
 import time
 from collections.abc import Iterable
 
@@ -11,11 +13,13 @@ from pyinaturalist import get_observations
 
 from . import utils
 
+logger = logging.getLogger(__name__)
+
 
 def check_attributes(obj, attrs: Iterable):
     for attr in attrs:
         if not hasattr(obj, attr) or getattr(obj, attr) is None:
-            raise Exception(f"Object {obj} must have attribute {attr}.")
+            raise AttributeError(f"Object {obj} must have attribute {attr}.")
 
 
 def json_serial(obj):
@@ -69,16 +73,19 @@ class DownloadKaggle:
     def _download(cls):
         display_name = cls.display_name().lower()
         if cls.kaggle_type == "datasets":
-            command = f"datasets download -d {cls.kaggle_url} --force"
+            args = ["kaggle", "datasets", "download", "-d", cls.kaggle_url, "--force"]
         elif cls.kaggle_type == "competitions":
-            command = f"competitions download -c {cls.kaggle_url} --force"
+            args = ["kaggle", "competitions", "download", "-c", cls.kaggle_url, "--force"]
         else:
             raise ValueError("cls.kaggle_type must be datasets or competitions.")
         exception_text = f"""Kaggle must be setup.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}"""
-        os.system(f"kaggle {command}")
+        try:
+            subprocess.run(args, check=True)
+        except (subprocess.CalledProcessError, FileNotFoundError) as e:
+            raise RuntimeError(exception_text) from e
         if not os.path.exists(cls.archive_name()):
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     @classmethod
     def _extract(cls):
@@ -89,7 +96,7 @@ class DownloadKaggle:
             exception_text = f"""Extracting failed.
                 Either the download was not completed or the Kaggle terms were not agreed with.
                 Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#{display_name}"""
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     @classmethod
     def archive_name(cls):
@@ -188,7 +195,7 @@ class DownloadINaturalist:
                     if not os.path.exists(file_name_image):
                         img = utils.download_image(url, file_name=file_name_image)
                         if not img:
-                            print(f"{url}: image download failed")
+                            logger.warning(f"{url}: image download failed")
                             continue
 
                     if cls.metadata_fields is None:

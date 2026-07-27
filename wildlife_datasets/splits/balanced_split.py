@@ -65,10 +65,8 @@ class BalancedSplit:
             List of splits. Each split is list of labels of the training and testing sets.
         """
 
-        raise (
-            NotImplementedError(
-                "Subclasses should implement this. \n You may want to use ClosedSetSplit instead of BalancedSplit."
-            )
+        raise NotImplementedError(
+            "Subclasses should implement this. \n You may want to use ClosedSetSplit instead of BalancedSplit."
         )
 
     def resplit_random(
@@ -112,7 +110,7 @@ class BalancedSplit:
             n_test = counts_test.get(name, 0)
             if n_train + n_test > 0:
                 if len(df_name) < n_train + n_test:
-                    raise (Exception("The set is too small."))
+                    raise ValueError("The set is too small.")
                 # Get the correct number of indices in both sets
                 idx_permutation = lcg.random_permutation(n_train + n_test)
                 idx_permutation = np.array(idx_permutation)
