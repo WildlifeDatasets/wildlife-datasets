@@ -318,7 +318,8 @@ class SplitterByFeatures:
 
     def split(self, df):
         clusters = self.get_clusters(df)
-        assert len(df) == len(clusters)
+        if len(df) != len(clusters):
+            raise ValueError(f"Expected {len(df)} clusters, got {len(clusters)}.")
 
         if self.file_name is not None:
             np.save(self.file_name, clusters)

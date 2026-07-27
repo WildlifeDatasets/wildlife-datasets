@@ -31,12 +31,14 @@ summary = {
 
 def get_date(x):
     x_split = x.split("-")
-    assert len(x_split) == 2
+    if len(x_split) != 2:
+        raise ValueError(f"Date {x} could not be split into year and month_day.")
     year, month_day = x_split
 
     # Check whether it ends with a letter
     m = re.fullmatch(r"(\d+)([a-z]?)", month_day)
-    assert m is not None
+    if m is None:
+        raise ValueError(f"Date {x} has an unrecognized month_day format.")
 
     # Convert the letter into day (no -> 1, a -> 2, b -> 3, ...)
     month = int(m.group(1))

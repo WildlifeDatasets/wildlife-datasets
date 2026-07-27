@@ -110,7 +110,8 @@ class WildlifeDataset:
                 warnings.warn(
                     "This dataset is not fully determined by its dataframe, so recreating it from df may be incomplete."
                 )
-        assert df is not None
+        if df is None:
+            raise ValueError(f"{self.__class__.__name__}.create_catalogue must return a pd.DataFrame, got None.")
 
         if remove_unknown:
             df = df[df[self.col_label] != self.unknown_name]
@@ -821,7 +822,6 @@ class WildlifeDataset:
             col = self.df[self.col_path]
         elif isinstance(col, str):
             col = self.df[col]
-        assert col is not None
         bad_paths = []
         for path in col:
             if isinstance(path, str) and not os.path.exists(self.get_absolute_path(path)):
@@ -843,7 +843,6 @@ class WildlifeDataset:
             col = self.df[self.col_path]
         elif isinstance(col, str):
             col = self.df[col]
-        assert col is not None
         bad_names = []
         for path in col:
             if not isinstance(path, str):

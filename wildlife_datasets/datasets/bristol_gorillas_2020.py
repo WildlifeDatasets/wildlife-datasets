@@ -102,7 +102,8 @@ class BristolGorillas2020(WildlifeDataset):
                 if len(line) > 0:
                     identity = identity_conversion[int(line[0])]
                     bbox = [float(num) for num in line.split()[1:]]
-                    assert len(bbox) == 4
+                    if len(bbox) != 4:
+                        raise ValueError(f"Expected 4 bbox values, got {len(bbox)} in {path_bbox}.")
                     bbox = utils.yolo_to_pascalvoc(*bbox, w, h)
                     bbox = [bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1]]
                     identity_all.append(identity)
