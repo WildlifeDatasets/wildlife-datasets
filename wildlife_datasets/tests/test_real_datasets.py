@@ -6,7 +6,7 @@ import unittest
 import warnings
 
 import pytest
-from huggingface_hub import scan_cache_dir
+from huggingface_hub import CacheNotFound, scan_cache_dir
 
 from wildlife_datasets import datasets
 from wildlife_datasets.tests.conftest import DEFAULT_DATA_ROOT
@@ -34,7 +34,10 @@ _SNAPSHOT = _load_snapshot()
 
 
 def _hf_dataset_cached(hf_url: str) -> bool:
-    cache_info = scan_cache_dir()
+    try:
+        cache_info = scan_cache_dir()
+    except CacheNotFound:
+        return False
     return any(repo.repo_type == "dataset" and repo.repo_id == hf_url for repo in cache_info.repos)
 
 
