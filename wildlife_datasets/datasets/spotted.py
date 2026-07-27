@@ -89,10 +89,10 @@ class _SpottedDataset(_DownloadHuggingFaceArchive, WildlifeDataset):
         return metadata
 
     def create_catalogue(self) -> pd.DataFrame:
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
         if data.empty:
-            raise FileNotFoundError(f"No images found in {self.root}.")
+            raise FileNotFoundError(f"No images found in {root}.")
 
         records = []
         for _, row in data.iterrows():

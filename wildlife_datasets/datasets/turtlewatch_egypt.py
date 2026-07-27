@@ -310,9 +310,9 @@ class TurtlewatchEgypt_Base(DownloadPrivate, WildlifeDataset):
 
 class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
     def create_catalogue(self, load_segmentation: bool = False, file_name: str | None = None) -> pd.DataFrame:
-        assert self.root is not None
+        root = self.get_root()
         self.load_individuals(file_name=file_name)
-        data = utils.find_images(self.root)
+        data = utils.find_images(root)
 
         # Get identity
         data["identity"] = data["file"].apply(lambda x: fix_identity(x.lower(), self.individuals))
@@ -335,16 +335,16 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
         # Finalize the dataframe
         data = data.drop("file", axis=1)
         if load_segmentation:
-            data = utils_load_segmentation(data, os.path.join(self.root, "segmentation.csv"))
+            data = utils_load_segmentation(data, os.path.join(root, "segmentation.csv"))
         return self.finalize_catalogue(data)
 
 
 class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
     def create_catalogue(self, load_segmentation: bool = False, file_name: str | None = None) -> pd.DataFrame:
 
-        assert self.root is not None
+        root = self.get_root()
         self.load_individuals(file_name=file_name)
-        data = utils.find_images(self.root)
+        data = utils.find_images(root)
 
         # Ignoring data starting with '.'
         mask = data["file"].str.startswith(".")
@@ -413,7 +413,7 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
 
         # Load segmentation
         if load_segmentation:
-            data = utils_load_segmentation(data, os.path.join(self.root, "segmentation.csv"))
+            data = utils_load_segmentation(data, os.path.join(root, "segmentation.csv"))
         return self.finalize_catalogue(data)
 
 

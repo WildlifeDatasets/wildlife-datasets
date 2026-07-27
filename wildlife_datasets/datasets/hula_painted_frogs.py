@@ -78,11 +78,12 @@ class HulaPaintedFrogs(DownloadURL, WildlifeDataset):
                 - inferred (str | None): identity prediction, when the try label is missing.
         """
 
-        labeled = pd.read_csv(f"{self.root}/labeled.csv")
+        root = self.get_root()
+        labeled = pd.read_csv(f"{root}/labeled.csv")
         labeled["path"] = "labeled" + os.path.sep + labeled["rel_path"].str.replace("/", os.path.sep)
-        unlabeled = pd.read_csv(f"{self.root}/unlabeled.csv")
+        unlabeled = pd.read_csv(f"{root}/unlabeled.csv")
         unlabeled["path"] = "unlabeled" + os.path.sep + unlabeled["rel_path"].str.replace("/", os.path.sep)
-        extra = pd.read_csv(f"{self.root}/extra.csv")
+        extra = pd.read_csv(f"{root}/extra.csv")
         extra["path"] = "extra" + os.path.sep + extra["rel_path"].str.replace("/", os.path.sep)
 
         df = pd.concat((labeled, unlabeled, extra))

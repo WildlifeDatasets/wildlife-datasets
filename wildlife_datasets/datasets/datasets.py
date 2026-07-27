@@ -209,6 +209,17 @@ class WildlifeDataset:
         else:
             return path
 
+    def get_root(self) -> str:
+        """Returns `self.root`, raising if it was not provided.
+
+        Returns:
+            The dataset root directory.
+        """
+
+        if self.root is None:
+            raise ValueError("`root` must be provided for this operation.")
+        return self.root
+
     def set_absolute_paths(self) -> None:
         if self.root is not None:
             self.df[self.col_path] = self.root + os.path.sep + self.df[self.col_path]
@@ -255,8 +266,8 @@ class WildlifeDataset:
             return segmentation
 
         if isinstance(segmentation, str):
-            assert self.root is not None
-            m = np.asfortranarray(utils.load_image(os.path.join(self.root, segmentation)))
+            root = self.get_root()
+            m = np.asfortranarray(utils.load_image(os.path.join(root, segmentation)))
             if m.ndim == 3:
                 m = m[:, :, 0]
             return mask_coco.encode(m)

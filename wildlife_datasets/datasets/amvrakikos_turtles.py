@@ -35,15 +35,15 @@ class AmvrakikosTurtles(DownloadKaggle, WildlifeDataset):
     kaggle_type = "datasets"
 
     def create_catalogue(self) -> pd.DataFrame:
-        assert self.root is not None
-        data = pd.read_csv(os.path.join(self.root, "annotations.csv"))
+        root = self.get_root()
+        data = pd.read_csv(os.path.join(root, "annotations.csv"))
 
         # Get the bounding box
         columns_bbox = ["bbox_x", "bbox_y", "bbox_width", "bbox_height"]
         bbox = data[columns_bbox].to_numpy()
         bbox = pd.Series(list(bbox))
         path = "images" + os.path.sep + data["image_name"]
-        date = [utils.get_image_date(os.path.join(self.root, p)) for p in path]
+        date = [utils.get_image_date(os.path.join(root, p)) for p in path]
 
         # Finalize the dataframe
         df = pd.DataFrame(

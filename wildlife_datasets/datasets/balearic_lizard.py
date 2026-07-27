@@ -43,7 +43,7 @@ class BalearicLizard(DownloadKaggle, WildlifeDataset):
         transparently retries with that prefix.
 
         Args:
-            metadata_filename: Relative path to the metadata CSV inside ``self.root``.
+            metadata_filename: Relative path to the metadata CSV inside ``root``.
 
         Returns:
             pd.DataFrame: A dataframe including the following columns:
@@ -56,8 +56,8 @@ class BalearicLizard(DownloadKaggle, WildlifeDataset):
         """
 
         # Load metadata
-        assert self.root is not None
-        metadata_path = os.path.join(self.root, metadata_filename)
+        root = self.get_root()
+        metadata_path = os.path.join(root, metadata_filename)
         df = pd.read_csv(metadata_path)
         df = df.rename({"id": "identity"}, axis=1)
         df["image_id"] = range(len(df))

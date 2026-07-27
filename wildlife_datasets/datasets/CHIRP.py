@@ -76,11 +76,11 @@ class CHIRP(WildlifeDataset):
     def create_catalogue(self) -> pd.DataFrame:
         """Creates catalogue for CHIRP dataset."""
 
-        assert self.root is not None
-        possible_neighbour = pd.read_csv(os.path.join(self.root, "ReID", "PossibleBirds_Neighbours.csv"))
-        possible_territory = pd.read_csv(os.path.join(self.root, "ReID", "PossibleBirds_Territory.csv"))
+        root = self.get_root()
+        possible_neighbour = pd.read_csv(os.path.join(root, "ReID", "PossibleBirds_Neighbours.csv"))
+        possible_territory = pd.read_csv(os.path.join(root, "ReID", "PossibleBirds_Territory.csv"))
 
-        data = pd.read_csv(os.path.join(self.root, "ReID", "Annotation.csv"))
+        data = pd.read_csv(os.path.join(root, "ReID", "Annotation.csv"))
         df = pd.DataFrame(
             {
                 "image_id": data.index,

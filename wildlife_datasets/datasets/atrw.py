@@ -75,9 +75,9 @@ class ATRW(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information for the reid_train part of the dataset
-        assert self.root is not None
+        root = self.get_root()
         ids = pd.read_csv(
-            os.path.join(self.root, "atrw_anno_reid_train", "reid_list_train.csv"),
+            os.path.join(root, "atrw_anno_reid_train", "reid_list_train.csv"),
             names=["identity", "path"],
             header=None,
         )
@@ -85,7 +85,7 @@ class ATRW(WildlifeDataset):
         ids["original_split"] = "train"
 
         # Load keypoints for the reid_train part of the dataset
-        with open(os.path.join(self.root, "atrw_anno_reid_train", "reid_keypoints_train.json")) as file:
+        with open(os.path.join(root, "atrw_anno_reid_train", "reid_keypoints_train.json")) as file:
             keypoints = json.load(file)
         df_keypoints = {
             "path": pd.Series(keypoints.keys()),
@@ -99,12 +99,12 @@ class ATRW(WildlifeDataset):
 
         # Load information for the test_plain part of the dataset
         with open(
-            os.path.join(self.root, "eval_script", "ATRWEvalScript-main", "annotations", "gt_test_plain.json")
+            os.path.join(root, "eval_script", "ATRWEvalScript-main", "annotations", "gt_test_plain.json")
         ) as file:
             identity = json.load(file)
         identity = pd.DataFrame(identity)
         ids = pd.read_csv(
-            os.path.join(self.root, "atrw_anno_reid_test", "reid_list_test.csv"), names=["path"], header=None
+            os.path.join(root, "atrw_anno_reid_test", "reid_list_test.csv"), names=["path"], header=None
         )
         ids["id"] = ids["path"].str.split(".", expand=True)[0].astype(int)
         ids["original_split"] = "test"
@@ -113,7 +113,7 @@ class ATRW(WildlifeDataset):
         ids.rename(columns={"entityid": "identity"}, inplace=True)
 
         # Load keypoints for the test part of the dataset
-        with open(os.path.join(self.root, "atrw_anno_reid_test", "reid_keypoints_test.json")) as file:
+        with open(os.path.join(root, "atrw_anno_reid_test", "reid_keypoints_test.json")) as file:
             keypoints = json.load(file)
         df_keypoints = {
             "path": pd.Series(keypoints.keys()),
@@ -127,10 +127,10 @@ class ATRW(WildlifeDataset):
 
         # Load information for the test_wild part of the dataset
         with open(
-            os.path.join(self.root, "eval_script", "ATRWEvalScript-main", "annotations", "gt_test_wild.json")
+            os.path.join(root, "eval_script", "ATRWEvalScript-main", "annotations", "gt_test_wild.json")
         ) as file:
             identity = json.load(file)
-        ids = utils.find_images(os.path.join(self.root, "atrw_detection_test", "test"))
+        ids = utils.find_images(os.path.join(root, "atrw_detection_test", "test"))
         ids["imgid"] = ids["file"].str.split(".", expand=True)[0].astype("int")
         entries = []
         for key in identity.keys():

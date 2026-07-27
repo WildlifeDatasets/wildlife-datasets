@@ -10,13 +10,13 @@ from .datasets import WildlifeDataset
 
 class WildlifeDatasetWildMe(WildlifeDataset):
     def create_catalogue_wildme(self, prefix: str, year: int) -> pd.DataFrame:
-        assert self.root is not None
+        root = self.get_root()
         # Get paths for annotation JSON file and for folder with images
         path_json = os.path.join(prefix + ".coco", "annotations", "instances_train" + str(year) + ".json")
         path_images = os.path.join(prefix + ".coco", "images", "train" + str(year))
 
         # Load annotations JSON file
-        with open(os.path.join(self.root, path_json)) as file:
+        with open(os.path.join(root, path_json)) as file:
             data = json.load(file)
 
         # Check whether segmentation is different from a box
