@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 
@@ -5,6 +6,8 @@ import pandas as pd
 
 from . import utils
 from .datasets import WildlifeDataset
+
+logger = logging.getLogger(__name__)
 
 summary = {
     "licenses": "Attribution 4.0 International (CC BY 4.0)",
@@ -93,12 +96,12 @@ class SealIDSegmented(SealID):
 
     @classmethod
     def get_data(cls, *args, **kwargs):
-        print(cls.warning)
+        logger.warning(cls.warning)
 
     @classmethod
     def _download(cls, *args, **kwargs):
-        print(cls.warning)
+        logger.warning(cls.warning)
 
     @classmethod
     def _extract(cls, *args, **kwargs):
-        print(cls.warning)
+        logger.warning(cls.warning)

@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 import os
 import shutil
 import subprocess
@@ -11,6 +12,8 @@ from datasets import load_dataset
 from pyinaturalist import get_observations
 
 from . import utils
+
+logger = logging.getLogger(__name__)
 
 
 def check_attributes(obj, attrs: Iterable):
@@ -192,7 +195,7 @@ class DownloadINaturalist:
                     if not os.path.exists(file_name_image):
                         img = utils.download_image(url, file_name=file_name_image)
                         if not img:
-                            print(f"{url}: image download failed")
+                            logger.warning(f"{url}: image download failed")
                             continue
 
                     if cls.metadata_fields is None:

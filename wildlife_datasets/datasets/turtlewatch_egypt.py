@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from collections.abc import Callable, Sequence
@@ -17,6 +18,8 @@ from .datasets import WildlifeDataset, utils
 from .downloads import DownloadPrivate
 from .general import Dataset_Metadata
 from .utils import strip_suffixes
+
+logger = logging.getLogger(__name__)
 
 identity_replace = {
     "": np.nan,
@@ -447,7 +450,7 @@ class TurtlewatchEgypt_Citizen(Dataset_Metadata):
             save_paths = [os.path.relpath(p, ".") for p in save_paths]
             save_paths_images = [x for x in save_paths if x.lower().endswith(img_extensions)]
             for x in set(save_paths).difference(set(save_paths_images)):
-                print(f"File non-image: {x}")
+                logger.warning(f"File non-image: {x}")
 
             create_info(d, folder_full)
 
@@ -512,9 +515,9 @@ def download_files(urls: list[str], download_folder: str) -> list[str]:
                 with open(save_path, "wb") as f:
                     f.write(response.content)
             else:
-                print(f"Failed: {url}")
+                logger.warning(f"Failed: {url}")
         except Exception as e:
-            print(f"Error downloading {url}: {e}")
+            logger.warning(f"Error downloading {url}: {e}")
     return save_paths
 
 

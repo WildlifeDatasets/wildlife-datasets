@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 
@@ -6,6 +7,8 @@ import pandas as pd
 
 from . import utils
 from .datasets import WildlifeDataset
+
+logger = logging.getLogger(__name__)
 
 summary = {
     "licenses": None,
@@ -154,12 +157,12 @@ class BirdIndividualIDSegmented(BirdIndividualID):
 
     @classmethod
     def get_data(cls, root, force=False, **kwargs):
-        print(cls.warning)
+        logger.warning(cls.warning)
 
     @classmethod
     def _download(cls):
-        print(cls.warning)
+        logger.warning(cls.warning)
 
     @classmethod
     def _extract(cls):
-        print(cls.warning)
+        logger.warning(cls.warning)

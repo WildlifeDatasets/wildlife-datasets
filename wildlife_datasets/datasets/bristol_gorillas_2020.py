@@ -52,8 +52,7 @@ class BristolGorillas2020(WildlifeDataset):
         try:
             utils.extract_archive(cls.archive, delete=True)
         except Exception as e:
-            print(e)
-            raise RuntimeError(exception_text)
+            raise RuntimeError(exception_text) from e
 
     def create_catalogue(self) -> pd.DataFrame:
         root = self.get_root()
