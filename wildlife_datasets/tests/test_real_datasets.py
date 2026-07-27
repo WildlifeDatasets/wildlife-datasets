@@ -1,14 +1,15 @@
+import argparse
 import json
 import os
 import sys
 import unittest
 import warnings
 
+import pytest
 from huggingface_hub import scan_cache_dir
 
 from wildlife_datasets import datasets
-
-DATA_ROOT = "/data/wildlife_datasets/data"
+from wildlife_datasets.tests.conftest import DEFAULT_DATA_ROOT
 
 SKIP_DATASETS = {
     "Drosophila": "slow to load",
@@ -37,7 +38,7 @@ def _hf_dataset_cached(hf_url: str) -> bool:
     return any(repo.repo_type == "dataset" and repo.repo_id == hf_url for repo in cache_info.repos)
 
 
-def _load_dataset_or_skip(cls, skip):
+def _load_dataset_or_skip(cls, data_root, skip):
     if cls.saved_to_system_folder:
         if not _hf_dataset_cached(cls.hf_url):
             skip(f"HuggingFace dataset not cached locally: {cls.hf_url}")
@@ -46,7 +47,7 @@ def _load_dataset_or_skip(cls, skip):
     root_extension = cls.display_name()
     if root_extension in DATA_FOLDER:
         root_extension = DATA_FOLDER[root_extension]
-    root = os.path.join(DATA_ROOT, root_extension)
+    root = os.path.join(data_root, root_extension)
     if not os.path.isdir(root):
         skip(f"data not present locally: {root}")
     return cls(root)
@@ -69,14 +70,15 @@ def _check_snapshot(cls, dataset) -> None:
         warnings.warn(f"{cls.__name__}: snapshot mismatch. Got {actual}, expected {expected}. ")
 
 
-@unittest.skipUnless(os.path.isdir(DATA_ROOT), f"Data folder not available: {DATA_ROOT}")
 class TestLoadAllDatasets(unittest.TestCase):
-    pass
+    @pytest.fixture(autouse=True)
+    def _inject_data_root(self, pytestconfig):
+        self.data_root = pytestconfig.getoption("--data-root")
 
 
 def _make_test(cls):
     def test(self):
-        dataset = _load_dataset_or_skip(cls, self.skipTest)
+        dataset = _load_dataset_or_skip(cls, self.data_root, self.skipTest)
         self.assertGreater(len(dataset), 0, f"{cls.__name__} loaded with 0 rows")
         _check_snapshot(cls, dataset)
 
@@ -93,13 +95,13 @@ def _raise_skip(msg: str) -> None:
     raise unittest.SkipTest(msg)
 
 
-def _write_snapshot() -> None:
+def _write_snapshot(data_root: str) -> None:
     snapshot = dict(_SNAPSHOT)
     for cls in datasets.names_all:
         if cls.__name__ in SKIP_DATASETS:
             continue
         try:
-            dataset = _load_dataset_or_skip(cls, _raise_skip)
+            dataset = _load_dataset_or_skip(cls, data_root, _raise_skip)
         except unittest.SkipTest as e:
             print(f"{cls.__name__}: skipped ({e})")
             continue
@@ -111,7 +113,12 @@ def _write_snapshot() -> None:
 
 
 if __name__ == "__main__":
-    if "--write-snapshot" in sys.argv:
-        _write_snapshot()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--write-snapshot", action="store_true")
+    parser.add_argument("--data-root", default=DEFAULT_DATA_ROOT)
+    args, remaining = parser.parse_known_args()
+    if args.write_snapshot:
+        _write_snapshot(args.data_root)
     else:
+        sys.argv = sys.argv[:1] + remaining
         unittest.main()
