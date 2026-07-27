@@ -1,15 +1,4 @@
 ```python exec="true" session="run"
-import contextlib, io
-
-def run(str):
-    f = io.StringIO()
-    with contextlib.redirect_stdout(f):
-        eval(str)
-    output = f.getvalue()
-    return output
-```
-
-```python exec="true" session="run"
 from wildlife_datasets import datasets, loader, metrics
 import pandas as pd
 
