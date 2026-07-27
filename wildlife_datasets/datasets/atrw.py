@@ -103,9 +103,7 @@ class ATRW(WildlifeDataset):
         ) as file:
             identity = json.load(file)
         identity = pd.DataFrame(identity)
-        ids = pd.read_csv(
-            os.path.join(root, "atrw_anno_reid_test", "reid_list_test.csv"), names=["path"], header=None
-        )
+        ids = pd.read_csv(os.path.join(root, "atrw_anno_reid_test", "reid_list_test.csv"), names=["path"], header=None)
         ids["id"] = ids["path"].str.split(".", expand=True)[0].astype(int)
         ids["original_split"] = "test"
         ids = pd.merge(ids, identity, left_on="id", right_on="imgid", how="left")
@@ -126,9 +124,7 @@ class ATRW(WildlifeDataset):
         df_test1["path"] = "atrw_reid_test" + os.path.sep + "test" + os.path.sep + df_test1["path"]
 
         # Load information for the test_wild part of the dataset
-        with open(
-            os.path.join(root, "eval_script", "ATRWEvalScript-main", "annotations", "gt_test_wild.json")
-        ) as file:
+        with open(os.path.join(root, "eval_script", "ATRWEvalScript-main", "annotations", "gt_test_wild.json")) as file:
             identity = json.load(file)
         ids = utils.find_images(os.path.join(root, "atrw_detection_test", "test"))
         ids["imgid"] = ids["file"].str.split(".", expand=True)[0].astype("int")
