@@ -40,7 +40,7 @@ def rename_index(df):
     for dataset_name in df.index:
         try:
             summary = eval(f"datasets.{dataset_name}.summary")
-            citation = " \cite{" + summary["cite"] + "}"
+            citation = r" \cite{" + summary["cite"] + "}"
         except Exception:
             citation = ""
         rename[dataset_name] = dataset_name + citation
@@ -318,7 +318,8 @@ class SplitterByFeatures:
 
     def split(self, df):
         clusters = self.get_clusters(df)
-        assert len(df) == len(clusters)
+        if len(df) != len(clusters):
+            raise ValueError(f"Expected {len(df)} clusters, got {len(clusters)}.")
 
         if self.file_name is not None:
             np.save(self.file_name, clusters)

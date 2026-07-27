@@ -15,7 +15,7 @@ summary = {
     "publication_url": "https://arxiv.org/abs/2005.13359",
     "cite": "trotter2020ndd20",
     "animals": {"Northumberland dolphin"},
-    "animals_simple": "doplhins",
+    "animals_simple": "dolphins",
     "real_animals": True,
     "year": 2020,
     "reported_n_total": None,
@@ -41,12 +41,12 @@ class NDD20(DownloadURL, WildlifeDataset):
     def _download(cls):
         exception_text = """Dataset must be downloaded manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#ndd20"""
-        raise Exception(exception_text)
+        raise RuntimeError(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the above-water dataset
-        assert self.root is not None
-        with open(os.path.join(self.root, "ABOVE_LABELS.json")) as file:
+        root = self.get_root()
+        with open(os.path.join(root, "ABOVE_LABELS.json")) as file:
             data = json.load(file)
 
         # Analyze the information about the above-water dataset
@@ -74,7 +74,7 @@ class NDD20(DownloadURL, WildlifeDataset):
                 )
 
         # Load information about the below-water dataset
-        with open(os.path.join(self.root, "BELOW_LABELS.json")) as file:
+        with open(os.path.join(root, "BELOW_LABELS.json")) as file:
             data = json.load(file)
 
         # Analyze the information about the below-water dataset
@@ -103,7 +103,7 @@ class NDD20(DownloadURL, WildlifeDataset):
         # Create the dataframe from entries
         df = pd.DataFrame(entries)
         if len(df.reg_type.unique()) != 1:
-            raise (Exception("Multiple segmentation types"))
+            raise ValueError("Multiple segmentation types")
 
         # Finalize the dataframe
         df["image_id"] = range(len(df))
@@ -116,12 +116,12 @@ class NDD20v2(NDD20):
     outdated_dataset = False
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
-        assert self.root is not None
+        root = self.get_root()
         for i, df_row in df.iterrows():
             # Rewrite wrong segmentations. There is no dolphin -> should be deleted.
             # But that would break compability and the identity is unknown anyway.
             if len(df_row["segmentation"]) == 4:
-                img = utils.load_image(os.path.join(self.root, df_row["path"]))
+                img = utils.load_image(os.path.join(root, df_row["path"]))
                 w, h = img.size
                 df.at[i, "segmentation"] = np.array(utils.bbox_segmentation([0, 0, w, h]))
         return df

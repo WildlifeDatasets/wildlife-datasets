@@ -37,8 +37,8 @@ class HumpbackWhaleID(DownloadKaggle, WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load the training data
-        assert self.root is not None
-        data = pd.read_csv(os.path.join(self.root, "train.csv"))
+        root = self.get_root()
+        data = pd.read_csv(os.path.join(root, "train.csv"))
         data.loc[data["Id"] == "new_whale", "Id"] = self.unknown_name
         df1 = pd.DataFrame(
             {
@@ -50,7 +50,7 @@ class HumpbackWhaleID(DownloadKaggle, WildlifeDataset):
         )
 
         # Find all testing images
-        test_files = utils.find_images(os.path.join(self.root, "test"))
+        test_files = utils.find_images(os.path.join(root, "test"))
         test_files = list(test_files["file"])
         test_files = pd.Series(np.sort(test_files))
 

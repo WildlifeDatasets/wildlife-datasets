@@ -31,12 +31,14 @@ summary = {
 
 def get_date(x):
     x_split = x.split("-")
-    assert len(x_split) == 2
+    if len(x_split) != 2:
+        raise ValueError(f"Date {x} could not be split into year and month_day.")
     year, month_day = x_split
 
     # Check whether it ends with a letter
     m = re.fullmatch(r"(\d+)([a-z]?)", month_day)
-    assert m is not None
+    if m is None:
+        raise ValueError(f"Date {x} has an unrecognized month_day format.")
 
     # Convert the letter into day (no -> 1, a -> 2, b -> 3, ...)
     month = int(m.group(1))
@@ -78,11 +80,12 @@ class HulaPaintedFrogs(DownloadURL, WildlifeDataset):
                 - inferred (str | None): identity prediction, when the try label is missing.
         """
 
-        labeled = pd.read_csv(f"{self.root}/labeled.csv")
+        root = self.get_root()
+        labeled = pd.read_csv(f"{root}/labeled.csv")
         labeled["path"] = "labeled" + os.path.sep + labeled["rel_path"].str.replace("/", os.path.sep)
-        unlabeled = pd.read_csv(f"{self.root}/unlabeled.csv")
+        unlabeled = pd.read_csv(f"{root}/unlabeled.csv")
         unlabeled["path"] = "unlabeled" + os.path.sep + unlabeled["rel_path"].str.replace("/", os.path.sep)
-        extra = pd.read_csv(f"{self.root}/extra.csv")
+        extra = pd.read_csv(f"{root}/extra.csv")
         extra["path"] = "extra" + os.path.sep + extra["rel_path"].str.replace("/", os.path.sep)
 
         df = pd.concat((labeled, unlabeled, extra))

@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 
@@ -5,6 +6,8 @@ import pandas as pd
 
 from . import utils
 from .datasets import WildlifeDataset
+
+logger = logging.getLogger(__name__)
 
 summary = {
     "licenses": "Attribution 4.0 International (CC BY 4.0)",
@@ -37,10 +40,8 @@ class SealID(WildlifeDataset):
     @classmethod
     def _download(cls, url=None):
         if url is None:
-            raise (
-                Exception(
-                    "URL must be provided for SealID.\nCheck https://wildlifedatasets.github.io/wildlife-datasets/preprocessing/#sealid"
-                )
+            raise ValueError(
+                "URL must be provided for SealID.\nCheck https://wildlifedatasets.github.io/wildlife-datasets/preprocessing/#sealid"
             )
         utils.download_url(url, cls.archive)
 
@@ -69,8 +70,8 @@ class SealID(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset
-        assert self.root is not None
-        data = pd.read_csv(os.path.join(self.root, "full images", "annotation.csv"))
+        root = self.get_root()
+        data = pd.read_csv(os.path.join(root, "full images", "annotation.csv"))
 
         # Finalize the dataframe
         df = pd.DataFrame(
@@ -95,12 +96,12 @@ class SealIDSegmented(SealID):
 
     @classmethod
     def get_data(cls, *args, **kwargs):
-        print(cls.warning)
+        logger.warning(cls.warning)
 
     @classmethod
     def _download(cls, *args, **kwargs):
-        print(cls.warning)
+        logger.warning(cls.warning)
 
     @classmethod
     def _extract(cls, *args, **kwargs):
-        print(cls.warning)
+        logger.warning(cls.warning)

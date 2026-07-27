@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import numpy as np
 import pandas as pd
@@ -35,13 +36,15 @@ class Giraffes(WildlifeDataset):
     @classmethod
     def _download(cls):
         url = "ftp://pbil.univ-lyon1.fr/pub/datasets/miele2021/"
-        command = f"wget -rpk -l 10 -np -c --random-wait -U Mozilla {url} -P '.' "
         exception_text = """Download works only on Linux. Please download it manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#giraffes"""
         if os.name == "posix":
-            os.system(command)
+            subprocess.run(
+                ["wget", "-rpk", "-l", "10", "-np", "-c", "--random-wait", "-U", "Mozilla", url, "-P", "."],
+                check=True,
+            )
         else:
-            raise Exception(exception_text)
+            raise RuntimeError(exception_text)
 
     @classmethod
     def _extract(cls):
@@ -49,8 +52,8 @@ class Giraffes(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
         folders = data["path"].str.split(os.path.sep, expand=True)
 
         # Extract information from the folder structure

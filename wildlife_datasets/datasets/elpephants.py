@@ -37,7 +37,7 @@ class ELPephants(WildlifeDataset):
     def _download(cls):
         exception_text = """Dataset must be downloaded manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#elpephants"""
-        raise Exception(exception_text)
+        raise RuntimeError(exception_text)
 
     @classmethod
     def _extract(cls):
@@ -45,8 +45,8 @@ class ELPephants(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
 
         # Create the dataframe
         df = pd.DataFrame(
@@ -60,16 +60,16 @@ class ELPephants(WildlifeDataset):
         )
 
         # Add training and testing split
-        path_txt = utils.find_images(self.root, img_extensions=(".txt",))
+        path_txt = utils.find_images(root, img_extensions=(".txt",))
         idx_train = np.where(path_txt["file"] == "train.txt")[0]
         idx_test = np.where(path_txt["file"] == "val.txt")[0]
         if len(idx_train) == 1 and len(idx_test) == 1:
             data_train = pd.read_csv(
-                os.path.join(self.root, path_txt["path"].iloc[idx_train[0]], "train.txt"), header=None, sep="\t"
+                os.path.join(root, path_txt["path"].iloc[idx_train[0]], "train.txt"), header=None, sep="\t"
             )
             data_train = data_train[1].to_numpy()
             data_test = pd.read_csv(
-                os.path.join(self.root, path_txt["path"].iloc[idx_test[0]], "val.txt"), header=None, sep="\t"
+                os.path.join(root, path_txt["path"].iloc[idx_test[0]], "val.txt"), header=None, sep="\t"
             )
             data_test = data_test[1].to_numpy()
             df["original_split"] = data["file"].apply(lambda x: utils.get_split(x, data_train, data_test))

@@ -1,6 +1,7 @@
 import os
 
 import pandas as pd
+from PIL import Image
 
 from . import utils
 from .datasets import WildlifeDataset
@@ -30,14 +31,15 @@ summary = {
 
 
 class CatIndividualImages(DownloadKaggle, WildlifeDataset):
+    outdated_dataset = True
     summary = summary
     kaggle_url = "timost1234/cat-individuals"
     kaggle_type = "datasets"
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
         folders = data["path"].str.split(os.path.sep, expand=True)
 
         # Remove 85 duplicate images
@@ -54,3 +56,33 @@ class CatIndividualImages(DownloadKaggle, WildlifeDataset):
             }
         )
         return self.finalize_catalogue(df)
+
+
+class CatIndividualImagesv2(CatIndividualImages):
+    outdated_dataset = False
+
+    @classmethod
+    def _extract(cls):
+        super()._extract()
+        cls._convert_heic_to_jpg()
+
+    @classmethod
+    def _convert_heic_to_jpg(cls):
+        try:
+            import pillow_heif
+        except ImportError as e:
+            raise ImportError(
+                "Loading CatIndividualImagesv2 requires pillow-heif to convert its HEIC images. "
+                "Install it via: pip install wildlife_datasets[full]"
+            ) from e
+        pillow_heif.register_heif_opener()
+
+        for path, _, files in os.walk("."):
+            for file in files:
+                if file.lower().endswith(".heic"):
+                    heic_path = os.path.join(path, file)
+                    jpg_path = os.path.splitext(heic_path)[0] + ".jpg"
+                    if os.path.exists(jpg_path):
+                        continue
+                    with Image.open(heic_path) as img:
+                        img.convert("RGB").save(jpg_path, "JPEG", quality=100)

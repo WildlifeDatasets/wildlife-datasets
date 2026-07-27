@@ -34,9 +34,9 @@ class ZakynthosTurtles(DownloadKaggle, WildlifeDataset):
     kaggle_type = "datasets"
 
     def create_catalogue(self) -> pd.DataFrame:
-        assert self.root is not None
-        data = pd.read_csv(os.path.join(self.root, "annotations.csv"))
-        bbox = pd.read_csv(os.path.join(self.root, "bbox.csv"))
+        root = self.get_root()
+        data = pd.read_csv(os.path.join(root, "annotations.csv"))
+        bbox = pd.read_csv(os.path.join(root, "bbox.csv"))
         data = pd.merge(data, bbox, left_on="path", right_on="image_name")
 
         dates = data["date"].str.split("_")

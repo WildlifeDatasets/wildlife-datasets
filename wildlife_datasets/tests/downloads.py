@@ -11,7 +11,7 @@ names_download = [
     (BelugaIDv2, "BelugaID"),
     (BrownBearHeads, "BrownBearHeads"),
     (CattleMuzzle, "CattleMuzzle"),
-    (CatIndividualImages, "CatIndividualImages"),
+    (CatIndividualImagesv2, "CatIndividualImages"),
     (Chicks4FreeID, None),
     (CoBRAReIdentificationYoungstock, "CoBRAReIdentificationYoungstock"),
     (CowDataset, "CowDataset"),

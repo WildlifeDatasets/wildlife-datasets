@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 
@@ -6,6 +7,8 @@ import pandas as pd
 
 from . import utils
 from .datasets import WildlifeDataset
+
+logger = logging.getLogger(__name__)
 
 summary = {
     "licenses": None,
@@ -41,7 +44,7 @@ class BirdIndividualID(WildlifeDataset):
     def _download(cls) -> None:
         exception_text = """Dataset must be downloaded manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#birdindividualid"""
-        raise Exception(exception_text)
+        raise RuntimeError(exception_text)
 
     @classmethod
     def _extract(cls):
@@ -58,8 +61,8 @@ class BirdIndividualID(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        path = os.path.join(self.root, self.prefix1, self.prefix2)
+        root = self.get_root()
+        path = os.path.join(root, self.prefix1, self.prefix2)
         data = utils.find_images(path)
         folders = data["path"].str.split(os.path.sep, expand=True)
 
@@ -98,7 +101,7 @@ class BirdIndividualID(WildlifeDataset):
         )
 
         # Add images without labels
-        path = os.path.join(self.root, self.prefix1, "New_birds")
+        path = os.path.join(root, self.prefix1, "New_birds")
         data = utils.find_images(path)
         species = data["path"]
         date = data["file"].apply(lambda x: self.extract_date(x))
@@ -154,12 +157,12 @@ class BirdIndividualIDSegmented(BirdIndividualID):
 
     @classmethod
     def get_data(cls, root, force=False, **kwargs):
-        print(cls.warning)
+        logger.warning(cls.warning)
 
     @classmethod
     def _download(cls):
-        print(cls.warning)
+        logger.warning(cls.warning)
 
     @classmethod
     def _extract(cls):
-        print(cls.warning)
+        logger.warning(cls.warning)

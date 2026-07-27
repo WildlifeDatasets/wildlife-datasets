@@ -40,16 +40,16 @@ class CowDataset(DownloadURL, WildlifeDataset):
         # Rename the folder with non-ASCII characters
         dirs = [x for x in os.listdir() if os.path.isdir(x)]
         if len(dirs) != 1:
-            raise Exception("There should be only one directory after extracting the file.")
+            raise ValueError("There should be only one directory after extracting the file.")
         os.rename(dirs[0], "images")
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
         folders = data["path"].str.split(os.path.sep, expand=True)
         path = data["path"] + os.path.sep + data["file"]
-        date = [utils.get_image_date(os.path.join(self.root, p)) for p in path]
+        date = [utils.get_image_date(os.path.join(root, p)) for p in path]
 
         # Finalize the dataframe
         df = pd.DataFrame(

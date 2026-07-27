@@ -37,13 +37,13 @@ class CTai(DownloadURL, WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset
-        assert self.root is not None
+        root = self.get_root()
         path = os.path.join(
             "chimpanzee_faces-master",
             "datasets_cropped_chimpanzee_faces",
             "data_CTai",
         )
-        data = pd.read_csv(os.path.join(self.root, path, "annotations_ctai.txt"), header=None, sep=" ")
+        data = pd.read_csv(os.path.join(root, path, "annotations_ctai.txt"), header=None, sep=" ")
 
         # Extract keypoints from the information
         keypoints = data[[11, 12, 14, 15, 17, 18, 20, 21, 23, 24]].to_numpy()

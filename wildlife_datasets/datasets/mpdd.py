@@ -38,7 +38,7 @@ class MPDD(DownloadURL, WildlifeDataset):
     def _download(cls):
         exception_text = """Dataset must be downloaded manually.
             Check https://wildlifedatasets.github.io/wildlife-datasets/preprocessing#mpdd"""
-        raise Exception(exception_text)
+        raise RuntimeError(exception_text)
 
     @classmethod
     def _extract(cls):
@@ -46,8 +46,8 @@ class MPDD(DownloadURL, WildlifeDataset):
         utils.extract_archive(os.path.join("Multi-pose dog dataset", "MPDD.zip"), delete=True)
 
     def create_catalogue(self) -> pd.DataFrame:
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
         folders = data["path"].str.split(os.path.sep, expand=True)
         identity = data["file"].apply(lambda x: int(x.split("_")[0]))
 
