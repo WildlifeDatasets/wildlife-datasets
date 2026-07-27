@@ -118,7 +118,6 @@ def find_images(
         Dataframe of relative paths of the images.
     """
 
-    # TODO: does not handle heic (CatIndividualImages) and webp images (ReunionTurtles)
     data = []
     for path, directories, files in os.walk(root):
         for file in files:
@@ -261,7 +260,12 @@ def data_directory(dir):
 
 
 def gdown_download(url, archive, exception_text=""):
-    import gdown
+    try:
+        import gdown
+    except ImportError as e:
+        raise ImportError(
+            "Downloading this dataset requires gdown. Install it via: pip install wildlife_datasets[full]"
+        ) from e
 
     gdown.download(url, archive, quiet=False)
     if not os.path.exists(archive):

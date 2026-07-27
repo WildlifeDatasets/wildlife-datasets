@@ -159,7 +159,7 @@
     ],
     "length": 2109
   },
-  "CatIndividualImages": {
+  "CatIndividualImagesv2": {
     "first_image_ids": [
       "0001_000",
       "0001_001",
@@ -167,7 +167,7 @@
       "0001_003",
       "0001_004"
     ],
-    "length": 13021
+    "length": 13478
   },
   "CattleMuzzle": {
     "first_image_ids": [

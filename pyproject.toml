@@ -26,24 +26,27 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-dependencies=[
-          'numpy>=1.19.4',
-          'pandas>=1.1.4',
-          'tqdm>=4.62.3',
-          'opencv-python>=4.5.5.62',
-          'Pillow>=7.1.2',
-          'scikit-learn>=1.0.1',
-          'matplotlib>=3.5.1',
-          'pycocotools>=2.0.1',
-          'networkx',
-          'datasets',
-          'gdown',
-          'kaggle',
-          'pyinaturalist',
-          'python-docx',
+dependencies = [
+    "numpy>=1.19.4",
+    "pandas>=1.1.4",
+    "tqdm>=4.62.3",
+    "opencv-python>=4.5.5.62",
+    "Pillow>=7.1.2",
+    "scikit-learn>=1.0.1",
+    "matplotlib>=3.5.1",
+    "pycocotools>=2.0.1",
+    "networkx",
+    "datasets",
+    "kaggle",
+    "pyinaturalist",
 ]
 
 [project.optional-dependencies]
+full = [
+    "pillow-heif",
+    "gdown",
+    "python-docx",
+]
 dev = [
     "pytest>=8.0",
     "ruff>=0.11",
@@ -69,8 +72,8 @@ packages = [
   "wildlife_datasets.detection",
   "wildlife_datasets.loader",
   "wildlife_datasets.metrics",
-  "wildlife_datasets.preparation",  
-  "wildlife_datasets.splits",  
+  "wildlife_datasets.preparation",
+  "wildlife_datasets.splits",
 ]
 
 [tool.ruff]
