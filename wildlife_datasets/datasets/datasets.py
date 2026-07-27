@@ -636,9 +636,7 @@ class WildlifeDataset:
             A full dataframe of the data, slightly modified.
         """
 
-        if df is None:
-            df = self.df
-        assert df is not None
+        df = self.df if df is None else df
         if self.update_wrong_labels:
             df = self.fix_labels(df)
         self.rename_column(df, "path", self.col_path)
@@ -672,9 +670,7 @@ class WildlifeDataset:
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
-        if df is None:
-            df = self.df
-        assert df is not None
+        df = self.df if df is None else df
         for col_name in ["image_id", self.col_label, self.col_path]:
             if col_name not in df.columns:
                 raise ValueError(f"Column {col_name} must be in the dataframe columns.")
@@ -691,9 +687,7 @@ class WildlifeDataset:
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
-        if df is None:
-            df = self.df
-        assert df is not None
+        df = self.df if df is None else df
         requirements = [
             ("image_id", ["int", "str"]),
             (self.col_label, ["int", "str"]),
@@ -801,9 +795,7 @@ class WildlifeDataset:
             A full dataframe of the data, slightly modified.
         """
 
-        if df is None:
-            df = self.df
-        assert df is not None
+        df = self.df if df is None else df
         drop_cols = [c for c in df.columns if df[c].astype(str).nunique() == 1]
         return df.drop(columns=drop_cols)
 
@@ -814,9 +806,7 @@ class WildlifeDataset:
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
-        if df is None:
-            df = self.df
-        assert df is not None
+        df = self.df if df is None else df
         if len(df["image_id"].unique()) != len(df):
             raise ValueError("Image ID not unique.")
 
