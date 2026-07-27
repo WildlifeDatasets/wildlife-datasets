@@ -68,13 +68,13 @@ class SeaTurtleID2022(DownloadKaggle, WildlifeDataset):
             Created dataframe.
         """
 
-        assert self.root is not None
+        root = self.get_root()
         # Load annotations JSON file
         path_json = os.path.join("turtles-data", "data", "annotations.json")
-        with open(os.path.join(self.root, path_json)) as file:
+        with open(os.path.join(root, path_json)) as file:
             data = json.load(file)
         path_csv = os.path.join("turtles-data", "data", "metadata_splits.csv")
-        with open(os.path.join(self.root, path_csv)) as file:
+        with open(os.path.join(root, path_csv)) as file:
             df_images = pd.read_csv(file)
         # Extract categories
         categories = {}
@@ -123,10 +123,10 @@ class SeaTurtleIDHeads(DownloadKaggle, WildlifeDataset):
     kaggle_type = "datasets"
 
     def create_catalogue(self) -> pd.DataFrame:
-        assert self.root is not None
+        root = self.get_root()
         # Load annotations JSON file
         path_json = "annotations.json"
-        with open(os.path.join(self.root, path_json)) as file:
+        with open(os.path.join(root, path_json)) as file:
             data = json.load(file)
 
         # Extract dtaa from the JSON file

@@ -110,7 +110,8 @@ class WildlifeDataset:
                 warnings.warn(
                     "This dataset is not fully determined by its dataframe, so recreating it from df may be incomplete."
                 )
-        assert df is not None
+        if df is None:
+            raise ValueError(f"{self.__class__.__name__}.create_catalogue must return a pd.DataFrame, got None.")
 
         if remove_unknown:
             df = df[df[self.col_label] != self.unknown_name]
@@ -209,6 +210,17 @@ class WildlifeDataset:
         else:
             return path
 
+    def get_root(self) -> str:
+        """Returns `self.root`, raising if it was not provided.
+
+        Returns:
+            The dataset root directory.
+        """
+
+        if self.root is None:
+            raise ValueError("`root` must be provided for this operation.")
+        return self.root
+
     def set_absolute_paths(self) -> None:
         if self.root is not None:
             self.df[self.col_path] = self.root + os.path.sep + self.df[self.col_path]
@@ -255,8 +267,8 @@ class WildlifeDataset:
             return segmentation
 
         if isinstance(segmentation, str):
-            assert self.root is not None
-            m = np.asfortranarray(utils.load_image(os.path.join(self.root, segmentation)))
+            root = self.get_root()
+            m = np.asfortranarray(utils.load_image(os.path.join(root, segmentation)))
             if m.ndim == 3:
                 m = m[:, :, 0]
             return mask_coco.encode(m)
@@ -625,9 +637,7 @@ class WildlifeDataset:
             A full dataframe of the data, slightly modified.
         """
 
-        if df is None:
-            df = self.df
-        assert df is not None
+        df = self.df if df is None else df
         if self.update_wrong_labels:
             df = self.fix_labels(df)
         self.rename_column(df, "path", self.col_path)
@@ -661,9 +671,7 @@ class WildlifeDataset:
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
-        if df is None:
-            df = self.df
-        assert df is not None
+        df = self.df if df is None else df
         for col_name in ["image_id", self.col_label, self.col_path]:
             if col_name not in df.columns:
                 raise ValueError(f"Column {col_name} must be in the dataframe columns.")
@@ -680,9 +688,7 @@ class WildlifeDataset:
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
-        if df is None:
-            df = self.df
-        assert df is not None
+        df = self.df if df is None else df
         requirements = [
             ("image_id", ["int", "str"]),
             (self.col_label, ["int", "str"]),
@@ -790,9 +796,7 @@ class WildlifeDataset:
             A full dataframe of the data, slightly modified.
         """
 
-        if df is None:
-            df = self.df
-        assert df is not None
+        df = self.df if df is None else df
         drop_cols = [c for c in df.columns if df[c].astype(str).nunique() == 1]
         return df.drop(columns=drop_cols)
 
@@ -803,9 +807,7 @@ class WildlifeDataset:
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
         """
 
-        if df is None:
-            df = self.df
-        assert df is not None
+        df = self.df if df is None else df
         if len(df["image_id"].unique()) != len(df):
             raise ValueError("Image ID not unique.")
 
@@ -820,7 +822,6 @@ class WildlifeDataset:
             col = self.df[self.col_path]
         elif isinstance(col, str):
             col = self.df[col]
-        assert col is not None
         bad_paths = []
         for path in col:
             if isinstance(path, str) and not os.path.exists(self.get_absolute_path(path)):
@@ -842,7 +843,6 @@ class WildlifeDataset:
             col = self.df[self.col_path]
         elif isinstance(col, str):
             col = self.df[col]
-        assert col is not None
         bad_names = []
         for path in col:
             if not isinstance(path, str):

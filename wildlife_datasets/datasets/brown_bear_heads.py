@@ -98,13 +98,13 @@ class BrownBearHeads(DownloadKaggle, WildlifeDataset):
                   scores loaded from `head_keypoints.csv` when requested.
         """
 
-        assert self.root is not None
-        df = pd.read_csv(os.path.join(self.root, "metadata.csv"), low_memory=False)
+        root = self.get_root()
+        df = pd.read_csv(os.path.join(root, "metadata.csv"), low_memory=False)
         if "image_id" not in df.columns:
             df["image_id"] = range(len(df))
 
         if load_keypoints:
-            keypoints = pd.read_csv(os.path.join(self.root, self.head_keypoints_file), low_memory=False)
+            keypoints = pd.read_csv(os.path.join(root, self.head_keypoints_file), low_memory=False)
             keypoints = self.parse_keypoints(keypoints)
             df = df.merge(keypoints, on="path", how="left")
 

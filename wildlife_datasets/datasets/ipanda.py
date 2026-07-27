@@ -53,8 +53,8 @@ class IPanda50(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
         folders = data["path"].str.split(os.path.sep, expand=True)
 
         # Extract keypoint information about eyes
@@ -65,8 +65,8 @@ class IPanda50(WildlifeDataset):
                 "iPanda50-eyes-labels", path_split[1], os.path.splitext(path_split[2])[0] + ".json"
             )
             keypoints_part = np.full(8, np.nan)
-            if os.path.exists(os.path.join(self.root, path_json)):
-                with open(os.path.join(self.root, path_json)) as file:
+            if os.path.exists(os.path.join(root, path_json)):
+                with open(os.path.join(root, path_json)) as file:
                     keypoints_file = json.load(file)["shapes"]
                     if keypoints_file[0]["label"] == "right_eye":
                         keypoints_part[0:4] = np.reshape(keypoints_file[0]["points"], 4)
@@ -89,7 +89,7 @@ class IPanda50(WildlifeDataset):
         )
 
         # Remove non-ASCII characters while keeping backwards compatibility
-        file_name = os.path.join(self.root, "changes.csv")
+        file_name = os.path.join(root, "changes.csv")
         if os.path.exists(file_name):
             # Files were already renamed, change image_id to keep backward compability
             df_changes = pd.read_csv(file_name)
@@ -106,7 +106,7 @@ class IPanda50(WildlifeDataset):
                 # Check if there are non-ASCII characters
                 if path_new != df_row["path"]:
                     # Rename files and df
-                    os.rename(os.path.join(self.root, df_row["path"]), os.path.join(self.root, path_new))
+                    os.rename(os.path.join(root, df_row["path"]), os.path.join(root, path_new))
                     df_row["path"] = path_new
                     # Save changes in image_id
                     ids_old.append(df_row["image_id"])

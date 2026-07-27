@@ -56,8 +56,8 @@ class BristolGorillas2020(WildlifeDataset):
             raise RuntimeError(exception_text)
 
     def create_catalogue(self) -> pd.DataFrame:
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
         folders = data["path"].str.split(os.path.sep, expand=True)
 
         # Restrict to correct images
@@ -80,7 +80,7 @@ class BristolGorillas2020(WildlifeDataset):
         bbox_all = []
         path_all = []
         for i in range(len(df1)):
-            path_img = os.path.join(self.root, df1["path"].iloc[i])
+            path_img = os.path.join(root, df1["path"].iloc[i])
             path_bbox = os.path.splitext(path_img)[0] + ".txt"
             path_size = os.path.splitext(path_img)[0] + "_size.txt"
 
@@ -102,7 +102,8 @@ class BristolGorillas2020(WildlifeDataset):
                 if len(line) > 0:
                     identity = identity_conversion[int(line[0])]
                     bbox = [float(num) for num in line.split()[1:]]
-                    assert len(bbox) == 4
+                    if len(bbox) != 4:
+                        raise ValueError(f"Expected 4 bbox values, got {len(bbox)} in {path_bbox}.")
                     bbox = utils.yolo_to_pascalvoc(*bbox, w, h)
                     bbox = [bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1]]
                     identity_all.append(identity)

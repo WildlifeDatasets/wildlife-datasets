@@ -58,8 +58,8 @@ class SMALST(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        data = utils.find_images(os.path.join(self.root, "zebra_training_set", "images"))
+        root = self.get_root()
+        data = utils.find_images(os.path.join(root, "zebra_training_set", "images"))
 
         # Extract information about the images
         path = data["file"].str.strip("zebra_")
@@ -69,7 +69,7 @@ class SMALST(WildlifeDataset):
         data = data.drop(["file"], axis=1)
 
         # Find all masks in root
-        masks = utils.find_images(os.path.join(self.root, "zebra_training_set", "bgsub"))
+        masks = utils.find_images(os.path.join(root, "zebra_training_set", "bgsub"))
 
         # Extract information about the images
         path = masks["file"].str.strip("zebra_")

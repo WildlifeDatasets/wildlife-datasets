@@ -153,7 +153,8 @@ def create_id(string_col: pd.Series) -> pd.Series:
     """
 
     entity_id = string_col.apply(lambda x: hashlib.md5(x.encode()).hexdigest()[:16])
-    assert len(entity_id.unique()) == len(entity_id)
+    if len(entity_id.unique()) != len(entity_id):
+        raise ValueError("Generated ids are not unique.")
     return entity_id
 
 

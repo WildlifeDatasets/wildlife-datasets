@@ -44,13 +44,13 @@ class BelugaIDv2(BelugaID):
     outdated_dataset = False
 
     def create_catalogue(self) -> pd.DataFrame:
-        assert self.root is not None
+        root = self.get_root()
         # Use the original data
         df_train = self.create_catalogue_wildme(os.path.join("beluga", "beluga"), 2022)
         df_train["original_split"] = "train"
 
         # Get the conversion of identities between original and new data
-        data_train = pd.read_csv(os.path.join(self.root, "beluga-id-test", "private_train_metadata.csv"))
+        data_train = pd.read_csv(os.path.join(root, "beluga-id-test", "private_train_metadata.csv"))
         id_conversion = {}
         for old_id, data_train_red in data_train.groupby("original_whale_id"):
             if data_train_red["whale_id"].nunique() != 1:
@@ -58,7 +58,7 @@ class BelugaIDv2(BelugaID):
             id_conversion[old_id] = data_train_red["whale_id"].iloc[0]
 
         # Add the new data
-        data_test = pd.read_csv(os.path.join(self.root, "beluga-id-test", "private_test_metadata.csv"))
+        data_test = pd.read_csv(os.path.join(root, "beluga-id-test", "private_test_metadata.csv"))
         df_test = pd.DataFrame(
             {
                 "path": data_test["path"].apply(

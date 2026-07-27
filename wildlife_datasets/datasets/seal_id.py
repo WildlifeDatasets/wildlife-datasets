@@ -67,8 +67,8 @@ class SealID(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset
-        assert self.root is not None
-        data = pd.read_csv(os.path.join(self.root, "full images", "annotation.csv"))
+        root = self.get_root()
+        data = pd.read_csv(os.path.join(root, "full images", "annotation.csv"))
 
         # Finalize the dataframe
         df = pd.DataFrame(

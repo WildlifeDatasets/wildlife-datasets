@@ -89,3 +89,4 @@ indent-style = "space"
 
 [tool.pytest.ini_options]
 testpaths = ["wildlife_datasets/tests"]
+addopts = "-rs"

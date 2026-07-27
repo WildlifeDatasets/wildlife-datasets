@@ -58,8 +58,8 @@ class NewtsKent(DownloadPrivate, WildlifeDataset):
     summary = summary
 
     def create_catalogue(self, load_segmentation: bool = False) -> pd.DataFrame:
-        assert self.root is not None
-        data = utils.find_images(self.root)
+        root = self.get_root()
+        data = utils.find_images(root)
         folders = data["path"].str.split(os.path.sep, expand=True)
         if folders[1].nunique() != 1 and folders[1].iloc[0] != "Identification":
             raise ValueError("Structure wrong")
@@ -87,7 +87,7 @@ class NewtsKent(DownloadPrivate, WildlifeDataset):
         data = data.drop("file", axis=1)
 
         if load_segmentation:
-            file_name = os.path.join(self.root, "segmentation.csv")
+            file_name = os.path.join(root, "segmentation.csv")
             data = utils_load_segmentation(data, file_name)
 
         return self.finalize_catalogue(data)

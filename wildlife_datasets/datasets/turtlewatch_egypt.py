@@ -283,7 +283,8 @@ def info_to_code(
 class TurtlewatchEgypt_Base(DownloadPrivate, WildlifeDataset):
     def extract_info(self, i: int) -> tuple[str | None, ...]:
         path = self.df.at[i, "path"]
-        assert isinstance(path, str)
+        if not isinstance(path, str):
+            raise TypeError(f"Expected a str path, got {type(path)}.")
         return code_to_info(path.split(os.path.sep)[-1], self.individuals)
 
     def extract_code(self, i: int) -> str:
@@ -310,9 +311,9 @@ class TurtlewatchEgypt_Base(DownloadPrivate, WildlifeDataset):
 
 class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
     def create_catalogue(self, load_segmentation: bool = False, file_name: str | None = None) -> pd.DataFrame:
-        assert self.root is not None
+        root = self.get_root()
         self.load_individuals(file_name=file_name)
-        data = utils.find_images(self.root)
+        data = utils.find_images(root)
 
         # Get identity
         data["identity"] = data["file"].apply(lambda x: fix_identity(x.lower(), self.individuals))
@@ -335,16 +336,16 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
         # Finalize the dataframe
         data = data.drop("file", axis=1)
         if load_segmentation:
-            data = utils_load_segmentation(data, os.path.join(self.root, "segmentation.csv"))
+            data = utils_load_segmentation(data, os.path.join(root, "segmentation.csv"))
         return self.finalize_catalogue(data)
 
 
 class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
     def create_catalogue(self, load_segmentation: bool = False, file_name: str | None = None) -> pd.DataFrame:
 
-        assert self.root is not None
+        root = self.get_root()
         self.load_individuals(file_name=file_name)
-        data = utils.find_images(self.root)
+        data = utils.find_images(root)
 
         # Ignoring data starting with '.'
         mask = data["file"].str.startswith(".")
@@ -358,7 +359,8 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
         idx = data["encounter_name"].isnull()
         if sum(idx) > 0:
             for folder, df_folder in data[idx].groupby("path"):
-                assert isinstance(folder, str)
+                if not isinstance(folder, str):
+                    raise TypeError(f"Expected a str folder name, got {type(folder)}.")
                 data.loc[df_folder.index, "encounter_name"] = folder.lower()
 
         # Sort data
@@ -367,7 +369,8 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
 
         # Get encounter_id
         data["encounter_id"] = (data["encounter_name"] != data["encounter_name"].shift()).cumsum()
-        assert data["encounter_id"].nunique() == data["encounter_name"].nunique()
+        if data["encounter_id"].nunique() != data["encounter_name"].nunique():
+            raise ValueError("encounter_id and encounter_name do not correspond to the same grouping.")
 
         # Preallocate columns to be able to handle strings and nans without warnings
         data["identity"] = pd.Series([None] * len(data), dtype="object")
@@ -413,7 +416,7 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
 
         # Load segmentation
         if load_segmentation:
-            data = utils_load_segmentation(data, os.path.join(self.root, "segmentation.csv"))
+            data = utils_load_segmentation(data, os.path.join(root, "segmentation.csv"))
         return self.finalize_catalogue(data)
 
 
@@ -424,15 +427,13 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
 
 class TurtlewatchEgypt_Citizen(Dataset_Metadata):
     @classmethod
-    def _download(cls, data: pd.DataFrame | None = None, transform: Callable | None = None) -> None:
+    def _download(cls, data: pd.DataFrame, transform: Callable[[pd.DataFrame], pd.DataFrame] | None = None) -> None:
         img_extensions = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".tiff", ".raw")
 
         # Transform the data into the required form
-        assert data is not None
         data = load_citizen_data(data)
         if transform is not None:
             data = transform(data)
-        assert isinstance(data, pd.DataFrame)
 
         # Go through the rows and download data
         metadata = pd.DataFrame()

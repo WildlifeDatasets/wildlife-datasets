@@ -58,8 +58,8 @@ class BirdIndividualID(WildlifeDataset):
 
     def create_catalogue(self) -> pd.DataFrame:
         # Find all images in root
-        assert self.root is not None
-        path = os.path.join(self.root, self.prefix1, self.prefix2)
+        root = self.get_root()
+        path = os.path.join(root, self.prefix1, self.prefix2)
         data = utils.find_images(path)
         folders = data["path"].str.split(os.path.sep, expand=True)
 
@@ -98,7 +98,7 @@ class BirdIndividualID(WildlifeDataset):
         )
 
         # Add images without labels
-        path = os.path.join(self.root, self.prefix1, "New_birds")
+        path = os.path.join(root, self.prefix1, "New_birds")
         data = utils.find_images(path)
         species = data["path"]
         date = data["file"].apply(lambda x: self.extract_date(x))
