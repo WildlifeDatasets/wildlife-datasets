@@ -37,13 +37,16 @@ dependencies=[
           'pycocotools>=2.0.1',
           'networkx',
           'datasets',
-          'gdown',
           'kaggle',
           'pyinaturalist',
-          'python-docx',
 ]
 
 [project.optional-dependencies]
+full = [
+    "pillow-heif",
+    "gdown",
+    "python-docx",
+]
 dev = [
     "pytest>=8.0",
     "ruff>=0.11",

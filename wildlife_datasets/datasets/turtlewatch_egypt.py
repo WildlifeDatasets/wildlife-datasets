@@ -1,16 +1,14 @@
+from __future__ import annotations
+
 import logging
 import os
 import re
 from collections.abc import Callable, Sequence
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 import pandas as pd
 import requests
-from docx import Document
-from docx.shared import Pt
-from docx.styles.style import ParagraphStyle
-from docx.text.paragraph import Paragraph
 from tqdm import tqdm
 
 from ..detection import load_segmentation as utils_load_segmentation
@@ -18,6 +16,9 @@ from .datasets import WildlifeDataset, utils
 from .downloads import DownloadPrivate
 from .general import Dataset_Metadata
 from .utils import strip_suffixes
+
+if TYPE_CHECKING:
+    from docx.text.paragraph import Paragraph
 
 logger = logging.getLogger(__name__)
 
@@ -532,6 +533,16 @@ def add_run_break(p: Paragraph, text1: str, text2: str | None = None) -> None:
 
 
 def create_info(d: pd.Series, save_folder: str) -> None:
+    try:
+        from docx import Document
+        from docx.shared import Pt
+        from docx.styles.style import ParagraphStyle
+    except ImportError as e:
+        raise ImportError(
+            "Downloading TurtlewatchEgypt_Citizen requires python-docx. "
+            "Install it via: pip install wildlife_datasets[full]"
+        ) from e
+
     doc = Document()
     style = doc.styles["Normal"]
     style = cast(ParagraphStyle, style)
