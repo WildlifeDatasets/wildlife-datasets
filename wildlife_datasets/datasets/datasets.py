@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 import pycocotools.mask as mask_coco
 from matplotlib.figure import Figure
-from PIL import Image
+from PIL import Image, ImageDraw
 
 from . import utils
 
@@ -745,7 +745,7 @@ class WildlifeDataset:
             if check:
                 return None
         if "dict" in allowed_types:
-            is_dict = [isinstance(val, dict) or (np.isscalar(val) and pd.isna(val)) for val in col]
+            is_dict = [isinstance(val, dict) or utils.is_na(val) for val in col]
             if all(is_dict):
                 return None
         if "date" in allowed_types:
@@ -988,28 +988,32 @@ class WildlifeDataset:
                 plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
         return fig
 
-    def plot_keypoints(self, idx: int, show_names=True, color="red", keep_transform=False, **kwargs):
+    def plot_keypoints(self, idx: int, show_names=True, color="red", keep_transform=False, radius=3, **kwargs):
         im = self.get_image(idx)
+
+        # Draw keypoints directly onto the raw image so that they stay aligned for bounding boxes
+        if "keypoints" in self.metadata.columns:
+            keypoints = self.metadata.iloc[idx]["keypoints"]
+            if not utils.is_na(keypoints):
+                draw = ImageDraw.Draw(im)
+                for name, point in keypoints.items():
+                    if utils.is_na(point) or len(point) < 2:
+                        continue
+                    x, y = point[0], point[1]
+                    if np.isnan(x) or np.isnan(y):
+                        continue
+                    draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=color, **kwargs)
+                    if show_names:
+                        draw.text((x + radius, y - radius), str(name), fill=color)
+
+        # Apply img_load and transforms
         im = self.apply_segmentation(im, idx)
         if keep_transform and self.transform:
             im = self.transform(im)
-        
+
         fig = plt.figure()
         plt.imshow(im)
         plt.axis("off")
-        if "keypoints" in self.metadata.columns:
-            keypoints = self.metadata.iloc[idx]["keypoints"]
-
-            items = keypoints.items() if isinstance(keypoints, dict) else enumerate(keypoints)
-            for name, point in items:
-                if point is None:
-                    continue
-                x, y = point[0], point[1]
-                if np.isnan(x) or np.isnan(y):
-                    continue
-                plt.scatter(x, y, color=color, **kwargs)
-                if show_names:
-                    plt.text(x, y, str(name), color=color, fontsize=8, ha="left", va="bottom")
         return fig
 
 # Alias for WildlifeDataset

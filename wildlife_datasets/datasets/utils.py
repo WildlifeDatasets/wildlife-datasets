@@ -240,7 +240,7 @@ def keypoints_to_dict(keypoints, names: list[str], values_per_point: int = 2) ->
         Dict mapping keypoint name to (x, y), or the original value if it is missing.
     """
 
-    if keypoints is None or (np.isscalar(keypoints) and pd.isna(keypoints)):
+    if is_na(keypoints):
         return keypoints
 
     keypoints = np.asarray(keypoints, dtype=float)
@@ -425,3 +425,7 @@ def delete_corrupted_images(
                 logger.warning(f"File is not corrupted: {full_name}")
             except ValueError:
                 os.remove(full_name)
+
+
+def is_na(x) -> bool:
+    return x is None or (np.isscalar(x) and pd.isna(x))
