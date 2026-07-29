@@ -13,8 +13,9 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import pycocotools.mask as mask_coco
+from matplotlib import font_manager
 from matplotlib.figure import Figure
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 from . import utils
 
@@ -988,13 +989,23 @@ class WildlifeDataset:
                 plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
         return fig
 
-    def plot_keypoints(self, idx: int, show_names=True, color="red", keep_transform=False, radius=3, **kwargs):
+    def plot_keypoints(
+        self, idx: int, show_names=True, color="red", keep_transform=False, radius=None, font_size=None, **kwargs
+    ):
         im = self.get_image(idx)
 
         # Draw keypoints directly onto the raw image so that they stay aligned for bounding boxes
         if "keypoints" in self.metadata.columns:
             keypoints = self.metadata.iloc[idx]["keypoints"]
             if not utils.is_na(keypoints):
+                # Scale marker/text size to the image so they stay readable on large images.
+                scale = max(im.size) / 400
+                if radius is None:
+                    radius = max(2, round(3 * scale))
+                if font_size is None:
+                    font_size = max(8, round(14 * scale))
+                font = ImageFont.truetype(font_manager.findfont(font_manager.FontProperties()), font_size)
+
                 draw = ImageDraw.Draw(im)
                 for name, point in keypoints.items():
                     if utils.is_na(point) or len(point) < 2:
@@ -1004,7 +1015,7 @@ class WildlifeDataset:
                         continue
                     draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=color, **kwargs)
                     if show_names:
-                        draw.text((x + radius, y - radius), str(name), fill=color)
+                        draw.text((x + radius, y - radius), str(name), fill=color, font=font)
 
         # Apply img_load and transforms
         im = self.apply_segmentation(im, idx)
