@@ -988,6 +988,29 @@ class WildlifeDataset:
                 plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
         return fig
 
+    def plot_keypoints(self, idx: int, show_names=True, color="red", keep_transform=False, **kwargs):
+        im = self.get_image(idx)
+        im = self.apply_segmentation(im, idx)
+        if keep_transform and self.transform:
+            im = self.transform(im)
+        
+        fig = plt.figure()
+        plt.imshow(im)
+        plt.axis("off")
+        if "keypoints" in self.metadata.columns:
+            keypoints = self.metadata.iloc[idx]["keypoints"]
+
+            items = keypoints.items() if isinstance(keypoints, dict) else enumerate(keypoints)
+            for name, point in items:
+                if point is None:
+                    continue
+                x, y = point[0], point[1]
+                if np.isnan(x) or np.isnan(y):
+                    continue
+                plt.scatter(x, y, color=color, **kwargs)
+                if show_names:
+                    plt.text(x, y, str(name), color=color, fontsize=8, ha="left", va="bottom")
+        return fig
 
 # Alias for WildlifeDataset
 class DatasetFactory(WildlifeDataset):
