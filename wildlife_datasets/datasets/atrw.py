@@ -33,6 +33,23 @@ class ATRW(WildlifeDataset):
     summary = summary
     url = "https://github.com/cvwc2019/ATRWEvalScript/archive/refs/heads/main.zip"
     archive = "main.zip"
+    keypoint_names = [
+        "left_ear",
+        "right_ear",
+        "nose",
+        "right_shoulder",
+        "right_front_paw",
+        "left_shoulder",
+        "left_front_paw",
+        "right_hip",
+        "right_knee",
+        "right_back_paw",
+        "left_hip",
+        "left_knee",
+        "left_back_paw",
+        "tail",
+        "center",
+    ]
     downloads = [
         # Wild dataset (Detection)
         (
@@ -92,6 +109,9 @@ class ATRW(WildlifeDataset):
             "keypoints": pd.Series(list(pd.DataFrame([keypoints[key] for key in keypoints.keys()]).to_numpy())),
         }
         data = pd.DataFrame(df_keypoints)
+        data["keypoints"] = data["keypoints"].apply(
+            lambda kp: utils.keypoints_to_dict(kp, self.keypoint_names, values_per_point=3)
+        )
 
         # Merge information for the reid_train part of the dataset
         df_train = pd.merge(ids, data, on="path", how="left")
@@ -118,6 +138,9 @@ class ATRW(WildlifeDataset):
             "keypoints": pd.Series(list(pd.DataFrame([keypoints[key] for key in keypoints.keys()]).to_numpy())),
         }
         data = pd.DataFrame(df_keypoints)
+        data["keypoints"] = data["keypoints"].apply(
+            lambda kp: utils.keypoints_to_dict(kp, self.keypoint_names, values_per_point=3)
+        )
 
         # Merge information for the test_plain part of the dataset
         df_test1 = pd.merge(ids, data, on="path", how="left")

@@ -4,7 +4,7 @@ import pandas as pd
 
 from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
-from .utils import parse_bbox_mask
+from .utils import keypoints_to_dict, parse_bbox_mask
 
 summary = {
     "licenses": "Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)",
@@ -33,6 +33,7 @@ class RotwildID_Faces(DownloadKaggle, WildlifeDataset):
     summary = summary
     kaggle_url = "jonaschu/rotwildid-faces"
     kaggle_type = "datasets"
+    keypoint_names = ["right_eye", "left_eye", "nose"]
 
     def create_catalogue(self, image_type: str = "mask") -> pd.DataFrame:
         """
@@ -52,7 +53,8 @@ class RotwildID_Faces(DownloadKaggle, WildlifeDataset):
                 - path (str): Relative path to the image file.
                 - bbox (list[float]): Bounding box. Automatic use via `img_load=bbox`.
                 - segmentation (list[float]): Segmentation mask. Automatic use via `img_load=bbox_mask`.
-                - keypoints (list[float]): List of keypoints (x right eye, y right eye, ...).
+                - keypoints (dict[str, tuple[float, float]]): Mapping from keypoint name
+                  (right_eye, left_eye, nose) to its (x, y) coordinates.
                 - image_quality (str): Quality of the image.
         """
 
@@ -66,7 +68,9 @@ class RotwildID_Faces(DownloadKaggle, WildlifeDataset):
         metadata = pd.read_csv(metadata_path, index_col=0)
         metadata["path"] = image_type + os.path.sep + metadata["path"]
         metadata["bbox"] = metadata["bbox"].apply(parse_bbox_mask)
-        metadata["keypoints"] = metadata["keypoints"].apply(parse_bbox_mask)
+        metadata["keypoints"] = metadata["keypoints"].apply(parse_bbox_mask).apply(
+            lambda kp: keypoints_to_dict(kp, self.keypoint_names, values_per_point=2)
+        )
         metadata["segmentation"] = metadata["segmentation"].apply(parse_bbox_mask)
 
         return self.finalize_catalogue(metadata)

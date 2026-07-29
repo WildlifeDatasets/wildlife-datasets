@@ -64,19 +64,14 @@ class IPanda50(WildlifeDataset):
             path_json = os.path.join(
                 "iPanda50-eyes-labels", path_split[1], os.path.splitext(path_split[2])[0] + ".json"
             )
-            keypoints_part = np.full(8, np.nan)
+            keypoints_entry = {}
             if os.path.exists(os.path.join(root, path_json)):
                 with open(os.path.join(root, path_json)) as file:
                     keypoints_file = json.load(file)["shapes"]
-                    if keypoints_file[0]["label"] == "right_eye":
-                        keypoints_part[0:4] = np.reshape(keypoints_file[0]["points"], 4)
-                    if keypoints_file[0]["label"] == "left_eye":
-                        keypoints_part[4:8] = np.reshape(keypoints_file[0]["points"], 4)
-                    if len(keypoints_file) == 2 and keypoints_file[1]["label"] == "right_eye":
-                        keypoints_part[0:4] = np.reshape(keypoints_file[1]["points"], 4)
-                    if len(keypoints_file) == 2 and keypoints_file[1]["label"] == "left_eye":
-                        keypoints_part[4:8] = np.reshape(keypoints_file[1]["points"], 4)
-            keypoints.append(list(keypoints_part))
+                for shape in keypoints_file:
+                    for i, point in enumerate(np.reshape(shape["points"], (2, 2)), start=1):
+                        keypoints_entry[f"{shape['label']}_{i}"] = tuple(point)
+            keypoints.append(keypoints_entry or np.nan)
 
         # Finalize the dataframe
         df = pd.DataFrame(
