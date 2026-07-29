@@ -696,7 +696,7 @@ class WildlifeDataset:
             (self.col_path, ["str"]),
             ("bbox", ["list_numeric"]),
             ("date", ["date"]),
-            ("keypoints", ["list_numeric"]),
+            ("keypoints", ["list_numeric", "dict"]),
             ("position", ["str"]),
             ("species", ["str", "list"]),
             ("video", ["int"]),
@@ -720,6 +720,7 @@ class WildlifeDataset:
                 `str` (strings),
                 `list` (lists),
                 `list_numeric` (lists with numeric values),
+                `dict` (dicts),
                 `date` (dates as tested by `pd.to_datetime`).
         """
 
@@ -738,10 +739,14 @@ class WildlifeDataset:
         if "list_numeric" in allowed_types and pd.api.types.is_list_like(col):
             check = True
             for val in col:
-                if not pd.api.types.is_list_like(val) and not pd.api.types.is_numeric_dtype(pd.Series(val)):
+                if isinstance(val, dict) or not pd.api.types.is_list_like(val) or not pd.api.types.is_numeric_dtype(pd.Series(val)):
                     check = False
                     break
             if check:
+                return None
+        if "dict" in allowed_types:
+            is_dict = [isinstance(val, dict) or (np.isscalar(val) and pd.isna(val)) for val in col]
+            if all(is_dict):
                 return None
         if "date" in allowed_types:
             try:
