@@ -3,6 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 
+from . import utils
 from .datasets import WildlifeDataset
 from .downloads import DownloadKaggle
 
@@ -38,26 +39,23 @@ class BrownBearHeads(DownloadKaggle, WildlifeDataset):
     @staticmethod
     def parse_keypoints(keypoints: pd.DataFrame) -> pd.DataFrame:
         point_indices = sorted({int(column.split("_")[1]) for column in keypoints.columns if column.endswith("_x")})
+        names = [f"keypoint_{point_index:02d}" for point_index in point_indices]
+
+        def build_entry(row: pd.Series) -> dict:
+            entry = {}
+            for name, point_index in zip(names, point_indices):
+                x = row[f"keypoint_{point_index:02d}_x"]
+                y = row[f"keypoint_{point_index:02d}_y"]
+                if pd.isna(x) or pd.isna(y):
+                    continue
+                score = row[f"keypoint_{point_index:02d}_score"]
+                entry[name] = (float(x), float(y), float(score) if not pd.isna(score) else np.nan)
+            return entry
+
         return pd.DataFrame(
             {
                 "path": keypoints["path"],
-                "keypoints": [
-                    [
-                        float(value) if not pd.isna(value) else np.nan
-                        for point_index in point_indices
-                        for value in (row[f"keypoint_{point_index:02d}_x"], row[f"keypoint_{point_index:02d}_y"])
-                    ]
-                    for _, row in keypoints.iterrows()
-                ],
-                "keypoint_scores": [
-                    [
-                        float(row[f"keypoint_{point_index:02d}_score"])
-                        if not pd.isna(row[f"keypoint_{point_index:02d}_score"])
-                        else np.nan
-                        for point_index in point_indices
-                    ]
-                    for _, row in keypoints.iterrows()
-                ],
+                "keypoints": [build_entry(row) for _, row in keypoints.iterrows()],
                 "min_keypoint_score": keypoints["min_keypoint_score"],
                 "mean_keypoint_score": keypoints["mean_keypoint_score"],
                 "n_out_of_bounds_keypoints": keypoints["n_out_of_bounds_keypoints"],
@@ -92,10 +90,10 @@ class BrownBearHeads(DownloadKaggle, WildlifeDataset):
                 - split_iid (str): Standardized in-distribution split.
                 - image_id (int): Stable image identifier.
                 - species (str): Added automatically as `brown bear` if missing.
-                - keypoints (list[float], optional): Face keypoints loaded from
-                  `head_keypoints.csv` when `load_keypoints=True`.
-                - keypoint_scores (list[float], optional): Per-keypoint model
-                  scores loaded from `head_keypoints.csv` when requested.
+                - keypoints (dict[str, tuple[float, float, float]], optional): Mapping from
+                  keypoint name (keypoint_00, keypoint_01, ...) to its (x, y, score) coordinates
+                  and model confidence, loaded from `head_keypoints.csv` when
+                  `load_keypoints=True`. Points with missing (x, y) are omitted.
         """
 
         root = self.get_root()

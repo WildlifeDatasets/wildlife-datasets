@@ -1,6 +1,8 @@
+import glob
 import os
 import re
 
+import numpy as np
 import pandas as pd
 import requests
 
@@ -73,8 +75,39 @@ class CHIRP(WildlifeDataset):
     def _extract(cls, archive: str | None = None) -> None:
         utils.extract_archive(archive or cls.archive, delete=True)
 
-    def create_catalogue(self) -> pd.DataFrame:
-        """Creates catalogue for CHIRP dataset."""
+    @staticmethod
+    def _load_keypoints(root: str, img_paths: pd.Series) -> pd.Series:
+        """Loads per-frame model-predicted keypoints from the `keypoints.csv` sidecar files.
+
+        Each `data/{bird_id}/{video_territory}/` directory contains a `keypoints.csv` with
+        one row per (image, keypoint) pair (columns `img`, `Keypoint`, `x`, `y`, `conf`).
+        These are aggregated into a single dict per image, keyed by `img_paths`.
+        """
+
+        keypoints_files = glob.glob(os.path.join(root, "ReID", "data", "*", "*", "keypoints.csv"))
+        if not keypoints_files:
+            return pd.Series(np.nan, index=img_paths.index)
+
+        long_df = pd.concat(
+            (pd.read_csv(file, usecols=["img", "Keypoint", "x", "y", "conf"]) for file in keypoints_files),
+            ignore_index=True,
+        )
+
+        def build_entry(group: pd.DataFrame) -> dict:
+            return {row.Keypoint: (row.x, row.y, row.conf) for row in group.itertuples()}
+
+        per_image = long_df.groupby("img")[["Keypoint", "x", "y", "conf"]].apply(build_entry)
+        return img_paths.map(per_image)
+
+    def create_catalogue(self, load_keypoints: bool = False) -> pd.DataFrame:
+        """Creates catalogue for CHIRP dataset.
+
+        Args:
+            load_keypoints (bool, optional): Whether to load the per-frame model-predicted
+                keypoints (13-point bird pose) into a `keypoints` column. Scans all
+                `keypoints.csv` sidecar files under `ReID/data/`, which is slow, so it is
+                opt-in.
+        """
 
         root = self.get_root()
         possible_neighbour = pd.read_csv(os.path.join(root, "ReID", "PossibleBirds_Neighbours.csv"))
@@ -101,4 +134,6 @@ class CHIRP(WildlifeDataset):
                 "possible_neighbour": data["Video"].map(possible_neighbour.set_index("Video")["PossibleBirds"]),
             }
         )
+        if load_keypoints:
+            df["keypoints"] = self._load_keypoints(root, data["img"].astype(str))
         return self.finalize_catalogue(df)

@@ -153,6 +153,7 @@ class CzechLynxv2(CzechLynx):
                 - source (str): Dataset partition or region (e.g., 'beskydy').
                 - date (datetime): Observation date. Converted to `datetime`.
                 - mask (dict): Segmentation mask for the animal.
+                - keypoints (dict): Pose keypoints of the animal (head, legs, ...).
                 - relative_age (float): Age estimate relative to first appearance.
                 - encounter (int): Unique encounter identifier.
                 - coat_pattern (str): Coat pattern or marking description.
@@ -161,7 +162,6 @@ class CzechLynxv2(CzechLynx):
                 - latitude (float): Latitude of the observation point.
                 - longitude (float): Longitude of the observation point.
                 - trap_id (str): Unique identifier for the camera trap.
-                - pose (dict): Pose of the animals (head, legs, ...).
                 - split-geo_aware (str): Spatial split category.
                 - split-time_open (str): Time-aware open-world split.
                 - split-time_closed (str): Time-aware closed-world split.
@@ -170,6 +170,7 @@ class CzechLynxv2(CzechLynx):
         Notes:
             - The `unique_name` column is renamed to `identity` and then dropped.
             - The `mask` column is renamed to `segmentation` and then dropped.
+            - The `pose` column is renamed to `keypoints` and then dropped.
             - No filtering is applied to the split; the selected column is kept for downstream use.
             - All metadata columns are retained except explicitly replaced ones.
         """
@@ -197,9 +198,9 @@ class CzechLynxv2(CzechLynx):
         # Keep only selected split column, rename it
         df["original_split"] = df[split]
         df["segmentation"] = df["mask"].apply(parse_bbox_mask)
-        df["pose"] = df["pose"].apply(parse_bbox_mask)
+        df["keypoints"] = df["pose"].apply(parse_bbox_mask)
         df.drop(
-            columns=["unique_name", "split-geo_aware", "split-time_open", "split-time_closed", "split-pose", "mask"],
+            columns=["unique_name", "split-geo_aware", "split-time_open", "split-time_closed", "split-pose", "mask", "pose"],
             inplace=True,
         )
 
