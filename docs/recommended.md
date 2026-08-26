@@ -85,7 +85,7 @@ print_list_red(datasets.names_giraffes_zebras) # markdown-exec: hide
 
 ### Primates
 
-The datasets CTai, CZoo and MacaqueFaces are very similar, all containing a relatively low resolution head images of chimpanzees (CTai and CZoo) or macaques (MacaqueFaces).
+The datasets CTai, CZoo and MacaqueFaces are very similar, all containing a relatively low resolution head images of chimpanzees (CTai and CZoo) or macaques (MacaqueFaces). GorillaWatchWild and GorillaZooBerlin are a similar pair from the GorillaWatch project, using the same face/body crop format but showing different gorillas: one filmed in the wild, the other at Berlin Zoo. Train on GorillaWatchWild and evaluate on GorillaZooBerlin to test how well a model generalizes to a zoo setting.
 
 ```python exec="true" source="above" result="console" session="run"
 datasets.names_primates
