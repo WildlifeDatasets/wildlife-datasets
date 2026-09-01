@@ -145,11 +145,11 @@ If you use our package, please cite the [paper](https://openaccess.thecvf.com/co
 
 ```
 @InProceedings{Cermak_2024_WACV,
-    author    = {\v{C}erm\'ak, Vojt\v{e}ch and Picek, Luk\'a\v{s} and Adam, Luk\'a\v{s} and Papafitsoros, Kostas},
-    title     = {{WildlifeDatasets: An Open-Source Toolkit for Animal Re-Identification}},
-    booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
-    month     = {January},
+    author    = {{\v{C}}erm{\'a}k, Vojt{\v{e}}ch and Picek, Lukas and Adam, Luk{\'a}{\v{s}} and Papafitsoros, Kostas},
+    title     = {{WildlifeDatasets: An open-source toolkit for animal re-identification}},
+    booktitle = {2024 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+    pages     = {5941--5951},
     year      = {2024},
-    pages     = {5953-5963}
+    organization={IEEE}
 }
 ```
