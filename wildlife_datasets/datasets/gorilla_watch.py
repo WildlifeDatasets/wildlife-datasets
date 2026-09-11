@@ -84,6 +84,7 @@ class GorillaWatchWild(DownloadHuggingFace, WildlifeDataset):
         split_sizes = [self.dataset[split].num_rows for split in split_names]
         cumsum = np.cumsum(split_sizes)
 
+        idx = self._normalize_idx(idx)
         split_idx = np.searchsorted(cumsum, idx, side="right")
         local_idx = idx if split_idx == 0 else idx - cumsum[split_idx - 1]
 
@@ -123,4 +124,5 @@ class GorillaZooBerlin(DownloadHuggingFace, WildlifeDataset):
         return self.finalize_catalogue(df)
 
     def get_image(self, idx):
-        return self.dataset["test"][int(idx)]["image"]
+        idx = self._normalize_idx(idx)
+        return self.dataset["test"][idx]["image"]
