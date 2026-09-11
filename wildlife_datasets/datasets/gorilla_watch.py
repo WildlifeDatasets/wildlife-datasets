@@ -28,7 +28,7 @@ summary_wild = {
     "reported_n_total": 160818,
     "reported_n_individuals": 135,
     "wild": True,
-    "span": "long",
+    "span": "4.5 years",
     "size": 59440,
 }
 
@@ -38,7 +38,7 @@ summary_zoo = {
     "reported_n_total": 188679,
     "reported_n_individuals": 5,
     "wild": False,
-    "span": "short",
+    "span": "2 months",
     "size": 12530,
 }
 
