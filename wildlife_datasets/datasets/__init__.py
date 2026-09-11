@@ -34,6 +34,7 @@ from .friesian_cattle import FriesianCattle2015, FriesianCattle2015v2, FriesianC
 from .general import Dataset_Folder, Dataset_Metadata
 from .giraffe_zebra_id import GiraffeZebraID
 from .giraffes import Giraffes
+from .gorilla_watch import GorillaWatchWild, GorillaZooBerlin
 from .happy_whale import HappyWhale
 from .holstein_cattle_recognition import HolsteinCattleRecognition
 from .hula_painted_frogs import HulaPaintedFrogs

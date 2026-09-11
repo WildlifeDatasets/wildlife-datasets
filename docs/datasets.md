@@ -179,6 +179,18 @@ GiraffeZebraID contains images of plains zebra and Masai giraffe taken from a tw
 
 ![](images/grid_Giraffes.png)
 
+### [GorillaWatchWild](https://huggingface.co/datasets/gorilla-watch/Gorilla-SPAC-Wild) <a href="https://arxiv.org/abs/2512.07776" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+GorillaWatchWild (Gorilla-SPAC-Wild) contains 135 individually identified western lowland gorillas extracted from camera-trap video footage collected at Odzala-Kokoua National Park, Republic of Congo. Detections are provided as paired face and body crops obtained via a fine-tuned YOLOv8-Nano detector and tracker, ground-truthed by primate researchers with 15+ years of experience with this population. The dataset has an individual-disjoint train/validation/test split for open-set evaluation, plus a single_encounter split of gorillas observed only once.
+
+![](images/grid_GorillaWatchWild.png)
+
+### [GorillaZooBerlin](https://huggingface.co/datasets/gorilla-watch/Gorilla-Zoo-Berlin) <a href="https://arxiv.org/abs/2512.07776" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+GorillaZooBerlin (Gorilla-Zoo-Berlin) is a cross-domain evaluation companion to GorillaWatchWild, part of the same GorillaWatch project. It contains camera-trap footage of the 5 western lowland gorillas of a single social group at Zoo Berlin, used to evaluate how well models trained on in-the-wild footage generalize to a controlled zoo environment with artificial structures, glass and different camera angles.
+
+![](images/grid_GorillaZooBerlin.png)
+
 ### [HappyWhale](https://www.kaggle.com/competitions/happy-whale-and-dolphin) <a href="https://link.springer.com/article/10.1007/s42991-021-00180-9" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
 HappyWhale, HumpbackWhale and NOAARightWhale are datasets of various whale species. They are a product of multi-year collaboration of multiple research institutions and citizen scientists. All these datasets were released as Kaggle competitions to make it easy and rewarding for the public to participate in science by building innovative tools to engage anyone interested in marine mammals. The whales were photographed during aerial surveys. HumpbackWhale is the most uniform dataset with a clear view on the whale tail above water. NOAARightWhale contains images of submerging whales. HappyWhale is the most diverse dataset with images of dorsal fins. Some image contain only the dorsal fin, while others contain a significant part of the whale body.
