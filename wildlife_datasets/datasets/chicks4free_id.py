@@ -31,6 +31,7 @@ summary = {
 class Chicks4FreeID(DownloadHuggingFace, WildlifeDataset):
     summary = summary
     hf_url = "dariakern/Chicks4FreeID"
+    image_column = "crop"
 
     @classmethod
     def _download(cls, hf_option="chicken-re-id-all-visibility"):
@@ -39,23 +40,17 @@ class Chicks4FreeID(DownloadHuggingFace, WildlifeDataset):
     def create_catalogue(self, hf_option="chicken-re-id-all-visibility") -> pd.DataFrame:
         dataset = load_dataset(self.hf_url, hf_option)
 
-        self.n_train = dataset["train"].num_rows
-        self.n_test = dataset["test"].num_rows
+        n_train = dataset["train"].num_rows
+        n_test = dataset["test"].num_rows
         self.dataset = dataset
         df = pd.DataFrame(
             {
-                "image_id": range(self.n_train + self.n_test),
+                "image_id": range(n_train + n_test),
                 "identity": list(dataset["train"]["identity"]) + list(dataset["test"]["identity"]),
                 "path": np.nan,
-                "split_original": self.n_train * ["train"] + self.n_test * ["test"],
+                "split_original": n_train * ["train"] + n_test * ["test"],
+                "hf_index": list(range(n_train)) + list(range(n_test)),
             }
         )
 
         return self.finalize_catalogue(df)
-
-    def get_image(self, idx):
-        idx = self._normalize_idx(idx)
-        if idx < self.n_train:
-            return self.dataset["train"][idx]["crop"]
-        else:
-            return self.dataset["test"][idx - self.n_train]["crop"]

@@ -62,6 +62,7 @@ class GorillaWatchWild(DownloadHuggingFace, WildlifeDataset):
                     "identity": dataset[split]["class"],
                     "path": np.nan,
                     "split_original": [split] * n_rows,
+                    "hf_index": range(n_rows),
                     "camera": dataset[split]["camera"],
                     "date": dataset[split]["date"],
                     "video_name": dataset[split]["video"],
@@ -77,19 +78,6 @@ class GorillaWatchWild(DownloadHuggingFace, WildlifeDataset):
         self.dataset = dataset
         self.config = config
         return self.finalize_catalogue(df)
-
-    def get_image(self, idx):
-        # Map flat index to split and local index
-        split_names = list(self.dataset.keys())
-        split_sizes = [self.dataset[split].num_rows for split in split_names]
-        cumsum = np.cumsum(split_sizes)
-
-        idx = self._normalize_idx(idx)
-        split_idx = np.searchsorted(cumsum, idx, side="right")
-        local_idx = idx if split_idx == 0 else idx - cumsum[split_idx - 1]
-
-        split = split_names[split_idx]
-        return self.dataset[split][int(local_idx)]["image"]
 
 
 class GorillaZooBerlin(DownloadHuggingFace, WildlifeDataset):
@@ -110,6 +98,7 @@ class GorillaZooBerlin(DownloadHuggingFace, WildlifeDataset):
                 "identity": dataset["test"]["class"],
                 "path": np.nan,
                 "split_original": ["test"] * n_rows,
+                "hf_index": range(n_rows),
                 "camera": dataset["test"]["camera"],
                 "date": dataset["test"]["date"],
                 "time": dataset["test"]["time"],
@@ -122,7 +111,3 @@ class GorillaZooBerlin(DownloadHuggingFace, WildlifeDataset):
         self.dataset = dataset
         self.config = config
         return self.finalize_catalogue(df)
-
-    def get_image(self, idx):
-        idx = self._normalize_idx(idx)
-        return self.dataset["test"][idx]["image"]
