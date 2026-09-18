@@ -33,7 +33,7 @@
 
 The aim of the project is to provide a comprehensive overview of datasets for wildlife individual re-identification and an easy-to-use package for developers of machine learning methods. The core functionality includes:
 
-- overview of 61 publicly available wildlife re-identification datasets and 3 metadatasets.
+- overview of 63 publicly available wildlife re-identification datasets and 3 metadatasets.
 - utilities to mass download and convert them into a unified format and fix some wrong labels.
 - used in synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools) to train our models [MegaDescriptor](https://wildlifedatasets.github.io/wildlife-tools/megadescriptor/) and [WildFusion](https://wildlifedatasets.github.io/wildlife-tools/wildfusion/).
 
@@ -43,6 +43,7 @@ Do you know about any animal re-identification dataset which is not included? Po
 
 ## Changelog
 
+[26/08/2026] Added GorillaWatchWild, GorillaZooBerlin (primates).  
 [14/07/2026] Added BrownBearHeads (bears), CHIRP (birds), HulaPaintedFrogs (frogs), LeopardID102 (leopards), Melops (fish), RedBeeReID (bees), RotwildID_Faces (deer) and SpottedHyenaID109, SpottedHyenaID415 (hyenas).  
 [30/01/2026] Added AnimalCLEF2026 (unifications of multiple datasets), BalearicLizards (lizards) and TurtlesOfSMSRC (sea turtles).  
 [18/08/2025] Reached **50 datasets** by adding BristolGorillas2020 (primates), CattleMuzzle, CoBRAReIdentificationYoungstock, HolsteinCattleRecognition (cows), CzechLynx (lynxes) and WildRaptorID (eagles).  

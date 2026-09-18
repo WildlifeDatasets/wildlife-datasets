@@ -54,7 +54,8 @@ class Chicks4FreeID(DownloadHuggingFace, WildlifeDataset):
         return self.finalize_catalogue(df)
 
     def get_image(self, idx):
+        idx = self._normalize_idx(idx)
         if idx < self.n_train:
-            return self.dataset["train"][int(idx)]["crop"]
+            return self.dataset["train"][idx]["crop"]
         else:
-            return self.dataset["test"][int(idx) - self.n_train]["crop"]
+            return self.dataset["test"][idx - self.n_train]["crop"]

@@ -120,6 +120,14 @@ class DownloadHuggingFace:
     def _extract(cls, **kwargs):
         pass
 
+    def _normalize_idx(self, idx: int) -> int:
+        n = len(self)
+        if idx < 0:
+            idx += n
+        if not 0 <= idx < n:
+            raise IndexError(f"Index {idx} out of range for dataset of length {n}.")
+        return idx
+
 
 class DownloadINaturalist:
     """

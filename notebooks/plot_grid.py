@@ -33,6 +33,8 @@ data = [
     (FriesianCattle2017, "auto", False, None),
     (GiraffeZebraID, "auto", False, None),
     (Giraffes, "auto", False, None),
+    (GorillaWatchWild, "auto", False, None),
+    (GorillaZooBerlin, "auto", False, None),
     (HappyWhale, "auto", False, None),
     (HolsteinCattleRecognition, "auto", False, None),
     (HulaPaintedFrogs, "auto", False, None),
