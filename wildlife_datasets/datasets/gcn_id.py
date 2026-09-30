@@ -29,6 +29,13 @@ summary = {
 }
 
 
+def convert_bbox(s: str | float) -> list[float] | None:
+    if pd.isnull(s):
+        return None
+    x1, y1, x2, y2 = parse_bbox_mask(s)
+    return [x1, y1, x2 - x1, y2 - y1]
+
+
 def convert_rle(s: str | float) -> dict | None:
     if pd.isnull(s):
         return None
@@ -87,7 +94,7 @@ class GCN_ID(DownloadURL, WildlifeDataset):
             axis=1,
         )
         df = df.drop(["file_name", "code"], axis=1)
-        df["bbox"] = df["bbox"].apply(parse_bbox_mask)
+        df["bbox"] = df["bbox"].apply(convert_bbox)
         df["segmentation"] = df["segmentation"].apply(convert_rle)
 
         return self.finalize_catalogue(df)
