@@ -31,6 +31,7 @@ data = [
     (ELPephants, "auto", False, None),
     (FriesianCattle2015v2, "crop_black", False, None),
     (FriesianCattle2017, "auto", False, None),
+    (GCN_ID, "bbox_mask", True, None),
     (GiraffeZebraID, "auto", False, None),
     (Giraffes, "auto", False, None),
     (GorillaWatchWild, "auto", False, None),
