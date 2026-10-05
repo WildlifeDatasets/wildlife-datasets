@@ -200,7 +200,15 @@ class CzechLynxv2(CzechLynx):
         df["segmentation"] = df["mask"].apply(parse_bbox_mask)
         df["keypoints"] = df["pose"].apply(parse_bbox_mask)
         df.drop(
-            columns=["unique_name", "split-geo_aware", "split-time_open", "split-time_closed", "split-pose", "mask", "pose"],
+            columns=[
+                "unique_name",
+                "split-geo_aware",
+                "split-time_open",
+                "split-time_closed",
+                "split-pose",
+                "mask",
+                "pose",
+            ],
             inplace=True,
         )
 

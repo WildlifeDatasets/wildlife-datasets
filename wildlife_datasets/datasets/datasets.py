@@ -748,7 +748,11 @@ class WildlifeDataset:
         if "list_numeric" in allowed_types and pd.api.types.is_list_like(col):
             check = True
             for val in col:
-                if isinstance(val, dict) or not pd.api.types.is_list_like(val) or not pd.api.types.is_numeric_dtype(pd.Series(val)):
+                if (
+                    isinstance(val, dict)
+                    or not pd.api.types.is_list_like(val)
+                    or not pd.api.types.is_numeric_dtype(pd.Series(val))
+                ):
                     check = False
                     break
             if check:
@@ -1036,6 +1040,7 @@ class WildlifeDataset:
         plt.imshow(im)
         plt.axis("off")
         return fig
+
 
 # Alias for WildlifeDataset
 class DatasetFactory(WildlifeDataset):

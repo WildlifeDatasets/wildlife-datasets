@@ -68,8 +68,10 @@ class RotwildID_Faces(DownloadKaggle, WildlifeDataset):
         metadata = pd.read_csv(metadata_path, index_col=0)
         metadata["path"] = image_type + os.path.sep + metadata["path"]
         metadata["bbox"] = metadata["bbox"].apply(parse_bbox_mask)
-        metadata["keypoints"] = metadata["keypoints"].apply(parse_bbox_mask).apply(
-            lambda kp: keypoints_to_dict(kp, self.keypoint_names, values_per_point=2)
+        metadata["keypoints"] = (
+            metadata["keypoints"]
+            .apply(parse_bbox_mask)
+            .apply(lambda kp: keypoints_to_dict(kp, self.keypoint_names, values_per_point=2))
         )
         metadata["segmentation"] = metadata["segmentation"].apply(parse_bbox_mask)
 
