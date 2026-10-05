@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import os
 import re
+import unicodedata
 from collections.abc import Callable, Sequence
 from typing import TYPE_CHECKING, cast
 
@@ -158,10 +159,42 @@ def get_code(xs: Sequence[str], name: str = "variables") -> str | None:
         return None
 
 
+transliterate_extra = {
+    "ł": "l",
+    "Ł": "L",
+    "ø": "o",
+    "Ø": "O",
+    "đ": "d",
+    "Đ": "D",
+    "þ": "th",
+    "Þ": "Th",
+    "ð": "d",
+    "Ð": "D",
+    "ß": "ss",
+    "æ": "ae",
+    "Æ": "AE",
+    "œ": "oe",
+    "Œ": "OE",
+}
+
+
+def transliterate(x: str) -> str:
+    for char, replacement in transliterate_extra.items():
+        x = x.replace(char, replacement)
+    x = unicodedata.normalize("NFKD", x)
+    # Accents and invisible format characters are expected to be dropped
+    base_chars = "".join(c for c in x if not unicodedata.combining(c) and unicodedata.category(c) != "Cf")
+    try:
+        base_chars.encode("ascii")
+    except UnicodeEncodeError:
+        logger.warning("Characters dropped during transliteration of %r", x)
+    return x.encode("ascii", "ignore").decode("ascii")
+
+
 def fix_identity(x: str | None, individuals: list[str]) -> str | None:
     if pd.isnull(x):
         return x
-    x = x.strip().lower()
+    x = transliterate(x.strip().lower())
     if x.startswith("no id") or x.startswith("noid"):
         return "unknown"
 
@@ -285,6 +318,10 @@ def info_to_code(
 
 
 class TurtlewatchEgypt_Base(DownloadPrivate, WildlifeDataset):
+    def __init__(self, *args, check_file_names: bool = False, **kwargs) -> None:
+        # Image file names in this dataset contain non-ISO-8859-1 characters
+        super().__init__(*args, check_file_names=check_file_names, **kwargs)
+
     def extract_info(self, i: int) -> tuple[str | None, ...]:
         path = self.df.at[i, "path"]
         if not isinstance(path, str):
@@ -307,10 +344,15 @@ class TurtlewatchEgypt_Base(DownloadPrivate, WildlifeDataset):
             file_name = f"{os.path.dirname(os.path.abspath(__file__))}/individuals.csv"
         if not os.path.exists(file_name):
             raise ValueError(f"File does not exist: {file_name}")
-        individuals = pd.read_csv(file_name)
-        individuals = individuals["Common_name"].to_numpy()
+        data = pd.read_csv(file_name)
+        individuals = data["Common_name"].to_numpy()
         individuals = [x.lower().strip() for x in individuals]
-        self.individuals = [strip_suffixes(x, [" C", " (DEAD)"]) for x in individuals]
+        individuals_fixed = [fix_identity(x.lower(), individuals) for x in individuals]
+        species = data["Species"].to_numpy()
+        species = [x.lower().strip() for x in species]
+        individuals = [strip_suffixes(x, [" C", " (DEAD)"]) for x in individuals]
+        self.individuals_to_species = {x: y for x, y in zip(individuals_fixed, species)}
+        self.individuals = [transliterate(x) for x in individuals]
 
 
 class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
@@ -321,6 +363,7 @@ class TurtlewatchEgypt_Master(TurtlewatchEgypt_Base):
 
         # Get identity
         data["identity"] = data["file"].apply(lambda x: fix_identity(x.lower(), self.individuals))
+        data["species"] = data["identity"].apply(lambda x: self.individuals_to_species.get(x, np.nan))
 
         # Get orientation
         data["date"] = data["file"].apply(lambda x: code_to_info(os.path.basename(x), self.individuals)[3])
@@ -406,6 +449,9 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
             data.loc[df_encounter.index, "hour"] = get_code(hours, name="hours")
             data.loc[df_encounter.index, "author"] = get_code(authors, name="authors")
             data.loc[df_encounter.index, "date"] = get_code(dates, name="dates")
+
+        # Add species
+        data["species"] = data["identity"].apply(lambda x: self.individuals_to_species.get(x, np.nan))
 
         # Fix the column names
         data = data.reset_index(drop=True)

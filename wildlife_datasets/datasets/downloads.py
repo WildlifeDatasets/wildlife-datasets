@@ -107,6 +107,7 @@ class DownloadHuggingFace:
     determined_by_df: bool = False
     saved_to_system_folder: bool = True
     hf_url: str
+    image_column: str = "image"
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
@@ -119,6 +120,10 @@ class DownloadHuggingFace:
     @classmethod
     def _extract(cls, **kwargs):
         pass
+
+    def get_image(self, idx: int):
+        row = self.metadata.iloc[idx]
+        return self.dataset[row["split_original"]][int(row["hf_index"])][self.image_column]
 
 
 class DownloadINaturalist:

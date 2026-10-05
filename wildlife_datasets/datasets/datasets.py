@@ -35,6 +35,7 @@ class WildlifeDataset:
       saved_to_system_folder (bool): Specifies whether dataset is saved to system (hidden) folders.
       remove_columns (bool): Specifies whether constant columns are removed in `finalize_catalogue`.
       check_files (bool): Specifies whether files should be checks for existence in `finalize_catalogue`.
+      check_file_names (bool): Specifies whether file names should be checked for problematic characters in `finalize_catalogue`.
       transform (Callable): Applied transform when loading the image.
       img_load (str): Applied transform when loading the image.
       labels_string (List[str]): List of labels in strings.
@@ -67,6 +68,7 @@ class WildlifeDataset:
         remove_unknown: bool = False,
         remove_columns: bool = False,
         check_files: bool = True,
+        check_file_names: bool = True,
         load_label: bool = False,
         factorize_label: bool = False,
         col_path: str = "path",
@@ -87,6 +89,7 @@ class WildlifeDataset:
             remove_unknown (bool, optional): Whether unknown identities should be removed.
             remove_columns (bool, optional): Whether constant columns are removed in `finalize_catalogue`.
             check_files (bool, optional): Whether files should be checks for existence in `finalize_catalogue`.
+            check_file_names (bool, optional): Whether file names should be checked for problematic characters in `finalize_catalogue`.
             load_label (bool, optional): Whether dataset[k] should return only image or also identity.
             factorize_label (bool, optional): Whether labels are returned factorized (intergers) or original (possibly strings).
             col_path (str, optional): Column name containing image paths.
@@ -105,6 +108,7 @@ class WildlifeDataset:
         self.col_label = col_label
         self.remove_columns = remove_columns
         self.check_files = check_files
+        self.check_file_names = check_file_names
         # If df is not provided, create it
         if df is None:
             df = self.create_catalogue(**kwargs)
@@ -651,9 +655,10 @@ class WildlifeDataset:
         self.check_unique_id(df)
         if self.check_files:
             self.check_files_exist(df[self.col_path])
-            self.check_files_names(df[self.col_path])
             if "segmentation" in df.columns:
                 self.check_files_exist(df["segmentation"])
+        if self.check_file_names:
+            self.check_files_names(df[self.col_path])
         return df
 
     def rename_column(self, df: pd.DataFrame, name_old, name_new):
