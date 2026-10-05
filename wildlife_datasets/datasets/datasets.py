@@ -1006,6 +1006,8 @@ class WildlifeDataset:
         if "keypoints" in self.metadata.columns:
             keypoints = self.metadata.iloc[idx]["keypoints"]
             if not utils.is_na(keypoints):
+                if not isinstance(keypoints, dict):
+                    raise ValueError("keypoints must be a dict.")
                 # Scale marker/text size to the image so they stay readable on large images.
                 scale = max(im.size) / 400
                 if radius is None:
