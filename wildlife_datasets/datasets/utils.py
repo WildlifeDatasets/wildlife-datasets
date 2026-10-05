@@ -230,18 +230,18 @@ def keypoints_to_dict(keypoints, names: list[str], values_per_point: int = 2) ->
 
     Args:
         keypoints: Flat sequence ordered as [x1, y1, (v1,) x2, y2, (v2,) ...], or a
-            missing value (e.g. `nan`), which is returned unchanged.
+            missing value (e.g. `nan`).
         names (List[str]): Name of each keypoint, in the same order as `keypoints`.
         values_per_point (int, optional): 2 for (x, y) points, or 3 for (x, y, visibility)
             COCO-style points. A point is omitted from the result (rather than kept as NaN)
             if its coordinates are missing, or, for the 3-value form, if visibility is 0.
 
     Returns:
-        Dict mapping keypoint name to (x, y), or the original value if it is missing.
+        Dict mapping keypoint name to (x, y), or `None` if it is missing or no keypoint is present.
     """
 
     if is_na(keypoints):
-        return keypoints
+        return None
 
     keypoints = np.asarray(keypoints, dtype=float)
     if keypoints.size != values_per_point * len(names):
@@ -261,7 +261,7 @@ def keypoints_to_dict(keypoints, names: list[str], values_per_point: int = 2) ->
             if np.isnan(x) or np.isnan(y):
                 continue
         result[name] = (x, y)
-    return result
+    return result if result else None
 
 
 class ProgressBar(tqdm):
