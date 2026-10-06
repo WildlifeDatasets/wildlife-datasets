@@ -160,13 +160,6 @@ class Melops(DownloadURL, WildlifeDataset):
                 if all(col in df for col in cols):
                     df[f"bbox_{part}_source"] = self._array_series(df[cols].to_numpy(), df.index)
 
-        color_path = self._find_file(root, "colour_extraction_correction.csv")
-        if color_path is not None:
-            colors = pd.read_csv(color_path)
-            colors["filename_year"] = colors["image"].apply(lambda x: os.path.splitext(x)[0])
-            colors = colors.drop(columns=["image"])
-            df = df.merge(colors, on="filename_year", how="left")
-
         return df
 
     @classmethod
@@ -285,11 +278,22 @@ class Melops(DownloadURL, WildlifeDataset):
         bbox_columns += [f"bbox_{part}_source" for part in self.bbox_parts] + ["head_w", "head_h"]
         df = df.drop(columns=[col for col in bbox_columns if col in df])
 
-        df["image_id"] = df["filename_year"]
         df["identity"] = df["ID"].astype(str)
         df["date"] = pd.to_datetime(df["date"], format="%d.%m.%Y").dt.strftime("%Y-%m-%d")
-        df["orientation"] = df["side"]
         df["species"] = "corkwing wrasse"
-        df = df.rename(columns={"lat": "latitude", "lon": "longitude"})
+        df["blurry"] = df["blurry"].map({0: 1, 1: 2})
+        df = df.drop(columns=["ID", "year"])
+        df = df.rename(
+            columns={
+                "filename_year": "image_id",
+                "side": "orientation",
+                "lat": "latitude",
+                "lon": "longitude",
+                "sex": "gender",
+                "trapID": "camera",
+                "area": "location",
+                "blurry": "image_quality",
+            }
+        )
 
         return self.finalize_catalogue(df)

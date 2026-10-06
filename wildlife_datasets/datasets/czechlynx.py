@@ -60,13 +60,13 @@ class CzechLynx(DownloadKaggle, WildlifeDataset):
                 - source (str): Dataset partition or region (e.g., 'beskydy').
                 - date (datetime): Observation date. Converted to `datetime`.
                 - relative_age (float): Age estimate relative to first appearance.
-                - encounter (int): Unique encounter identifier.
+                - encounter_id (int): Unique encounter identifier.
                 - coat_pattern (str): Coat pattern or marking description.
                 - location (str): Specific trap or site location.
                 - cell_code (str): Grid cell reference (e.g., 10km spatial cell).
                 - latitude (float): Latitude of the observation point.
                 - longitude (float): Longitude of the observation point.
-                - trap_id (str): Unique identifier for the camera trap.
+                - camera (str): Unique identifier for the camera trap.
                 - split-geo_aware (str): Spatial split category.
                 - split-time_open (str): Time-aware open-world split.
                 - split-time_closed (str): Time-aware closed-world split.
@@ -90,12 +90,13 @@ class CzechLynx(DownloadKaggle, WildlifeDataset):
         df.drop(columns=["unique_name"], inplace=True)
 
         # Keep only selected split column, rename it
-        df["original_split"] = df[split]
+        df["split"] = df[split]
         df.drop(
             columns=["unique_name", "split-geo_aware", "split-time_open", "split-time_closed"],
             errors="ignore",
             inplace=True,
         )
+        df = df.rename(columns={"encounter": "encounter_id", "trap_id": "camera"})
 
         return self.finalize_catalogue(df)
 
@@ -155,13 +156,13 @@ class CzechLynxv2(CzechLynx):
                 - mask (dict): Segmentation mask for the animal.
                 - keypoints (dict): Pose keypoints of the animal (head, legs, ...).
                 - relative_age (float): Age estimate relative to first appearance.
-                - encounter (int): Unique encounter identifier.
+                - encounter_id (int): Unique encounter identifier.
                 - coat_pattern (str): Coat pattern or marking description.
                 - location (str): Specific trap or site location.
                 - cell_code (str): Grid cell reference (e.g., 10km spatial cell).
                 - latitude (float): Latitude of the observation point.
                 - longitude (float): Longitude of the observation point.
-                - trap_id (str): Unique identifier for the camera trap.
+                - camera (str): Unique identifier for the camera trap.
                 - split-geo_aware (str): Spatial split category.
                 - split-time_open (str): Time-aware open-world split.
                 - split-time_closed (str): Time-aware closed-world split.
@@ -196,7 +197,7 @@ class CzechLynxv2(CzechLynx):
         df.loc[idx, "date"] = df.loc[idx, "date"].apply(lambda x: str(x)[6:10] + "-" + str(x)[3:5] + "-" + str(x)[:2])
 
         # Keep only selected split column, rename it
-        df["original_split"] = df[split]
+        df["split"] = df[split]
         df["segmentation"] = df["mask"].apply(parse_bbox_mask)
         df["keypoints"] = df["pose"].apply(parse_bbox_mask)
         df.drop(
@@ -211,5 +212,6 @@ class CzechLynxv2(CzechLynx):
             ],
             inplace=True,
         )
+        df = df.rename(columns={"encounter": "encounter_id", "trap_id": "camera"})
 
         return self.finalize_catalogue(df)

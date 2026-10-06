@@ -63,6 +63,7 @@ class BalearicLizard(DownloadKaggle, WildlifeDataset):
         metadata_path = os.path.join(root, metadata_filename)
         df = pd.read_csv(metadata_path)
         df = df.rename({"id": "identity"}, axis=1)
+        df = df.drop(columns=["name"], errors="ignore")
         df["image_id"] = range(len(df))
         df["path"] = self.root_prefix + os.path.sep + df["path"].str[12:]  # Strip data/images/
         if self.convert_to_png:

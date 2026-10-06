@@ -90,7 +90,10 @@ class FriesianCattle2015v2(FriesianCattle2015):
 
         # Remove specified individuals as they are duplicates
         identities_to_remove = [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 37]
-        return self.fix_labels_remove_identity(df, identities_to_remove)
+        df = self.fix_labels_remove_identity(df, identities_to_remove)
+
+        # Only the testing part remains
+        return df.drop(columns=["split"])
 
 
 class FriesianCattle2017(DownloadURL, WildlifeDataset):

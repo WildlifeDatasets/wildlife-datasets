@@ -61,7 +61,7 @@ class GorillaWatchWild(DownloadHuggingFace, WildlifeDataset):
                 {
                     "identity": dataset[split]["class"],
                     "path": np.nan,
-                    "split_original": [split] * n_rows,
+                    "split": [split] * n_rows,
                     "hf_index": range(n_rows),
                     "camera": dataset[split]["camera"],
                     "date": dataset[split]["date"],
@@ -97,7 +97,7 @@ class GorillaZooBerlin(DownloadHuggingFace, WildlifeDataset):
                 "image_id": range(n_rows),
                 "identity": dataset["test"]["class"],
                 "path": np.nan,
-                "split_original": ["test"] * n_rows,
+                "split": ["test"] * n_rows,
                 "hf_index": range(n_rows),
                 "camera": dataset["test"]["camera"],
                 "date": dataset["test"]["date"],

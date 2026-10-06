@@ -62,7 +62,7 @@ class ZindiTurtleRecall(DownloadURL, WildlifeDataset):
                 "path": "images" + os.path.sep + data["image_id"] + ".JPG",
                 "identity": data["turtle_id"],
                 "orientation": data["image_location"].str.lower(),
-                "original_split": data["split"],
+                "split": data["split"],
             }
         )
         return self.finalize_catalogue(df)

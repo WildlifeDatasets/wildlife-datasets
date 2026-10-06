@@ -66,6 +66,9 @@ class WildlifeDatasetWildMe(WildlifeDataset):
         # Rename empty dates
         df.loc[df["date"] == "NA", "date"] = np.nan
 
+        # Remove columns without any information
+        df = df.drop([col for col in ["date", "segmentation"] if df[col].isnull().all()], axis=1)
+
         # Remove superficial columns
         df = df.drop(["image_id", "file_name", "supercategory", "category_id"], axis=1)
         df.rename({"id": "image_id"}, axis=1, inplace=True)

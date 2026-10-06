@@ -121,12 +121,8 @@ class CHIRP(WildlifeDataset):
                 "path": "ReID/" + os.path.sep + data["img"].astype(str).str.replace("/", os.path.sep, regex=False),
                 "date": data["Date"],
                 "video_name": data["Video"],
-                "observation_id": data["UnqTrack"].map(
-                    {track: idx for idx, track in enumerate(data["UnqTrack"].unique())}
-                ),
-                "observation_name": data["UnqTrack"],
-                "territory": data["Territory"],
-                "year": data["Year"],
+                "encounter_id": data["UnqTrack"],
+                "location": data["Territory"],
                 "split-closed_set": data["ClosedSetSplit"],
                 "split-disjointed_set": data["DisjointedSetSplit"],
                 "split-open_set": data["OpenSetSplit"],

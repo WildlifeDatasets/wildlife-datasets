@@ -79,10 +79,10 @@ class SealID(WildlifeDataset):
                 "image_id": data["file"].str.split(".", expand=True)[0],
                 "path": "full images" + os.path.sep + self.prefix + data["reid_split"] + os.path.sep + data["file"],
                 "identity": data["class_id"].astype(int),
-                "original_split": data["segmentation_split"].replace(
+                "split": data["segmentation_split"].replace(
                     {"training": "train", "testing": "test", "validation": "val"}
                 ),
-                "original_split_reid": data["reid_split"],
+                "split_reid": data["reid_split"],
             }
         )
         return self.finalize_catalogue(df)

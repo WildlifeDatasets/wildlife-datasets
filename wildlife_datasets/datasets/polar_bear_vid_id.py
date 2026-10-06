@@ -50,5 +50,5 @@ class PolarBearVidID(DownloadURL, WildlifeDataset):
         )
         df = pd.merge(df, metadata, on="id", how="left")
         df.rename({"name": "identity", "sex": "gender"}, axis=1, inplace=True)
-        df = df.drop(["id", "zoo", "tracklets"], axis=1)
+        df = df.drop(["id", "zoo", "tracklets", "type"], axis=1)
         return self.finalize_catalogue(df)

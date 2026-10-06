@@ -109,7 +109,7 @@ class SeaTurtleID2022(DownloadKaggle, WildlifeDataset):
         df = df.drop(
             ["id", "file_name", "timestamp", "width", "height", "year", "split_closed_random", "split_open"], axis=1
         )
-        df.rename({"split_closed": "original_split"}, axis=1, inplace=True)
+        df.rename({"split_closed": "split", "clarity": "image_quality"}, axis=1, inplace=True)
         df["date"] = df["date"].apply(lambda x: x[:4] + "-" + x[5:7] + "-" + x[8:10])
 
         df["image_id"] = range(1, len(df) + 1)

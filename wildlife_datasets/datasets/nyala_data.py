@@ -55,7 +55,7 @@ class NyalaData(DownloadURL, WildlifeDataset):
                 "path": data["path"] + os.path.sep + data["file"],
                 "identity": identity,
                 "orientation": orientation,
-                "original_split": folders[2],
+                "split": folders[2],
             }
         )
         return self.finalize_catalogue(df)

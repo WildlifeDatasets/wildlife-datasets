@@ -55,7 +55,7 @@ class RotwildID_Faces(DownloadKaggle, WildlifeDataset):
                 - segmentation (list[float]): Segmentation mask. Automatic use via `img_load=bbox_mask`.
                 - keypoints (dict[str, tuple[float, float]]): Mapping from keypoint name
                   (right_eye, left_eye, nose) to its (x, y) coordinates.
-                - image_quality (str): Quality of the image.
+                - image_quality (int): Quality of the image (1 = excellent, 4 = poor).
         """
 
         root = self.get_root()
@@ -74,5 +74,6 @@ class RotwildID_Faces(DownloadKaggle, WildlifeDataset):
             .apply(lambda kp: keypoints_to_dict(kp, self.keypoint_names, values_per_point=2))
         )
         metadata["segmentation"] = metadata["segmentation"].apply(parse_bbox_mask)
+        metadata["image_quality"] = metadata["image_quality"].map({"excellent": 1, "good": 2, "ok": 3, "poor": 4})
 
         return self.finalize_catalogue(metadata)

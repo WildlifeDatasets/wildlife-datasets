@@ -58,7 +58,7 @@ class NOAARightWhale(DownloadKaggle, WildlifeDataset):
                 "image_id": data["Image"].str.split(".", expand=True)[0].str.strip("w_").astype(int),
                 "path": "imgs" + os.path.sep + data["Image"],
                 "identity": data["whaleID"],
-                "original_split": "train",
+                "split": "train",
             }
         )
 
@@ -69,7 +69,7 @@ class NOAARightWhale(DownloadKaggle, WildlifeDataset):
                 "image_id": data["Image"].str.split(".", expand=True)[0].str.strip("w_").astype(int),
                 "path": "imgs" + os.path.sep + data["Image"],
                 "identity": self.unknown_name,
-                "original_split": "test",
+                "split": "test",
             }
         )
 

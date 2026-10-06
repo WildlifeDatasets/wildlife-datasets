@@ -48,7 +48,7 @@ class Chicks4FreeID(DownloadHuggingFace, WildlifeDataset):
                 "image_id": range(n_train + n_test),
                 "identity": list(dataset["train"]["identity"]) + list(dataset["test"]["identity"]),
                 "path": np.nan,
-                "split_original": n_train * ["train"] + n_test * ["test"],
+                "split": n_train * ["train"] + n_test * ["test"],
                 "hf_index": list(range(n_train)) + list(range(n_test)),
             }
         )

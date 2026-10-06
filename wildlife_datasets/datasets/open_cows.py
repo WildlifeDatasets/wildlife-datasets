@@ -54,7 +54,7 @@ class OpenCows2020(DownloadURL, WildlifeDataset):
                 "image_id": utils.create_id(identity.astype(str) + split + data["file"]),
                 "path": data["path"] + os.path.sep + data["file"],
                 "identity": identity,
-                "original_split": split,
+                "split": split,
             }
         )
         return self.finalize_catalogue(df)

@@ -117,9 +117,9 @@ class _SpottedDataset(_DownloadHuggingFaceArchive, WildlifeDataset):
             col_label=self.col_label,
         )
         idx_train, idx_test = splitter.split(df)[0]
-        df["time_split"] = pd.NA
-        df.loc[idx_train, "time_split"] = "train"
-        df.loc[idx_test, "time_split"] = "test"
+        df["split"] = pd.NA
+        df.loc[idx_train, "split"] = "train"
+        df.loc[idx_test, "split"] = "test"
 
 
 class LeopardID102(_SpottedDataset):

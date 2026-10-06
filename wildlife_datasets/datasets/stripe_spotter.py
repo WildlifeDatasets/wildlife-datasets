@@ -89,7 +89,7 @@ class StripeSpotter(WildlifeDataset):
                 "identity": data["animal_name"],
                 "bbox": pd.Series([[int(a) for a in b.split(" ")] for b in data["roi"]]),
                 "orientation": data["flank"],
-                "photo_quality": data["photo_quality"],
+                "image_quality": data["photo_quality"].map({"best": 1, "good": 2, "ok": 3, "bad": 4}),
                 "date": data["sighting_date"],
             }
         )
