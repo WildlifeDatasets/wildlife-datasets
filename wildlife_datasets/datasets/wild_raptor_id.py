@@ -56,7 +56,7 @@ class WildRaptorID(DownloadURL, WildlifeDataset):
         # Add date
         file = data["file"].apply(lambda x: os.path.splitext(x)[0][1:-1])
         date = file.apply(lambda x: x.split("_")[0])
-        date = date.apply(lambda x: f"{x[:4]}-{x[4:6]}-{x[6:8]} {x[8:10]}:{x[10:12]}")
+        date = date.apply(lambda x: f"{x[:4]}-{x[4:6]}-{x[6:8]} {x[8:10]}:{x[10:12]}:00")
         data["date"] = date
 
         # Add video

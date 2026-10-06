@@ -123,9 +123,9 @@ class ELPephants(WildlifeDataset):
         # Extract year from the beginning or end
         if len(year) >= 4:
             if represents_int(year[:4]):
-                return f"{int(year[:4])}-{conversion[month]}-1"
+                return f"{int(year[:4])}-{conversion[month]:02d}-01"
             elif represents_int(year[-4:]):
-                return f"{int(year[-4:])}-{conversion[month]}-1"
+                return f"{int(year[-4:])}-{conversion[month]:02d}-01"
         return np.nan
 
     def extract_orientation(self, x):

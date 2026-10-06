@@ -70,4 +70,4 @@ class MultiCamCows2024(DownloadURL, WildlifeDataset):
         year = int(x[:4])
         month = conversion[x[4:7].lower()]
         day = int(x[7:])
-        return f"{year}-{month}-{day}"
+        return f"{year}-{month:02d}-{day:02d}"
