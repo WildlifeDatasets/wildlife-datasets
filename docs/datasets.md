@@ -169,6 +169,12 @@ See the description in [AerialCattle2017](#aerialcattle2017).
 
 ![](images/grid_FriesianCattle2017.png)
 
+### [GCN_ID](https://zenodo.org/records/18000809) <a href="https://bmva-archive.org.uk/bmvc/2025/assets/workshops/MVCC/Paper_13/paper.pdf" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
+
+GCN_ID contains images of great crested newts (Triturus cristatus), a protected amphibian species in Europe, whose individuals can be identified by the unique orange-yellow underbelly markings with black blotches. The newts were live-captured by funnel traps in eight ponds near Cambridge, UK, during surveys between May and June 2024. The captured newts were placed in a small transparent container, which was inverted to photograph the underbelly by a smartphone at different angles and lighting levels. The dataset contains 1,232 images of 206 individuals, together with bounding boxes and segmentation masks obtained by GroundingDINO and SAM-2. The original release also contains videos, which are not included.
+
+![](images/grid_GCN_ID.png)
+
 ### [GiraffeZebraID](https://lila.science/datasets/great-zebra-giraffe-id) <a href="https://aaai.org/papers/15245-15245-animal-population-censusing-at-scale-with-citizen-science-and-photographic-identification/" target="_blank"><img src="https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png" alt="publication link" width="20"></a>
 
 GiraffeZebraID contains images of plains zebra and Masai giraffe taken from a two-day census of Nairobi National Park with the participation of 27 different teams of citizen scientists and 55 total photographers. The photographers were recruited both from civic groups and by asking for volunteers at the entrance gate in Nairobi National Park. All volunteers were briefly trained in a collection protocol and tasked to take pictures of animals within specific regions and from specific viewpoints. These regions helped to enforce better coverage and prevent a particular area from becoming oversampled. Only images containing either zebras or giraffes were included in this dataset. All images are labeled with viewpoints and possibly rotated bounding boxes around the individual animals. All of the images in the dataset have been resized to have a maximum dimension of 3,000 pixels.
