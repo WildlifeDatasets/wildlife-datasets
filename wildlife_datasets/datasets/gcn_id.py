@@ -55,10 +55,9 @@ class GCN_ID(DownloadURL, WildlifeDataset):
         """
         Create the catalogue DataFrame for the GCN_ID dataset.
 
-        The identity is taken from the `identity` column, which follows the paper
-        (no recaptures). The metadata also contains `recapture_id`, which merges some
-        identities across surveys. It is kept as an extra column, but it is unreliable
-        (visual check shows some merged identities having different patterns).
+        The identity is taken from the `recapture_id` column, which links encounters
+        of the same newt across surveys. The original `identity` column is kept
+        as `encounter_id`.
 
         Returns:
             pd.DataFrame: A dataframe containing one row per image.
@@ -69,8 +68,8 @@ class GCN_ID(DownloadURL, WildlifeDataset):
                 - path (str): Relative path to the image file.
                 - bbox (list): Bounding box [x, y, w, h].
                 - segmentation (dict): Segmentation mask in the RLE format.
-                - recapture_id (int): Unverified linking of identities across surveys.
-                - survey (int): Survey (encounter) number.
+                - encounter_id (int): Identifier of a single encounter (capture).
+                - survey (int): Survey number.
         """
 
         root = self.get_root()
@@ -89,6 +88,8 @@ class GCN_ID(DownloadURL, WildlifeDataset):
         df = df.rename(
             {
                 "Unnamed: 0": "image_id",
+                "identity": "encounter_id",
+                "recapture_id": "identity",
                 "segmentation_mask_rle": "segmentation",
             },
             axis=1,
