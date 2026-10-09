@@ -3,6 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 
+from . import utils
 from .datasets import WildlifeDataset
 from .downloads import DownloadURL
 
@@ -34,6 +35,7 @@ class CZoo(DownloadURL, WildlifeDataset):
     url = "https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip"
     archive = "master.zip"
     rmtree = "chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CTai"
+    keypoint_names = ["right_eye", "left_eye", "mouth_center", "left_earlobe", "right_earlobe"]
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset
@@ -48,7 +50,9 @@ class CZoo(DownloadURL, WildlifeDataset):
         # Extract keypoints from the information
         keypoints = data[[11, 12, 14, 15, 17, 18, 20, 21, 23, 24]].to_numpy()
         keypoints[np.isinf(keypoints)] = np.nan
-        keypoints = pd.Series(list(keypoints))
+        keypoints = pd.Series(list(keypoints)).apply(
+            lambda kp: utils.keypoints_to_dict(kp, self.keypoint_names, values_per_point=2)
+        )
 
         # Finalize the dataframe
         df = pd.DataFrame(

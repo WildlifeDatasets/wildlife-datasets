@@ -262,7 +262,9 @@ class Melops(DownloadURL, WildlifeDataset):
             if found.any():
                 values[found] = np.stack(df.loc[found, f"{column}_source"].to_numpy())
             df[f"{column}_source"] = self._array_series(values, df.index)
-            df[column] = self._array_series(self._source_keypoints_to_body_crop(df, values), df.index)
+            df[column] = self._array_series(self._source_keypoints_to_body_crop(df, values), df.index).apply(
+                lambda kp: utils.keypoints_to_dict(kp, names, values_per_point=2)
+            )
         if "keypoints_head" in df:
             df["keypoints"] = df["keypoints_head"]
         return df

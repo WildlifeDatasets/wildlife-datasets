@@ -225,6 +225,45 @@ def is_annotation_bbox(segmentation: list[float], bbox: list[float], tol: float 
     return True
 
 
+def keypoints_to_dict(keypoints, names: list[str], values_per_point: int = 2) -> dict[str, tuple[float, float]] | None:
+    """Converts a flat keypoints array into a dict mapping keypoint name to (x, y).
+
+    Args:
+        keypoints: Flat sequence ordered as [x1, y1, (v1,) x2, y2, (v2,) ...], or a
+            missing value (e.g. `nan`).
+        names (List[str]): Name of each keypoint, in the same order as `keypoints`.
+        values_per_point (int, optional): 2 for (x, y) points, or 3 for (x, y, visibility)
+            COCO-style points. A point is omitted from the result (rather than kept as NaN)
+            if its coordinates are missing, or, for the 3-value form, if visibility is 0.
+
+    Returns:
+        Dict mapping keypoint name to (x, y), or `None` if it is missing or no keypoint is present.
+    """
+
+    if is_na(keypoints):
+        return None
+
+    keypoints = np.asarray(keypoints, dtype=float)
+    if keypoints.size != values_per_point * len(names):
+        raise ValueError(
+            f"Expected {values_per_point} * {len(names)} = {values_per_point * len(names)} values, got {keypoints.size}."
+        )
+
+    points = keypoints.reshape(-1, values_per_point)
+    result = {}
+    for name, point in zip(names, points):
+        if values_per_point == 3:
+            x, y, visibility = point
+            if visibility == 0 or np.isnan(x) or np.isnan(y):
+                continue
+        else:
+            x, y = point
+            if np.isnan(x) or np.isnan(y):
+                continue
+        result[name] = (x, y)
+    return result if result else None
+
+
 class ProgressBar(tqdm):
     def update_to(self, b=1, bsize=1, tsize=None):
         if tsize is not None:
@@ -386,3 +425,7 @@ def delete_corrupted_images(
                 logger.warning(f"File is not corrupted: {full_name}")
             except ValueError:
                 os.remove(full_name)
+
+
+def is_na(x) -> bool:
+    return x is None or (np.isscalar(x) and pd.isna(x))

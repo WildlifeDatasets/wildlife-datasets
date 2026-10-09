@@ -13,8 +13,9 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import pycocotools.mask as mask_coco
+from matplotlib import font_manager
 from matplotlib.figure import Figure
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 from . import utils
 
@@ -701,7 +702,7 @@ class WildlifeDataset:
             (self.col_path, ["str"]),
             ("bbox", ["list_numeric"]),
             ("date", ["date"]),
-            ("keypoints", ["list_numeric"]),
+            ("keypoints", ["list_numeric", "dict"]),
             ("position", ["str"]),
             ("species", ["str", "list"]),
             ("video", ["int"]),
@@ -714,6 +715,14 @@ class WildlifeDataset:
                 if len(col) > 0:
                     self.check_types_column(col, col_name, allowed_types)
 
+        if "keypoints" in df.columns:
+            col = df["keypoints"][~df["keypoints"].isnull()]
+            if len(col) > 0 and not all(isinstance(val, dict) for val in col):
+                warnings.warn(
+                    "Column keypoints should be a dict mapping keypoint name to its coordinates "
+                    "A flat list/array is deprecated and will be unsupported in the future."
+                )
+
     def check_types_column(self, col: pd.Series, col_name: str, allowed_types: list[str]) -> None:
         """Checks if the column `col` is in the format `allowed_types`.
 
@@ -725,6 +734,7 @@ class WildlifeDataset:
                 `str` (strings),
                 `list` (lists),
                 `list_numeric` (lists with numeric values),
+                `dict` (dicts),
                 `date` (dates as tested by `pd.to_datetime`).
         """
 
@@ -743,10 +753,18 @@ class WildlifeDataset:
         if "list_numeric" in allowed_types and pd.api.types.is_list_like(col):
             check = True
             for val in col:
-                if not pd.api.types.is_list_like(val) and not pd.api.types.is_numeric_dtype(pd.Series(val)):
+                if (
+                    isinstance(val, dict)
+                    or not pd.api.types.is_list_like(val)
+                    or not pd.api.types.is_numeric_dtype(pd.Series(val))
+                ):
                     check = False
                     break
             if check:
+                return None
+        if "dict" in allowed_types:
+            is_dict = [isinstance(val, dict) or utils.is_na(val) for val in col]
+            if all(is_dict):
                 return None
         if "date" in allowed_types:
             try:
@@ -986,6 +1004,46 @@ class WildlifeDataset:
                 pos_x = (i + 0.5) * img_w + i * offset
                 pos_y = offset_h / 2
                 plt.text(pos_x, pos_y, str(header), color=color, ha=ha, va=va, **kwargs)
+        return fig
+
+    def plot_keypoints(
+        self, idx: int, show_names=True, color="red", keep_transform=False, radius=None, font_size=None, **kwargs
+    ):
+        im = self.get_image(idx)
+
+        # Draw keypoints directly onto the raw image so that they stay aligned for bounding boxes
+        if "keypoints" in self.metadata.columns:
+            keypoints = self.metadata.iloc[idx]["keypoints"]
+            if not utils.is_na(keypoints):
+                if not isinstance(keypoints, dict):
+                    raise ValueError("keypoints must be a dict.")
+                # Scale marker/text size to the image so they stay readable on large images.
+                scale = max(im.size) / 400
+                if radius is None:
+                    radius = max(2, round(3 * scale))
+                if font_size is None:
+                    font_size = max(8, round(14 * scale))
+                font = ImageFont.truetype(font_manager.findfont(font_manager.FontProperties()), font_size)
+
+                draw = ImageDraw.Draw(im)
+                for name, point in keypoints.items():
+                    if utils.is_na(point) or len(point) < 2:
+                        continue
+                    x, y = point[0], point[1]
+                    if np.isnan(x) or np.isnan(y):
+                        continue
+                    draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=color, **kwargs)
+                    if show_names:
+                        draw.text((x + radius, y - radius), str(name), fill=color, font=font)
+
+        # Apply img_load and transforms
+        im = self.apply_segmentation(im, idx)
+        if keep_transform and self.transform:
+            im = self.transform(im)
+
+        fig = plt.figure()
+        plt.imshow(im)
+        plt.axis("off")
         return fig
 
 

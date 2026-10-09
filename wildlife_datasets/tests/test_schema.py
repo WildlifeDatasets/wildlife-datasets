@@ -67,9 +67,10 @@ class TestColumnTypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             create_dataset(df)
 
-    def test_bbox_list_of_non_numeric_values_currently_passes(self):
+    def test_bbox_list_of_non_numeric_values_raises(self):
         df = pd.DataFrame([{**make_base_row(), "bbox": ["a", "b", "c", "d"]}])
-        create_dataset(df)
+        with self.assertRaises(ValueError):
+            create_dataset(df)
 
     def test_keypoints_numeric_list_passes(self):
         df = pd.DataFrame([{**make_base_row(), "keypoints": [1.0, 2.0, 3.0, 4.0]}])
@@ -77,6 +78,15 @@ class TestColumnTypes(unittest.TestCase):
 
     def test_keypoints_scalar_non_numeric_raises(self):
         df = pd.DataFrame([{**make_base_row(), "keypoints": "[1.0, 2.0, 3.0, 4.0]"}])
+        with self.assertRaises(ValueError):
+            create_dataset(df)
+
+    def test_keypoints_dict_passes(self):
+        df = pd.DataFrame([{**make_base_row(), "keypoints": {"left_eye": (1.0, 2.0)}}])
+        create_dataset(df)
+
+    def test_bbox_dict_raises(self):
+        df = pd.DataFrame([{**make_base_row(), "bbox": {"x": 1.0, "y": 2.0}}])
         with self.assertRaises(ValueError):
             create_dataset(df)
 

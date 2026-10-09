@@ -7,6 +7,7 @@ from datasets import DownloadConfig, load_dataset
 from datasets import Image as HFImage
 from PIL import Image as PILImage
 
+from . import utils
 from .datasets import WildlifeDataset
 from .downloads import DownloadHuggingFace
 
@@ -37,7 +38,7 @@ class RedBeeReID(DownloadHuggingFace, WildlifeDataset):
     summary = summary
     hf_url = "megretlab/red_bee_reID"
     image_columns = ("rotated_masked", "unrotated_unmasked")
-    keypoint_names = ("head", "neck", "thorax", "waist", "tail")
+    keypoint_names = ["head", "neck", "thorax", "waist", "tail"]
 
     def __init__(self, *args, image_column: str = "rotated_masked", **kwargs):
         self._check_image_column(image_column)
@@ -108,7 +109,9 @@ class RedBeeReID(DownloadHuggingFace, WildlifeDataset):
         df["keypoints_source"] = pd.Series(list(keypoint_source))
         df["bbox_source_center"] = pd.Series(list(bbox_source_center))
         df["bbox_source"] = pd.Series(list(bbox_source))
-        df["keypoints"] = pd.Series(list(keypoints))
+        df["keypoints"] = pd.Series(list(keypoints)).apply(
+            lambda kp: utils.keypoints_to_dict(kp, cls.keypoint_names, values_per_point=2)
+        )
         df["bbox"] = pd.Series(list(bbox))
 
     def create_catalogue(

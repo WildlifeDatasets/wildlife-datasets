@@ -31,7 +31,7 @@ The following columns may be present in the dataframe. Besides these columns, it
 |--------|------|-------------|
 | bbox | `List[float]` | Bounding box in the form [x, y, w, h]. Therefore, the topleft corner has coordinates [x, y], while the bottomright corner has coordinates [x+w, y+h]. |
 | date | special | Timestamp of the photo. The preferred format is `%Y-%m-%d %H:%M:%S` from the `datetime` package but it is sufficient to be amenable to `pd.to_datetime(x)`. |
-| keypoints | `List[float]` | Keypoints coordinates in the image such as eyes or joints. |
+| keypoints | `dict[str, tuple]` | Mapping from keypoint name (e.g. `left_eye`, `nose`) to its coordinates `(x, y)`, optionally followed by extra per-point values such as a detection confidence or a COCO-style visibility flag (0: not labeled, 1: labeled but not visible, 2: visible), e.g. `(x, y, confidence)`. A keypoint is omitted from the dict rather than kept with missing coordinates. |
 | position | `str` | Position from which each photo was taken. The usual values are left and right. |
 | segmentation | `List[float]` or special | Segmentation mask in the form [x1, y1, x2, y2, ...]. Additional format are possible such as file path to a mask image, or `pytorch` RLE. |
 | species | `str` or `List[str]` | The depicted species for datasets with multiple species. |
