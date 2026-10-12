@@ -72,9 +72,10 @@ class TestColumnTypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             create_dataset(df)
 
-    def test_keypoints_numeric_list_passes(self):
+    def test_keypoints_numeric_list_raises(self):
         df = pd.DataFrame([{**make_base_row(), "keypoints": [1.0, 2.0, 3.0, 4.0]}])
-        create_dataset(df)
+        with self.assertRaises(ValueError):
+            create_dataset(df)
 
     def test_keypoints_scalar_non_numeric_raises(self):
         df = pd.DataFrame([{**make_base_row(), "keypoints": "[1.0, 2.0, 3.0, 4.0]"}])

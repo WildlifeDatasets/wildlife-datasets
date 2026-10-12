@@ -697,7 +697,7 @@ class WildlifeDataset:
             (self.col_path, ["str"]),
             ("bbox", ["list_numeric"]),
             ("date", ["date"]),
-            ("keypoints", ["list_numeric", "dict"]),
+            ("keypoints", ["dict"]),
             ("position", ["str"]),
             ("species", ["str", "list"]),
             ("video", ["int"]),
@@ -709,14 +709,6 @@ class WildlifeDataset:
                 col = df[col_name][~df[col_name].isnull()]
                 if len(col) > 0:
                     self.check_types_column(col, col_name, allowed_types)
-
-        if "keypoints" in df.columns:
-            col = df["keypoints"][~df["keypoints"].isnull()]
-            if len(col) > 0 and not all(isinstance(val, dict) for val in col):
-                warnings.warn(
-                    "Column keypoints should be a dict mapping keypoint name to its coordinates "
-                    "A flat list/array is deprecated and will be unsupported in the future."
-                )
 
     def check_types_column(self, col: pd.Series, col_name: str, allowed_types: list[str]) -> None:
         """Checks if the column `col` is in the format `allowed_types`.
