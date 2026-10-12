@@ -35,7 +35,7 @@ class CZoo(DownloadURL, WildlifeDataset):
     url = "https://github.com/cvjena/chimpanzee_faces/archive/refs/heads/master.zip"
     archive = "master.zip"
     rmtree = "chimpanzee_faces-master/datasets_cropped_chimpanzee_faces/data_CTai"
-    keypoint_names = ["right_eye", "left_eye", "mouth_center", "left_earlobe", "right_earlobe"]
+    keypoint_names = ("right_eye", "left_eye", "mouth_center", "left_earlobe", "right_earlobe")
 
     def create_catalogue(self) -> pd.DataFrame:
         # Load information about the dataset

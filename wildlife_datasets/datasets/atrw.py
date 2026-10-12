@@ -33,7 +33,7 @@ class ATRW(WildlifeDataset):
     summary = summary
     url = "https://github.com/cvwc2019/ATRWEvalScript/archive/refs/heads/main.zip"
     archive = "main.zip"
-    keypoint_names = [
+    keypoint_names = (
         "left_ear",
         "right_ear",
         "nose",
@@ -49,7 +49,7 @@ class ATRW(WildlifeDataset):
         "left_back_paw",
         "tail",
         "center",
-    ]
+    )
     downloads = [
         # Wild dataset (Detection)
         (
