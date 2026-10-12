@@ -994,8 +994,33 @@ class WildlifeDataset:
         return fig
 
     def plot_keypoints(
-        self, idx: int, show_names=True, color="red", keep_transform=False, radius=None, font_size=None, **kwargs
-    ):
+        self,
+        idx: int,
+        show_names: bool = True,
+        color: str | tuple[int, int, int] = "red",
+        keep_transform: bool = False,
+        radius: float | None = None,
+        font_size: int | None = None,
+        **kwargs,
+    ) -> Figure:
+        """Plots the image at position `idx` with its keypoints.
+
+        Keypoints are drawn onto the raw image before `img_load` (e.g. bbox cropping)
+        is applied, so they stay aligned with the loaded image.
+
+        Args:
+            idx (int): Position (not index) of the image in the dataframe.
+            show_names (bool, optional): Whether keypoint names are written next to the points.
+            color (Union[str, Tuple[int, int, int]], optional): Color of the points and names.
+            keep_transform (bool, optional): Whether `self.transform` is applied.
+            radius (Optional[float], optional): Radius of the points. None scales it with the image size.
+            font_size (Optional[int], optional): Font size of the names. None scales it with the image size.
+            **kwargs: Additional arguments passed to `ImageDraw.ellipse`.
+
+        Returns:
+            Figure: The plotted figure.
+        """
+
         im = self.get_image(idx)
 
         # Draw keypoints directly onto the raw image so that they stay aligned for bounding boxes
