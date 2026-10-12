@@ -226,7 +226,9 @@ def is_annotation_bbox(segmentation: list[float], bbox: list[float], tol: float 
     return True
 
 
-def keypoints_to_dict(keypoints, names: Sequence[str], values_per_point: int = 2) -> dict[str, tuple[float, float]] | None:
+def keypoints_to_dict(
+    keypoints, names: Sequence[str], values_per_point: int = 2
+) -> dict[str, tuple[float, float]] | None:
     """Converts a flat keypoints array into a dict mapping keypoint name to (x, y).
 
     Args:
