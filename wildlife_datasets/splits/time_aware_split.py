@@ -79,7 +79,7 @@ class TimeProportionSplit(TimeAwareSplit):
                 # Loop over all dates; y is a tuple (date, df with unique date and identity)
                 for i, (_, df_date) in enumerate(dates):
                     # Add half dates to the training and half to the testing set
-                    if i < np.minimum(n_dates - 1, int(np.round(self.ratio * n_dates))):
+                    if i < np.minimum(n_dates - 1, np.maximum(1, int(np.round(self.ratio * n_dates)))):
                         idx_train += list(df_date.index)
                     else:
                         idx_test += list(df_date.index)
@@ -91,7 +91,7 @@ class TimeProportionSplit(TimeAwareSplit):
 class TimeProportionOpenSetSplit(TimeAwareSplit):
     """Time-proportion open set splitting method into training and testing sets.
 
-    First, it pust some individuals into the training set only.
+    First, it puts some individuals into the testing set only.
     Then it is the TimeProportionSplit.
     """
 
@@ -188,7 +188,7 @@ class TimeProportionOpenSetSplit(TimeAwareSplit):
                     # Loop over all dates; y is a tuple (date, df with unique date and identity)
                     for i, (_, df_date) in enumerate(dates):
                         # Add half dates to the training and half to the testing set
-                        if i < np.minimum(n_dates - 1, int(np.round(ratio_train * n_dates))):
+                        if i < np.minimum(n_dates - 1, np.maximum(1, int(np.round(ratio_train * n_dates)))):
                             idx_train += list(df_date.index)
                         else:
                             idx_test += list(df_date.index)

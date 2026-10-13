@@ -6,6 +6,7 @@ import os
 import shutil
 import urllib.request
 import warnings
+from collections.abc import Sequence
 from contextlib import contextmanager
 
 import cv2
@@ -225,13 +226,15 @@ def is_annotation_bbox(segmentation: list[float], bbox: list[float], tol: float 
     return True
 
 
-def keypoints_to_dict(keypoints, names: list[str], values_per_point: int = 2) -> dict[str, tuple[float, float]] | None:
+def keypoints_to_dict(
+    keypoints, names: Sequence[str], values_per_point: int = 2
+) -> dict[str, tuple[float, float]] | None:
     """Converts a flat keypoints array into a dict mapping keypoint name to (x, y).
 
     Args:
         keypoints: Flat sequence ordered as [x1, y1, (v1,) x2, y2, (v2,) ...], or a
             missing value (e.g. `nan`).
-        names (List[str]): Name of each keypoint, in the same order as `keypoints`.
+        names (Sequence[str]): Name of each keypoint, in the same order as `keypoints`.
         values_per_point (int, optional): 2 for (x, y) points, or 3 for (x, y, visibility)
             COCO-style points. A point is omitted from the result (rather than kept as NaN)
             if its coordinates are missing, or, for the 3-value form, if visibility is 0.

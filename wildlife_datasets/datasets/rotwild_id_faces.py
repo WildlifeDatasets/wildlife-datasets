@@ -33,7 +33,7 @@ class RotwildID_Faces(DownloadKaggle, WildlifeDataset):
     summary = summary
     kaggle_url = "jonaschu/rotwildid-faces"
     kaggle_type = "datasets"
-    keypoint_names = ["right_eye", "left_eye", "nose"]
+    keypoint_names = ("right_eye", "left_eye", "nose")
 
     def create_catalogue(self, image_type: str = "mask") -> pd.DataFrame:
         """
@@ -42,8 +42,7 @@ class RotwildID_Faces(DownloadKaggle, WildlifeDataset):
         `image_type` must be in `("landmark_affine", "landmark_crop", "mask")`,
         it is recommended to use mask. See the documentation at the Kaggle website.
 
-        The dataset contains keypoints for right eye, left eye and nose (in this order).
-        See the keyword `keypoints` below.
+        The dataset contains keypoints for right eye, left eye and nose.
 
         Returns:
             pd.DataFrame: A dataframe containing one row per image.

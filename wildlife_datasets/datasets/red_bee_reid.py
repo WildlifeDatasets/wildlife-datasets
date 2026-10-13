@@ -38,7 +38,7 @@ class RedBeeReID(DownloadHuggingFace, WildlifeDataset):
     summary = summary
     hf_url = "megretlab/red_bee_reID"
     image_columns = ("rotated_masked", "unrotated_unmasked")
-    keypoint_names = ["head", "neck", "thorax", "waist", "tail"]
+    keypoint_names = ("head", "neck", "thorax", "waist", "tail")
 
     def __init__(self, *args, image_column: str = "rotated_masked", **kwargs):
         self._check_image_column(image_column)
