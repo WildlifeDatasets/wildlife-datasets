@@ -140,11 +140,15 @@ class TestBrownBearHeads(unittest.TestCase):
 
             dataset = BrownBearHeads(root, load_keypoints=True)
 
-            self.assertEqual(dataset.df.loc[0, "keypoints"][:2], [5.0, 6.0])
-            self.assertTrue(np.isnan(dataset.df.loc[0, "keypoints"][2]))
+            keypoints_0 = dataset.df.loc[0, "keypoints"]
+            self.assertEqual(keypoints_0["keypoint_00"], (5.0, 6.0, 0.7))
+            self.assertNotIn("keypoint_01", keypoints_0)
             self.assertEqual(dataset.df.loc[0, "n_out_of_bounds_keypoints"], 1)
-            self.assertEqual(dataset.df.loc[1, "keypoints"], [1.0, 2.0, 3.0, 4.0])
-            self.assertEqual(dataset.df.loc[1, "keypoint_scores"], [0.9, 0.8])
+
+            keypoints_1 = dataset.df.loc[1, "keypoints"]
+            self.assertEqual(keypoints_1["keypoint_00"], (1.0, 2.0, 0.9))
+            self.assertEqual(keypoints_1["keypoint_01"], (3.0, 4.0, 0.8))
+            self.assertNotIn("keypoint_scores", dataset.df.columns)
             self.assertNotIn("keypoint_00_x", dataset.df.columns)
 
     def test_build_clean_metadata_attaches_keypoints(self):
