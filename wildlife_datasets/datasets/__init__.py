@@ -32,7 +32,7 @@ from .drosophila import Drosophila
 from .elpephants import ELPephants
 from .friesian_cattle import FriesianCattle2015, FriesianCattle2015v2, FriesianCattle2017
 from .gcn_id import GCN_ID
-from .general import Dataset_Folder, Dataset_Metadata
+from .general import Dataset_Folder, Dataset_FolderStructured, Dataset_Metadata
 from .giraffe_zebra_id import GiraffeZebraID
 from .giraffes import Giraffes
 from .gorilla_watch import GorillaWatchWild, GorillaZooBerlin

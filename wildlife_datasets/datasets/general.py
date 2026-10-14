@@ -16,6 +16,27 @@ class Dataset_Folder(WildlifeDataset):
         return self.finalize_catalogue(df)
 
 
+class Dataset_FolderStructured(WildlifeDataset):
+    def create_catalogue(self, levels: tuple[str | None, ...] = ("identity",)) -> pd.DataFrame:
+        root = self.get_root()
+        data = find_images(root)
+        folders = data["path"].str.split(os.path.sep, expand=True)
+        depth = folders.notna().sum(axis=1).where(data["path"] != ".", 0)
+        wrong_depth = depth != len(levels)
+        if wrong_depth.any():
+            examples = (data["path"][wrong_depth] + os.path.sep + data["file"][wrong_depth]).head(3).tolist()
+            raise ValueError(f"Images must be exactly {len(levels)} folder(s) deep to match levels {levels}, e.g. {examples}")
+
+        df = pd.DataFrame({"path": data["path"] + os.path.sep + data["file"]})
+        for i, level in enumerate(levels):
+            if level is not None:
+                df[level] = folders[i]
+        if "identity" not in df.columns:
+            df["identity"] = "unknown"
+        df["image_id"] = get_persistent_id(df["path"])
+        return self.finalize_catalogue(df)
+
+
 class Dataset_Metadata(WildlifeDataset):
     def create_catalogue(self, file_name: str = "metadata.csv", load_segmentation: bool = False) -> pd.DataFrame:
 
