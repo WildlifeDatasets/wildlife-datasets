@@ -21,18 +21,9 @@ def score(solution: pd.DataFrame, submission: pd.DataFrame) -> dict:
         return {}
     if not pandas.api.types.is_string_dtype(submission["identity"]):
         return {}
-    if (
-        not solution["identity"]
-        .apply(
-            lambda x: (
-                x.startswith("SeaTurtleID2022_")
-                or x.startswith("SalamanderID2025_")
-                or x.startswith("LynxID2025_")
-                or x == "new_individual"
-            )
-        )
-        .all()
-    ):
+    prefixes = ("SeaTurtleID2022_", "SalamanderID2025_", "LynxID2025_")
+    is_valid = submission["identity"].str.startswith(prefixes) | (submission["identity"] == "new_individual")
+    if not is_valid.all():
         return {}
 
     # Extract the data
@@ -52,7 +43,7 @@ def score(solution: pd.DataFrame, submission: pd.DataFrame) -> dict:
         if sum(unknown_pred) == 0:
             precision = 0
         else:
-            precision = sum(unknown_true * unknown_true) / sum(unknown_pred)
+            precision = sum(unknown_true & unknown_pred) / sum(unknown_pred)
 
         # Fix possible nans
         if np.isnan(acc_known):
