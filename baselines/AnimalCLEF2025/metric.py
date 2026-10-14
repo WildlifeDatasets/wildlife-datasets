@@ -12,15 +12,15 @@ def score(solution: pd.DataFrame, submission: pd.DataFrame) -> dict:
 
     # Checks for correct input format
     if "image_id" not in submission.columns:
-        return np.nan
+        return {}
     if "identity" not in submission.columns:
-        return np.nan
+        return {}
     if len(submission) != len(solution):
-        return np.nan
+        return {}
     if not np.array_equal(submission["image_id"], solution["image_id"]):
-        return np.nan
+        return {}
     if not pandas.api.types.is_string_dtype(submission["identity"]):
-        return np.nan
+        return {}
     if (
         not solution["identity"]
         .apply(
@@ -33,7 +33,7 @@ def score(solution: pd.DataFrame, submission: pd.DataFrame) -> dict:
         )
         .all()
     ):
-        return np.nan
+        return {}
 
     # Extract the data
     results = {}
