@@ -112,8 +112,12 @@ class TestColumnTypes(unittest.TestCase):
         df = pd.DataFrame([{**make_base_row(), "video": 0}])
         create_dataset(df)
 
-    def test_video_non_int_raises(self):
+    def test_video_str_passes(self):
         df = pd.DataFrame([{**make_base_row(), "video": "0"}])
+        create_dataset(df)
+
+    def test_video_non_int_str_raises(self):
+        df = pd.DataFrame([{**make_base_row(), "video": 0.5}])
         with self.assertRaises(ValueError):
             create_dataset(df)
 
