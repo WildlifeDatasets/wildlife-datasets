@@ -67,9 +67,7 @@ class CzechLynx(DownloadKaggle, WildlifeDataset):
                 - latitude (float): Latitude of the observation point.
                 - longitude (float): Longitude of the observation point.
                 - camera (str): Unique identifier for the camera trap.
-                - split-geo_aware (str): Spatial split category.
-                - split-time_open (str): Time-aware open-world split.
-                - split-time_closed (str): Time-aware closed-world split.
+                - split (str): Split selected by the `split` argument.
 
         Notes:
             - The `unique_name` column is renamed to `identity` and then dropped.
@@ -153,7 +151,7 @@ class CzechLynxv2(CzechLynx):
                 - path (str): Relative path to the image file.
                 - source (str): Dataset partition or region (e.g., 'beskydy').
                 - date (datetime): Observation date. Converted to `datetime`.
-                - mask (dict): Segmentation mask for the animal.
+                - segmentation (dict): Segmentation mask for the animal.
                 - keypoints (dict): Pose keypoints of the animal (head, legs, ...).
                 - relative_age (float): Age estimate relative to first appearance.
                 - encounter_id (int): Unique encounter identifier.
@@ -163,10 +161,7 @@ class CzechLynxv2(CzechLynx):
                 - latitude (float): Latitude of the observation point.
                 - longitude (float): Longitude of the observation point.
                 - camera (str): Unique identifier for the camera trap.
-                - split-geo_aware (str): Spatial split category.
-                - split-time_open (str): Time-aware open-world split.
-                - split-time_closed (str): Time-aware closed-world split.
-                - split-pose (str): Split for pose estimation.
+                - split (str): Split selected by the `split` argument.
 
         Notes:
             - The `unique_name` column is renamed to `identity` and then dropped.
