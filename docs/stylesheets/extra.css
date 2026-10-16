@@ -1,0 +1,24 @@
+.metadata-table table {
+  font-size: 0.55rem;
+}
+
+.md-typeset .metadata-table table:not([class]) th,
+.md-typeset .metadata-table table:not([class]) td {
+  min-width: 0;
+  padding: 0.15em 0.3em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.md-typeset .metadata-table table:not([class]) th:not(:first-child) {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  vertical-align: bottom;
+  text-align: left;
+  padding: 0.4em 0.15em;
+}
+
+.md-typeset .metadata-table table:not([class]) th:nth-child(even),
+.md-typeset .metadata-table table:not([class]) td:nth-child(even) {
+  background-color: var(--md-default-fg-color--lightest);
+}

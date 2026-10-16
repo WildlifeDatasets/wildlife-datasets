@@ -37,7 +37,7 @@ The `img_load` keyword uses these columns to crop or mask the images on the fly,
 
 ## Optional columns
 
-The following columns may be present in the dataframe. Besides these columns, it is possible to define additional dataset-specific columns.
+The following columns may be present in the dataframe. Besides these columns, it is possible to define additional dataset-specific columns. The [available metadata](metadata.md) page shows which columns are available for each dataset.
 
 | Column | Type | Description |
 |--------|------|-------------|
