@@ -44,7 +44,9 @@ class PolarBearVidID(DownloadURL, WildlifeDataset):
             {
                 "image_id": data["file"].apply(lambda x: os.path.splitext(x)[0]),
                 "path": data["path"] + os.path.sep + data["file"],
-                "video": data["file"].str[7:10].astype(int),
+                "video": data["file"].str[:10],
+                "frame_number": data["file"].str[11:14].astype(int),
+                "camera": data["file"].str[3:6],
                 "id": data["path"].astype(int),
             }
         )

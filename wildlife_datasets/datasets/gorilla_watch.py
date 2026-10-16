@@ -65,7 +65,7 @@ class GorillaWatchWild(DownloadHuggingFace, WildlifeDataset):
                     "hf_index": range(n_rows),
                     "camera": dataset[split]["camera"],
                     "date": dataset[split]["date"],
-                    "video_name": dataset[split]["video"],
+                    "video": dataset[split]["video"],
                     "frame_number": dataset[split]["frame_number"],
                 }
             )
@@ -73,7 +73,6 @@ class GorillaWatchWild(DownloadHuggingFace, WildlifeDataset):
 
         df = pd.concat(dfs, ignore_index=True)
         df["image_id"] = range(len(df))
-        df["video"] = pd.factorize(df["video_name"])[0]
 
         self.dataset = dataset
         self.config = config
@@ -102,11 +101,10 @@ class GorillaZooBerlin(DownloadHuggingFace, WildlifeDataset):
                 "camera": dataset["test"]["camera"],
                 "date": dataset["test"]["date"],
                 "time": dataset["test"]["time"],
-                "video_name": dataset["test"]["video"],
+                "video": dataset["test"]["video"],
                 "frame_number": dataset["test"]["frame_number"],
             }
         )
-        df["video"] = pd.factorize(df["video_name"])[0]
 
         self.dataset = dataset
         self.config = config

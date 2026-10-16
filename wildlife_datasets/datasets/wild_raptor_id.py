@@ -60,9 +60,8 @@ class WildRaptorID(DownloadURL, WildlifeDataset):
         data["date"] = date
 
         # Add video
-        for i, (_, df_group) in enumerate(data.groupby(["identity", "date"])):
-            data.loc[df_group.index, "video"] = i
-        data["video"] = data["video"].astype(int)
+        data["video"] = data["identity"] + "_" + file.apply(lambda x: x.split("_")[0])
+        data["frame_number"] = pd.to_numeric(file.apply(lambda x: x.split("_")[1]), errors="coerce").astype("Int64")
 
         # Finalize the dataframe
         data["image_id"] = data["identity"] + "_" + file
