@@ -12,9 +12,7 @@ from huggingface_hub import CacheNotFound, scan_cache_dir
 from wildlife_datasets import datasets
 from wildlife_datasets.tests.conftest import DEFAULT_DATA_ROOT
 
-SKIP_DATASETS = {
-    "NewtsKent": "private data",
-}
+SKIP_DATASETS = {}
 
 DATA_FOLDER = {
     "BalearicLizardSegmented": "BalearicLizard",
