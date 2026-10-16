@@ -704,7 +704,7 @@ class WildlifeDataset:
             ("date", ["date"]),
             ("keypoints", ["dict"]),
             ("orientation", ["str"]),
-            ("species", ["str", "list"]),
+            ("species", ["str"]),
             ("video", ["int", "str"]),
             ("frame_number", ["int"]),
         ]
