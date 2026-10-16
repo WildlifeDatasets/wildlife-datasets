@@ -104,9 +104,10 @@ class TestColumnTypes(unittest.TestCase):
         df = pd.DataFrame([{**make_base_row(), "species": "zebra"}])
         create_dataset(df)
 
-    def test_species_as_list_passes(self):
+    def test_species_as_list_raises(self):
         df = pd.DataFrame([{**make_base_row(), "species": ["zebra", "horse"]}])
-        create_dataset(df)
+        with self.assertRaises(ValueError):
+            create_dataset(df)
 
     def test_video_int_passes(self):
         df = pd.DataFrame([{**make_base_row(), "video": 0}])
