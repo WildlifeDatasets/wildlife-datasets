@@ -25,7 +25,9 @@ class Dataset_FolderStructured(WildlifeDataset):
         wrong_depth = depth != len(levels)
         if wrong_depth.any():
             examples = (data["path"][wrong_depth] + os.path.sep + data["file"][wrong_depth]).head(3).tolist()
-            raise ValueError(f"Images must be exactly {len(levels)} folder(s) deep to match levels {levels}, e.g. {examples}")
+            raise ValueError(
+                f"Images must be exactly {len(levels)} folder(s) deep to match levels {levels}, e.g. {examples}"
+            )
 
         df = pd.DataFrame({"path": data["path"] + os.path.sep + data["file"]})
         for i, level in enumerate(levels):
