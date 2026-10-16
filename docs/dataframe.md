@@ -47,12 +47,11 @@ The following columns may be present in the dataframe. Besides these columns, it
 | species | `str` | The depicted species. |
 | camera | `str` | Identifier of the camera (camera trap) which took the photo. |
 | keypoints | `dict[str, tuple]` | Mapping from keypoint name (e.g. `left_eye`, `nose`) to its coordinates `(x, y)`, optionally followed by extra per-point values such as a detection confidence or a COCO-style visibility flag (0: not labeled, 1: labeled but not visible, 2: visible), e.g. `(x, y, confidence)`. A keypoint is omitted from the dict rather than kept with missing coordinates. |
-| video | `int` | Index of the video from which the image was extracted. |
+| video | `int` or `str` | Identifier (index or name) of the video from which the image was extracted. |
+| frame_number | `int` | Index of the frame in the video. |
 | encounter_id | `int` or `str` | Identifier of an encounter (sighting or tracklet). All images with the same `encounter_id` depict the same individual during one encounter. |
 | image_quality | `int` | Quality of the image, where 1 is the best quality and higher values are worse. The scale depends on the dataset. |
 | gender | `str` | Sex of the depicted individual. |
-| video_name | `str` | Name of the video from which the image was extracted. |
-| frame_number | `int` | Index of the frame in the video. |
 | latitude | `float` | Latitude of the location where the photo was taken. |
 | longitude | `float` | Longitude of the location where the photo was taken. |
 | location | `str` | Name or code of the location (site, territory) where the photo was taken. |
