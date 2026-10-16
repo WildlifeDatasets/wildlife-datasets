@@ -1,9 +1,11 @@
 import glob
+import json
 import os
 import re
 
 import numpy as np
 import pandas as pd
+import pycocotools.mask as mask_coco
 import requests
 
 from . import utils
@@ -99,7 +101,33 @@ class CHIRP(WildlifeDataset):
         per_image = long_df.groupby("img")[["Keypoint", "x", "y", "conf"]].apply(build_entry)
         return img_paths.map(per_image)
 
-    def create_catalogue(self, load_keypoints: bool = False) -> pd.DataFrame:
+    @staticmethod
+    def _load_segmentation(root: str, img_paths: pd.Series, image_size: tuple[int, int] = (480, 480)) -> pd.Series:
+        """Loads bird segmentation masks from the `masks.csv` sidecar files.
+
+        Each `data/{bird_id}/{video_territory}/` directory contains a `masks.csv` with one row per
+        image (columns `img`, `mask`). The mask is a list with one instance consisting of several
+        polygons. These are converted to the COCO RLE format to save memory.
+        """
+
+        masks_files = glob.glob(os.path.join(root, "ReID", "data", "*", "*", "masks.csv"))
+        if not masks_files:
+            return pd.Series(np.nan, index=img_paths.index)
+
+        h, w = image_size
+
+        def to_rle(mask: str) -> dict:
+            polygons = [polygon for instance in json.loads(mask) for polygon in instance]
+            rle = mask_coco.merge(mask_coco.frPyObjects(polygons, h, w))
+            return {"size": rle["size"], "counts": rle["counts"].decode("ascii")}
+
+        per_image = {}
+        for file in utils.ProgressBar(masks_files, desc="CHIRP masks", mininterval=1, ncols=100):
+            masks = pd.read_csv(file, usecols=["img", "mask"])
+            per_image.update(zip(masks["img"], masks["mask"].apply(to_rle)))
+        return img_paths.map(per_image)
+
+    def create_catalogue(self, load_keypoints: bool = False, load_segmentation: bool = True) -> pd.DataFrame:
         """Creates catalogue for CHIRP dataset.
 
         Args:
@@ -107,6 +135,9 @@ class CHIRP(WildlifeDataset):
                 keypoints (13-point bird pose) into a `keypoints` column. Scans all
                 `keypoints.csv` sidecar files under `ReID/data/`, which is slow, so it is
                 opt-in.
+            load_segmentation (bool, optional): Whether to load the bird segmentation masks
+                into a `segmentation` column (COCO RLE format). Scans all `masks.csv` sidecar
+                files under `ReID/data/`, which takes about a minute.
         """
 
         root = self.get_root()
@@ -133,4 +164,6 @@ class CHIRP(WildlifeDataset):
         )
         if load_keypoints:
             df["keypoints"] = self._load_keypoints(root, data["img"].astype(str))
+        if load_segmentation:
+            df["segmentation"] = self._load_segmentation(root, data["img"].astype(str))
         return self.finalize_catalogue(df)
