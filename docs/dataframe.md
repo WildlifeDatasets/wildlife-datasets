@@ -32,7 +32,7 @@ The following two columns are optional but they are handled specially by the lib
 | bbox | `List[float]` | Bounding box in the form [x, y, w, h]. Therefore, the topleft corner has coordinates [x, y], while the bottomright corner has coordinates [x+w, y+h]. |
 | segmentation | `List[float]` or special | Segmentation mask in the form [x1, y1, x2, y2, ...]. Additional formats are possible such as a file path to a mask image or the COCO RLE format `{"size": [h, w], "counts": ...}`. |
 
-The `img_load` keyword uses these columns to crop or mask the images on the fly, without creating new image files. The most important options are `bbox` (crop to the bounding box) and `bbox_mask` (ctop to the bounding box and black out the background). See [loading bounding boxes](wildlife_dataset.md#loading-bounding-boxes) for more examples.
+The `img_load` keyword uses these columns to crop or mask the images on the fly, without creating new image files. The most important options are `bbox` (crop to the bounding box) and `bbox_mask` (crop to the bounding box and black out the background). See [loading bounding boxes](wildlife_dataset.md#loading-bounding-boxes) for more examples.
 
 
 ## Optional columns
