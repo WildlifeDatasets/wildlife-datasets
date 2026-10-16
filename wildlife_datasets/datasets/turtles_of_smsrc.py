@@ -45,7 +45,7 @@ class TurtlesOfSMSRC(DownloadINaturalist, Dataset_Metadata):
         metadata["image_id"] = metadata["observation_id"].astype(str) + "_" + metadata["photo_id"].astype(str)
         metadata["identity"] = metadata["observation_id"]
         mask = ~metadata["location"].isnull()
-        metadata["latitute"] = metadata.loc[mask, "location"].apply(lambda x: ast.literal_eval(x)[0]).astype(float)
+        metadata["latitude"] = metadata.loc[mask, "location"].apply(lambda x: ast.literal_eval(x)[0]).astype(float)
         metadata["longitude"] = metadata.loc[mask, "location"].apply(lambda x: ast.literal_eval(x)[1]).astype(float)
         metadata = metadata.drop(["location", "photo_id", "photo_url"], axis=1)
         metadata = metadata.rename(

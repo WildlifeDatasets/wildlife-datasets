@@ -45,7 +45,7 @@ class HappyWhale(DownloadKaggle, WildlifeDataset):
                 "path": "train_images" + os.path.sep + data["image"],
                 "identity": data["individual_id"],
                 "species": data["species"],
-                "original_split": "train",
+                "split": "train",
             }
         )
 
@@ -60,7 +60,7 @@ class HappyWhale(DownloadKaggle, WildlifeDataset):
                 "path": "test_images" + os.path.sep + test_files,
                 "identity": self.unknown_name,
                 "species": np.nan,
-                "original_split": "test",
+                "split": "test",
             }
         )
 

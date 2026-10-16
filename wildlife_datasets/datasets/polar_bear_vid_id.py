@@ -44,11 +44,13 @@ class PolarBearVidID(DownloadURL, WildlifeDataset):
             {
                 "image_id": data["file"].apply(lambda x: os.path.splitext(x)[0]),
                 "path": data["path"] + os.path.sep + data["file"],
-                "video": data["file"].str[7:10].astype(int),
+                "video": data["file"].str[:10],
+                "frame_number": data["file"].str[11:14].astype(int),
+                "camera": data["file"].str[3:6],
                 "id": data["path"].astype(int),
             }
         )
         df = pd.merge(df, metadata, on="id", how="left")
         df.rename({"name": "identity", "sex": "gender"}, axis=1, inplace=True)
-        df = df.drop(["id", "zoo", "tracklets"], axis=1)
+        df = df.drop(["id", "zoo", "tracklets", "type"], axis=1)
         return self.finalize_catalogue(df)

@@ -72,7 +72,7 @@ class ReunionTurtles(DownloadKaggle, WildlifeDataset):
                 "image_id": range(len(data)),
                 "path": path,
                 "identity": data["Turtle_ID"],
-                "date": date,
+                "date": date.dt.strftime("%Y-%m-%d"),
                 "orientation": orientation,
                 "species": data["Species"],
                 "id_code": list(code),

@@ -100,6 +100,12 @@ class Drosophila(DownloadURL, WildlifeDataset):
             data.loc[idx1 & ~idx2, "split"] = "train"
             data.loc[idx1 & idx2, "split"] = "val"
 
+        # Extract video and frame from file names such as dir[1]_19_12908.png or 2_397.png
+        file_info = data["file"].str.extract(r"^(?:dir\[\d+\]_)?(\d+)_(\d+)\.png$")
+        week_day = folders[0].str.extract(r"^(week\d+_Day\d+)")[0]
+        data["video"] = week_day + "_" + file_info[0]
+        data["frame_number"] = file_info[1].astype(int)
+
         # Create id and path
         data["id"] = utils.create_id(folders[0] + data["file"])
         data["path"] = data["path"] + os.path.sep + data["file"]

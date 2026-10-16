@@ -123,7 +123,7 @@ class DownloadHuggingFace:
 
     def get_image(self, idx: int):
         row = self.metadata.iloc[idx]
-        return self.dataset[row["split_original"]][int(row["hf_index"])][self.image_column]
+        return self.dataset[row["split"]][int(row["hf_index"])][self.image_column]
 
 
 class DownloadINaturalist:

@@ -82,8 +82,7 @@ class BrownBearHeads(DownloadKaggle, WildlifeDataset):
                 - width_original (int): Original image width before resizing.
                 - height_original (int): Original image height before resizing.
                 - date (datetime): Observation timestamp.
-                - year (int): Observation year.
-                - camera (str): Camera or camera-model metadata.
+                - camera_model (str): Camera model.
                 - split_2017 ... split_2022 (str): Original yearly split roles.
                 - split_ood (str): Standardized out-of-distribution split.
                 - split_iid (str): Standardized in-distribution split.
@@ -107,5 +106,6 @@ class BrownBearHeads(DownloadKaggle, WildlifeDataset):
 
         if "species" not in df.columns:
             df["species"] = "brown bear"
+        df = df.drop(columns=["year"], errors="ignore").rename(columns={"camera": "camera_model"})
 
         return self.finalize_catalogue(df)

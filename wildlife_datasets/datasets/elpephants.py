@@ -72,7 +72,7 @@ class ELPephants(WildlifeDataset):
                 os.path.join(root, path_txt["path"].iloc[idx_test[0]], "val.txt"), header=None, sep="\t"
             )
             data_test = data_test[1].to_numpy()
-            df["original_split"] = data["file"].apply(lambda x: utils.get_split(x, data_train, data_test))
+            df["split"] = data["file"].apply(lambda x: utils.get_split(x, data_train, data_test))
 
         # Finalize the dataframe
         return self.finalize_catalogue(df)
@@ -123,9 +123,9 @@ class ELPephants(WildlifeDataset):
         # Extract year from the beginning or end
         if len(year) >= 4:
             if represents_int(year[:4]):
-                return f"{int(year[:4])}-{conversion[month]}-1"
+                return f"{int(year[:4])}-{conversion[month]:02d}-01"
             elif represents_int(year[-4:]):
-                return f"{int(year[-4:])}-{conversion[month]}-1"
+                return f"{int(year[-4:])}-{conversion[month]:02d}-01"
         return np.nan
 
     def extract_orientation(self, x):

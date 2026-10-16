@@ -45,7 +45,7 @@ class HumpbackWhaleID(DownloadKaggle, WildlifeDataset):
                 "image_id": data["Image"].str.split(".", expand=True)[0],
                 "path": "train" + os.path.sep + data["Image"],
                 "identity": data["Id"],
-                "original_split": "train",
+                "split": "train",
             }
         )
 
@@ -60,7 +60,7 @@ class HumpbackWhaleID(DownloadKaggle, WildlifeDataset):
                 "image_id": test_files.str.split(".", expand=True)[0],
                 "path": "test" + os.path.sep + test_files,
                 "identity": self.unknown_name,
-                "original_split": "test",
+                "split": "test",
             }
         )
 

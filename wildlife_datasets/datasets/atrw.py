@@ -99,7 +99,7 @@ class ATRW(WildlifeDataset):
             header=None,
         )
         ids["id"] = ids["path"].str.split(".", expand=True)[0].astype(int)
-        ids["original_split"] = "train"
+        ids["split"] = "train"
 
         # Load keypoints for the reid_train part of the dataset
         with open(os.path.join(root, "atrw_anno_reid_train", "reid_keypoints_train.json")) as file:
@@ -125,7 +125,7 @@ class ATRW(WildlifeDataset):
         identity = pd.DataFrame(identity)
         ids = pd.read_csv(os.path.join(root, "atrw_anno_reid_test", "reid_list_test.csv"), names=["path"], header=None)
         ids["id"] = ids["path"].str.split(".", expand=True)[0].astype(int)
-        ids["original_split"] = "test"
+        ids["split"] = "test"
         ids = pd.merge(ids, identity, left_on="id", right_on="imgid", how="left")
         ids = ids.drop(["query", "frame", "imgid"], axis=1)
         ids.rename(columns={"entityid": "identity"}, inplace=True)
@@ -167,7 +167,7 @@ class ATRW(WildlifeDataset):
         df_test2 = pd.merge(ids, entries, on="imgid", how="left")
         df_test2["path"] = "atrw_detection_test" + os.path.sep + "test" + os.path.sep + df_test2["file"]
         df_test2["id"] = df_test2["imgid"].astype(str) + "_" + df_test2["identity"].astype(str)
-        df_test2["original_split"] = "test"
+        df_test2["split"] = "test"
         df_test2 = df_test2.drop(["file", "imgid"], axis=1)
 
         # Finalize the dataframe

@@ -16,3 +16,11 @@ def pytest_addoption(parser):
         "(used by test_real_datasets.py). Keypoints loading can be slow for some datasets "
         "(e.g. CHIRP scans every keypoints.csv sidecar file), so this speeds up local runs.",
     )
+    parser.addoption(
+        "--no-load-segmentation",
+        action="store_true",
+        default=False,
+        help="Do not pass load_segmentation=True to datasets whose create_catalogue supports it "
+        "(used by test_real_datasets.py). Segmentation loading can be slow for some datasets "
+        "(e.g. CHIRP scans every masks.csv sidecar file), so this speeds up local runs.",
+    )

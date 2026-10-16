@@ -135,9 +135,30 @@ class RedBeeReID(DownloadHuggingFace, WildlifeDataset):
         )
         metadata["path"] = np.nan
         metadata["hf_index"] = metadata["image_id"]
-        metadata["split_original"] = "train"
         metadata["species"] = "honey bee"
-        metadata["video"] = metadata["video_key"].astype(int)
+        metadata["video"] = metadata["crop_filename"].str.rsplit(".T", n=1).str[0]
+        metadata = metadata.drop(
+            columns=[
+                *[f"{name}_{axis}" for name in self.keypoint_names for axis in ("x", "y")],
+                *[f"{name}_visibility" for name in ("head", "neck", "thorax", "tail")],
+                "bbox_x",
+                "bbox_y",
+                "bbox_width",
+                "bbox_height",
+                "global_track",
+                "unique_track_hash",
+                "unique_frame_hash",
+                "real_crop_filename",
+                "new_filepath",
+                "video_key",
+                "vid_num",
+                "bee_id",
+                "angle_src",
+                "virtual",
+                "crop_bee_scale",
+            ]
+        )
+        metadata = metadata.rename(columns={"track_id": "encounter_id", "frame": "frame_number"})
 
         return self.finalize_catalogue(metadata)
 

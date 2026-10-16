@@ -12,6 +12,10 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - md_in_html
+
+extra_css:
+  - stylesheets/extra.css
 
 plugins:
   - markdown-exec
@@ -32,6 +36,7 @@ nav:
     - Adding new datasets: adding.md
   - Advanced:
     - Dataset representation: dataframe.md
+    - Available metadata: metadata.md
     - Recommended datasets: recommended.md
     - Default splits: default_splits.md
     - Advanced splits: tutorial_splits.md

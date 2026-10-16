@@ -31,32 +31,7 @@ def get_name(x):
     return None
 
 
-summary = {
-    "licenses": "",
-    "licenses_url": "",
-    "url": "",
-    "publication_url": "",
-    "cite": "",
-    "animals": {"newts"},
-    "animals_simple": "newts",
-    "real_animals": True,
-    "year": 2026,
-    "reported_n_total": None,
-    "reported_n_individuals": None,
-    "wild": False,
-    "clear_photos": True,
-    "pose": "single",
-    "unique_pattern": True,
-    "from_video": False,
-    "cropped": False,
-    "span": "5 years",
-    "size": None,
-}
-
-
 class NewtsKent(DownloadPrivate, WildlifeDataset):
-    summary = summary
-
     def create_catalogue(self, load_segmentation: bool = False) -> pd.DataFrame:
         root = self.get_root()
         data = utils.find_images(root)

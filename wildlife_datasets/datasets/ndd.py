@@ -109,6 +109,7 @@ class NDD20(DownloadURL, WildlifeDataset):
         df["image_id"] = range(len(df))
         df["path"] = df["orientation"].str.upper() + os.path.sep + df["file_name"]
         df = df.drop(["reg_type", "file_name"], axis=1)
+        df["image_quality"] = df.pop("out_of_focus").map({False: 1, True: 2})
         return self.finalize_catalogue(df)
 
 

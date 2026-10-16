@@ -96,7 +96,7 @@ class BirdIndividualID(WildlifeDataset):
                 "identity": identity,
                 "date": date,
                 "species": species,
-                "original_split": split,
+                "split": split,
             }
         )
 
@@ -120,7 +120,7 @@ class BirdIndividualID(WildlifeDataset):
                 "identity": self.unknown_name,
                 "date": date,
                 "species": species,
-                "original_split": np.nan,
+                "split": np.nan,
             }
         )
         df = pd.concat([df1, df2])

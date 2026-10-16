@@ -12,10 +12,7 @@ from huggingface_hub import CacheNotFound, scan_cache_dir
 from wildlife_datasets import datasets
 from wildlife_datasets.tests.conftest import DEFAULT_DATA_ROOT
 
-SKIP_DATASETS = {
-    "Drosophila": "slow to load",
-    "NewtsKent": "private data",
-}
+SKIP_DATASETS = {}
 
 DATA_FOLDER = {
     "BalearicLizardSegmented": "BalearicLizard",
@@ -42,23 +39,20 @@ def _hf_dataset_cached(hf_url: str) -> bool:
     return any(repo.repo_type == "dataset" and repo.repo_id == hf_url for repo in cache_info.repos)
 
 
-def _optional_load_kwargs(cls, load_keypoints: bool) -> dict:
+def _optional_load_kwargs(cls, load_keypoints: bool, load_segmentation: bool) -> dict:
     """Builds extra create_catalogue kwargs to exercise on every real dataset.
 
-    Currently only load_keypoints: introspects create_catalogue instead of hardcoding
-    dataset names, so any dataset that later gains a load_keypoints option is covered
-    automatically.
+    Introspects create_catalogue instead of hardcoding dataset names, so any dataset
+    that later gains a load_keypoints or load_segmentation option is covered automatically.
     """
 
-    if not load_keypoints:
-        return {}
-    if "load_keypoints" in inspect.signature(cls.create_catalogue).parameters:
-        return {"load_keypoints": True}
-    return {}
+    parameters = inspect.signature(cls.create_catalogue).parameters
+    options = {"load_keypoints": load_keypoints, "load_segmentation": load_segmentation}
+    return {name: True for name, enabled in options.items() if enabled and name in parameters}
 
 
-def _load_dataset_or_skip(cls, data_root, skip, load_keypoints: bool = True):
-    extra_kwargs = _optional_load_kwargs(cls, load_keypoints)
+def _load_dataset_or_skip(cls, data_root, skip, load_keypoints: bool = True, load_segmentation: bool = True):
+    extra_kwargs = _optional_load_kwargs(cls, load_keypoints, load_segmentation)
     if cls.saved_to_system_folder:
         if not _hf_dataset_cached(cls.hf_url):
             skip(f"HuggingFace dataset not cached locally: {cls.hf_url}")
@@ -95,11 +89,12 @@ class TestLoadAllDatasets(unittest.TestCase):
     def _inject_data_root(self, pytestconfig):
         self.data_root = pytestconfig.getoption("--data-root")
         self.load_keypoints = not pytestconfig.getoption("--no-load-keypoints")
+        self.load_segmentation = not pytestconfig.getoption("--no-load-segmentation")
 
 
 def _make_test(cls):
     def test(self):
-        dataset = _load_dataset_or_skip(cls, self.data_root, self.skipTest, self.load_keypoints)
+        dataset = _load_dataset_or_skip(cls, self.data_root, self.skipTest, self.load_keypoints, self.load_segmentation)
         self.assertGreater(len(dataset), 0, f"{cls.__name__} loaded with 0 rows")
         _check_snapshot(cls, dataset)
 
@@ -122,7 +117,7 @@ def _write_snapshot(data_root: str) -> None:
         if cls.__name__ in SKIP_DATASETS:
             continue
         try:
-            dataset = _load_dataset_or_skip(cls, data_root, _raise_skip, load_keypoints=False)
+            dataset = _load_dataset_or_skip(cls, data_root, _raise_skip, load_keypoints=False, load_segmentation=False)
         except unittest.SkipTest as e:
             print(f"{cls.__name__}: skipped ({e})")
             continue
@@ -138,6 +133,7 @@ if __name__ == "__main__":
     parser.add_argument("--write-snapshot", action="store_true")
     parser.add_argument("--data-root", default=DEFAULT_DATA_ROOT)
     parser.add_argument("--no-load-keypoints", action="store_true")
+    parser.add_argument("--no-load-segmentation", action="store_true")
     args, remaining = parser.parse_known_args()
     if args.write_snapshot:
         _write_snapshot(args.data_root)

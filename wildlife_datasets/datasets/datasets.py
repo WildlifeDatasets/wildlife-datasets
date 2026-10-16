@@ -703,9 +703,10 @@ class WildlifeDataset:
             ("bbox", ["list_numeric"]),
             ("date", ["date"]),
             ("keypoints", ["dict"]),
-            ("position", ["str"]),
-            ("species", ["str", "list"]),
-            ("video", ["int"]),
+            ("orientation", ["str"]),
+            ("species", ["str"]),
+            ("video", ["int", "str"]),
+            ("frame_number", ["int"]),
         ]
         # Verify if the columns are in correct formats
         for col_name, allowed_types in requirements:

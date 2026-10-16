@@ -48,6 +48,9 @@ class MultiCamCows2024(DownloadURL, WildlifeDataset):
                 "path": data["path"] + os.path.sep + data["file"],
                 "identity": folders[n_cols - 1].astype(int),
                 "date": folders[n_cols - 2].apply(self.extract_date),
+                "video": folders[n_cols - 2] + "_" + folders[n_cols - 1],
+                "frame_number": data["file"].str.split("_").str[0].astype(int),
+                "camera": data["file"].str.split("_").str[1].str.split(".").str[0],
             }
         )
         return self.finalize_catalogue(df)
@@ -70,4 +73,4 @@ class MultiCamCows2024(DownloadURL, WildlifeDataset):
         year = int(x[:4])
         month = conversion[x[4:7].lower()]
         day = int(x[7:])
-        return f"{year}-{month}-{day}"
+        return f"{year}-{month:02d}-{day:02d}"

@@ -47,7 +47,7 @@ class BelugaIDv2(BelugaID):
         root = self.get_root()
         # Use the original data
         df_train = self.create_catalogue_wildme(os.path.join("beluga", "beluga"), 2022)
-        df_train["original_split"] = "train"
+        df_train["split"] = "train"
 
         # Get the conversion of identities between original and new data
         data_train = pd.read_csv(os.path.join(root, "beluga-id-test", "private_train_metadata.csv"))
@@ -69,7 +69,7 @@ class BelugaIDv2(BelugaID):
                 "date": data_test["timestamp"],
                 "species": "beluga_whale",
                 "orientation": data_test["viewpoint"].replace({"top": "up"}),
-                "original_split": "test",
+                "split": "test",
             }
         )
 

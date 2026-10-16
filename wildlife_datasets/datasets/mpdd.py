@@ -57,7 +57,7 @@ class MPDD(DownloadURL, WildlifeDataset):
                 "image_id": data["file"],
                 "path": data["path"] + os.path.sep + data["file"],
                 "identity": identity,
-                "original_split": folders[2],
+                "split": folders[2],
             }
         )
         return self.finalize_catalogue(df)

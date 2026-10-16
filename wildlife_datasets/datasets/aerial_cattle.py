@@ -46,7 +46,8 @@ class AerialCattle2017(DownloadURL, WildlifeDataset):
                 "image_id": utils.create_id(data["file"]),
                 "path": data["path"] + os.path.sep + data["file"],
                 "identity": folders[1].astype(int),
-                "video": folders[2].astype(int),
+                "video": folders[1] + "_" + folders[2],
+                "frame_number": data["file"].str.split(".", expand=True)[0].astype(int),
             }
         )
         return self.finalize_catalogue(df)

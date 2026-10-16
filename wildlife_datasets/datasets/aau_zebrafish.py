@@ -63,7 +63,7 @@ class AAUZebraFish(DownloadKaggle, WildlifeDataset):
 
         # Modify information about video sources
         video = data["Filename"].str.split("_", expand=True)[0]
-        video = video.astype("category").cat.codes
+        frame_number = data["Filename"].str.split("_", expand=True)[1].str.split(".", expand=True)[0].astype(int)
 
         # Finalize the dataframe
         df = pd.DataFrame(
@@ -72,6 +72,7 @@ class AAUZebraFish(DownloadKaggle, WildlifeDataset):
                 "path": "data" + os.path.sep + data["Filename"],
                 "identity": data["Object ID"],
                 "video": video,
+                "frame_number": frame_number,
                 "bbox": bbox,
                 "orientation": orientation,
             }

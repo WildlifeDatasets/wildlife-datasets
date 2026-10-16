@@ -68,7 +68,7 @@ class BristolGorillas2020(WildlifeDataset):
         df1 = pd.DataFrame(
             {
                 "path": data["path"] + os.path.sep + data["file"],
-                "original_split": folders.iloc[:, -3],
+                "split": folders.iloc[:, -3],
             }
         )
 

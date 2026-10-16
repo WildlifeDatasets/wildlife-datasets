@@ -3,8 +3,6 @@ import warnings
 
 import numpy as np
 import pandas as pd
-from PIL import Image
-from tqdm import tqdm
 
 from . import utils
 from .datasets import WildlifeDataset
@@ -58,11 +56,6 @@ class Melops(DownloadURL, WildlifeDataset):
 
         >>> headless = datasets.Melops(root, bbox="headless", img_load="bbox")
 
-        Load body crops with pixel-space bbox columns:
-
-        >>> annotated = datasets.Melops(root, load_image_size=True)
-        >>> annotated.df[["bbox_body", "bbox_head", "bbox_headless"]].head()
-
         Load head and white-card keypoints when the annotation file is present:
 
         >>> pose = datasets.Melops(root, load_keypoints=True)
@@ -70,16 +63,12 @@ class Melops(DownloadURL, WildlifeDataset):
 
     Args:
         bbox: Optional part name used for the standard ``bbox`` column. Use
-            ``"body"``, ``"head"``, or ``"headless"``. Setting this also reads
-            image sizes and creates pixel-space ``bbox_body``, ``bbox_head``,
-            and ``bbox_headless`` columns.
+            ``"body"``, ``"head"``, or ``"headless"``. The bounding box is given
+            in pixels of the body crop.
         drop_missing: The Zenodo body archive is missing one metadata image
             (``P8316190_2020``). When ``True``, missing body-image rows are
             dropped with a warning. When ``False``, loading fails on missing
             body images.
-        load_image_size: Read body-crop image dimensions and add
-            ``image_width`` and ``image_height``. This is needed for
-            pixel-space bbox conversion.
         load_keypoints: Read ``keypoint_head.csv`` and
             ``keypoint_white_card.csv`` when available. Source keypoints remain
             available as ``*_source`` columns; transformed keypoints are in the
@@ -171,51 +160,35 @@ class Melops(DownloadURL, WildlifeDataset):
                 if all(col in df for col in cols):
                     df[f"bbox_{part}_source"] = self._array_series(df[cols].to_numpy(), df.index)
 
-        color_path = self._find_file(root, "colour_extraction_correction.csv")
-        if color_path is not None:
-            colors = pd.read_csv(color_path)
-            colors["filename_year"] = colors["image"].apply(lambda x: os.path.splitext(x)[0])
-            colors = colors.drop(columns=["image"])
-            df = df.merge(colors, on="filename_year", how="left")
-
         return df
 
-    def _add_image_sizes(self, df: pd.DataFrame) -> None:
-        root = self.get_root()
-
-        def get_size(path):
-            with Image.open(os.path.join(root, path)) as img:
-                return img.size
-
-        sizes = [get_size(path) for path in tqdm(df["path"], desc="Melops image sizes", mininterval=1, ncols=100)]
-        df[["image_width", "image_height"]] = pd.DataFrame(sizes, index=df.index)
+    @classmethod
+    def _original_size(cls, df: pd.DataFrame) -> np.ndarray:
+        # head_w and head_h are the head bbox sizes in pixels of the original image
+        return df[["head_w", "head_h"]].to_numpy() / df[["head_width", "head_height"]].to_numpy()
 
     @classmethod
     def _bbox_to_body_crop(cls, df: pd.DataFrame, part: str) -> np.ndarray:
         body = df[cls._bbox_columns("body")].to_numpy()
         boxes = df[cls._bbox_columns(part)].to_numpy()
-        image_size = df[["image_width", "image_height"]].to_numpy()
+        original_size = cls._original_size(df)
+        crop_size = body[:, 2:] * original_size
 
         body_top_left = body[:, :2] - body[:, 2:] / 2
         box_top_left = boxes[:, :2] - boxes[:, 2:] / 2
-        top_left = (box_top_left - body_top_left) / body[:, 2:] * image_size
-        size = boxes[:, 2:] / body[:, 2:] * image_size
+        top_left = (box_top_left - body_top_left) * original_size
+        size = boxes[:, 2:] * original_size
 
-        bottom_right = np.clip(top_left + size, 0, image_size)
-        top_left = np.clip(top_left, 0, image_size)
+        bottom_right = np.clip(top_left + size, 0, crop_size)
+        top_left = np.clip(top_left, 0, crop_size)
         return np.column_stack([top_left, bottom_right - top_left])
 
-    def _add_body_crop_bboxes(self, df: pd.DataFrame, bbox: str | None) -> None:
+    def _check_bbox_columns(self, df: pd.DataFrame) -> None:
         missing = [col for part in self.bbox_parts for col in self._bbox_columns(part) if col not in df]
         if missing:
             raise FileNotFoundError(
                 f"Melops_bbox_coords.txt is required for bbox conversion but these columns are missing: {missing}."
             )
-
-        for part in self.bbox_parts:
-            df[f"bbox_{part}"] = self._array_series(self._bbox_to_body_crop(df, part), df.index)
-        if bbox is not None:
-            df["bbox"] = df[f"bbox_{bbox}"]
 
     @staticmethod
     def _keypoints_to_wide(keypoints: pd.DataFrame, names: tuple[str, ...]) -> pd.DataFrame:
@@ -241,8 +214,7 @@ class Melops(DownloadURL, WildlifeDataset):
     def _source_keypoints_to_body_crop(cls, df: pd.DataFrame, keypoints: np.ndarray) -> np.ndarray:
         points = keypoints.reshape(len(df), -1, 2)
         body = df[cls._bbox_columns("body")].to_numpy()
-        source_size = df[["image_width", "image_height"]].to_numpy() / body[:, 2:]
-        body_top_left = (body[:, :2] - body[:, 2:] / 2) * source_size
+        body_top_left = (body[:, :2] - body[:, 2:] / 2) * cls._original_size(df)
         points = points - body_top_left[:, None, :]
         return points.reshape(len(df), -1)
 
@@ -273,7 +245,6 @@ class Melops(DownloadURL, WildlifeDataset):
         self,
         bbox: str | None = None,
         drop_missing: bool = True,
-        load_image_size: bool = False,
         load_keypoints: bool = False,
     ) -> pd.DataFrame:
         root = self.get_root()
@@ -297,17 +268,32 @@ class Melops(DownloadURL, WildlifeDataset):
             df = df[~missing].reset_index(drop=True)
 
         df = self._add_optional_annotations(df)
-        if bbox is not None or load_image_size or load_keypoints:
-            self._add_image_sizes(df)
-            self._add_body_crop_bboxes(df, bbox)
+        if bbox is not None or load_keypoints:
+            self._check_bbox_columns(df)
+        if bbox is not None:
+            df["bbox"] = self._array_series(self._bbox_to_body_crop(df, bbox), df.index)
         if load_keypoints:
             df = self._add_keypoints(df)
+        bbox_columns = [col for part in self.bbox_parts for col in self._bbox_columns(part)]
+        bbox_columns += [f"bbox_{part}_source" for part in self.bbox_parts] + ["head_w", "head_h"]
+        df = df.drop(columns=[col for col in bbox_columns if col in df])
 
-        df["image_id"] = df["filename_year"]
         df["identity"] = df["ID"].astype(str)
         df["date"] = pd.to_datetime(df["date"], format="%d.%m.%Y").dt.strftime("%Y-%m-%d")
-        df["orientation"] = df["side"]
         df["species"] = "corkwing wrasse"
-        df = df.rename(columns={"lat": "latitude", "lon": "longitude"})
+        df["blurry"] = df["blurry"].map({0: 1, 1: 2})
+        df = df.drop(columns=["ID", "year"])
+        df = df.rename(
+            columns={
+                "filename_year": "image_id",
+                "side": "orientation",
+                "lat": "latitude",
+                "lon": "longitude",
+                "sex": "gender",
+                "trapID": "camera",
+                "area": "location",
+                "blurry": "image_quality",
+            }
+        )
 
         return self.finalize_catalogue(df)
