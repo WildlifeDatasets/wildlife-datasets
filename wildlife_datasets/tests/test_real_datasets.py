@@ -13,7 +13,6 @@ from wildlife_datasets import datasets
 from wildlife_datasets.tests.conftest import DEFAULT_DATA_ROOT
 
 SKIP_DATASETS = {
-    "Drosophila": "slow to load",
     "NewtsKent": "private data",
 }
 
