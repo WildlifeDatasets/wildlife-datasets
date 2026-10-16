@@ -94,9 +94,7 @@ class TestLoadAllDatasets(unittest.TestCase):
 
 def _make_test(cls):
     def test(self):
-        dataset = _load_dataset_or_skip(
-            cls, self.data_root, self.skipTest, self.load_keypoints, self.load_segmentation
-        )
+        dataset = _load_dataset_or_skip(cls, self.data_root, self.skipTest, self.load_keypoints, self.load_segmentation)
         self.assertGreater(len(dataset), 0, f"{cls.__name__} loaded with 0 rows")
         _check_snapshot(cls, dataset)
 
