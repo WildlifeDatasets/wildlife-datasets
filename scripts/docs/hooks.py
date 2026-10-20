@@ -12,13 +12,28 @@ merge_datasets = {
 pdf_icon = "https://github.com/WildlifeDatasets/wildlife-datasets/raw/main/docs/resources/pdf_icon.png"
 
 
+def get_summaries(meta: bool) -> dict[str, dict]:
+    summaries = {c.display_name(): c.summary for c in names_all}
+    merge_values = list(merge_datasets.values())
+    names = sorted(summaries, key=str.lower)
+    return {
+        name: summaries[name] for name in names if (name in meta_datasets) == meta and name not in merge_values
+    }
+
+
+def publication_link(summary: dict, width: int) -> str:
+    if not summary.get("publication_url"):
+        return ""
+    return f'<a href="{summary["publication_url"]}" target="_blank"><img src="{pdf_icon}" alt="publication link" width="{width}"></a>'
+
+
 def dataset_section(name: str, summary: dict, docs_dir: str) -> str:
     if name not in merge_datasets:
         header = f"### [{name}]({summary['url']})"
     else:
         header = f"### [{name}, {merge_datasets[name]}]({summary['url']})"
     if summary.get("publication_url"):
-        header += f' <a href="{summary["publication_url"]}" target="_blank"><img src="{pdf_icon}" alt="publication link" width="20"></a>'
+        header += " " + publication_link(summary, 20)
     if name in merge_datasets:
         header += f' {{ #{name.lower()} data-toc-label="{name}" }}'
     lines = [header, summary.get("description", "")]
@@ -32,22 +47,14 @@ def dataset_section(name: str, summary: dict, docs_dir: str) -> str:
     return "\n\n".join(line for line in lines if line)
 
 
-def datasets_markdown(docs_dir: str) -> str:
-    summaries = {c.display_name(): c.summary for c in names_all}
-    names = sorted(summaries, key=str.lower)
-    merge_values = list(merge_datasets.values())
-    lines = ["## Overview of MetaDatasets"]
-    for name in names:
-        if name in meta_datasets and name not in merge_values:
-            lines += [dataset_section(name, summaries[name], docs_dir)]
-    lines += ["## Overview of Datasets"]
-    for name in names:
-        if name not in meta_datasets and name not in merge_values:
-            lines += [dataset_section(name, summaries[name], docs_dir)]
-    return "\n\n".join(lines) + "\n"
+def datasets_markdown(meta: bool, docs_dir: str) -> str:
+    summaries = get_summaries(meta)
+    return "\n\n".join(dataset_section(name, summary, docs_dir) for name, summary in summaries.items())
 
 
 def on_page_markdown(markdown: str, page, config, files) -> str:
+    docs_dir = config["docs_dir"]
     if page.file.src_uri == "datasets.md":
-        return markdown.replace("<!-- datasets -->", datasets_markdown(config["docs_dir"]))
+        markdown = markdown.replace("<!-- datasets-meta -->", datasets_markdown(True, docs_dir))
+        markdown = markdown.replace("<!-- datasets -->", datasets_markdown(False, docs_dir))
     return markdown
