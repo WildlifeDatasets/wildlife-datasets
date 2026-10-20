@@ -14,6 +14,7 @@ summary = {
     "animals": {"chickens"},
     "animals_simple": "chickens",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2024,
     "reported_n_total": 1146,
     "reported_n_individuals": 50,

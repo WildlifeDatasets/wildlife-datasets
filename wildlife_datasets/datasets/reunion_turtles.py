@@ -15,6 +15,7 @@ summary = {
     "animals": {"green turtle", "hawksbill turtle"},
     "animals_simple": "sea turtles",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2024,
     "reported_n_total": 336,
     "reported_n_individuals": 84,

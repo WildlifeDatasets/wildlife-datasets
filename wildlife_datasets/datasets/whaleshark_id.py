@@ -12,6 +12,7 @@ summary = {
     "animals": {"whale shark"},
     "animals_simple": "sharks",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2020,
     "reported_n_total": 7693,
     "reported_n_individuals": 543,

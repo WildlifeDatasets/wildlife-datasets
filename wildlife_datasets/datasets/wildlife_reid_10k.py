@@ -14,6 +14,7 @@ summary = {
     "animals": {"multiple"},
     "animals_simple": "multiple",
     "real_animals": True,
+    "original_dataset": False,
     "year": 2025,
     "reported_n_total": 214262,
     "reported_n_individuals": 1034478,

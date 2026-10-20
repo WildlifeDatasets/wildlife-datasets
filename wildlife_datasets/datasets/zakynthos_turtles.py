@@ -14,6 +14,7 @@ summary = {
     "animals": {"loggerhead turtle"},
     "animals_simple": "sea turtles",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2024,
     "reported_n_total": 160,
     "reported_n_individuals": 40,

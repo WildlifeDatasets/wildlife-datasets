@@ -17,6 +17,7 @@ summary = {
     "animals": {"balearic lizard"},
     "animals_simple": "lizards",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2025,
     "reported_n_total": 4619,
     "reported_n_individuals": 1009,

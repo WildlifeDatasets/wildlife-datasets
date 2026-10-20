@@ -14,6 +14,7 @@ summary = {
     "animals": {"Green Sea Turtle"},
     "animals_simple": "sea turtles",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2025,
     "reported_n_total": None,
     "reported_n_individuals": None,

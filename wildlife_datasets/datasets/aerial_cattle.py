@@ -15,6 +15,7 @@ summary = {
     "animals": {"Friesian cattle"},
     "animals_simple": "cows",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2017,
     "reported_n_total": 46340,
     "reported_n_individuals": 23,

@@ -18,6 +18,7 @@ summary = {
     "animals": {"ringed seal"},
     "animals_simple": "seals",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2022,
     "reported_n_total": 2080,
     "reported_n_individuals": 57,

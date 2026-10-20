@@ -18,6 +18,7 @@ summary = {
     "animals": {"Siberian Jay"},
     "animals_simple": "birds",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2026,
     "reported_n_total": 402750,
     "reported_n_individuals": 182,

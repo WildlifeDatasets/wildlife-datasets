@@ -16,6 +16,7 @@ summary = {
     "animals": {"right whale"},
     "animals_simple": "whales",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2015,
     "reported_n_total": None,
     "reported_n_individuals": None,

@@ -19,6 +19,7 @@ summary = {
     "animals": {"corkwing wrasse"},
     "animals_simple": "fish",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2026,
     "reported_n_total": 24578,
     "reported_n_individuals": 9861,

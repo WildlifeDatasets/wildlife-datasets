@@ -20,6 +20,7 @@ summary = {
     "animals": {"honey bees"},
     "animals_simple": "bees",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2026,
     "reported_n_total": 9495,
     "reported_n_individuals": 45,

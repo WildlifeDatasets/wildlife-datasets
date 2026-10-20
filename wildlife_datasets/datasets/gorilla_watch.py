@@ -10,6 +10,7 @@ _gorilla_summary_base = {
     "animals": {"gorilla"},
     "animals_simple": "gorillas",
     "real_animals": True,
+    "original_dataset": True,
     "clear_photos": True,
     "unique_pattern": False,
     "pose": "single",

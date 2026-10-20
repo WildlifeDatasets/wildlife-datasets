@@ -12,6 +12,7 @@ summary = {
     "animals": {"spotted hyena"},
     "animals_simple": "hyenas",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2022,
     "reported_n_total": 3129,
     "reported_n_individuals": 256,

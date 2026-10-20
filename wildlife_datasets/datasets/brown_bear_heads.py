@@ -15,6 +15,7 @@ summary = {
     "animals": {"brown bear"},
     "animals_simple": "bears",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2026,
     "reported_n_total": 72939,
     "reported_n_individuals": 109,

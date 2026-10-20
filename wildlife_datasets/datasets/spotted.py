@@ -15,6 +15,7 @@ summary_common = {
     "publication_url": "https://arxiv.org/abs/2607.00804",
     "cite": "kelebek2026spotted",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2026,
     "wild": True,
     "clear_photos": False,

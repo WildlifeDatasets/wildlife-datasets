@@ -15,6 +15,7 @@ summary = {
     "animals": {"great crested newt"},
     "animals_simple": "newts",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2025,
     "reported_n_total": 1232,
     "reported_n_individuals": 206,

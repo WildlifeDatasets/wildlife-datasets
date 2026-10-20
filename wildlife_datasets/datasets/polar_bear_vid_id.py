@@ -15,6 +15,7 @@ summary = {
     "animals": {"polar bear"},
     "animals_simple": "polar bears",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2023,
     "reported_n_total": 138363,
     "reported_n_individuals": 13,

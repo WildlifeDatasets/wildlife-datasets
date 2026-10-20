@@ -19,6 +19,7 @@ summary = {
     "animals": {"sociable weaver", "zebra finch", "great tit"},
     "animals_simple": "birds",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2019,
     "reported_n_total": 50643,
     "reported_n_individuals": 50,

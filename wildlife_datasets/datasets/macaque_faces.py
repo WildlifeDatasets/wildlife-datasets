@@ -15,6 +15,7 @@ summary = {
     "animals": {"rhesus macaque"},
     "animals_simple": "macaques",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2018,
     "reported_n_total": 6460,
     "reported_n_individuals": 34,

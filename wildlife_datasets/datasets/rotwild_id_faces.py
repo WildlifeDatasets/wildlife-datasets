@@ -15,6 +15,7 @@ summary = {
     "animals": {"red deer"},
     "animals_simple": "deers",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2026,
     "reported_n_total": 1012,
     "reported_n_individuals": 59,

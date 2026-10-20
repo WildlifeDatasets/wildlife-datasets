@@ -15,6 +15,7 @@ summary = {
     "animals": {"zebrafish"},
     "animals_simple": "fish",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2020,
     "reported_n_total": 6672,
     "reported_n_individuals": 6,

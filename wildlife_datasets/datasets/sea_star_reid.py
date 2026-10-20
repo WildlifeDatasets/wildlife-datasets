@@ -15,6 +15,7 @@ summary = {
     "animals": {"sea star"},
     "animals_simple": "sea stars",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2023,
     "reported_n_total": 2187,
     "reported_n_individuals": 95,

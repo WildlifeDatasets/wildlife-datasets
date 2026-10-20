@@ -15,6 +15,7 @@ summary = {
     "animals": {"zebra"},
     "animals_simple": "zebras",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2011,
     "reported_n_total": None,
     "reported_n_individuals": None,

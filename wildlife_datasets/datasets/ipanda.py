@@ -17,6 +17,7 @@ summary = {
     "animals": {"great panda"},
     "animals_simple": "pandas",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2021,
     "reported_n_total": 6874,
     "reported_n_individuals": 50,

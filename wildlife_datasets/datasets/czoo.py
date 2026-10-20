@@ -16,6 +16,7 @@ summary = {
     "animals": {"chimpanzee"},
     "animals_simple": "chimpanzees",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2016,
     "reported_n_total": 2109,
     "reported_n_individuals": 24,

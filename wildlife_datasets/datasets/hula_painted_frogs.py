@@ -15,6 +15,7 @@ summary = {
     "animals": {"Hula painted frog"},
     "animals_simple": "frogs",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2026,
     "reported_n_total": 1233,
     "reported_n_individuals": 191,

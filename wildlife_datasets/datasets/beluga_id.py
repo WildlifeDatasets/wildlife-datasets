@@ -14,6 +14,7 @@ summary = {
     "animals": {"beluga whale"},
     "animals_simple": "whales",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2022,
     "reported_n_total": 5902,
     "reported_n_individuals": 788,

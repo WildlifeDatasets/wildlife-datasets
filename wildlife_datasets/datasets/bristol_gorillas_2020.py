@@ -15,6 +15,7 @@ summary = {
     "animals": {"gorilla"},
     "animals_simple": "gorillas",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2020,
     "reported_n_total": 5428,
     "reported_n_individuals": 7,

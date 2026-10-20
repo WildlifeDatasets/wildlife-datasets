@@ -17,6 +17,7 @@ summary = {
     "animals": {"rhesus monkey", "japanese monkey", "chimpanzee"},
     "animals_simple": "monkeys",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2012,
     "reported_n_total": 1282,
     "reported_n_individuals": 68,

@@ -15,6 +15,7 @@ summary = {
     "animals": {"amur tiger"},
     "animals_simple": "tigers",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2019,
     "reported_n_total": 9496,
     "reported_n_individuals": 92,

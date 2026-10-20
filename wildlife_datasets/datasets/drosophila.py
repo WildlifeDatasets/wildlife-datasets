@@ -15,6 +15,7 @@ summary = {
     "animals": {"drosophila"},
     "animals_simple": "flies",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2018,
     "reported_n_total": 2592000,
     "reported_n_individuals": 60,

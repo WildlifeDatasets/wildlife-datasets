@@ -2,7 +2,6 @@ import os
 
 from wildlife_datasets.datasets import names_all
 
-meta_datasets = ["AnimalCLEF2025", "AnimalCLEF2026", "WildlifeReID10k"]
 merge_datasets = {
     "BalearicLizard": "BalearicLizardSegmented",
     "BirdIndividualID": "BirdIndividualIDSegmented",
@@ -17,7 +16,7 @@ def get_summaries(meta: bool) -> dict[str, dict]:
     merge_values = list(merge_datasets.values())
     names = sorted(summaries, key=str.lower)
     return {
-        name: summaries[name] for name in names if (name in meta_datasets) == meta and name not in merge_values
+        name: summaries[name] for name in names if summaries[name]["original_dataset"] != meta and name not in merge_values
     }
 
 

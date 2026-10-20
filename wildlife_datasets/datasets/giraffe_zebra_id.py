@@ -12,6 +12,7 @@ summary = {
     "animals": {"giraffe masai", "zebra plains"},
     "animals_simple": "giraffes+zebras",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2017,
     "reported_n_total": 6925,
     "reported_n_individuals": 2056,
