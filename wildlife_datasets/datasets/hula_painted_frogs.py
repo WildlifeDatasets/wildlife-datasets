@@ -26,6 +26,7 @@ summary = {
     "cropped": True,
     "span": "8 years",
     "size": 7000,
+    "description": "This dataset contains labeled and unlabeled images of the Hula painted frog (Latonia nigriventer), a critically endangered amphibian endemic to the Hula Valley, Israel, collected in the field across multiple observation dates to support automatic photo-identification and long-term population monitoring of the species. A subset of images was manually annotated with individual identities by domain experts, while a second subset has identities inferred using the method described in the associated publication, with individual numbering kept consistent between the two. In total, the dataset comprises 1,232 expert-labeled images, 1,691 images with inferred identities, and an additional 717 images not used in the paper's analyses, of which 314 carry expert-annotated identities and the remainder are unlabeled.",
 }
 
 

@@ -8,7 +8,7 @@ from .general import Dataset_Metadata
 summary = {
     "licenses": "",
     "licenses_url": "",
-    "url": "",
+    "url": "https://www.inaturalist.org/projects/turtles-of-smsrc",
     "publication_url": None,
     "cite": "",
     "animals": {"Green Sea Turtle"},
@@ -25,6 +25,7 @@ summary = {
     "cropped": False,
     "span": "1 year",
     "size": None,
+    "description": "The Sharjah Marine Science Research Centre (SMSRC) has created a participatory research project aimed at documenting the occurrence, distribution, and habitat use of marine turtles along the Khor Fakkan coast. Through systematic photographic records, the project seeks to create a visual and georeferenced database of individual turtles observed by researchers, students, divers, and citizen scientists. Each turtle photograph will be tagged with location (GPS), date, and habitat type, allowing for the analysis of spatial patterns, site fidelity, and potential threats such as entanglement or pollution. Over time, the dataset will serve as a baseline for long-term monitoring and for developing awareness materials and conservation strategies for Sharjah’s marine biodiversity.",
 }
 
 

@@ -27,6 +27,7 @@ summary = {
     "cropped": False,
     "span": "10 years",
     "size": 9790,
+    "description": "See the description in [HappyWhale](#happywhale).",
 }
 
 

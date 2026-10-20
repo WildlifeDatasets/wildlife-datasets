@@ -28,6 +28,7 @@ summary = {
     "cropped": True,
     "span": "unknown",
     "size": 929,
+    "description": "The authors collected giant panda streaming videos from the Panda Channel, which contains daily routine videos of pandas at different ages. The identity annotations are provided by professional zookeepers and breeders. The authors manually selected images with various illuminations, viewpoints, postures, and occlusions. In addition, they manually cropped out each individual panda with a tight bounding box and provided additional eye annotations.",
 }
 
 

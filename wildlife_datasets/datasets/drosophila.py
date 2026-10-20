@@ -26,6 +26,7 @@ summary = {
     "cropped": True,
     "span": "3 days",
     "size": 74856,
+    "description": "Twenty drosophila flies were collected few hours after eclosion and housed separately. On the third day, post-eclosion flies were individually mouth pipetted into a circular acrylic arena, illuminated with overhead LED bulbs and filmed in grayscale. This was repeated in three consecutive days. Since the sampling frequency from videos was high, this generated several million images. However, the differences between these images are small.",
 }
 
 

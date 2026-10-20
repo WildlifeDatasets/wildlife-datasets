@@ -23,6 +23,7 @@ summary = {
     "cropped": False,
     "span": "unknown",
     "size": 3441,
+    "description": "See the description in [BelugaID](#belugaid).",
 }
 
 

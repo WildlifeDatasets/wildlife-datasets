@@ -27,6 +27,7 @@ summary = {
     "cropped": True,
     "span": "unknown",
     "size": 1719,
+    "description": "",
 }
 
 

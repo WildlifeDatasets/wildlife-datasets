@@ -27,6 +27,7 @@ summary = {
     "cropped": False,
     "span": "unknown",
     "size": 495,
+    "description": "See the description in [LionData](#liondata).",
 }
 
 

@@ -26,6 +26,7 @@ summary = {
     "cropped": True,
     "span": "short",
     "size": 17600,
+    "description": "Biometric images consisting of the cattle muzzle and face were collected at the University of New England’s Tullimba Research Feedlot, Kingstown, NSW, Australia. The images were collected during Induction Day in February 2019 when animals were vaccinated and tagged. In total, 300 cattle were inducted, which involved each animal being restrained in a crush restraint with its head placed in a “head scoop” for application of an eye treatment and micro-chipping. Upon its containment in the crush, a photographer stood approximately 1–2 m in front and photographed images of each individual animal in frontal pose from a camera set at 1 m above the ground. The camera was a Canon D800 (Toyko, Japan) equipped with a 18–55 mm lens (Canon EF-S 18–55 mm f/4–5.6 IS STM).",
 }
 
 

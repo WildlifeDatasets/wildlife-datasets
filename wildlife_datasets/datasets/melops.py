@@ -30,6 +30,7 @@ summary = {
     "cropped": True,
     "span": "7 years",
     "size": 27700,
+    "description": "Melops dataset features wild corkwing wrasse (Symphodus melops) photographed during a seven-year capture-mark-recapture study in Norway from 2018 to 2024. The dataset includes 24,578 images of 9,861 PIT-tagged individuals, providing reliable ground-truth identities for individual re-identification. It contains cropped head and body images from both left and right sides, capturing the species’ distinctive and asymmetric facial color patterns.",
 }
 
 

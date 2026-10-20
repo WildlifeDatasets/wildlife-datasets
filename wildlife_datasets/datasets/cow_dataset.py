@@ -26,6 +26,7 @@ summary = {
     "cropped": False,
     "span": "short",
     "size": 4150,
+    "description": "The dataset does not contain any description.",
 }
 
 

@@ -26,6 +26,7 @@ summary = {
     "cropped": False,
     "span": "1 month",
     "size": 805,
+    "description": "GCN_ID contains images of great crested newts (Triturus cristatus), a protected amphibian species in Europe, whose individuals can be identified by the unique orange-yellow underbelly markings with black blotches. The newts were live-captured by funnel traps in eight ponds near Cambridge, UK, during surveys between May and June 2024. The captured newts were placed in a small transparent container, which was inverted to photograph the underbelly by a smartphone at different angles and lighting levels. The dataset contains 1,232 images of 206 individuals, together with bounding boxes and segmentation masks obtained by GroundingDINO and SAM-2. The original release also contains videos, which are not included.",
 }
 
 

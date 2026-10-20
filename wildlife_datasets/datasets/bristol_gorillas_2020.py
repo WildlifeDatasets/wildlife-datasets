@@ -26,6 +26,7 @@ summary = {
     "cropped": False,
     "span": "short",
     "size": 15600,
+    "description": "This MP4 video and JPG image dataset of a troop of 7 western lowland gorillas (Gorilla gorilla gorilla) filmed at Bristol Zoo Gardens contains around 5k+ facial bounding box and individual gorilla identity annotations. A basic YOLOv3-powered application is able to perform facial identifications at 92% mAP when utilising single frames on the still image data. Tracking-by-detection-association and identity voting across short tracklets in videos yields an improved robust performance at 97% mAP.",
 }
 
 

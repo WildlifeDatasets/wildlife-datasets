@@ -27,6 +27,7 @@ summary = {
     "cropped": True,
     "span": "unknown",
     "size": 634,
+    "description": "See the description in [CTai](#ctai).",
 }
 
 

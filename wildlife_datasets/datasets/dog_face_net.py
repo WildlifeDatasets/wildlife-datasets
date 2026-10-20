@@ -26,6 +26,7 @@ summary = {
     "cropped": True,
     "span": "short",
     "size": 76,
+    "description": "The dataset does not contain any description about its acquisition, only factual description of images.",
 }
 
 

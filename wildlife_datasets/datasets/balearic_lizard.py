@@ -28,6 +28,7 @@ summary = {
     "cropped": True,
     "span": "15 years",
     "size": 36450,
+    "description": "BalearicLizard is a curated, long-term photographic dataset of the Balearic wall lizard (Podarcis lilfordi) created to support non-invasive individual re-identification, long-term ecological monitoring (capture–recapture), and computer-vision benchmarking on small-bodied reptiles. It contains 4,619 high-resolution ventral/pectoral photographs from 1,009 individually identified lizards, collected over 15 years during a systematic monitoring program (October 2010 to October2024) on Illot d’en Curt (a small islet off the southern coast of Mallorca, Balearic Islands, Spain). Each capture provides both the original oriented field photograph and a segmented crop focusing on the pectoral/anterior ventral scale pattern, which is the biometric region used for identification.",
 }
 
 

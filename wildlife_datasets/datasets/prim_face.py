@@ -28,6 +28,7 @@ summary = {
     "cropped": True,
     "span": "short",
     "size": 3700,
+    "description": "The database covers various species of non-human primates: rhesus and Japanese monkeys, chimpanzees, and common marmosets. For individual animals, there are multiple pictures with various views, illuminations, and facial expressions.",
 }
 
 

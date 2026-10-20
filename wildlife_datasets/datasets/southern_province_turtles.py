@@ -25,6 +25,7 @@ summary = {
     "cropped": True,
     "span": "short",
     "size": 55,
+    "description": "SouthernProvinceTurtles is a collection of green sea turtles photos from two different sources in Southern Province, Sri Lanka. The first one comes from nesting turtles in the beaches Rekawa and Batigama, the seocnd one from multiple rescue centers in the southern coast of Sri Lanka. There is a significant shift between those two. The first source contains generally difficult photos taken with the red light in the night while the second source contains much simple photos.",
 }
 
 

@@ -27,6 +27,7 @@ summary_2015 = {
     "cropped": True,
     "span": "1 day",
     "size": 76,
+    "description": "See the description in [AerialCattle2017](#aerialcattle2017).",
 }
 
 summary_2017 = {
@@ -49,6 +50,7 @@ summary_2017 = {
     "cropped": True,
     "span": "1 day",
     "size": 343,
+    "description": "See the description in [AerialCattle2017](#aerialcattle2017).",
 }
 
 

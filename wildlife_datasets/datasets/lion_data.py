@@ -26,6 +26,7 @@ summary = {
     "cropped": True,
     "span": "unknown",
     "size": 495,
+    "description": "LionData and NyalaData contain images of lions and nyalas collected from Mara Masia project in Kenya. While images in NyalaData are relatively uniform nad show the image of the whole nyalas, LionData depict various lion details such as ears or noses.",
 }
 
 

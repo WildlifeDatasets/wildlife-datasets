@@ -26,6 +26,7 @@ summary = {
     "cropped": True,
     "span": "7 days",
     "size": 36500,
+    "description": "See the description in [AerialCattle2017](#aerialcattle2017).",
 }
 
 

@@ -26,6 +26,7 @@ summary = {
     "cropped": True,
     "span": "short",
     "size": 29.6,
+    "description": "MPDD is a dataset of various dog breeds with 1657 images of 192 dogs. The dataset should be theoretically simple than most because the dogs differ significantly in size and color.",
 }
 
 

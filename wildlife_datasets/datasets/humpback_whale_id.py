@@ -27,6 +27,7 @@ summary = {
     "cropped": True,
     "span": "very long",
     "size": 5911,
+    "description": "See the description in [HappyWhale](#happywhale).",
 }
 
 
