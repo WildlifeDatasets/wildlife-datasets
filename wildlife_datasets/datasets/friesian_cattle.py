@@ -28,6 +28,7 @@ summary_2015 = {
     "span": "1 day",
     "size": 76,
     "description": "See the description in [AerialCattle2017](#aerialcattle2017).",
+    "modifications": "Labels fixed",
 }
 
 summary_2017 = {

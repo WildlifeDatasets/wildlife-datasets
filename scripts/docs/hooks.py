@@ -52,9 +52,29 @@ def datasets_markdown(meta: bool, docs_dir: str) -> str:
     return "\n\n".join(dataset_section(name, summary, docs_dir) for name, summary in summaries.items())
 
 
+def preprocessing_markdown(meta: bool) -> str:
+    summaries = get_summaries(meta)
+    lines = [
+        f"| {'MetaDataset' if meta else 'Dataset'} | Publication | Processing requirements | Dataset modifications |",
+        "|--|:--|:--|:--|",
+    ]
+    for name, summary in summaries.items():
+        cells = [
+            f"[{name}]({summary['url']})",
+            publication_link(summary, 16),
+            summary.get("processing", ""),
+            summary.get("modifications", ""),
+        ]
+        lines.append("| " + " | ".join(cells) + " |")
+    return "\n".join(lines)
+
+
 def on_page_markdown(markdown: str, page, config, files) -> str:
     docs_dir = config["docs_dir"]
     if page.file.src_uri == "datasets.md":
         markdown = markdown.replace("<!-- datasets-meta -->", datasets_markdown(True, docs_dir))
         markdown = markdown.replace("<!-- datasets -->", datasets_markdown(False, docs_dir))
+    elif page.file.src_uri == "preprocessing.md":
+        markdown = markdown.replace("<!-- preprocessing-meta -->", preprocessing_markdown(True))
+        markdown = markdown.replace("<!-- preprocessing -->", preprocessing_markdown(False))
     return markdown

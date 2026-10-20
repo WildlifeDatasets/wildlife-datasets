@@ -28,6 +28,8 @@ summary = {
     "span": "very long",
     "size": 5911,
     "description": "See the description in [HappyWhale](#happywhale).",
+    "processing": "Kaggle required + terms",
+    "modifications": "Unknown animals renamed",
 }
 
 

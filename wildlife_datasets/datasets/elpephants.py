@@ -27,6 +27,7 @@ summary = {
     "span": "14 years",
     "size": 625,
     "description": "This elephant dataset was provided by researchers from the Elephant Listening Project (ELP) at the Cornell University Ithaca, who are conducting research on forest elephants visiting the Dzanga bai clearing in the Dzanga-Ndoki National Park in the Central African Republic. It was devised for re-identification of elephants that have been documented before. The images have been taken over a range of about 15 years.",
+    "processing": "Manual download",
 }
 
 

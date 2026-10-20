@@ -28,6 +28,7 @@ summary = {
     "span": "short",
     "size": 11000,
     "description": "The images were acquired using regular digital cameras or smartphones. The resolutions of the images ranged between 195 x 261 and 4608 x 3453 pixels. Most images of cats were acquired at public animal shelters (Taipei City Animal Protection Office, Taipei, Taiwan; and New Taipei City Government Animal Protection and Health Inspection Office, New Taipei, Taiwan) and private animal shelters in Taipei. The remaining images were collected from social media.",
+    "processing": "Kaggle required",
 }
 
 

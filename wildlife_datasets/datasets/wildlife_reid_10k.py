@@ -26,6 +26,7 @@ summary = {
     "span": "very long",
     "size": 24760,
     "description": "WildlifeReID-10k is a wildlife re-identification dataset with more than 140k images of 10k individual animals. It is a collection of 37 existing wildlife re-identification datasets with additional processing steps. WildlifeReID-10k contains diverse animals such as marine turtles, primates, birds, African herbivores, marine mammals, and domestic animals.",
+    "processing": "Kaggle required",
 }
 
 

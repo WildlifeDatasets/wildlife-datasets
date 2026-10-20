@@ -28,6 +28,7 @@ summary = {
     "span": "1 month",
     "size": 18881,
     "description": "See the description in [AerialCattle2017](#aerialcattle2017).",
+    "modifications": "Labels fixed",
 }
 
 

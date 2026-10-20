@@ -27,6 +27,7 @@ summary = {
     "span": "4.2 years",
     "size": 32,
     "description": "This dataset consists of photographs taken between 2007 and 2024 on Reunion Island, a French territory in the Indian Ocean (21°0'S, 55°30'E), whose shallow waters are known to be a development and foraging ground for green and hawksbill turtles. Photographs were taken by recreational divers as part of a citizen science programme with no specific associated protocols (no specific viewing angle or distance). Citizens shared their photographs whenever they wished with scientists for further analysis. All photographs are turtle head profiles taken during the same encounter and are stored in the TORSOOI database.",
+    "processing": "Kaggle required",
 }
 
 

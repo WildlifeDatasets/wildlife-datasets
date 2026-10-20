@@ -26,6 +26,7 @@ summary = {
     "span": "2.5 years",
     "size": 826,
     "description": "See the description in [SeaTurtleID2022](#seaturtleid2022).",
+    "processing": "Kaggle required",
 }
 
 

@@ -29,6 +29,7 @@ summary_2026 = {
     "span": "very long",
     "size": 2080,
     "description": "AnimalCLEF2026 is a continuation of the AnimalCLEF2025 competition with a clustering task and an enhanced dataset.",
+    "processing": "Kaggle required",
 }
 
 
@@ -104,6 +105,7 @@ summary_2025 = {
     "span": "very long",
     "size": 1930,
     "description": "AnamalCLEF2025 was designed as a re-identification competition attracting over 200 participants. For testing, the authors have curated a dataset consisting of never-seen data of three species: (i)🐢 loggerhead sea turtles (Zakynthos, Greece), (ii) 🦎 salamanders (Czech Republic), and (iii) 🐆 Eurasian lynxes (Czech Republic).",
+    "processing": "Kaggle required",
 }
 
 

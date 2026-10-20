@@ -132,6 +132,7 @@ class LeopardID102(_SpottedDataset):
         "reported_n_individuals": 102,
         "size": 865,
         "description": "LeopardID102 contains 717 labelled camera-trap photographs of 102 wild leopards from Zimbabwe, together with 148 additional leopard images that were not assigned to an individual identity. It comes from the same survey as SpottedHyenaID415 and includes all leopard images captured during that survey period. The images are full camera-trap frames and contain natural variation in viewpoint, lighting, animal size, and background clutter. No official train/test split has been provided by the authors. Therefore, we provide a time-aware 80/20 split.",
+        "modifications": "Unknown animals renamed; time-aware 80/20 split added",
     }
     hf_repo = "WildCAT-Datasets/LeopardID102"
     archive = "LeopardID102.zip"
@@ -150,6 +151,7 @@ class SpottedHyenaID109(_SpottedDataset):
         "reported_n_individuals": 109,
         "size": 704,
         "description": "SpottedHyenaID109 contains 704 camera-trap photographs of 109 wild spotted hyenas from Zimbabwe. The dataset comes from a larger survey with more than 800 identified hyenas, from which the authors selected individuals with reliable labels. The images are full camera-trap frames and contain natural variation in viewpoint, lighting, animal size, and background clutter. It does not overlap with SpottedHyenaID415.  No official train/test split has been provided by the authors. Therefore, we provide a time-aware 80/20 split.",
+        "modifications": "Left/right orientation preserved; time-aware 80/20 split added",
     }
     hf_repo = "WildCAT-Datasets/SpottedHyenaID109"
     archive = "SpottedHyenaID109.zip"
@@ -168,6 +170,7 @@ class SpottedHyenaID415(_SpottedDataset):
         "reported_n_individuals": 415,
         "size": 2247,
         "description": "SpottedHyenaID415 contains 1,871 labelled camera-trap photographs of 415 wild spotted hyenas from Zimbabwe, together with 376 additional hyena images that were not assigned to an individual identity. It comes from the same survey as LeopardID102 and includes all spotted hyena images captured during that survey period. The dataset does not overlap with SpottedHyenaID109.  No official train/test split has been provided by the authors. Therefore, we provide a time-aware 80/20 split.",
+        "modifications": "Unidentifiable animals renamed; time-aware 80/20 split added",
     }
     hf_repo = "WildCAT-Datasets/SpottedHyenaID415"
     archive = "SpottedHyenaID415.zip"

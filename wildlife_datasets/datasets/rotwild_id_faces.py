@@ -27,6 +27,7 @@ summary = {
     "span": "unknown",
     "size": 183,
     "description": "A face re-identification dataset for red deer (Cervus elaphus) collected in the wild in northern Germany. The dataset is intended for training and evaluating individual-identification (re-ID) models in the metric-learning setting — given two face crops, decide whether they show the same individual.",
+    "processing": "Kaggle required",
 }
 
 

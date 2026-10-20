@@ -24,6 +24,7 @@ summary = {
     "span": "unknown",
     "size": 8565,
     "description": "See the description in [BelugaID](#belugaid).",
+    "modifications": "Unknown animals renamed",
 }
 
 
