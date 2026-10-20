@@ -15,9 +15,11 @@ def get_summaries(meta: bool) -> dict[str, dict]:
     summaries = {c.display_name(): c.summary for c in names_all}
     merge_values = list(merge_datasets.values())
     names = sorted(summaries, key=str.lower)
-    return {
-        name: summaries[name] for name in names if summaries[name]["original_dataset"] != meta and name not in merge_values
-    }
+    summaries_subset = {}
+    for name in names:
+        if summaries[name].get("original_dataset", True) != meta and name not in merge_values:
+            summaries_subset[name] = summaries[name]
+    return summaries_subset
 
 
 def publication_link(summary: dict, width: int) -> str:
@@ -26,11 +28,15 @@ def publication_link(summary: dict, width: int) -> str:
     return f'<a href="{summary["publication_url"]}" target="_blank"><img src="{pdf_icon}" alt="publication link" width="{width}"></a>'
 
 
+def dataset_link(name: str, summary: dict) -> str:
+    return f"[{name}]({summary['url']})" if summary.get("url") else name
+
+
 def dataset_section(name: str, summary: dict, docs_dir: str) -> str:
     if name not in merge_datasets:
-        header = f"### [{name}]({summary['url']})"
+        header = f"### {dataset_link(name, summary)}"
     else:
-        header = f"### [{name}, {merge_datasets[name]}]({summary['url']})"
+        header = f"### {dataset_link(f'{name}, {merge_datasets[name]}', summary)}"
     if summary.get("publication_url"):
         header += " " + publication_link(summary, 20)
     if name in merge_datasets:
@@ -59,10 +65,10 @@ def preprocessing_markdown(meta: bool) -> str:
     ]
     for name, summary in summaries.items():
         cells = [
-            f"[{name}]({summary['url']})",
+            dataset_link(name, summary),
             publication_link(summary, 16),
-            summary.get("processing", ""),
-            summary.get("modifications", ""),
+            summary.get("processing") or "",
+            summary.get("modifications") or "",
         ]
         lines.append("| " + " | ".join(cells) + " |")
     return "\n".join(lines)
