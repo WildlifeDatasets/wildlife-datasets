@@ -9,6 +9,7 @@ theme:
     - content.code.copy    
 
 markdown_extensions:
+  - attr_list
   - admonition
   - pymdownx.details
   - pymdownx.superfences
@@ -19,6 +20,9 @@ plugins:
       handlers:
         python:
           paths: [wildlife_datasets]
+
+hooks:
+  - docs/scripts/hooks.py
     
 nav:
   - Introduction: index.md  

@@ -17,6 +17,7 @@ summary_2026 = {
     "animals": {"loggerhead turtle", "salamander", "lynx", "lizards"},
     "animals_simple": "multiple",
     "real_animals": True,
+    "original_dataset": False,
     "year": 2026,
     "reported_n_total": 15483,
     "reported_n_individuals": 1450,
@@ -28,6 +29,8 @@ summary_2026 = {
     "cropped": True,
     "span": "very long",
     "size": 2080,
+    "description": "AnimalCLEF2026 is a continuation of the AnimalCLEF2025 competition with a clustering task and an enhanced dataset.",
+    "processing": "Kaggle required",
 }
 
 
@@ -91,6 +94,7 @@ summary_2025 = {
     "animals": {"loggerhead turtle", "salamander", "lynx"},
     "animals_simple": "multiple",
     "real_animals": True,
+    "original_dataset": False,
     "year": 2025,
     "reported_n_total": 15209,
     "reported_n_individuals": 1233,
@@ -102,6 +106,8 @@ summary_2025 = {
     "cropped": True,
     "span": "very long",
     "size": 1930,
+    "description": "AnamalCLEF2025 was designed as a re-identification competition attracting over 200 participants. For testing, the authors have curated a dataset consisting of never-seen data of three species: (i)🐢 loggerhead sea turtles (Zakynthos, Greece), (ii) 🦎 salamanders (Czech Republic), and (iii) 🐆 Eurasian lynxes (Czech Republic).",
+    "processing": "Kaggle required",
 }
 
 

@@ -15,6 +15,7 @@ summary = {
     "animals": {"cow"},
     "animals_simple": "cows",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2025,
     "reported_n_total": 11438,
     "reported_n_individuals": 48,
@@ -26,6 +27,7 @@ summary = {
     "cropped": True,
     "span": "2 years",
     "size": 732,
+    "description": "The data was collected at a commercial Belgian dairy farm between December 2021 and October 2023 in pen housing eight heifers aged 8 to 12 months. During the experimental period, six groups of animals were monitored, resulting in a total of 48 animals. Video footage was collected continuously during day and night with a roof-mounted 4MP camera (Hikvision Europe, Hoofddorp, The Netherlands, model DS-2CD2643G2-IZS) at 2 fps. For this study, only daylight video recordings were retained. Of the 48 monitored animals, 29 were purebred red Holstein-Friesian and 19 were purebred Holstein-Friesian.",
 }
 
 

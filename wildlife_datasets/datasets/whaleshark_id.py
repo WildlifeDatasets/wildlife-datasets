@@ -12,6 +12,7 @@ summary = {
     "animals": {"whale shark"},
     "animals_simple": "sharks",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2020,
     "reported_n_total": 7693,
     "reported_n_individuals": 543,
@@ -23,6 +24,7 @@ summary = {
     "cropped": False,
     "span": "5.2 years",
     "size": 6466,
+    "description": "WhaleSharkID contains images of whale sharks and represents a collaborative effort based on the data collection and population modeling efforts conducted at Ningaloo Marine Park in Western Australia from 1995 to 2008. Images are annotated with bounding boxes around each visible whale shark and viewpoints.",
 }
 
 

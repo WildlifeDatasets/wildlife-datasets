@@ -15,6 +15,7 @@ summary = {
     "animals": {"polar bear"},
     "animals_simple": "polar bears",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2023,
     "reported_n_total": 138363,
     "reported_n_individuals": 13,
@@ -26,6 +27,7 @@ summary = {
     "cropped": True,
     "span": "short",
     "size": 1501,
+    "description": "PolarBearVidID is a dataset of 13 individual polar bears from 6 German zoos. The photos are extracted from 1431 video sequences at 12.5 fps totalling around 138 thousand images. Since the cameras were stationary, the background was cropped to prevent background overfitting.",
 }
 
 

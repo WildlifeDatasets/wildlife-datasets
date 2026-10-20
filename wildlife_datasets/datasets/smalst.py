@@ -16,6 +16,7 @@ summary = {
     "animals": {"zebra"},
     "animals_simple": "zebras",
     "real_animals": False,
+    "original_dataset": True,
     "year": 2019,
     "reported_n_total": 12850,
     "reported_n_individuals": 10,
@@ -27,6 +28,8 @@ summary = {
     "cropped": False,
     "span": "artificial",
     "size": 11978,
+    "description": "SMALST is a unique dataset because it does not contain images of real animals. Instead, the authors used the SMALR method to render 3D models of artificial Grevy's zebras from real zebra images. Then they used projections to generate multiple zebra images from each 3D model. Finally, they put the generated image on some background images. The advantages of this approach are the possibility to generate infinite numbre of images and to have precise segmentations for free. The disadvantage is that the images are computer-generated and placed in non-real background.",
+    "processing": "Manual download + Only linux: extracting",
 }
 
 

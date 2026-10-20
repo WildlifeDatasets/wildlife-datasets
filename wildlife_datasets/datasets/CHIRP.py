@@ -18,6 +18,7 @@ summary = {
     "animals": {"Siberian Jay"},
     "animals_simple": "birds",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2026,
     "reported_n_total": 402750,
     "reported_n_individuals": 182,
@@ -29,6 +30,7 @@ summary = {
     "cropped": True,
     "span": "3 years",
     "size": 19964,
+    "description": "The CHIRP video Re-ID dataset is part of a larger dataset covering a range of computer vision tasks, including object detection, keypoint estimation and action recognition of a wild population of Siberian Jays (*Perisoreus infaustus*) in Swedish Laplands. The video Re-ID dataset contains 16,109 samples across 183 unique individuals, on average 89 samples per individuals spanning multiple years. Each sample consists of 25 frames (1 second) for video re-id. All birds in the dataset are fitted with a unique combination of 3-4 colour rings on their legs, which can aid individual identification.",
 }
 
 

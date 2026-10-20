@@ -15,6 +15,7 @@ summary = {
     "animals": {"Friesian cattle"},
     "animals_simple": "cows",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2024,
     "reported_n_total": 101329,
     "reported_n_individuals": 90,
@@ -26,6 +27,7 @@ summary = {
     "cropped": True,
     "span": "7 days",
     "size": 36500,
+    "description": "See the description in [AerialCattle2017](#aerialcattle2017).",
 }
 
 

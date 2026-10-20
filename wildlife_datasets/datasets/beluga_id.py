@@ -14,6 +14,7 @@ summary = {
     "animals": {"beluga whale"},
     "animals_simple": "whales",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2022,
     "reported_n_total": 5902,
     "reported_n_individuals": 788,
@@ -25,6 +26,7 @@ summary = {
     "cropped": True,
     "span": "2.1 years",
     "size": 590,
+    "description": "The high-quality datasets BelugaID, HyenaID2022 and LeopardID2022 were published by WildMe. They contain labelled images of beluga whales, heynas and leopards. BelugaID represents a collaborative effort based on the data collection and population modeling efforts conducted in the Cook Inlet off the cost of Alaska from 2016-2019. HyenaID2022 and LeopardID2022 represent a collaborative effort based on the data collection and population modeling efforts conducted by the Botswana Predator Conservation Trust. BelugaID contains pre-cropped high-quality images taken mostly from the top. On the other hand, HyenaID2022 and LeopardID2022 contain both day-time and night-time photos with largely various quality. In some photos, it is even difficult to spot the corresponding animal. The latter two datasets are annotated with viewpoints and bounding boxes.",
 }
 
 

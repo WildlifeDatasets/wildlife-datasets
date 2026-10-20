@@ -15,6 +15,7 @@ summary = {
     "animals": {"cow"},
     "animals_simple": "cows",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2021,
     "reported_n_total": 1237,
     "reported_n_individuals": 136,
@@ -26,6 +27,7 @@ summary = {
     "cropped": False,
     "span": "short",
     "size": 500,
+    "description": "The data set consists of 1237 pairs of thermal and RGB (640 x 320 pixels and 320 x 240 pixels) images with 136 classes (i.e. 136 different cows) with a mean of 9 images per class/cow. Each folder name is the collar id of the cattle and contains its respective thermal and RGB images. The data set was collected at the Dairy Campus in Leeuwarden, The Netherlands.",
 }
 
 

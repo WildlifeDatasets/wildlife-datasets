@@ -15,6 +15,7 @@ summary = {
     "animals": {"zebra"},
     "animals_simple": "zebras",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2011,
     "reported_n_total": None,
     "reported_n_individuals": None,
@@ -26,6 +27,8 @@ summary = {
     "cropped": False,
     "span": "7 days",
     "size": 229,
+    "description": "StripeSpotter is the first published dataset. For seven consecutive days, the authors made a semi-random circuit through the 90,000 acre nature conservancy Ol'Pejeta Conservancy in Laikipia, which contains several hundred wild Plains zebras, and fewer than 20 endangered Grevy's zebras. Two people were stationed on top of the vehicle to take pictures with cheap digital cameras while the driver circled around individual groups of zebras, so as to capture both flanks of the animal. We collected as many pictures as possible of each flank of an animal in different positions in its natural walking gait. A professionally trained field assistant identified the images based on a database of prior sightings stretching back almost ten years. All but a few zebras were reliably identified.",
+    "processing": "Only linux: extracting",
 }
 
 

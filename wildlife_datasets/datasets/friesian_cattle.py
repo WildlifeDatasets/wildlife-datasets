@@ -16,6 +16,7 @@ summary_2015 = {
     "animals": {"Friesian cattle"},
     "animals_simple": "cows",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2016,
     "reported_n_total": 377,
     "reported_n_individuals": 40,
@@ -27,6 +28,8 @@ summary_2015 = {
     "cropped": True,
     "span": "1 day",
     "size": 76,
+    "description": "See the description in [AerialCattle2017](#aerialcattle2017).",
+    "modifications": "Labels fixed",
 }
 
 summary_2017 = {
@@ -38,6 +41,7 @@ summary_2017 = {
     "animals": {"Friesian cattle"},
     "animals_simple": "cows",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2017,
     "reported_n_total": 940,
     "reported_n_individuals": 89,
@@ -49,6 +53,7 @@ summary_2017 = {
     "cropped": True,
     "span": "1 day",
     "size": 343,
+    "description": "See the description in [AerialCattle2017](#aerialcattle2017).",
 }
 
 

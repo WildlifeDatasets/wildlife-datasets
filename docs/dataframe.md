@@ -51,6 +51,7 @@ Besides the dataframe, each dataset also contains some metadata. All entries are
 | animals | List of all animal scientific names in the dataset. |
 | animals_simple | List of all animal common names in the dataset. |
 | real_animals | Determines whether the images are of real animals as opposed to computer generated image. |
+| original_dataset | Determines whether the dataset is original as opposed to a collection of existing datasets (MetaDataset). |
 | year | Publication year of the dataset. |
 | reported_n_total | The reported number of total animals. |
 | reported_n_individuals | The reported number of individuals. |

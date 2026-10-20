@@ -15,6 +15,7 @@ summary = {
     "animals": {"brown bear"},
     "animals_simple": "bears",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2026,
     "reported_n_total": 72939,
     "reported_n_individuals": 109,
@@ -26,6 +27,9 @@ summary = {
     "cropped": True,
     "span": "5.1 years",
     "size": 6740,
+    "description": "BrownBearHeads is a longitudinal brown bear re-identification dataset collected at McNeil River State Game Sanctuary in Alaska, USA, between 2017 and 2022. It contains 72,940 head images of 109 known wild brown bears photographed across multiple years, viewpoints, and seasonal appearance changes such as fur shedding and substantial weight gain.\nThis provided version is re-distributed through the Kaggle reupload with a unified `metadata.csv` and standardized split columns. For details see `scripts/BrownBearHeads`.",
+    "processing": "Kaggle required",
+    "modifications": "Kaggle reupload with unified metadata and standardized splits. See `scripts/BrownBearHeads/`",
 }
 
 

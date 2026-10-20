@@ -12,6 +12,7 @@ summary = {
     "animals": {"giraffe masai", "zebra plains"},
     "animals_simple": "giraffes+zebras",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2017,
     "reported_n_total": 6925,
     "reported_n_individuals": 2056,
@@ -23,6 +24,7 @@ summary = {
     "cropped": False,
     "span": "12 days",
     "size": 10433,
+    "description": "GiraffeZebraID contains images of plains zebra and Masai giraffe taken from a two-day census of Nairobi National Park with the participation of 27 different teams of citizen scientists and 55 total photographers. The photographers were recruited both from civic groups and by asking for volunteers at the entrance gate in Nairobi National Park. All volunteers were briefly trained in a collection protocol and tasked to take pictures of animals within specific regions and from specific viewpoints. These regions helped to enforce better coverage and prevent a particular area from becoming oversampled. Only images containing either zebras or giraffes were included in this dataset. All images are labeled with viewpoints and possibly rotated bounding boxes around the individual animals. All of the images in the dataset have been resized to have a maximum dimension of 3,000 pixels.",
 }
 
 

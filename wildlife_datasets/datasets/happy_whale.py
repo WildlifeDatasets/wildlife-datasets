@@ -16,6 +16,7 @@ summary = {
     "animals": {"dolphin", "whale"},
     "animals_simple": "dolphins+whales",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2022,
     "reported_n_total": None,
     "reported_n_individuals": None,
@@ -27,6 +28,9 @@ summary = {
     "cropped": False,
     "span": "very long",
     "size": 61912,
+    "description": "HappyWhale, HumpbackWhale and NOAARightWhale are datasets of various whale species. They are a product of multi-year collaboration of multiple research institutions and citizen scientists. All these datasets were released as Kaggle competitions to make it easy and rewarding for the public to participate in science by building innovative tools to engage anyone interested in marine mammals. The whales were photographed during aerial surveys. HumpbackWhale is the most uniform dataset with a clear view on the whale tail above water. NOAARightWhale contains images of submerging whales. HappyWhale is the most diverse dataset with images of dorsal fins. Some image contain only the dorsal fin, while others contain a significant part of the whale body.",
+    "processing": "Kaggle required + terms",
+    "modifications": "Species fixed",
 }
 
 
