@@ -22,7 +22,7 @@ plugins:
           paths: [wildlife_datasets]
 
 hooks:
-  - scripts/docs/hooks.py
+  - docs/scripts/hooks.py
     
 nav:
   - Introduction: index.md  
