@@ -2,7 +2,6 @@ import os
 
 import pandas as pd
 
-from ..detection import load_segmentation as utils_load_segmentation
 from .datasets import WildlifeDataset
 from .utils import find_images, get_persistent_id
 
@@ -48,14 +47,11 @@ class Dataset_FolderStructured(WildlifeDataset):
 
 
 class Dataset_Metadata(WildlifeDataset):
-    def create_catalogue(self, file_name: str = "metadata.csv", load_segmentation: bool = False) -> pd.DataFrame:
+    def create_catalogue(self, file_name: str = "metadata.csv") -> pd.DataFrame:
 
         root = self.get_root()
         metadata = pd.read_csv(os.path.join(root, file_name))
         metadata = self.modify_metadata(metadata)
-        if load_segmentation:
-            file_name = os.path.join(root, "segmentation.csv")
-            metadata = utils_load_segmentation(metadata, file_name)
         return self.finalize_catalogue(metadata)
 
     def modify_metadata(self, metadata: pd.DataFrame) -> pd.DataFrame:

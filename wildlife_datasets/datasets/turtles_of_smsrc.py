@@ -1,7 +1,9 @@
 import ast
+import os
 
 import pandas as pd
 
+from ..detection import load_segmentation as utils_load_segmentation
 from .downloads import DownloadINaturalist
 from .general import Dataset_Metadata
 
@@ -39,6 +41,10 @@ class TurtlesOfSMSRC(DownloadINaturalist, Dataset_Metadata):
         "location",
     )
 
+    def __init__(self, *args, load_segmentation: bool = False, **kwargs) -> None:
+        self.load_segmentation = load_segmentation
+        super().__init__(*args, **kwargs)
+
     def create_catalogue(self, *, replace_identity: list[tuple] | None = None, **kwargs) -> pd.DataFrame:
         self.replace_identity = [] if replace_identity is None else replace_identity
         return super().create_catalogue(**kwargs)
@@ -54,6 +60,9 @@ class TurtlesOfSMSRC(DownloadINaturalist, Dataset_Metadata):
             {"observation_id": "encounter_id", "species_guess": "species", "file_name": "path", "observed_on": "date"},
             axis=1,
         )
+        if self.load_segmentation:
+            file_name = os.path.join(self.get_root(), "segmentation.csv")
+            metadata = utils_load_segmentation(metadata, file_name)
         return metadata
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
