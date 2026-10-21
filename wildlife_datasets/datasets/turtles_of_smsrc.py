@@ -43,7 +43,7 @@ class TurtlesOfSMSRC(DownloadINaturalist, Dataset_Metadata):
         self.replace_identity = [] if replace_identity is None else replace_identity
         return super().create_catalogue(**kwargs)
 
-    def modify_catalogue(self, metadata: pd.DataFrame) -> pd.DataFrame:
+    def modify_metadata(self, metadata: pd.DataFrame) -> pd.DataFrame:
         metadata["image_id"] = metadata["observation_id"].astype(str) + "_" + metadata["photo_id"].astype(str)
         metadata["identity"] = metadata["observation_id"]
         mask = ~metadata["location"].isnull()
