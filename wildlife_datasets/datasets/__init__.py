@@ -61,6 +61,7 @@ from .rotwild_id_faces import RotwildID_Faces
 from .sea_star_reid import SeaStarReID2023
 from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
 from .seal_id import SealID, SealIDSegmented
+from .side_view_cows import SideViewCows2026
 from .smalst import SMALST
 from .southern_province_turtles import SouthernProvinceTurtles
 from .spotted import LeopardID102, SpottedHyenaID109, SpottedHyenaID415
