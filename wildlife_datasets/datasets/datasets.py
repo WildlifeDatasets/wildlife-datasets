@@ -70,6 +70,7 @@ class WildlifeDataset:
         remove_columns: bool = False,
         check_files: bool = True,
         check_file_names: bool = True,
+        run_checks: bool = True,
         load_label: bool = False,
         factorize_label: bool = False,
         col_path: str = "path",
@@ -91,6 +92,7 @@ class WildlifeDataset:
             remove_columns (bool, optional): Whether constant columns are removed in `finalize_catalogue`.
             check_files (bool, optional): Whether files should be checks for existence in `finalize_catalogue`.
             check_file_names (bool, optional): Whether file names should be checked for problematic characters in `finalize_catalogue`.
+            run_checks (bool, optional): Whether `check_catalogue` is called in `finalize_catalogue`.
             load_label (bool, optional): Whether dataset[k] should return only image or also identity.
             factorize_label (bool, optional): Whether labels are returned factorized (intergers) or original (possibly strings).
             col_path (str, optional): Column name containing image paths.
@@ -110,9 +112,13 @@ class WildlifeDataset:
         self.remove_columns = remove_columns
         self.check_files = check_files
         self.check_file_names = check_file_names
+        self.run_checks = run_checks
         # If df is not provided, create it
         if df is None:
+            self._catalogue_finalized = False
             df = self.create_catalogue(**kwargs)
+            if df is not None and not self._catalogue_finalized:
+                df = self.finalize_catalogue(self.modify_catalogue(df))
         else:
             if not self.determined_by_df:
                 warnings.warn(
@@ -495,6 +501,14 @@ class WildlifeDataset:
 
         raise NotImplementedError("Needs to be implemented by subclasses.")
 
+    def modify_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Modifies the dataframe created by `create_catalogue`.
+
+        Automatically called in `__init__` before `finalize_catalogue`.
+        """
+
+        return df
+
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
         """Fixes labels in dataframe.
 
@@ -630,11 +644,9 @@ class WildlifeDataset:
         self,
         df: pd.DataFrame | None = None,
     ) -> pd.DataFrame:
-        """Reorders the dataframe and check file paths.
+        """Fixes labels, standardizes the dataframe and checks it.
 
-        Reorders the columns and removes constant columns.
-        Checks if columns are in correct formats.
-        Checks if ids are unique and if all files exist.
+        Calls `fix_labels`, `standardize_catalogue` and `check_catalogue`.
 
         Args:
             df (Optional[pd.DataFrame], optional): A full dataframe of the data.
@@ -646,13 +658,41 @@ class WildlifeDataset:
         df = self.df if df is None else df
         if self.update_wrong_labels:
             df = self.fix_labels(df)
+        df = self.standardize_catalogue(df)
+        if self.run_checks:
+            self.check_catalogue(df)
+        self._catalogue_finalized = True
+        return df
+
+    def standardize_catalogue(self, df: pd.DataFrame | None = None) -> pd.DataFrame:
+        """Renames and reorders the columns and optionally removes constant columns.
+
+        Args:
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
+
+        Returns:
+            A full dataframe of the data, slightly modified.
+        """
+
+        df = self.df if df is None else df
         self.rename_column(df, "path", self.col_path)
         self.rename_column(df, "identity", self.col_label)
         self.check_required_columns(df)
-        self.check_types_columns(df)
         df = self.reorder_df(df)
         if self.remove_columns:
             df = self.remove_constant_columns(df)
+        return df
+
+    def check_catalogue(self, df: pd.DataFrame | None = None) -> None:
+        """Checks columns, their types, unique ids and file paths.
+
+        Args:
+            df (Optional[pd.DataFrame], optional): A full dataframe of the data.
+        """
+
+        df = self.df if df is None else df
+        self.check_required_columns(df)
+        self.check_types_columns(df)
         self.check_unique_id(df)
         if self.check_files:
             self.check_files_exist(df[self.col_path])
@@ -660,7 +700,6 @@ class WildlifeDataset:
                 self.check_files_exist(df["segmentation"])
         if self.check_file_names:
             self.check_files_names(df[self.col_path])
-        return df
 
     def rename_column(self, df: pd.DataFrame, name_old, name_new):
         if name_old != name_new:
