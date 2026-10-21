@@ -115,10 +115,7 @@ class WildlifeDataset:
         self.run_checks = run_checks
         # If df is not provided, create it
         if df is None:
-            self._catalogue_finalized = False
             df = self.create_catalogue(**kwargs)
-            if df is not None and not self._catalogue_finalized:
-                df = self.finalize_catalogue(self.modify_catalogue(df))
         else:
             if not self.determined_by_df:
                 warnings.warn(
@@ -501,14 +498,6 @@ class WildlifeDataset:
 
         raise NotImplementedError("Needs to be implemented by subclasses.")
 
-    def modify_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Modifies the dataframe created by `create_catalogue`.
-
-        Automatically called in `__init__` before `finalize_catalogue`.
-        """
-
-        return df
-
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:
         """Fixes labels in dataframe.
 
@@ -661,7 +650,6 @@ class WildlifeDataset:
         df = self.standardize_catalogue(df)
         if self.run_checks:
             self.check_catalogue(df)
-        self._catalogue_finalized = True
         return df
 
     def standardize_catalogue(self, df: pd.DataFrame | None = None) -> pd.DataFrame:

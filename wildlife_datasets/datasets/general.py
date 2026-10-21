@@ -13,6 +13,10 @@ class Dataset_Folder(WildlifeDataset):
         data = find_images(root)
         df = pd.DataFrame({"identity": len(data) * ["unknown"], "path": data["path"] + os.path.sep + data["file"]})
         df["image_id"] = get_persistent_id(df["path"])
+        df = self.modify_catalogue(df)
+        return self.finalize_catalogue(df)
+
+    def modify_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
         return df
 
 
@@ -36,6 +40,10 @@ class Dataset_FolderStructured(WildlifeDataset):
         if "identity" not in df.columns:
             df["identity"] = "unknown"
         df["image_id"] = get_persistent_id(df["path"])
+        df = self.modify_catalogue(df)
+        return self.finalize_catalogue(df)
+
+    def modify_catalogue(self, df: pd.DataFrame) -> pd.DataFrame:
         return df
 
 
@@ -44,6 +52,11 @@ class Dataset_Metadata(WildlifeDataset):
 
         root = self.get_root()
         metadata = pd.read_csv(os.path.join(root, file_name))
+        metadata = self.modify_catalogue(metadata)
         if load_segmentation:
-            metadata = utils_load_segmentation(metadata, os.path.join(root, "segmentation.csv"))
+            file_name = os.path.join(root, "segmentation.csv")
+            metadata = utils_load_segmentation(metadata, file_name)
+        return self.finalize_catalogue(metadata)
+
+    def modify_catalogue(self, metadata: pd.DataFrame) -> pd.DataFrame:
         return metadata
