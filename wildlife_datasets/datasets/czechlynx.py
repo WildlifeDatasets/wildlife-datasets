@@ -108,7 +108,7 @@ summary_v2 = {
     "publication_url": "https://www.nature.com/articles/s41597-026-06853-9",
     "cite": "picek2026czechlynx",
     "animals": {"lynx"},
-    "animals_simple": "cats",
+    "animals_simple": "lynxes",
     "real_animals": True,
     "original_dataset": True,
     "year": 2025,
