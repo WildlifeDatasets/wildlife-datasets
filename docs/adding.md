@@ -42,6 +42,7 @@ from wildlife_datasets.datasets import WildlifeDataset
 
 summary = {
     'n_images': 4,
+    'n_images_identified': 4,
     'n_individuals': 2,
 }
 

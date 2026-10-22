@@ -54,6 +54,7 @@ Besides the dataframe, each dataset also contains some metadata. All entries are
 | original_dataset | Determines whether the dataset is original as opposed to a collection of existing datasets (MetaDataset). |
 | year | Publication year of the dataset. |
 | n_images | Number of images. |
+| n_images_identified | Number of images with a known identity. |
 | n_individuals | Number of individuals (without the unknown identity). |
 | wild | Determines whether the environment that it was photographed in is wild. |
 | clear_photos | Determines whether the database is quality-controlled such that image quality is consistent across all images. |

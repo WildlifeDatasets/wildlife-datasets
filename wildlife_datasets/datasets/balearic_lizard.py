@@ -20,6 +20,7 @@ summary = {
     "original_dataset": True,
     "year": 2025,
     "n_images": 4619,
+    "n_images_identified": 4619,
     "n_individuals": 1009,
     "wild": False,
     "clear_photos": True,

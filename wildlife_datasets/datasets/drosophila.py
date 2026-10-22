@@ -18,6 +18,7 @@ summary = {
     "original_dataset": True,
     "year": 2018,
     "n_images": 2591820,
+    "n_images_identified": 2591700,
     "n_individuals": 60,
     "wild": False,
     "clear_photos": True,
