@@ -26,8 +26,8 @@ _gorilla_summary_base = {
 summary_wild = {
     **_gorilla_summary_base,
     "url": "https://huggingface.co/datasets/gorilla-watch/Gorilla-SPAC-Wild",
-    "reported_n_total": 160818,
-    "reported_n_individuals": 135,
+    "n_images": 160818,
+    "n_individuals": 135,
     "wild": True,
     "span": "4.5 years",
     "size": 59440,
@@ -37,8 +37,8 @@ summary_wild = {
 summary_zoo = {
     **_gorilla_summary_base,
     "url": "https://huggingface.co/datasets/gorilla-watch/Gorilla-Zoo-Berlin",
-    "reported_n_total": 188679,
-    "reported_n_individuals": 5,
+    "n_images": 188679,
+    "n_individuals": 5,
     "wild": False,
     "span": "2 months",
     "size": 12530,

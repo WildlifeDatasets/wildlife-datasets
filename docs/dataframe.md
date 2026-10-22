@@ -53,8 +53,8 @@ Besides the dataframe, each dataset also contains some metadata. All entries are
 | real_animals | Determines whether the images are of real animals as opposed to computer generated image. |
 | original_dataset | Determines whether the dataset is original as opposed to a collection of existing datasets (MetaDataset). |
 | year | Publication year of the dataset. |
-| reported_n_total | The reported number of total animals. |
-| reported_n_individuals | The reported number of individuals. |
+| n_images | Number of images. |
+| n_individuals | Number of individuals (without the unknown identity). |
 | wild | Determines whether the environment that it was photographed in is wild. |
 | clear_photos | Determines whether the database is quality-controlled such that image quality is consistent across all images. |
 | pose | Determines whether the photos have one orientation (single), two orientation such as left and right flanks (double) or more (multiple). |

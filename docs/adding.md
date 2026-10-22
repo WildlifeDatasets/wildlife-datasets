@@ -41,8 +41,8 @@ import pandas as pd
 from wildlife_datasets.datasets import WildlifeDataset
 
 summary = {
-    'reported_n_total': 4,
-    'reported_n_individuals': 2,
+    'n_images': 4,
+    'n_individuals': 2,
 }
 
 class Test(WildlifeDataset):
