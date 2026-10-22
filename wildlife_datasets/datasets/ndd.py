@@ -19,7 +19,7 @@ summary = {
     "real_animals": True,
     "original_dataset": True,
     "year": 2020,
-    "reported_n_total": None,
+    "reported_n_total": 6102,
     "reported_n_individuals": 82,
     "wild": True,
     "clear_photos": True,

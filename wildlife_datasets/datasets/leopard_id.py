@@ -14,7 +14,7 @@ summary = {
     "real_animals": True,
     "original_dataset": True,
     "year": 2022,
-    "reported_n_total": None,
+    "reported_n_total": 6825,
     "reported_n_individuals": 430,
     "wild": True,
     "clear_photos": False,
