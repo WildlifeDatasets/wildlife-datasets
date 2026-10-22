@@ -25,7 +25,7 @@ summary = {
     "cropped": False,
     "span": "1.7 years",
     "size": 25100,
-    "description": "SideViewCows2026 contains right-side images of dairy cows, predominantly Holstein Friesian with a few Fleckvieh, Jersey and Brown Swiss animals. It consists of three nested subsets with consistent identities: parlor (54,393 video frames of 110 cows from a fixed camera at the milking parlor entrance, cropped to a region of interest), barn (25,260 frames of 69 cows from handheld videos in the barn) and snapshots (607 photographs of 63 cows in varied indoor and outdoor settings). Every image comes with a binary segmentation mask of the animal. Regions with people were overwritten in magenta. Since frames from the same recording are strongly correlated, splits should be grouped by video.",
+    "description": "SideViewCows2026 contains right-side images of dairy cows, predominantly Holstein Friesian with a few Fleckvieh, Jersey and Brown Swiss animals. It consists of three nested subsets with consistent identities: parlor (54,393 video frames of 110 cows from a fixed camera at the milking parlor entrance, cropped to a region of interest), barn (25,260 frames of 69 cows from handheld videos in the barn) and snapshots (607 photographs of 63 cows taken over several days in varied indoor and outdoor settings while testing a re-identification system). Parlor and barn are intended for training and snapshots for testing. Every image comes with a binary segmentation mask of the animal. Regions with people were overwritten in magenta. Since frames from the same recording are strongly correlated, custom splits should be grouped by video.",
 }
 
 
@@ -38,13 +38,17 @@ class SideViewCows2026(DownloadURL, Dataset_Metadata):
         ("https://zenodo.org/records/21605650/files/manifest.csv?download=1", "manifest.csv"),
     ]
     extract_add_folder = False
+    max_gap = 60
 
     def create_catalogue(self, file_name: str = "manifest.csv") -> pd.DataFrame:
         """
         Create the catalogue DataFrame for the SideViewCows2026 dataset.
 
-        The recordings are identified by the capture time, which is shared by all
-        frames of one video. Snapshots are individual photographs and have no video.
+        Frames of one individual in parlor or barn belong to the same video when their
+        capture times differ by at most `max_gap` seconds. Frames in a video are numbered
+        by capture time and then by path. Snapshots are individual photographs and have
+        no video. The split follows the authors: parlor (train1) was used for training,
+        barn (train2) can be used for training or comparison and snapshots are the test set.
 
         Returns:
             pd.DataFrame: A dataframe containing one row per image.
@@ -54,9 +58,10 @@ class SideViewCows2026(DownloadURL, Dataset_Metadata):
                 - identity (int): Individual identity label.
                 - path (str): Relative path to the image file.
                 - segmentation (str): Relative path to the binary mask.
-                - split (str): Gallery (parlor) or query (snapshots), missing for barn.
+                - subset (str): Recording setting (parlor, barn or snapshots).
+                - split (str): train1 (parlor), train2 (barn) or test (snapshots).
                 - video (int): Index of the video recording, missing for snapshots.
-                - frame_number (int): Consecutive number of the image within the individual and subset.
+                - frame_number (int): Index of the frame in the video, missing for snapshots.
                 - time_offset_s (int): Capture time in seconds relative to the earliest image.
         """
 
@@ -73,9 +78,12 @@ class SideViewCows2026(DownloadURL, Dataset_Metadata):
             axis=1,
         )
         metadata["image_id"] = get_persistent_id(metadata["path"])
-        is_video = metadata["subset"] != "snapshots"
-        video = metadata.loc[is_video, ["subset", "time_offset_s"]].astype(str).agg("_".join, axis=1)
-        metadata["video"] = pd.Series(pd.factorize(video)[0], index=video.index).astype("Int64")
-        metadata["split"] = metadata.pop("subset").map({"parlor": "gallery", "snapshots": "query"})
+        videos = metadata[metadata["subset"] != "snapshots"]
+        videos = videos.sort_values(["subset", "identity", "time_offset_s", "path"])
+        gap = videos.groupby(["subset", "identity"])["time_offset_s"].diff()
+        video = (gap.isnull() | (gap > self.max_gap)).cumsum() - 1
+        metadata["video"] = video.astype("Int64")
+        metadata["frame_number"] = videos.groupby(video).cumcount().astype("Int64") + 1
+        metadata["split"] = metadata["subset"].map({"parlor": "train1", "barn": "train2", "snapshots": "test"})
         metadata = metadata.drop(["width", "height", "sha256"], axis=1)
         return metadata
