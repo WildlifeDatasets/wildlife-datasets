@@ -9,11 +9,11 @@ from .downloads import DownloadKaggle
 logger = logging.getLogger(__name__)
 
 summary = {
-    "licenses": "Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)",
-    "licenses_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "licenses": "Attribution 4.0 International (CC BY 4.0)",
+    "licenses_url": "https://creativecommons.org/licenses/by/4.0/",
     "url": "https://www.kaggle.com/datasets/roberalcaraz/baleariclizard",
-    "publication_url": "https://sciety.org/articles/activity/10.21203/rs.3.rs-7302183/v1",
-    "cite": "alcaraz2025rematch",
+    "publication_url": "https://www.nature.com/articles/s41597-026-07411-z",
+    "cite": "alcaraz2026rematch",
     "animals": {"balearic lizard"},
     "animals_simple": "lizards",
     "real_animals": True,

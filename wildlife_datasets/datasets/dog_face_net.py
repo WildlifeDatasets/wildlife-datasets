@@ -9,7 +9,7 @@ from .downloads import DownloadURL
 summary = {
     "licenses": "Attribution 4.0 International (CC BY 4.0)",
     "licenses_url": "https://creativecommons.org/licenses/by/4.0/",
-    "url": "https://github.com/GuillaumeMougeot/DogFaceNet",
+    "url": "https://zenodo.org/records/12578449",
     "publication_url": "https://link.springer.com/chapter/10.1007/978-3-030-29894-4_34",
     "cite": "mougeot2019deep",
     "animals": {"dog"},

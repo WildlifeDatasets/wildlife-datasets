@@ -102,11 +102,11 @@ class CzechLynx(DownloadKaggle, WildlifeDataset):
 
 
 summary_v2 = {
-    "licenses": "Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)",
-    "licenses_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "licenses": "Attribution 4.0 International (CC BY 4.0)",
+    "licenses_url": "https://creativecommons.org/licenses/by/4.0/",
     "url": "https://www.kaggle.com/datasets/picekl/czechlynx/",
-    "publication_url": "https://arxiv.org/abs/2506.04931",
-    "cite": "picek2025czechlynx",
+    "publication_url": "https://www.nature.com/articles/s41597-026-06853-9",
+    "cite": "picek2026czechlynx",
     "animals": {"lynx"},
     "animals_simple": "cats",
     "real_animals": True,
