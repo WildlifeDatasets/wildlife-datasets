@@ -44,6 +44,7 @@ names_download = [
     (SeaStarReID2023, "SeaStarReID2023"),
     (SeaTurtleID2022, "SeaTurtleID2022"),
     (SeaTurtleIDHeads, "SeaTurtleIDHeads"),
+    (SideViewCows2026, "SideViewCows2026"),
     (SouthernProvinceTurtles, "SouthernProvinceTurtles"),
     (StripeSpotter, "StripeSpotter"),
     (TurtlesOfSMSRC, "TurtlesOfSMSRC"),
