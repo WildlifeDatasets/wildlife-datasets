@@ -39,10 +39,12 @@ The aim of the project is to provide a comprehensive overview of datasets for wi
 
 An introductory example is provided in a [Jupyter notebook](notebooks/introduction.ipynb). The package provides a natural synergy with [WildlifeTools](https://github.com/WildlifeDatasets/wildlife-tools), which provides our [MegaDescriptor](https://huggingface.co/BVRA/MegaDescriptor-L-384) model and tools for training neural networks. 
 
+Two tutorials cover [mask operations](notebooks/masks.ipynb) and [MegaDescriptor-T-224 inference and evaluation](notebooks/cfr.ipynb), including Recall@k, random Recall@k, CFR and SSI.
+
 Do you know about any animal re-identification dataset which is not included? Post it to the [discussion forum](https://github.com/WildlifeDatasets/wildlife-datasets/discussions/6) please.
 
 ## Changelog
-
+[20/10/2026] Supporting animal mask loading using either already provided masks or newly masks by [Upadhyay et al. 2026](ADD LINK ONCE ON ARXIV)
 [14/07/2026] Added BrownBearHeads (bears), CHIRP (birds), HulaPaintedFrogs (frogs), LeopardID102 (leopards), Melops (fish), RedBeeReID (bees), RotwildID_Faces (deer) and SpottedHyenaID109, SpottedHyenaID415 (hyenas).  
 [30/01/2026] Added AnimalCLEF2026 (unifications of multiple datasets), BalearicLizards (lizards) and TurtlesOfSMSRC (sea turtles).  
 [18/08/2025] Reached **50 datasets** by adding BristolGorillas2020 (primates), CattleMuzzle, CoBRAReIdentificationYoungstock, HolsteinCattleRecognition (cows), CzechLynx (lynxes) and WildRaptorID (eagles).  
@@ -129,7 +131,7 @@ dataset.plot_grid()
 
 ## Additional functionality
 
-For additional functionality including mass loading, datasets splitting or evaluation metrics we refer to the [documentation](https://wildlifedatasets.github.io/wildlife-datasets/) or the [notebooks](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/notebooks).
+For additional functionality including mask loading, datasets splitting or evaluation metrics we refer to the [documentation](https://wildlifedatasets.github.io/wildlife-datasets/) or the [notebooks](https://github.com/WildlifeDatasets/wildlife-datasets/tree/main/notebooks).
 
 ## Additional datasets
 

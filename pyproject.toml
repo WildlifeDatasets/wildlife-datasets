@@ -31,12 +31,14 @@ dependencies=[
           'pandas>=1.1.4',
           'tqdm>=4.62.3',
           'opencv-python>=4.5.5.62',
-          'Pillow>=7.1.2',
+          'Pillow>=9.1.0',
           'scikit-learn>=1.0.1',
           'matplotlib>=3.5.1',
           'pycocotools>=2.0.1',
           'networkx',
           'datasets',
+          'huggingface-hub>=0.20',
+          'pyarrow>=14',
           'gdown',
           'kaggle',
           'pyinaturalist',
@@ -44,6 +46,13 @@ dependencies=[
 ]
 
 [project.optional-dependencies]
+inpainting = [
+    "diffusers>=0.30",
+    "torch>=2.1",
+    "transformers>=4.41",
+    "accelerate>=0.26",
+    "safetensors>=0.4",
+]
 dev = [
     "pytest>=8.0",
     "ruff>=0.11",

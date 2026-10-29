@@ -6,16 +6,70 @@ import warnings
 from collections.abc import Callable, Sequence
 from contextlib import contextmanager
 from copy import deepcopy
+from dataclasses import dataclass
 
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
-import pycocotools.mask as mask_coco
 from matplotlib.figure import Figure
-from PIL import Image
+from PIL import Image, ImageOps
 
 from . import utils
+
+_CFR_FILL = np.array((123, 116, 103), dtype=np.uint8)
+
+
+@dataclass
+class DatasetImage:
+    """An indexed image with its aligned foreground mask and CFR views.
+
+    Attributes:
+        image (Image.Image): Full RGB source image, before model preprocessing.
+        mask (np.ndarray | None): Boolean foreground mask, or None if unavailable.
+    """
+
+    image: Image.Image
+    mask: np.ndarray | None
+
+    def _view(self, foreground, background):
+        if self.mask is None:
+            raise ValueError("This image has no foreground mask; CFR views are unavailable.")
+        return Image.fromarray(np.where(self.mask[..., None], foreground, background))
+
+    @property
+    def foreground(self) -> Image.Image:
+        """Animal foreground with the background filled by the ImageNet RGB mean."""
+        return self._view(np.asarray(self.image), _CFR_FILL)
+
+    @property
+    def background(self) -> Image.Image:
+        """Background with the animal filled by the ImageNet RGB mean."""
+        return self._view(_CFR_FILL, np.asarray(self.image))
+
+    @property
+    def shortcut(self) -> Image.Image:
+        """CFR shortcut view: the background, including the animal-shaped hole."""
+        return self.background
+
+    @property
+    def silhouette(self) -> Image.Image:
+        """Black animal silhouette on the ImageNet RGB mean background."""
+        return self._view(np.zeros(3, dtype=np.uint8), _CFR_FILL)
+
+    @property
+    def cfr_views(self) -> dict[str, Image.Image]:
+        """Return full, foreground, shortcut, and silhouette views as RGB images.
+
+        All views share the source image's coordinates. Apply the same model
+        preprocessing to each view afterwards. A missing mask raises ValueError.
+        """
+        return {
+            "full": self.image.copy(),
+            "foreground": self.foreground,
+            "shortcut": self.shortcut,
+            "silhouette": self.silhouette,
+        }
 
 
 class WildlifeDataset:
@@ -68,6 +122,7 @@ class WildlifeDataset:
         factorize_label: bool = False,
         col_path: str = "path",
         col_label: str = "identity",
+        masks: bool | None = None,
         **kwargs,
     ) -> None:
         """Initializes the class.
@@ -88,8 +143,18 @@ class WildlifeDataset:
             factorize_label (bool, optional): Whether labels are returned factorized (intergers) or original (possibly strings).
             col_path (str, optional): Column name containing image paths.
             col_label (str, optional): Column name containing individual animal names (labels).
+            masks (bool | None): Detect native and cached masks by default, without
+                downloading. False keeps image-only access; True also prepares missing
+                published masks. Mask items use img_load="full" and transform=None;
+                apply spatial augmentations to the pair afterwards.
         """
 
+        if masks and (img_load != "full" or transform is not None):
+            raise ValueError(
+                'With masks=True, use img_load="full" and transform=None. '
+                "Apply spatial transforms to item.image and item.mask together, "
+                "or preprocess item.cfr_views afterwards."
+            )
         if not self.saved_to_system_folder and root is not None and not os.path.exists(root):
             raise FileNotFoundError(f"Dataset root does not exist: {root}")
         if self.outdated_dataset:
@@ -117,15 +182,18 @@ class WildlifeDataset:
         self.df = df.reset_index(drop=True)
         self.transform = transform
         self.img_load = img_load
+        self.load_label = load_label
+        self.factorize_label = factorize_label
+        self._mask_reader = None
+        available = self._init_masks(local_files_only=masks is None) if masks is not False else False
+        self.masks = masks is True or (available and img_load == "full" and transform is None)
         if self.img_load == "auto":
-            if "segmentation" in self.df:
+            if "segmentation" in self.df or self._mask_reader is not None:
                 self.img_load = "bbox_mask"
             elif "bbox" in self.df:
                 self.img_load = "bbox"
             else:
                 self.img_load = "full"
-        self.load_label = load_label
-        self.factorize_label = factorize_label
         self.compute_attributes()
 
     @property
@@ -162,26 +230,70 @@ class WildlifeDataset:
     def __len__(self):
         return len(self.df)
 
-    def __getitem__(self, idx: int) -> Image.Image | tuple[Image.Image, int | str]:
-        """Load an image with iloc `idx` with transforms `self.transform` and `self.img_load` applied.
+    def __getitem__(self, idx: int) -> Image.Image | DatasetImage | tuple[Image.Image | DatasetImage, int | str]:
+        """Load the image at positional index `idx`.
 
-        Args:
-            idx (int): Index of the image.
-
-        Returns:
-            Loaded image.
+        With native or cached masks and default image-loading settings, return
+        a DatasetImage exposing .image, .mask, and the CFR view properties.
+        Otherwise, return the image with img_load and transform applied.
+        With load_label=True, also return the identity as (image_or_item, label).
         """
-
         img = self.get_image(idx)
-        img = self.apply_segmentation(img, idx)
-        if self.transform:
-            img = self.transform(img)
+        if self.masks:
+            from ..loader.masks import _load_mask
+
+            img = DatasetImage(img.convert("RGB"), _load_mask(self, idx, image=img))
+        else:
+            img = self.apply_segmentation(img, idx)
+            if self.transform:
+                img = self.transform(img)
         if self.load_label and self.factorize_label:
             return img, self.labels[idx]
         elif self.load_label:
             return img, self.df[self.col_label].iloc[idx]
         else:
             return img
+
+    def _init_masks(self, *, local_files_only=False):
+        """Resolve native/published annotations and report whether masks are available."""
+        from ..loader.masks import MaskReader, _has_segmentation
+
+        native = self.df.get("segmentation", pd.Series(None, index=self.df.index)).map(_has_segmentation)
+        if native.all():
+            return bool(native.any())
+        # Dataset variants can reuse their parent's release; source-path
+        # matching still decides which individual annotations are covered.
+        for cls in type(self).__mro__:
+            if cls is WildlifeDataset:
+                break
+            if not issubclass(cls, WildlifeDataset):
+                continue
+            reader = MaskReader.from_hub(cls.__name__, local_files_only=local_files_only)
+            if reader is not None:
+                fallback = self.df.loc[~native]
+                ids = reader.match(fallback, path_col=self.col_path)
+                self.df["mask_id"] = pd.Series(ids, index=fallback.index, dtype=object)
+                self._mask_reader = reader
+                break
+        return bool(native.any() or self._mask_reader is not None)
+
+    def has_mask(self, idx: int) -> bool:
+        """Check native/published annotation availability without reading mask pixels.
+
+        Native annotation presence is checked, not file existence or mask
+        validity; indexing reports missing files or malformed data.
+        """
+        from ..loader.masks import _has_segmentation
+
+        if not self.masks:
+            return False
+        row = self.df.iloc[idx]
+        if _has_segmentation(row.get("segmentation")):
+            return True
+        if self._mask_reader is None:
+            return False
+        key = row["mask_id"]
+        return bool(pd.notna(key) and self._mask_reader.is_present(key))
 
     def compute_attributes(self) -> None:
         self.labels, self.labels_map = pd.factorize(self.df[self.col_label].to_numpy())
@@ -197,10 +309,7 @@ class WildlifeDataset:
         """
 
         dataset = deepcopy(self)
-        if len(self) == len(idx):
-            dataset.df = dataset.df[idx].reset_index(drop=True)
-        else:
-            dataset.df = dataset.df.loc[idx].reset_index(drop=True)
+        dataset.df = dataset.df.loc[idx].reset_index(drop=True)
         dataset.compute_attributes()
         return dataset
 
@@ -216,7 +325,10 @@ class WildlifeDataset:
             self.root = None
 
     def get_image(self, idx: int) -> Image.Image:
-        """Load an image with iloc `idx`.
+        """Load the full source image at iloc `idx`, respecting EXIF orientation.
+
+        Dataset transforms and img_load modes are not applied. When mask access
+        is active, indexing returns this image and its aligned mask together.
 
         Args:
             idx (int): Index of the image.
@@ -228,7 +340,7 @@ class WildlifeDataset:
         data = self.df.iloc[idx]
         img_path = self.get_absolute_path(data[self.col_path])
         img = self.load_image(img_path)
-        return img
+        return ImageOps.exif_transpose(img)
 
     def load_image(self, path: str) -> Image.Image:
         """Load an image with `path`.
@@ -242,45 +354,16 @@ class WildlifeDataset:
 
         return utils.load_image(path)
 
-    def _prepare_segmentation(self, img, segmentation):
-        if isinstance(segmentation, (list, np.ndarray)):
-            w, h = img.size
-            rles = mask_coco.frPyObjects([segmentation], h, w)
-            return mask_coco.merge(rles)
-
-        if isinstance(segmentation, dict) and isinstance(segmentation.get("counts"), (list, np.ndarray)):
-            h, w = segmentation["size"]
-            return mask_coco.frPyObjects(segmentation, h, w)
-
-        if isinstance(segmentation, dict) and isinstance(segmentation.get("counts"), str):
-            return segmentation
-
-        if isinstance(segmentation, str):
-            assert self.root is not None
-            m = np.asfortranarray(utils.load_image(os.path.join(self.root, segmentation)))
-            if m.ndim == 3:
-                m = m[:, :, 0]
-            return mask_coco.encode(m)
-
-        if not np.any(pd.isnull(segmentation)):
-            raise Exception("Segmentation type not recognized")
-
-        return segmentation
-
-    def _apply_mask(self, img: Image.Image, segmentation, invert: bool) -> Image.Image:
-        if np.any(pd.isnull(segmentation)):
+    def _apply_mask(self, img: Image.Image, mask, invert: bool) -> Image.Image:
+        if mask is None:
             return img
-        mask = mask_coco.decode(segmentation).astype(bool)
         if invert:
             mask = ~mask
         return Image.fromarray(np.asarray(img) * mask[..., np.newaxis])
 
-    def _apply_mask_crop(self, img: Image.Image, segmentation, invert: bool = False) -> Image.Image:
-        if segmentation is None or np.any(pd.isnull(segmentation)):
+    def _apply_mask_crop(self, img: Image.Image, mask, invert: bool = False) -> Image.Image:
+        if mask is None:
             return img
-
-        # Decode mask (H, W) → bool
-        mask = mask_coco.decode(segmentation).astype(bool)
 
         # If mask is empty, return original
         if not mask.any():
@@ -321,9 +404,14 @@ class WildlifeDataset:
 
         # Prepare for segmentations
         if self.img_load in {"full_mask", "full_hide", "bbox_mask", "bbox_hide"}:
-            if "segmentation" not in data:
-                raise ValueError(f"{self.img_load} selected but no segmentation found.")
-            segmentation = self._prepare_segmentation(img, data["segmentation"])
+            from ..loader.masks import _load_mask
+
+            if "segmentation" not in data and self._mask_reader is None:
+                raise ValueError(
+                    f"{self.img_load} selected but no segmentation found; prepare masks with get_data(root, masks=True)."
+                )
+            img = ImageOps.exif_transpose(img).convert("RGB")
+            segmentation = _load_mask(self, idx, image=img)
 
         # Load full image as it is.
         if self.img_load == "full":
@@ -366,27 +454,30 @@ class WildlifeDataset:
         raise ValueError(f"Invalid img_load argument: {self.img_load}")
 
     @classmethod
-    def get_data(cls, root: str, force: bool = False, **kwargs) -> None:
-        """Downloads and extracts the data. Wrapper around `cls._download` and `cls._extract.`
+    def get_data(cls, root: str, force: bool = False, masks: bool = False, **kwargs) -> None:
+        """Download and extract the dataset, optionally including foreground masks.
 
         Args:
             root (str): Where the data should be stored.
-            force (bool, optional): It the root exists, whether it should be overwritten.
+            force (bool, optional): Force download again.
+            masks (bool, optional): Download and prepare masks.
+                Also works when the images have already been downloaded.
         """
 
         dataset_name = cls.__name__
         mark_file_name = os.path.join(root, cls.download_mark_name)
 
         already_downloaded = os.path.exists(mark_file_name)
+        print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
         if not cls.saved_to_system_folder and already_downloaded and not force:
-            print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
             print(cls.download_warning)
         else:
-            print(f"DATASET {dataset_name}: DOWNLOADING STARTED.")
             cls.download(root, force=force, **kwargs)
             print(f"DATASET {dataset_name}: EXTRACTING STARTED.")
             cls.extract(root, **kwargs)
-            print(f"DATASET {dataset_name}: FINISHED.\n")
+        if masks:
+            cls(root, masks=True)
+        print(f"DATASET {dataset_name}: FINISHED.\n")
 
     @classmethod
     def download(cls, root: str, force: bool = False, **kwargs) -> None:
@@ -412,7 +503,7 @@ class WildlifeDataset:
             with utils.data_directory(root):
                 cls._download(**kwargs)
             open(mark_file_name, "a").close()
-            if hasattr(cls, "summary") and isinstance(cls.summary, dict) and "licenses_url" in cls.summary:
+            if cls.summary.get("licenses_url"):
                 with open(os.path.join(root, cls.license_file_name), "w") as file:
                     file.write(cls.summary["licenses_url"])
 

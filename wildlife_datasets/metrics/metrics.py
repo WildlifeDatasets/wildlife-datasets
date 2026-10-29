@@ -288,7 +288,7 @@ def average_precision(y_true: int | str, y_pred: list) -> float:
         return skm.average_precision_score(a, b)
 
 
-def mean_average_precision(y_true: list, y_pred: list[list]):
+def mean_average_precision(y_true: list, y_pred: list[list]) -> float:
     """Computes the mean average precision (for multiple samples).
 
     It computes MAP@K, where K is the length of `y_pred[0]`.
@@ -324,7 +324,7 @@ def auc_roc_new_class(
         new_class (Union[int, str]): Name of the new class.
 
     Returns:
-        Computed arena under ROC curve.
+        Computed area under ROC curve.
     """
 
     y_true, _, new_class = unify_types(y_true, [], new_class)
@@ -344,7 +344,7 @@ def BAKS(
 
     Args:
         y_true (List): List of true labels.
-        y_score (List): List of scores.
+        y_pred (List): List of predictions.
         identity_test_only (List): List of new identities (only in the testing set).
 
     Returns:
@@ -381,7 +381,7 @@ def BAUS(y_true: list, y_pred: list, identity_test_only: list, new_class: int | 
 
     Args:
         y_true (List): List of true labels.
-        y_score (List): List of scores.
+        y_pred (List): List of predictions.
         identity_test_only (List): List of new identities (only in the testing set).
         new_class (Union[int, str]): Name of the new class.
 
@@ -410,3 +410,47 @@ def BAUS(y_true: list, y_pred: list, identity_test_only: list, new_class: int | 
     for _, df_identity in df.groupby("y_true"):
         accuracy += 1 / df["y_true"].nunique() * np.mean(df_identity["y_pred"] == new_class)
     return accuracy
+
+
+# Counterfactual foreground retrieval scores.
+
+
+def cfr(recalls: dict[str, float], random_recall: float) -> float:
+    """Compute CFR from previously calculated Recall@k values.
+
+    Args:
+        recalls (dict): Maps "full" and "foreground" to their Recall@k values
+            as fractions in [0, 1]. Other view keys are ignored.
+        random_recall (float): Expected random Recall@k for the same queries,
+            gallery, k, and retrieval exclusions, as a fraction in [0, 1].
+
+    Returns:
+        float: Retrieval performance supported by both full and foreground
+        views, in [0, 1]. Returns NaN when random recall is 1 or an input is NaN.
+    """
+    signal = np.maximum(0, np.minimum(recalls["full"], recalls["foreground"]) - random_recall)
+    return float(signal / (1 - random_recall)) if random_recall < 1 else float("nan")
+
+
+def ssi(recalls: dict[str, float], random_recall: float, *, silhouette_is_shortcut: bool = True) -> float:
+    """Compute SSI from previously calculated Recall@k values.
+
+    Args:
+        recalls (dict): Maps "full" and "shortcut" to their Recall@k values,
+            optionally including "silhouette", as fractions in [0, 1].
+        random_recall (float): Expected random Recall@k for the same queries,
+            gallery, k, and retrieval exclusions, as a fraction in [0, 1].
+        silhouette_is_shortcut (bool): Include silhouette recall when supplied,
+            using the larger shortcut/silhouette value. Set False when outline
+            is intended identity evidence. Defaults to True.
+
+    Returns:
+        float: Shortcut signal relative to full-image signal, in [0, 1]. Returns
+        NaN when full-image recall is at or below chance or a used input is NaN.
+    """
+    shortcut = recalls["shortcut"]
+    if silhouette_is_shortcut and "silhouette" in recalls:
+        shortcut = np.maximum(shortcut, recalls["silhouette"])
+    full_signal = np.maximum(0, recalls["full"] - random_recall)
+    shortcut_signal = np.maximum(0, shortcut - random_recall)
+    return float(np.minimum(1, shortcut_signal / full_signal)) if full_signal > 0 else float("nan")

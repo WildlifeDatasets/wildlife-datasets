@@ -25,7 +25,7 @@ from .cows import Cows2021, Cows2021v2
 from .ctai import CTai
 from .czechlynx import CzechLynx, CzechLynxv2
 from .czoo import CZoo
-from .datasets import DatasetFactory, WildlifeDataset
+from .datasets import DatasetFactory, DatasetImage, WildlifeDataset
 from .dog_face_net import DogFaceNet
 from .downloads import DownloadHuggingFace, DownloadINaturalist, DownloadKaggle, DownloadPrivate, DownloadURL
 from .drosophila import Drosophila

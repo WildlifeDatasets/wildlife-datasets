@@ -219,12 +219,13 @@ class DownloadINaturalist:
         pass
 
     @classmethod
-    def get_data(cls, root: str, force: bool = True, **kwargs) -> None:
+    def get_data(cls, root: str, force: bool = True, masks: bool = False, **kwargs) -> None:
         """Downloads and extracts the data. Wrapper around `cls._download` and `cls._extract.`
 
         Args:
             root (str): Where the data should be stored.
             force (bool, optional): It the root exists, whether it should be overwritten.
+            masks (bool, optional): Prepare native or published masks after extraction.
         """
 
         dataset_name = cls.__name__
@@ -232,6 +233,8 @@ class DownloadINaturalist:
         cls.download(root, force=force, **kwargs)
         print(f"DATASET {dataset_name}: EXTRACTING STARTED.")
         cls.extract(root, **kwargs)
+        if masks:
+            cls(root, masks=True)
         print(f"DATASET {dataset_name}: FINISHED.\n")
 
 
