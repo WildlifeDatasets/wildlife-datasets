@@ -54,7 +54,9 @@ class Chicks4FreeID(DownloadHuggingFace, WildlifeDataset):
         return self.finalize_catalogue(df)
 
     def get_image(self, idx):
-        if idx < self.n_train:
-            return self.dataset["train"][int(idx)]["crop"]
+        # Catalogue IDs retain the original backend positions after subsetting.
+        source_idx = int(self.df.iloc[idx]["image_id"])
+        if source_idx < self.n_train:
+            return self.dataset["train"][source_idx]["crop"]
         else:
-            return self.dataset["test"][int(idx) - self.n_train]["crop"]
+            return self.dataset["test"][source_idx - self.n_train]["crop"]
