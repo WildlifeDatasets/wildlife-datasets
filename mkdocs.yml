@@ -29,6 +29,8 @@ nav:
     - Displaying datasets: wildlife_dataset.md
     - Training ML models: training.md
     - Testing ML methods: methods.md
+    - CFR evaluation: cfr.md
+    - Foreground masks: masks.md
     - Adding new datasets: adding.md
   - Advanced:
     - Dataset representation: dataframe.md
