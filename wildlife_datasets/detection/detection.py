@@ -73,7 +73,9 @@ def run_detection(dataset: WildlifeDataset, model) -> pd.DataFrame:
             labels = np.concatenate((labels, box.cls.cpu().numpy()))
 
     if len(image_ids) == 0:
-        return pd.DataFrame(columns=["image_id", "bbox_x", "bbox_y", "bbox_w", "bbox_h", "segmentation", "score", "label"])
+        return pd.DataFrame(
+            columns=["image_id", "bbox_x", "bbox_y", "bbox_w", "bbox_h", "segmentation", "score", "label"]
+        )
     return pd.DataFrame(
         {
             "image_id": image_ids,
