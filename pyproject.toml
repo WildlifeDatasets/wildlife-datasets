@@ -43,15 +43,13 @@ dependencies=[
           'kaggle',
           'pyinaturalist',
           'python-docx',
+          "notebook>=7.6.3",
 ]
 
 [project.optional-dependencies]
 inpainting = [
-    "diffusers>=0.30",
-    "torch>=2.1",
-    "transformers>=4.41",
-    "accelerate>=0.26",
-    "safetensors>=0.4",
+    "onnxruntime>=1.21",
+    "onnx>=1.17",
 ]
 dev = [
     "pytest>=8.0",

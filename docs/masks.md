@@ -115,12 +115,11 @@ When resizing masks, use nearest-neighbor interpolation to preserve their binary
 ## Background Inpainting
 
 Removing an animal with a constant color leaves an artificial region in the image. 
-In case you want/need a more natural background, we provides an optional Stable Diffusion inpainting interface that reconstructs the scene behind the animal.
-
+For applications requiring a more natural background, WildlifeDatasets provides an optional inpainting interface based on [Moebius (ECCV 2026)](https://arxiv.org/abs/2606.19195), which reconstructs the scene behind the animal.
 First, install the additional dependencies:
 
 ```bash
-pip install "wildlife-datasets[inpainting]"
+pip install "wildlife-datasets[fast-inpainting]"
 ```
 
 Then initialize the background filler and apply it to a dataset item:
@@ -128,30 +127,20 @@ Then initialize the background filler and apply it to a dataset item:
 ```python
 from wildlife_datasets import preparation
 
-fill = preparation.StableDiffusionBackgroundFill()
+fill = preparation.MoebiusBackgroundFill(num_inference_steps=10)
 
-background = fill(item)
+background = fill(item, seed=42)
 background.save("background.png")
 ```
 
 The filler uses the image and its segmentation mask to reconstruct the region occupied by the animal. 
 It returns an RGB PIL image at the original resolution, preserving pixels outside the expanded mask.
-You can (and you should) provide a prompt describing the scene:
-
-```python
-background = fill(
-    item,
-    prompt="Fill the masked part, fit it so it matches the background.",
-    seed=42,
-)
-```
 
 The model is downloaded automatically on first use and cached locally. 
-It is loaded once and reused for subsequent images.
-By default, CUDA and Apple MPS acceleration are supported, with CPU as a fallback.
+It is loaded once and reused for subsequent images. On Apple Silicon, Core ML acceleration is used automatically.
 
-Additional options include `device`, `model`, `resolution`, `num_inference_steps`, `guidance_scale`, and `mask_dilation`. 
-A preloaded Diffusers pipeline can also be supplied through `pipeline=pipe`.
+Additional options include `num_inference_steps`, `guidance_scale`, and `mask_dilation`. 
+Increasing the number of inference steps (e.g., to 20) allows more sampling at the cost of longer processing times.
 
 > **Note:** Inpainting can introduce artificial objects or textures, so generated backgrounds should be inspected before use. 
-Unlike the constant-fill views used in standard [CFR and SSI evaluation](cfr.md), inpainted backgrounds contain generated visual information and should be treated as a separate experimental condition.
+> Unlike the constant-fill views used in standard [CFR and SSI evaluation](cfr.md), inpainted backgrounds contain generated visual information and should be treated as a separate experimental condition.

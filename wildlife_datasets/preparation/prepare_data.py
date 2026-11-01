@@ -49,7 +49,8 @@ def resize_dataset(
 
         # Save image to new root with unique image path
         if copy_files:
-            image = dataset[i]
+            with dataset.temporary_attrs(masks=False):
+                image = dataset[i]
             full_img_path = os.path.join(new_root, img_path)
             if not os.path.exists(os.path.dirname(full_img_path)):
                 os.makedirs(os.path.dirname(full_img_path))
