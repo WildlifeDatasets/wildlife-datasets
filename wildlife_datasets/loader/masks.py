@@ -141,6 +141,7 @@ class MaskReader(Mapping):
         Returns:
             bool: Whether an accepted mask is available.
         """
+        return bool(self._records[str(key)]["present"])
 
     def match(self, catalogue, *, path_col="path"):
         """Matches dataset records to segmentation mask annotations.
