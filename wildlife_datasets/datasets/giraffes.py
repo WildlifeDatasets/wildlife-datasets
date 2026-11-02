@@ -16,6 +16,7 @@ summary = {
     "animals": {"giraffe"},
     "animals_simple": "giraffes",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2021,
     "reported_n_total": None,
     "reported_n_individuals": None,
@@ -27,6 +28,8 @@ summary = {
     "cropped": True,
     "span": "unknown",
     "size": 1719,
+    "description": "",
+    "processing": "Only linux: downloading",
 }
 
 

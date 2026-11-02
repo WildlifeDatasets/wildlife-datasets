@@ -9,11 +9,12 @@ summary = {
     "licenses": "Attribution 4.0 International (CC BY 4.0)",
     "licenses_url": "https://creativecommons.org/licenses/by/4.0/",
     "url": "https://huggingface.co/datasets/dariakern/Chicks4FreeID",
-    "publication_url": None,
+    "publication_url": "https://www.mdpi.com/2076-2615/15/1/1",
     "cite": "kern2024towards",
     "animals": {"chickens"},
     "animals_simple": "chickens",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2024,
     "reported_n_total": 1146,
     "reported_n_individuals": 50,
@@ -25,6 +26,7 @@ summary = {
     "cropped": True,
     "span": "short",
     "size": 1401,
+    "description": 'The Chicks4FreeID dataset contains top-down view images of individually segmented and annotated chickens (with roosters and ducks also possibly present and labeled as such). 11 different coops with 54 individuals were visited for manual data collection. Each of the 677 images depicts at least one chicken. The identities of the 50 chickens, 2 roosters and 2 ducks were annotated for a total of 1270 animal instances. Annotation additionally contains visibility ratings of "best", "good", and "bad" for each animal instance.',
 }
 
 

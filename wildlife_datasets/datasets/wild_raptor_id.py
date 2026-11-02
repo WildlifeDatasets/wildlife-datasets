@@ -15,6 +15,7 @@ summary = {
     "animals": {"eagle"},
     "animals_simple": "eagles",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2025,
     "reported_n_total": 14817,
     "reported_n_individuals": 47,
@@ -26,6 +27,7 @@ summary = {
     "cropped": True,
     "span": "1 month",
     "size": 2600,
+    "description": "The dataset was gathered using the DS-2TD91LY-AFG model PTZ camera, which can detect subjects up to 6.7 km away, making it well-suited for monitoring white-tailed eagles across wide regions. The camera provides a resolution of 1920×1080 pixels and supports multiple encoding options such as H.264, H.265, Smart264, Smart265, and MJPEG, ensuring high-quality and efficient video recording. In December 2022, a total of 131 video clips were captured, featuring 47 distinct white-tailed eagles, forming a comprehensive dataset for testing and refining the identification model. The authors proposed multiple splits based on a video-level partitioning approach.",
 }
 
 

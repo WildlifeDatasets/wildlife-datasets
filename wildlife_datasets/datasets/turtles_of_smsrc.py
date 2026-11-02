@@ -1,19 +1,22 @@
 import ast
+import os
 
 import pandas as pd
 
+from ..detection import load_segmentation as utils_load_segmentation
 from .downloads import DownloadINaturalist
 from .general import Dataset_Metadata
 
 summary = {
     "licenses": "",
     "licenses_url": "",
-    "url": "",
+    "url": "https://www.inaturalist.org/projects/turtles-of-smsrc",
     "publication_url": None,
     "cite": "",
     "animals": {"Green Sea Turtle"},
     "animals_simple": "sea turtles",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2025,
     "reported_n_total": None,
     "reported_n_individuals": None,
@@ -25,6 +28,7 @@ summary = {
     "cropped": False,
     "span": "1 year",
     "size": None,
+    "description": "The Sharjah Marine Science Research Centre (SMSRC) has created a participatory research project aimed at documenting the occurrence, distribution, and habitat use of marine turtles along the Khor Fakkan coast. Through systematic photographic records, the project seeks to create a visual and georeferenced database of individual turtles observed by researchers, students, divers, and citizen scientists. Each turtle photograph will be tagged with location (GPS), date, and habitat type, allowing for the analysis of spatial patterns, site fidelity, and potential threats such as entanglement or pollution. Over time, the dataset will serve as a baseline for long-term monitoring and for developing awareness materials and conservation strategies for Sharjah’s marine biodiversity.",
 }
 
 
@@ -36,6 +40,10 @@ class TurtlesOfSMSRC(DownloadINaturalist, Dataset_Metadata):
         "observed_on",
         "location",
     )
+
+    def __init__(self, *args, load_segmentation: bool = False, **kwargs) -> None:
+        self.load_segmentation = load_segmentation
+        super().__init__(*args, **kwargs)
 
     def create_catalogue(self, *, replace_identity: list[tuple] | None = None, **kwargs) -> pd.DataFrame:
         self.replace_identity = [] if replace_identity is None else replace_identity
@@ -52,6 +60,9 @@ class TurtlesOfSMSRC(DownloadINaturalist, Dataset_Metadata):
             {"observation_id": "encounter_id", "species_guess": "species", "file_name": "path", "observed_on": "date"},
             axis=1,
         )
+        if self.load_segmentation:
+            file_name = os.path.join(self.get_root(), "segmentation.csv")
+            metadata = utils_load_segmentation(metadata, file_name)
         return metadata
 
     def fix_labels(self, df: pd.DataFrame) -> pd.DataFrame:

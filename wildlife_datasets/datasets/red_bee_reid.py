@@ -20,6 +20,7 @@ summary = {
     "animals": {"honey bees"},
     "animals_simple": "bees",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2026,
     "reported_n_total": 9495,
     "reported_n_individuals": 45,
@@ -31,6 +32,7 @@ summary = {
     "cropped": True,
     "span": "3 days",
     "size": 9495,
+    "description": "RedBeeReID is a fine-grained honey bee re-identification dataset collected from 9 videos over 3 days at bee feeders. It contains 9495 cropped images of 45 red paint-marked honey bee identities across 358 tracks. The Hugging Face release provides both unrotated unmasked crops and pose-normalized, background-masked crops, with bounding boxes and 5-point pose labels.",
 }
 
 

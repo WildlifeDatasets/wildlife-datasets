@@ -10,6 +10,7 @@ _gorilla_summary_base = {
     "animals": {"gorilla"},
     "animals_simple": "gorillas",
     "real_animals": True,
+    "original_dataset": True,
     "clear_photos": True,
     "unique_pattern": False,
     "pose": "single",
@@ -30,6 +31,7 @@ summary_wild = {
     "wild": True,
     "span": "4.5 years",
     "size": 59440,
+    "description": "GorillaWatchWild (Gorilla-SPAC-Wild) contains 135 individually identified western lowland gorillas extracted from camera-trap video footage collected at Odzala-Kokoua National Park, Republic of Congo. Detections are provided as paired face and body crops obtained via a fine-tuned YOLOv8-Nano detector and tracker, ground-truthed by primate researchers with 15+ years of experience with this population. The dataset has an individual-disjoint train/validation/test split for open-set evaluation, plus a single_encounter split of gorillas observed only once.",
 }
 
 summary_zoo = {
@@ -40,6 +42,7 @@ summary_zoo = {
     "wild": False,
     "span": "2 months",
     "size": 12530,
+    "description": "GorillaZooBerlin (Gorilla-Zoo-Berlin) is a cross-domain evaluation companion to GorillaWatchWild, part of the same GorillaWatch project. It contains camera-trap footage of the 5 western lowland gorillas of a single social group at Zoo Berlin, used to evaluate how well models trained on in-the-wild footage generalize to a controlled zoo environment with artificial structures, glass and different camera angles.",
 }
 
 

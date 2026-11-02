@@ -16,6 +16,7 @@ summary = {
     "animals": {"right whale"},
     "animals_simple": "whales",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2015,
     "reported_n_total": None,
     "reported_n_individuals": None,
@@ -27,6 +28,8 @@ summary = {
     "cropped": False,
     "span": "10 years",
     "size": 9790,
+    "description": "See the description in [HappyWhale](#happywhale).",
+    "processing": "Kaggle required + terms",
 }
 
 

@@ -16,6 +16,7 @@ summary = {
     "animals": {"whale"},
     "animals_simple": "whales",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2019,
     "reported_n_total": None,
     "reported_n_individuals": None,
@@ -27,6 +28,9 @@ summary = {
     "cropped": True,
     "span": "very long",
     "size": 5911,
+    "description": "See the description in [HappyWhale](#happywhale).",
+    "processing": "Kaggle required + terms",
+    "modifications": "Unknown animals renamed",
 }
 
 

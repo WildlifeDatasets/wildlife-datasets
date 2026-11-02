@@ -15,6 +15,7 @@ summary = {
     "animals": {"lion"},
     "animals_simple": "lions",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2020,
     "reported_n_total": 750,
     "reported_n_individuals": 98,
@@ -26,6 +27,7 @@ summary = {
     "cropped": True,
     "span": "unknown",
     "size": 495,
+    "description": "LionData and NyalaData contain images of lions and nyalas collected from Mara Masia project in Kenya. While images in NyalaData are relatively uniform nad show the image of the whole nyalas, LionData depict various lion details such as ears or noses.",
 }
 
 

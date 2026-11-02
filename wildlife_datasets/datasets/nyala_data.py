@@ -16,6 +16,7 @@ summary = {
     "animals": {"nyala"},
     "animals_simple": "nyalas",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2020,
     "reported_n_total": 1934,
     "reported_n_individuals": 274,
@@ -27,6 +28,7 @@ summary = {
     "cropped": False,
     "span": "unknown",
     "size": 495,
+    "description": "See the description in [LionData](#liondata).",
 }
 
 

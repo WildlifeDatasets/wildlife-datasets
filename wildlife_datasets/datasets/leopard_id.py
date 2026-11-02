@@ -12,6 +12,7 @@ summary = {
     "animals": {"leopard"},
     "animals_simple": "leopards",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2022,
     "reported_n_total": None,
     "reported_n_individuals": 430,
@@ -23,6 +24,8 @@ summary = {
     "cropped": False,
     "span": "unknown",
     "size": 8565,
+    "description": "See the description in [BelugaID](#belugaid).",
+    "modifications": "Unknown animals renamed",
 }
 
 

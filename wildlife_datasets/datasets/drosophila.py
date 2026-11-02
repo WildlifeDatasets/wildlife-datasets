@@ -15,6 +15,7 @@ summary = {
     "animals": {"drosophila"},
     "animals_simple": "flies",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2018,
     "reported_n_total": 2592000,
     "reported_n_individuals": 60,
@@ -26,6 +27,8 @@ summary = {
     "cropped": True,
     "span": "3 days",
     "size": 74856,
+    "description": "Twenty drosophila flies were collected few hours after eclosion and housed separately. On the third day, post-eclosion flies were individually mouth pipetted into a circular acrylic arena, illuminated with overhead LED bulbs and filmed in grayscale. This was repeated in three consecutive days. Since the sampling frequency from videos was high, this generated several million images. However, the differences between these images are small.",
+    "modifications": "Few images removed",
 }
 
 

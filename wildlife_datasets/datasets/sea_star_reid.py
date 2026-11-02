@@ -15,6 +15,7 @@ summary = {
     "animals": {"sea star"},
     "animals_simple": "sea stars",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2023,
     "reported_n_total": 2187,
     "reported_n_individuals": 95,
@@ -26,6 +27,7 @@ summary = {
     "cropped": True,
     "span": "short",
     "size": 1689,
+    "description": "This dataset contains 1204 images of 39 individual Asterias rubens sea stars and 983 images of 56 individual Anthenea australiae sea stars. For the ASRU data set, images were taken on five distinct days. For the ANAU data set, images were taken in three locations (sunlight, shaded, naturalistic exhibit) on the same day. The photos were taken in a water tank.",
 }
 
 

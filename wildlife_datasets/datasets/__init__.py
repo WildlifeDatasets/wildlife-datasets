@@ -32,7 +32,7 @@ from .drosophila import Drosophila
 from .elpephants import ELPephants
 from .friesian_cattle import FriesianCattle2015, FriesianCattle2015v2, FriesianCattle2017
 from .gcn_id import GCN_ID
-from .general import Dataset_Folder, Dataset_Metadata
+from .general import Dataset_Folder, Dataset_FolderStructured, Dataset_Metadata
 from .giraffe_zebra_id import GiraffeZebraID
 from .giraffes import Giraffes
 from .gorilla_watch import GorillaWatchWild, GorillaZooBerlin
@@ -61,6 +61,7 @@ from .rotwild_id_faces import RotwildID_Faces
 from .sea_star_reid import SeaStarReID2023
 from .sea_turtle_id import SeaTurtleID2022, SeaTurtleIDHeads
 from .seal_id import SealID, SealIDSegmented
+from .side_view_cows import SideViewCows2026
 from .smalst import SMALST
 from .southern_province_turtles import SouthernProvinceTurtles
 from .spotted import LeopardID102, SpottedHyenaID109, SpottedHyenaID415

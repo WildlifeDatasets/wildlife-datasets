@@ -62,6 +62,7 @@ data = [
     (SeaStarReID2023, "auto", True, None),
     (SeaTurtleID2022, "auto", False, None),
     (SeaTurtleIDHeads, "auto", False, None),
+    (SideViewCows2026, "auto", False, None),
     (SMALST, "auto", False, None),
     (SouthernProvinceTurtles, "auto", False, None),
     (SpottedHyenaID109, "auto", False, None),

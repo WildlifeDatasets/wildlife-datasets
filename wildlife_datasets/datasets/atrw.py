@@ -15,6 +15,7 @@ summary = {
     "animals": {"amur tiger"},
     "animals_simple": "tigers",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2019,
     "reported_n_total": 9496,
     "reported_n_individuals": 92,
@@ -26,6 +27,7 @@ summary = {
     "cropped": False,
     "span": "short",
     "size": 1760,
+    "description": "The ATRW (Amur Tiger Re-identification in the Wild) dataset was collected with the help of WWF in ten zoos in China. The images were extracted from videos. Besides tiger re-identification, the dataset can also be used for tiger detection and pose estimation.",
 }
 
 

@@ -476,6 +476,16 @@ class TurtlewatchEgypt_New(TurtlewatchEgypt_Base):
 
 
 class TurtlewatchEgypt_Citizen(Dataset_Metadata):
+    def __init__(self, *args, load_segmentation: bool = False, **kwargs) -> None:
+        self.load_segmentation = load_segmentation
+        super().__init__(*args, **kwargs)
+
+    def modify_metadata(self, metadata: pd.DataFrame) -> pd.DataFrame:
+        if self.load_segmentation:
+            file_name = os.path.join(self.get_root(), "segmentation.csv")
+            metadata = utils_load_segmentation(metadata, file_name)
+        return metadata
+
     @classmethod
     def _download(cls, data: pd.DataFrame, transform: Callable[[pd.DataFrame], pd.DataFrame] | None = None) -> None:
         img_extensions = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".tiff", ".raw")

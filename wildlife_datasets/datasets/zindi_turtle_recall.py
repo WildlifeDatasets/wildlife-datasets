@@ -15,6 +15,7 @@ summary = {
     "animals": {"sea turtle"},
     "animals_simple": "sea turtles",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2022,
     "reported_n_total": None,
     "reported_n_individuals": None,
@@ -26,6 +27,7 @@ summary = {
     "cropped": True,
     "span": "unknown",
     "size": 6482,
+    "description": "ZindiTurtleRecall was collected through the Watamu Turtle Watch and Local Ocean Conservation. Many of the turtles in this project are turtles who have been caught as bycatch by fishermen and bought to Local Ocean Conservation for rehabilitation. Each rescued turtle is assessed, then measured, weighed and tagged. If it is in good health, the turtle is transported to the Watamu Marine National Park where it is released back into the ocean. Severely injured turtles are admitted to a rehabilitation unit. The dataset contain close-up images of turtle eays and post-ocular scutes from three different viewpoints.",
 }
 
 

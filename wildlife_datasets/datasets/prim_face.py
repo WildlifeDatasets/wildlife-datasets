@@ -17,6 +17,7 @@ summary = {
     "animals": {"rhesus monkey", "japanese monkey", "chimpanzee"},
     "animals_simple": "monkeys",
     "real_animals": True,
+    "original_dataset": True,
     "year": 2012,
     "reported_n_total": 1282,
     "reported_n_individuals": 68,
@@ -28,6 +29,7 @@ summary = {
     "cropped": True,
     "span": "short",
     "size": 3700,
+    "description": "The database covers various species of non-human primates: rhesus and Japanese monkeys, chimpanzees, and common marmosets. For individual animals, there are multiple pictures with various views, illuminations, and facial expressions.",
 }
 
 
