@@ -399,6 +399,8 @@ def get_persistent_id(paths: pd.Series) -> pd.Series:
     counts = folders.nunique()
     varying = counts[counts > 1]
     if varying.empty:
+        if len(paths) == 1:
+            return create_id(paths.str.split(os.path.sep).apply(lambda x: "/".join(x)))
         raise ValueError("All entries are the same")
     idx = varying.index.min()
     return create_id(paths.str.split(os.path.sep).apply(lambda x: "/".join(x[idx:])))
