@@ -238,3 +238,5 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+baselines/AnimalCLEF2026/maps/
